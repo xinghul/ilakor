@@ -1,0 +1,15 @@
+// browser prefix
+
+@mixin prefix($property, $value) {
+  -webkit-#{$property}: #{$value};
+   -khtml-#{$property}: #{$value};
+     -moz-#{$property}: #{$value};
+      -ms-#{$property}: #{$value};
+       -o-#{$property}: #{$value};
+          #{$property}: #{$value};
+}
+
+@mixin setSize($width, $height) {
+  width: #{$width} ;
+  height: #{$height};
+}

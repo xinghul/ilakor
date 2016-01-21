@@ -1,0 +1,32 @@
+html,
+body {
+  margin: 0;
+  padding: 0; }
+
+body {
+  font: 14px Helvetica Neue, Muli, helvetica, arial;
+  background: #eaeaea url("/images/base.png");
+  -webkit-font-smoothing: antialiased;
+  -moz-font-smoothing: antialiased;
+  -ms-font-smoothing: antialiased;
+  -o-font-smoothing: antialiased;
+  font-smoothing: antialiased; }
+
+a {
+  cursor: pointer; }
+
+*:focus {
+  outline: 0 !important; }
+
+.help-block {
+  color: red !important; }
+
+#userArea {
+  margin: 8px 0 0 0; }
+
+.navbar-fixed-top {
+  top: 0;
+  border-width: 0 0 1px; }
+
+#mainContent {
+  margin-top: 70px; }
