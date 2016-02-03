@@ -4,7 +4,7 @@
   var gulp       = require("gulp")
   ,   jade       = require("gulp-jade")
   ,   sass       = require("gulp-sass")
-  ,   rimraf     = require("gulp-rimraf")
+  ,   del        = require("del")
   ,   browserify = require("browserify")
   ,   source     = require("vinyl-source-stream");
 
@@ -28,7 +28,7 @@
   // });
 
   gulp.task("default", ["browserify", "jade", "sass"], function() {
-    console.log("haha");
+    console.log("Build succeeded.");
   });
 
   gulp.task("browserify", ["clean"], function() {
@@ -52,13 +52,12 @@
       .pipe(gulp.dest("./app/stylesheets/"));
   });
 
-  gulp.task("clean", function() {
-    return gulp.src([
+  gulp.task("clean", function(_callback) {
+    return del([
         "./app/views/*",
         "./app/stylesheets/main.css",
         "./app/bundle.js"
-      ], {read: false})
-      .pipe(rimraf());
+      ], _callback);
   });
 
 }();

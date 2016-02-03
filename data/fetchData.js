@@ -5,10 +5,10 @@ var request = require("request")
 ,   jsdom   = require("jsdom")
 ,   Promise = require("bluebird");
 
-var total = 12321
+var total = 8684
 ,   arr = [];
 
-for (var i = 12321; i <= total; i++)
+for (var i = 8600; i <= total; i++)
 {
   arr.push(function(pageIndex) {
     var defer = Promise.defer();
@@ -19,6 +19,7 @@ for (var i = 12321; i <= total; i++)
       done: function(err, window) {
         console.log(pageIndex);
         if (err) {
+          console.log(err);
           defer.resolve();
           return;
         }

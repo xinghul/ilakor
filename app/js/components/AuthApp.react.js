@@ -1,13 +1,8 @@
+import React from "react"
+import { Button, Form, SplitButton, MenuItem, Modal } from "react-bootstrap"
+
 +function(undefined) {
 "use strict";
-
-var React          = require("react")
-,   ReactBootstrap = require("react-bootstrap");
-
-var Button         = ReactBootstrap.Button
-,   DropdownButton = ReactBootstrap.DropdownButton
-,   MenuItem       = ReactBootstrap.MenuItem
-,   Modal          = ReactBootstrap.Modal;
 
 var AuthStore   = require("../stores/AuthStore")
 ,   AuthActions = require("../actions/AuthActions");
@@ -116,29 +111,38 @@ var AuthApp = React.createClass({
 
   render: function() {
     var authArea;
+    var toggleModeMessage;
+    var socialLoginArea;
     
     if (this.state.user.username) {
       var title = "Hello, " + this.state.user.username;
       
       authArea =
-        <DropdownButton id="sign-in" title={title} bsStyle="success" pullRight>
+        <SplitButton id="sign-in" title={title} bsStyle="default" pullRight>
           <MenuItem>My Account</MenuItem>
+          <MenuItem divider />
           <MenuItem onSelect={this.handleLogOut}>Log out</MenuItem>
-        </DropdownButton>
+        </SplitButton>
         
     } else {
-      var switchMessageSpan;
-      
       if (this.state.isSignUp) {
-        switchMessageSpan =
+        toggleModeMessage =
           <span className="pull-left">
             Already have an account? <a onClick={this.toggleMode}>Sign In</a>
           </span>
       } else {
-        switchMessageSpan =
+        toggleModeMessage =
           <span className="pull-left">
             New here? <a onClick={this.toggleMode}>Sign Up</a>
           </span>
+          
+        socialLoginArea = 
+          <div>
+            login with
+            <Button><a href="/auth/facebook">Facebook</a></Button>
+            <Button>Google</Button>
+            <Button>Twitter</Button>
+          </div>
       }
       
       authArea = 
@@ -154,10 +158,11 @@ var AuthApp = React.createClass({
               <EmailInput emailError={this.state.emailError}/>
               <PasswordInput passwordError={this.state.passwordError}/>
               <div style={{color: "red"}}>{this.state.message}</div>
+              <Button block bsStyle="success" onClick={this.handleSubmit}>Sign in</Button>
+              {socialLoginArea}
             </Modal.Body>
             <Modal.Footer>
-              {switchMessageSpan}
-              <Button onClick={this.handleSubmit}>Submit</Button>
+              {toggleModeMessage}
               <Button onClick={this.toggleModal}>Close</Button>
             </Modal.Footer>
           </Modal>

@@ -58,7 +58,12 @@
           deferred.reject(err);
         } else {
           if (res.statusCode === 200) {
-            var newUser = JSON.parse(res.body);
+            var response = JSON.parse(res.body)
+            ,   newUser  = response.user
+            ,   token    = response.token;
+            
+            // save jwt token into the cookie
+            ReactCookie.save("token", token);
 
             AppDispatcher.handleAction({
               actionType: AuthConstants.RECEIVED_USER,

@@ -1,18 +1,14 @@
+"use strict";
+
 import React from "react"
 import { render } from "react-dom"
 import { Router, Route, Link, browserHistory } from "react-router"
 
-+function(window, document, undefined) {
-"use strict";
-
-var ProductData = require("./ProductData")
-,   CartAPI     = require("./utils/CartAPI")
-,   CartApp     = require("./components/CartApp.react");
-
-const NavbarApp  = require("./components/NavbarApp.react")
-,     MockGenApp = require("./components/MockGenApp.react");
+import ItemDisplayApp from "./components/ItemDisplayApp.jsx"
+import NavbarApp from "./components/NavbarApp.jsx"
 
 class App extends React.Component {
+    
   render() {
     return (
       <div>
@@ -23,15 +19,11 @@ class App extends React.Component {
   }
 }
 
-class HelloApp extends React.Component {
+const About = React.createClass({
   render() {
-    return (
-      <div>
-        <h2>Hello!</h2>
-      </div>
-    );
+    return <h3>About</h3>
   }
-}
+})
 
 class HiApp extends React.Component {
   render() {
@@ -43,20 +35,12 @@ class HiApp extends React.Component {
   }
 }
 
-localStorage.clear();
-
-// for CartApp
-ProductData.init();
-CartAPI.getProductData();
-
 render((
-  <Router history={browserHistory}>
+  <Router>
     <Route path="/" component={App}>
-      <Route path="testRoute1" component={HelloApp}/>
-      <Route path="testRoute2" component={HiApp}/>
-      <Route path="*" component={HelloApp}/>
+      <Route path="testRoute1" component={ItemDisplayApp} />
+      <Route path="testRoute2" component={HiApp} />
+      <Route path="*" component={HiApp} />
     </Route>
   </Router>
 ), document.getElementById("mainContent"));
-
-}(window, document);

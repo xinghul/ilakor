@@ -31,14 +31,22 @@
         });
 
         return res.json({
-          'user': req.user.infoLocal,
-          'token': token
+          "user": req.user.infoLocal,
+          "token": token
         });
       }
       
       return next(new CustomError(401, "You're not logged in."));
     },
-
+    
+    /**
+     * Deletes the session when user log out.
+     * 
+     * @param  {Request}  req  the request object.
+     * @param  {Response} res  the response object.
+     * @param  {Function} next the next middleware.
+     *
+     */
     delete: function(req, res, next) {
       if (req.user) {
         req.logout();
@@ -85,10 +93,10 @@
           token = jwt.sign(user, process.env.JWT_SECRET, {
             expiresIn: "24h"
           });
-
+          
           res.json({
-            'user': req.user.infoLocal,
-            'token': token
+            "user": req.user.infoLocal,
+            "token": token
           });
         });
       })(req, res, next);

@@ -16,33 +16,37 @@ router.get("/session", session.get);
 router.post("/session", session.create);
 router.delete("/session", session.delete);
 
-// =====================================
-// Facebook routes =====================
-// =====================================
-// router.get('/facebook', passport.authenticate('facebook', {
-//   scope: "email",
-//   display: "popup"
-// }));
-//
-// router.get('/facebook/callback', function (req, res, next) {
-//   passport.authenticate('facebook', function (err, user) {
-//     if (err)
-//     res.end(err);
-//     req.logIn(user, function (err) {
-//       if (err) {
-//         console.log(err);
-//         res.end(err);
-//       }
-//       else {
-//         res.redirect("/");
-//       }
-//     });
-//   })(req, res, next);
-// });
-//
-// // =====================================
-// // Twitter routes ======================
-// // =====================================
+/**********************************************************
+*                     Facebook Routes                     *
+**********************************************************/
+
+router.get("/facebook", passport.authenticate("facebook", {
+  authType: "reauthenticate", // force re-authenticate
+  scope: "email",
+  display: "popup"
+}));
+
+router.get("/facebook/callback", function (req, res, next) {
+  passport.authenticate("facebook", function (err, user) {
+    if (err) {
+      return res.end(err);      
+    }
+    
+    req.logIn(user, function (err) {
+      if (err) {
+        console.log(err);
+        res.end(err);
+      } else {
+        res.redirect("/");
+      }
+    });
+  })(req, res, next);
+});
+
+
+/**********************************************************
+*                     Twitter Routes                      *
+**********************************************************/
 // router.get('/twitter', passport.authenticate("twitter"));
 //
 // router.get('/twitter/callback', function (req, res, next) {
@@ -61,9 +65,11 @@ router.delete("/session", session.delete);
 //   })(req, res, next);
 // });
 //
-// // =====================================
-// // Google routes =======================
-// // =====================================
+
+
+/**********************************************************
+*                      Google  Routes                     *
+**********************************************************/
 // router.get('/google', passport.authenticate('google', { scope : ['profile', 'email'] }));
 //
 // router.get('/google/callback', function (req, res, next) {
