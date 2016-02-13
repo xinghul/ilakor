@@ -16,6 +16,10 @@ function ensureLoggedIn(req, res, next) {
   res.redirect("/");
 }
 
+// router.get("*", function (req, res){
+//   res.render("index");
+// });
+
 /* GET home page. */
 router.get("/", function(req, res, next) {
   // store user into cookie from here

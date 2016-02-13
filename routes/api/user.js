@@ -1,4 +1,3 @@
-+function(undefined) {
 "use strict";
 
 var mongoose = require("mongoose")
@@ -51,7 +50,14 @@ var UserApi = {
       });
     });
   },
-
+  
+  /**
+   * Returns user specified by given user id, if it exists.
+   * 
+   * @param  {Request}   req  the request object.
+   * @param  {Response}  res  the response object.
+   * @param  {Function} next the next middleware.
+   */
   get: function(req, res, next) {
     var userId = req.params.userId;
 
@@ -88,5 +94,3 @@ var UserApi = {
 };
 
 module.exports = UserApi;
-
-}();

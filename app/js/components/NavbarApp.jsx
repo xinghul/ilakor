@@ -31,8 +31,8 @@ export default class NarbarApp extends React.Component {
           </Navbar.Brand>
         </Navbar.Header>
         <Nav>
-          <NavItem eventKey={1} href="#/testRoute1">
-            TestRoute1
+          <NavItem eventKey={1} href="#/items">
+            Furnitures
           </NavItem>
           <NavItem eventKey={2} href="#/testRoute2">
             TestRoute2

@@ -2,7 +2,8 @@
 
 import React from "react"
 import { render } from "react-dom"
-import { Router, Route, Link, browserHistory } from "react-router"
+import { Router, Route, IndexRoute, Link, hashHistory } from "react-router"
+import createBrowserHistory from 'history/lib/createBrowserHistory'
 
 import ItemDisplayApp from "./components/ItemDisplayApp.jsx"
 import NavbarApp from "./components/NavbarApp.jsx"
@@ -21,26 +22,27 @@ class App extends React.Component {
 
 const About = React.createClass({
   render() {
-    return <h3>About</h3>
+    return <h3>Index Route</h3>
   }
 })
 
-class HiApp extends React.Component {
+class testApp extends React.Component {
   render() {
     return (
       <div>
-        <h2>Hi!</h2>
+        <h2>Test Route</h2>
       </div>
     );
   }
 }
 
 render((
-  <Router>
+  <Router history={hashHistory}>
     <Route path="/" component={App}>
-      <Route path="testRoute1" component={ItemDisplayApp} />
-      <Route path="testRoute2" component={HiApp} />
-      <Route path="*" component={HiApp} />
+      <IndexRoute component={About} />
+      <Route path="items" component={ItemDisplayApp} />
+      <Route path="testRoute2" component={testApp} />
+      <Route path="*" component={testApp} />
     </Route>
   </Router>
 ), document.getElementById("mainContent"));
