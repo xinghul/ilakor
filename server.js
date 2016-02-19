@@ -5,7 +5,7 @@
 *                      Load Modules                      *
 **********************************************************/
 // load env variables first
-require('dotenv').load();
+require("dotenv").load();
 
 var express  = require("express")
 ,   path     = require("path")

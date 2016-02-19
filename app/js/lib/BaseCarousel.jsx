@@ -46,11 +46,12 @@ export default class BaseCarousel extends React.Component {
     carousel = this.createCarousel();
     
     style = {
-      height: this.props.height + "px"
+      height: this.props.height + "px",
+      padding: "20px"
     };
     
     return (
-      <div>
+      <div style={style}>
         {carousel}
       </div>
     );
@@ -64,5 +65,5 @@ BaseCarousel.propTypes = {
 
 BaseCarousel.defaultProps = { 
   items: [],
-  height: 700
+  height: 300
 };

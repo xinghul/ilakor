@@ -89,7 +89,7 @@ var AuthApp = React.createClass({
 
   componentDidMount: function() {
     AuthStore.addChangeListener(this._onChange);
-
+    
     AuthActions.logInFromCookie();
   },
 
@@ -105,7 +105,7 @@ var AuthApp = React.createClass({
       passwordError: null,
       message: null
     });
-
+    
     this.setState(getStateFromStores());
   },
 

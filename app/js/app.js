@@ -6,6 +6,7 @@ import { Router, Route, IndexRoute, Link, hashHistory } from "react-router"
 import createBrowserHistory from 'history/lib/createBrowserHistory'
 
 import ItemDisplayApp from "./components/ItemDisplayApp.jsx"
+import ItemManageApp from "./components/ItemManageApp.jsx"
 import NavbarApp from "./components/NavbarApp.jsx"
 
 class App extends React.Component {
@@ -20,29 +21,19 @@ class App extends React.Component {
   }
 }
 
-const About = React.createClass({
+const IndexApp = React.createClass({
   render() {
     return <h3>Index Route</h3>
   }
 })
 
-class testApp extends React.Component {
-  render() {
-    return (
-      <div>
-        <h2>Test Route</h2>
-      </div>
-    );
-  }
-}
-
 render((
   <Router history={hashHistory}>
     <Route path="/" component={App}>
-      <IndexRoute component={About} />
-      <Route path="items" component={ItemDisplayApp} />
-      <Route path="testRoute2" component={testApp} />
-      <Route path="*" component={testApp} />
+      <IndexRoute component={IndexApp} />
+      <Route path="itemDisplay" component={ItemDisplayApp} />
+      <Route path="itemManage" component={ItemManageApp} />
+      <Route path="*" component={IndexApp} />
     </Route>
   </Router>
 ), document.getElementById("mainContent"));

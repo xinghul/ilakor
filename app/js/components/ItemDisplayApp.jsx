@@ -37,7 +37,7 @@ export default class ItemDisplayApp extends React.Component {
       },
       {
         type: "item",
-        src: "/images/room_sample.jpg",
+        src: "/images/table_1.jpg",
         href: "#",
         alt: "Furniture sample",
         label: "Label",
@@ -47,14 +47,14 @@ export default class ItemDisplayApp extends React.Component {
         type: "item",
         href: "#",
         alt: "Furniture sample",
-        src: "/images/room_sample.jpg",
+        src: "/images/table_2.jpg",
         label: "Label",
         description: "Description"
       },
       {
         type: "item",
         href: "#",
-        src: "/images/room_sample.jpg",
+        src: "/images/chair_1.jpg",
         alt: "Furniture sample",
         label: "Label",
         description: "Description"
@@ -62,7 +62,7 @@ export default class ItemDisplayApp extends React.Component {
       {
         type: "item",
         href: "#",
-        src: "/images/room_sample.jpg",
+        src: "/images/chair_2.jpg",
         alt: "Furniture sample",
         label: "Label",
         description: "Description"

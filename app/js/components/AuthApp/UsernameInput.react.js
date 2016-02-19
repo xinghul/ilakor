@@ -1,24 +1,21 @@
-import React from "react"
-import { Input, Glyphicon } from "react-bootstrap"
-
-+function(undefined) {
 "use strict";
 
-// XXX try to make it work with refs
+import React from "react"
+import { Input, Glyphicon } from "react-bootstrap"
+import LinkedStateMixin from "react-addons-linked-state-mixin"
+
 var AuthActions = require("../../actions/AuthActions");
 
 const innerGlyphicon = <Glyphicon glyph="user" />;
 
 const UsernameInput = React.createClass({
+  
+  mixins: [LinkedStateMixin],
 
   getInitialState: function() {
     return {
       value: ''
     };
-  },
-
-  getValue: function() {
-    return this.refs.input.getValue();
   },
 
   validationState: function() {
@@ -39,35 +36,35 @@ const UsernameInput = React.createClass({
     }
   },
 
-  handleChange: function() {
-    // XXX This could also be done using ReactLink:
-    // http://facebook.github.io/react/docs/two-way-binding-helpers.html
+  handleChange: function(newValue) {
     this.setState({
-      value: this.getValue()
+      value: newValue
     });
 
-    AuthActions.inputUsername(this.getValue());
+    AuthActions.inputUsername(newValue);
   },
 
   render: function() {
+    
+    var valueLink = {
+      value: this.state.value,
+      requestChange: this.handleChange
+    };
+    
     return (
       <Input
         type="text"
-        value={this.state.value}
         placeholder="Enter username"
         addonBefore={innerGlyphicon}
         help={this.props.usernameError}
         bsStyle={this.validationState()}
         hasFeedback
-        ref="input"
         groupClassName="group-class"
         labelClassName="label-class"
-        onChange={this.handleChange} />
+        valueLink={valueLink} />
     );
   }
 
 });
 
 module.exports = UsernameInput;
-
-}();

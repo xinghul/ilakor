@@ -46,7 +46,7 @@ var ItemApi = {
   },
   
   /**
-   * Removes item specified by given _id, if it exists.
+   * Removes item specified by given id, if it exists.
    * 
    * @param  {String} id the specified id.
    *
@@ -57,8 +57,10 @@ var ItemApi = {
     
     Item.remove({_id: ObjectId(id)}, function(err, result) {
       if (err) {
+        console.log(err);
         deferred.reject(err);
       } else {
+        console.log(result);
         deferred.resolve(result);
       }
     });
@@ -67,7 +69,29 @@ var ItemApi = {
   },
   
   /**
-   * Returns item specified by given _id, if it exists.
+   * Updates item specified by given id with new value.
+   * 
+   * @param  {String} id the specified id.
+   *
+   * @return {Object} the promise object.
+   */
+  update: function(id, newValue) {
+    var deferred = Promise.defer();
+    
+    Item.update({_id: ObjectId(id)}, { $set: newValue }, function(err, result) {
+      if (err) {
+        deferred.reject(err);
+      } else {
+        // resolve the new value instead
+        deferred.resolve(newValue);
+      }
+    });
+    
+    return deferred.promise;
+  },
+  
+  /**
+   * Returns item specified by given id, if it exists.
    * 
    * @param  {String} id the specified id.
    *

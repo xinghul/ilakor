@@ -1,23 +1,21 @@
+"use strict";
+
 import React from "react"
 import { Input, Glyphicon } from "react-bootstrap"
-
-+function(undefined) {
-"use strict";
+import LinkedStateMixin from "react-addons-linked-state-mixin"
 
 var AuthActions = require("../../actions/AuthActions");
 
 const innerGlyphicon = <Glyphicon glyph="lock" />;
 
 const PasswordInput = React.createClass({
+  
+  mixins: [LinkedStateMixin],
 
   getInitialState: function() {
     return {
       value: ""
     };
-  },
-
-  getValue: function() {
-    return this.refs.input.getValue();
   },
 
   validationState: function() {
@@ -60,35 +58,34 @@ const PasswordInput = React.createClass({
     }
   },
 
-  handleChange: function() {
-    // XXX This could also be done using ReactLink:
-    // http://facebook.github.io/react/docs/two-way-binding-helpers.html
+  handleChange: function(newValue) {
     this.setState({
-      value: this.getValue()
+      value: newValue
     });
 
-    AuthActions.inputPassword(this.getValue());
+    AuthActions.inputPassword(newValue);
   },
-
+  
   render: function() {
+    var valueLink = {
+      value: this.state.value,
+      requestChange: this.handleChange
+    };
+    
     return (
       <Input
         type="password"
-        value={this.state.value}
         placeholder="Enter password"
         addonBefore={innerGlyphicon}
         help={this.props.passwordError}
         bsStyle={this.validationState()}
         hasFeedback
-        ref="input"
         groupClassName="group-class"
         labelClassName="label-class"
-        onChange={this.handleChange} />
+        valueLink={valueLink} />
     );
   }
 
 });
 
 module.exports = PasswordInput;
-
-}();

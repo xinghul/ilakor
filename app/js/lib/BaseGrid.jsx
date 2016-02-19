@@ -19,10 +19,10 @@ export default class BaseGrid extends React.Component {
   }
   
   componentDidMount() {
-    var itemsConfig = this.state.itemsConfig;
-    var items = [];
+    let itemsConfig = this.state.itemsConfig
+    ,   items = [];
     
-    for (var itemConfig of itemsConfig)
+    for (let itemConfig of itemsConfig)
     {
       switch (itemConfig.type) {
         
@@ -47,7 +47,7 @@ export default class BaseGrid extends React.Component {
   }
   
   createItem(itemConfig) {
-    var itemJsx;
+    let itemJsx;
 
     itemJsx = (
       <Col xs={6} md={4}>

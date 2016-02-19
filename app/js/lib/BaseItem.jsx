@@ -14,27 +14,29 @@ export default class BaseItem extends React.Component {
   }
   
   createItem() {
-    var itemConfig = this.state.item;
+    let itemConfig = this.state.item;
+    
     
     return (
       <div>
         <Thumbnail src={itemConfig.src} href={itemConfig.href} alt={itemConfig.alt} />
         <div>
-          <h3>{itemConfig.label}</h3>
-          <p>{itemConfig.description}</p>
+          <div>{itemConfig.label}</div>
+          <div>{itemConfig.description}</div>
         </div>
       </div>
     );
   }
   
   render() {
-    var item;
-    var style;
+    let item
+    ,   style;
     
     item = this.createItem();
     
     style = {
-      height: this.props.height + "px"
+      height: this.props.height + "px",
+      padding: "20px"
     };
     
     return (
@@ -53,5 +55,5 @@ BaseItem.propTypes = {
 
 BaseItem.defaultProps = { 
   item: {},
-  height: 700
+  height: 300
 };

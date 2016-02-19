@@ -31,11 +31,11 @@ export default class NarbarApp extends React.Component {
           </Navbar.Brand>
         </Navbar.Header>
         <Nav>
-          <NavItem eventKey={1} href="#/items">
+          <NavItem eventKey={1} href="#/itemDisplay">
             Furnitures
           </NavItem>
-          <NavItem eventKey={2} href="#/testRoute2">
-            TestRoute2
+          <NavItem eventKey={2} href="#/itemManage">
+            CMS
           </NavItem>
         </Nav>
         <Nav pullRight id="authModalTrigger">
