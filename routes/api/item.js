@@ -1,12 +1,12 @@
 "use strict";
 
-var mongoose = require("mongoose")
+let mongoose = require("mongoose")
 ,   Promise  = require("bluebird");
 
-var Item     = mongoose.model("Item")
+let Item     = mongoose.model("Item")
 ,   ObjectId = mongoose.Types.ObjectId;
 
-var ItemApi = {
+let ItemApi = {
   
   /**
    * Creates a new item.
@@ -29,106 +29,114 @@ var ItemApi = {
    * 	 description: { ... }
    * }
    */
-  add: function(rawData) {
-    var deferred = Promise.defer();
-    
-    var item = new Item(rawData);
+   add: function(rawData) {
+     
+     return new Promise(function(resolve, reject) {
+       
+       let item = new Item(rawData);
 
-    item.save(function(err, newItem) {
-      if (err) {
-        deferred.reject(err);
-      } else {
-        deferred.resolve(newItem);
-      }
-    });
-    
-    return deferred.promise;
-  },
-  
-  /**
-   * Removes item specified by given id, if it exists.
-   * 
-   * @param  {String} id the specified id.
-   *
-   * @return {Object} the promise object.
-   */
-  remove: function(id) {
-    var deferred = Promise.defer();
-    
-    Item.remove({_id: ObjectId(id)}, function(err, result) {
-      if (err) {
-        console.log(err);
-        deferred.reject(err);
-      } else {
-        console.log(result);
-        deferred.resolve(result);
-      }
-    });
-    
-    return deferred.promise;
-  },
-  
-  /**
-   * Updates item specified by given id with new value.
-   * 
-   * @param  {String} id the specified id.
-   *
-   * @return {Object} the promise object.
-   */
-  update: function(id, newValue) {
-    var deferred = Promise.defer();
-    
-    Item.update({_id: ObjectId(id)}, { $set: newValue }, function(err, result) {
-      if (err) {
-        deferred.reject(err);
-      } else {
-        // resolve the new value instead
-        deferred.resolve(newValue);
-      }
-    });
-    
-    return deferred.promise;
-  },
-  
-  /**
-   * Returns item specified by given id, if it exists.
-   * 
-   * @param  {String} id the specified id.
-   *
-   * @return {Object} the promise object.
-   */
-  get: function(id) {
-    var deferred = Promise.defer();
-    
-    Item.findById(ObjectId(id), function(err, result) {
-      if (err) {
-        deferred.reject(err);
-      } else {
-        deferred.resolve(result);
-      }
-    });
-    
-    return deferred.promise;
-  },
-  
-  /**
-   * Returns all items.
-   * 
-   * @return {Object} the promise object.
-   */
-  getAll: function() {
-    var deferred = Promise.defer();
-    
-    Item.find({}, function(err, result) {
-      if (err) {
-        deferred.reject(err);
-      } else {
-        deferred.resolve(result);
-      }
-    });
-    
-    return deferred.promise;
-  }
+       item.save(function(err, newItem) {
+         if (err) {
+           reject(err);
+         } else {
+           resolve(newItem);
+         }
+       });
+       
+     });
+
+   },
+   
+   /**
+    * Removes item specified by given id, if it exists.
+    * 
+    * @param  {String} id the specified id.
+    *
+    * @return {Promise} the new promise object.
+    */
+   remove: function(id) {
+     
+     return new Promise(function(resolve, reject) {
+       
+       Item.remove({_id: ObjectId(id)}, function(err, result) {
+         if (err) {
+           reject(err);
+         } else {
+           resolve(result);
+         }
+       });
+       
+     });
+     
+   },
+   
+   /**
+    * Updates item specified by given id with new value.
+    * 
+    * @param  {String} id the specified id.
+    *
+    * @return {Promise} the new promise object.
+    */
+   update: function(id, newValue) {
+     
+     return new Promise(function(resolve, reject) {
+       
+       Item.findOneAndUpdate({_id: ObjectId(id)}, {$set: newValue}, {new: true}, function(err, updatedItem) {
+         if (err) {
+           reject(err);
+         } else {
+           console.log(updatedItem);
+           resolve(updatedItem);
+         }
+       });
+       
+     });
+     
+   },
+   
+   /**
+    * Returns item specified by given id, if it exists.
+    * 
+    * @param  {String} id the specified id.
+    *
+    * @return {Promise} the new promise object.
+    */
+   get: function(id) {
+     
+     return new Promise(function(resolve, reject) {
+       
+       Item.findById(ObjectId(id), function(err, result) {
+         if (err) {
+           reject(err);
+         } else {
+           resolve(result);
+         }
+       });
+       
+     });
+     
+   },
+   
+   /**
+    * Returns all items.
+    * 
+    * @return {Promise} the new promise object.
+    */
+   getAll: function() {
+     
+     return new Promise(function(resolve, reject) {
+       
+       Item.find({}, function(err, result) {
+         if (err) {
+           reject(err);
+         } else {
+           resolve(result);
+         }
+       });
+       
+     });
+     
+   }
 
 };
 
