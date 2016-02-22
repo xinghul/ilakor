@@ -44,72 +44,71 @@ var AuthActions = {
   },
 
   userLogIn: function userLogIn(user) {
-    var deferred = Promise.defer();
 
-    request.post({
-      url: "http://localhost:3001/auth/session",
-      form: {
-        "email": user.email,
-        "password": user.password
-      }
-    }, function (err, res) {
-      if (err) {
-        deferred.reject(err);
-      } else {
-        if (res.statusCode === 200) {
-          var response = JSON.parse(res.body),
-              newUser = response.user,
-              token = response.token;
+    return new Promise(function (resolve, reject) {
 
-          // save jwt token into the cookie
-          ReactCookie.save("token", token);
-
-          AppDispatcher.handleAction({
-            actionType: AuthConstants.RECEIVED_USER,
-            user: newUser
-          });
-
-          deferred.resolve();
-        } else {
-          deferred.reject(JSON.parse(res.body));
+      request.post({
+        url: "http://localhost:3001/auth/session",
+        form: {
+          "email": user.email,
+          "password": user.password
         }
-      }
-    });
+      }, function (err, res) {
+        if (err) {
+          reject(err);
+        } else {
+          if (res.statusCode === 200) {
+            var response = JSON.parse(res.body),
+                newUser = response.user,
+                token = response.token;
 
-    return deferred.promise;
+            // save jwt token into the cookie
+            ReactCookie.save("token", token);
+
+            AppDispatcher.handleAction({
+              actionType: AuthConstants.RECEIVED_USER,
+              user: newUser
+            });
+
+            resolve();
+          } else {
+            reject(JSON.parse(res.body));
+          }
+        }
+      });
+    });
   },
 
   userSignUp: function userSignUp(user) {
-    var deferred = Promise.defer();
 
-    // XXX check if all the fields are non-empty
-    request.post({
-      url: "http://localhost:3001/auth/users",
-      form: {
-        "local.email": user.email,
-        "local.username": user.username,
-        "local.password": user.password
-      }
-    }, function (err, res) {
-      if (err) {
-        deferred.reject(err);
-      } else {
-        if (res.statusCode === 200) {
-          var newUser = JSON.parse(res.body);
-
-          AppDispatcher.handleAction({
-            actionType: AuthConstants.RECEIVED_USER,
-            user: newUser
-          });
-
-          deferred.resolve();
-        } else {
-          deferred.reject(JSON.parse(res.body));
+    return new Promise(function (resolve, reject) {
+      // XXX check if all the fields are non-empty
+      request.post({
+        url: "http://localhost:3001/auth/users",
+        form: {
+          "local.email": user.email,
+          "local.username": user.username,
+          "local.password": user.password
         }
-      }
-    });
+      }, function (err, res) {
+        if (err) {
+          reject(err);
+        } else {
+          if (res.statusCode === 200) {
+            var newUser = JSON.parse(res.body);
 
-    return deferred.promise;
+            AppDispatcher.handleAction({
+              actionType: AuthConstants.RECEIVED_USER,
+              user: newUser
+            });
+
+            resolve();
+          } else {
+            reject(JSON.parse(res.body));
+          }
+        }
+      });
+    });
   },
 
   logInFromCookie: function logInFromCookie() {
@@ -124,30 +123,30 @@ var AuthActions = {
   },
 
   removeUserFromCookie: function removeUserFromCookie() {
-    var deferred = Promise.defer();
 
-    request.del({
-      url: "http://localhost:3001/auth/session"
-    }, function (err, res) {
-      if (err) {
-        deferred.reject(err);
-      } else {
-        if (res.statusCode === 200) {
-          ReactCookie.remove("user");
+    return new Promise(function (resolve, reject) {
 
-          AppDispatcher.handleAction({
-            actionType: AuthConstants.RECEIVED_USER,
-            user: {}
-          });
-
-          deferred.resolve();
+      request.del({
+        url: "http://localhost:3001/auth/session"
+      }, function (err, res) {
+        if (err) {
+          reject(err);
         } else {
-          deferred.reject(res.body);
-        }
-      }
-    });
+          if (res.statusCode === 200) {
+            ReactCookie.remove("user");
 
-    return deferred.promise;
+            AppDispatcher.handleAction({
+              actionType: AuthConstants.RECEIVED_USER,
+              user: {}
+            });
+
+            resolve();
+          } else {
+            reject(res.body);
+          }
+        }
+      });
+    });
   }
 
 };
@@ -183,31 +182,30 @@ var ItemManageAction = {
    */
   getAllItems: function getAllItems() {
 
-    var deferred = Promise.defer();
+    return new Promise(function (resolve, reject) {
 
-    request.get({
-      url: "http://localhost:3001/api/items"
-    }, function (err, response) {
-      if (err) {
-        deferred.reject(err);
-      } else {
-        // make sure the response status code is 200
-        if (response.statusCode === 200) {
-          var items = JSON.parse(response.body);
-
-          _dispatcherAppDispatcher2["default"].handleAction({
-            actionType: _constantsItemManageConstants2["default"].RECEIVED_ALL_ITEMS,
-            items: items
-          });
-
-          deferred.resolve();
+      request.get({
+        url: "http://localhost:3001/api/items"
+      }, function (err, response) {
+        if (err) {
+          reject(err);
         } else {
-          deferred.reject(JSON.parse(response.body));
-        }
-      }
-    });
+          // make sure the response status code is 200
+          if (response.statusCode === 200) {
+            var items = JSON.parse(response.body);
 
-    return deferred.promise;
+            _dispatcherAppDispatcher2["default"].handleAction({
+              actionType: _constantsItemManageConstants2["default"].RECEIVED_ALL_ITEMS,
+              items: items
+            });
+
+            resolve();
+          } else {
+            reject(JSON.parse(response.body));
+          }
+        }
+      });
+    });
   },
 
   /**
@@ -219,34 +217,33 @@ var ItemManageAction = {
    */
   addItem: function addItem(newItem) {
 
-    var deferred = Promise.defer();
+    return new Promise(function (resolve, reject) {
 
-    request.post({
-      url: "http://localhost:3001/api/items",
-      form: {
-        item: JSON.stringify(newItem)
-      }
-    }, function (err, response, body) {
-      if (err) {
-        deferred.reject(err);
-      } else {
-        // make sure the response status code is 200
-        if (response.statusCode === 200) {
-          var _newItem = JSON.parse(body);
-
-          _dispatcherAppDispatcher2["default"].handleAction({
-            actionType: _constantsItemManageConstants2["default"].RECEIVED_ITEM,
-            item: _newItem
-          });
-
-          deferred.resolve();
-        } else {
-          deferred.reject(JSON.parse(response.body));
+      request.post({
+        url: "http://localhost:3001/api/items",
+        form: {
+          item: JSON.stringify(newItem)
         }
-      }
-    });
+      }, function (err, response, body) {
+        if (err) {
+          reject(err);
+        } else {
+          // make sure the response status code is 200
+          if (response.statusCode === 200) {
+            var _newItem = JSON.parse(body);
 
-    return deferred.promise;
+            _dispatcherAppDispatcher2["default"].handleAction({
+              actionType: _constantsItemManageConstants2["default"].RECEIVED_ITEM,
+              item: _newItem
+            });
+
+            resolve();
+          } else {
+            reject(JSON.parse(response.body));
+          }
+        }
+      });
+    });
   },
 
   /**
@@ -259,37 +256,36 @@ var ItemManageAction = {
    */
   updateItem: function updateItem(id, newValue) {
 
-    var deferred = Promise.defer();
+    return new Promise(function (resolve, reject) {
 
-    request.put({
-      url: "http://localhost:3001/api/items",
-      qs: {
-        id: id
-      },
-      form: {
-        item: JSON.stringify(newValue)
-      }
-    }, function (err, response, body) {
-      if (err) {
-        deferred.reject(err);
-      } else {
-        // make sure the response status code is 200
-        if (response.statusCode === 200) {
-          var newItem = JSON.parse(body);
-
-          _dispatcherAppDispatcher2["default"].handleAction({
-            actionType: _constantsItemManageConstants2["default"].RECEIVED_UPDATED_ITEM,
-            item: newItem
-          });
-
-          deferred.resolve();
-        } else {
-          deferred.reject(JSON.parse(response.body));
+      request.put({
+        url: "http://localhost:3001/api/items",
+        qs: {
+          id: id
+        },
+        form: {
+          item: JSON.stringify(newValue)
         }
-      }
-    });
+      }, function (err, response, body) {
+        if (err) {
+          reject(err);
+        } else {
+          // make sure the response status code is 200
+          if (response.statusCode === 200) {
+            var newItem = JSON.parse(body);
 
-    return deferred.promise;
+            _dispatcherAppDispatcher2["default"].handleAction({
+              actionType: _constantsItemManageConstants2["default"].RECEIVED_UPDATED_ITEM,
+              item: newItem
+            });
+
+            resolve();
+          } else {
+            reject(JSON.parse(response.body));
+          }
+        }
+      });
+    });
   },
 
   /**
@@ -301,33 +297,32 @@ var ItemManageAction = {
    */
   removeItem: function removeItem(id) {
 
-    var deferred = Promise.defer();
+    return new Promise(function (resolve, reject) {
 
-    request.del({
-      url: "http://localhost:3001/api/items",
-      qs: {
-        id: id
-      }
-    }, function (err, response, body) {
-      if (err) {
-        deferred.reject(err);
-      } else {
-        // make sure the response status code is 200
-        if (response.statusCode === 200) {
-
-          _dispatcherAppDispatcher2["default"].handleAction({
-            actionType: _constantsItemManageConstants2["default"].RECEIVED_REMOVED_ITEM_ID,
-            id: id
-          });
-
-          deferred.resolve();
-        } else {
-          deferred.reject(JSON.parse(response.body));
+      request.del({
+        url: "http://localhost:3001/api/items",
+        qs: {
+          id: id
         }
-      }
-    });
+      }, function (err, response, body) {
+        if (err) {
+          reject(err);
+        } else {
+          // make sure the response status code is 200
+          if (response.statusCode === 200) {
 
-    return deferred.promise;
+            _dispatcherAppDispatcher2["default"].handleAction({
+              actionType: _constantsItemManageConstants2["default"].RECEIVED_REMOVED_ITEM_ID,
+              id: id
+            });
+
+            resolve();
+          } else {
+            reject(JSON.parse(response.body));
+          }
+        }
+      });
+    });
   }
 };
 

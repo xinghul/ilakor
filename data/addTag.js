@@ -3,7 +3,7 @@
 var request = require("request");
 
 var tag = {
-  name: "Chair12"
+  name: "Chair Table"
 };
 
 request.post({

@@ -1,14 +1,14 @@
 "use strict";
 
-var request     = require("request")
+let request     = require("request")
 ,   ReactCookie = require("react-cookie")
 ,   Promise     = require("bluebird");
 
-var AppDispatcher = require("../dispatcher/AppDispatcher")
+let AppDispatcher = require("../dispatcher/AppDispatcher")
 ,   AuthConstants = require("../constants/AuthConstants");
 
 
-var AuthActions = {
+let AuthActions = {
 
   toggleMode: function() {
     AppDispatcher.handleAction({
@@ -42,80 +42,79 @@ var AuthActions = {
       password: password
     });
   },
-
+  
   userLogIn: function(user) {
-    var deferred = Promise.defer();
-
-    request.post({
-      url: "http://localhost:3001/auth/session",
-      form: {
-        "email": user.email,
-        "password": user.password
-      }
-    }, function(err, res) {
-      if (err) {
-        deferred.reject(err);
-      } else {
-        if (res.statusCode === 200) {
-          var response = JSON.parse(res.body)
-          ,   newUser  = response.user
-          ,   token    = response.token;
-          
-          // save jwt token into the cookie
-          ReactCookie.save("token", token);
-
-          AppDispatcher.handleAction({
-            actionType: AuthConstants.RECEIVED_USER,
-            user: newUser
-          });
-
-          deferred.resolve();
-        } else {
-          deferred.reject(JSON.parse(res.body));
+    
+    return new Promise(function(resolve, reject) {
+      
+      request.post({
+        url: "http://localhost:3001/auth/session",
+        form: {
+          "email": user.email,
+          "password": user.password
         }
-      }
+      }, function(err, res) {
+        if (err) {
+          reject(err);
+        } else {
+          if (res.statusCode === 200) {
+            let response = JSON.parse(res.body)
+            ,   newUser  = response.user
+            ,   token    = response.token;
+            
+            // save jwt token into the cookie
+            ReactCookie.save("token", token);
+
+            AppDispatcher.handleAction({
+              actionType: AuthConstants.RECEIVED_USER,
+              user: newUser
+            });
+
+            resolve();
+          } else {
+            reject(JSON.parse(res.body));
+          }
+        }
+      });
+      
     });
-
-    return deferred.promise;
-
   },
 
   userSignUp: function(user) {
-    var deferred = Promise.defer();
-
-    // XXX check if all the fields are non-empty
-    request.post({
-      url: "http://localhost:3001/auth/users",
-      form: {
-        "local.email": user.email,
-        "local.username": user.username,
-        "local.password": user.password
-      }
-    }, function(err, res) {
-      if (err) {
-        deferred.reject(err);
-      } else {
-        if (res.statusCode === 200) {
-          var newUser = JSON.parse(res.body);
-
-          AppDispatcher.handleAction({
-            actionType: AuthConstants.RECEIVED_USER,
-            user: newUser
-          });
-
-          deferred.resolve();
-        } else {
-          deferred.reject(JSON.parse(res.body));
+    
+    return new Promise(function(resolve, reject) {
+      // XXX check if all the fields are non-empty
+      request.post({
+        url: "http://localhost:3001/auth/users",
+        form: {
+          "local.email": user.email,
+          "local.username": user.username,
+          "local.password": user.password
         }
-      }
+      }, function(err, res) {
+        if (err) {
+          reject(err);
+        } else {
+          if (res.statusCode === 200) {
+            let newUser = JSON.parse(res.body);
+
+            AppDispatcher.handleAction({
+              actionType: AuthConstants.RECEIVED_USER,
+              user: newUser
+            });
+
+            resolve();
+          } else {
+            reject(JSON.parse(res.body));
+          }
+        }
+      });
+
     });
-
-    return deferred.promise;
-
   },
 
   logInFromCookie: function() {
-    var user = ReactCookie.load("user");
+    let user = ReactCookie.load("user");
 
     if (user) {
       AppDispatcher.handleAction({
@@ -126,30 +125,31 @@ var AuthActions = {
   },
 
   removeUserFromCookie: function() {
-    var deferred = Promise.defer();
-
-    request.del({
-      url: "http://localhost:3001/auth/session"
-    }, function(err, res) {
-      if (err) {
-        deferred.reject(err);
-      } else {
-        if (res.statusCode === 200) {
-          ReactCookie.remove("user");
-          
-          AppDispatcher.handleAction({
-            actionType: AuthConstants.RECEIVED_USER,
-            user: {}
-          });
-
-          deferred.resolve();
+    
+    return new Promise(function(resolve, reject) {
+      
+      request.del({
+        url: "http://localhost:3001/auth/session"
+      }, function(err, res) {
+        if (err) {
+          reject(err);
         } else {
-          deferred.reject(res.body);
-        }
-      }
-    });
+          if (res.statusCode === 200) {
+            ReactCookie.remove("user");
+            
+            AppDispatcher.handleAction({
+              actionType: AuthConstants.RECEIVED_USER,
+              user: {}
+            });
 
-    return deferred.promise;
+            resolve();
+          } else {
+            reject(res.body);
+          }
+        }
+      });
+      
+    });
   }
 
 };
