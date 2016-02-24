@@ -18,7 +18,7 @@ let ItemApi = {
    * rawData schema:
    * {
    * 	 name: String,
-   * 	 category: [String],
+   * 	 tag: [String],
    * 	 image: [String],
    * 	 weight: Number,
    * 	 dimension: {

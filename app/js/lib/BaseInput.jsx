@@ -43,7 +43,7 @@ export default class BaseInput extends React.Component {
         defaultValue={this.props.defaultValue}
         ref="input"
         />
-    )
+    );
     
   }
 }

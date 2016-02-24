@@ -8,6 +8,7 @@ import { Modal, Table, Label, Input, Glyphicon, Button } from "react-bootstrap"
 import LinkedStateMixin from "react-addons-linked-state-mixin"
 
 import BaseInput from "../lib/BaseInput.jsx"
+import BaseMultiSelect from "../lib/BaseMultiSelect.jsx"
 import BaseModal from "../lib/BaseModal.jsx"
 
 import ItemManageAction from "../actions/ItemManageAction"
@@ -15,7 +16,8 @@ import ItemManageStore from "../stores/ItemManageStore"
 
 function getStateFromStores() {
   return {
-    items: ItemManageStore.getItems()
+    items: ItemManageStore.getItems(),
+    tags: ItemManageStore.getTags()
   };
 }
 
@@ -26,10 +28,11 @@ export default class ItemManageApp extends React.Component {
     
     this.state = {
       name: "",
-      category: [],
+      tag: [],
       weight: "",
       
       items: [],
+      tags: [],
       
       showItemInfoModal: false,
       selectedItem: null
@@ -38,14 +41,14 @@ export default class ItemManageApp extends React.Component {
   
   handleSubmit() {
     // FIXME: make it unclickable
-    if (_.isEmpty(this.state.name) || _.isEmpty(this.state.weight) || _.isEmpty(this.state.category)) {
+    if (_.isEmpty(this.state.name) || _.isEmpty(this.state.weight) || _.isEmpty(this.state.tag)) {
       return;  
     }
     
     ItemManageAction.addItem({
       name: this.state.name,
       weight: this.state.weight,
-      category: this.state.category
+      tag: this.state.tag
     }).catch(function(err) {
       console.log(err);
     });
@@ -64,9 +67,8 @@ export default class ItemManageApp extends React.Component {
   }
   
   handleTagsChange(newValue) {
-    // FIXME: trim tabs and spaces
     this.setState({
-      category: newValue.split(",")
+      tag: newValue
     });
   }
   
@@ -116,6 +118,8 @@ export default class ItemManageApp extends React.Component {
     ItemManageStore.addChangeListener(this._onChange.bind(this));
     
     ItemManageAction.getAllItems();
+    
+    ItemManageAction.getAllTags();
   }
   
   componentWillUnmount() {
@@ -136,7 +140,7 @@ export default class ItemManageApp extends React.Component {
           <td>{index}</td>
           <td>{item.name}</td>
           <td>{item.weight}</td>
-          <td>{item.category}</td>
+          <td>{item.tag}</td>
         </tr>
       );
     }
@@ -148,7 +152,7 @@ export default class ItemManageApp extends React.Component {
             <th>#</th>
             <th>Name</th>
             <th>Weight</th>
-            <th>Category</th>
+            <th>tag</th>
           </tr>
         </thead>
         <tbody>
@@ -158,6 +162,18 @@ export default class ItemManageApp extends React.Component {
     );
     
     return itemListTable;
+  }
+  
+  createTagOptions() {
+    let tags = this.state.tags
+    ,   tagOptions = [];
+    
+    for (let tag of tags)
+    {
+      tagOptions.push(tag.name);
+    }
+    
+    return tagOptions;
   }
   
   render() {
@@ -190,11 +206,12 @@ export default class ItemManageApp extends React.Component {
         handleChange={this.handleNameChange.bind(this)} />
     );
     
-    let categoryInput = (
-      <BaseInput
-        type="text"
-        placeholder="Enter categories, split by ','"
-        addonBefore="tags"
+    let tagOptions = this.createTagOptions();
+    
+    let tagInput = (
+      <BaseMultiSelect
+        label="Tags"
+        options={tagOptions}
         handleChange={this.handleTagsChange.bind(this)} />
     );
     
@@ -258,7 +275,7 @@ export default class ItemManageApp extends React.Component {
         </Row>
         <Row>
           <Col xs={12}>
-            {categoryInput}
+            {tagInput}
           </Col>
         </Row>
         <Row>

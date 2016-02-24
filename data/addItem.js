@@ -4,7 +4,7 @@ var request = require("request");
 
 var item = {
   name: "Table",
-  category: ["table"],
+  tag: ["table"],
   image: ["test.png"],
   weight: 100,
   dimension: {

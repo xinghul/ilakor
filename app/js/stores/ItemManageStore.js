@@ -8,8 +8,9 @@ import ItemManageConstants from "../constants/ItemManageConstants"
 
 const CHANGE_EVENT = "change";
 
-// items in this store
-let _items = [];
+// items and tags in this store
+let _items = []
+,   _tags  = [];
 
 let ItemManageStore = _.extend({}, EventEmitter.prototype, {
   
@@ -37,8 +38,7 @@ let ItemManageStore = _.extend({}, EventEmitter.prototype, {
     }
   },
   
-  updateItem: function(newItem)
-  {
+  updateItem: function(newItem) {
     let id = newItem._id;
     
     for (let index = 0; index < _items.length; index++)
@@ -50,6 +50,14 @@ let ItemManageStore = _.extend({}, EventEmitter.prototype, {
         break;
       }
     }
+  },
+  
+  setTags: function(newTags) {
+    _tags = newTags;
+  },
+  
+  getTags: function() {
+    return _tags;
   },
 
   emitChange: function() {
@@ -88,6 +96,11 @@ ItemManageStore.dispatchToken = AppDispatcher.register(function(payload) {
       
     case ItemManageConstants.RECEIVED_UPDATED_ITEM:
       ItemManageStore.updateItem(action.item);
+      ItemManageStore.emitChange();
+      break;
+      
+    case ItemManageConstants.RECEIVED_ALL_TAGS:
+      ItemManageStore.setTags(action.tags);
       ItemManageStore.emitChange();
       break;
 

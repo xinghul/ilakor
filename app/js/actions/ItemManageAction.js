@@ -164,6 +164,41 @@ let ItemManageAction = {
       });
       
     });
+  },
+  
+  /**
+   * Gets all tags.
+   *
+   * @return {Promise} the promise object.
+   */
+  getAllTags: function() {
+    
+    return new Promise(function(resolve, reject) {
+      
+      request.get({
+        url: "http://localhost:3001/api/tags"
+      }, function(err, response) {
+        if (err) {
+          reject(err);
+        } else {
+          // make sure the response status code is 200
+          if (response.statusCode === 200) {
+            let tags = JSON.parse(response.body);
+            
+            AppDispatcher.handleAction({
+              actionType: ItemManageConstants.RECEIVED_ALL_TAGS,
+              tags: tags
+            });
+            
+            resolve();
+            
+          } else {
+            reject(JSON.parse(response.body));
+          }
+        }
+      });
+      
+    });
   }
 };
 

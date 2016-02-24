@@ -6,5 +6,7 @@ export default keyMirror({
   RECEIVED_ITEM: null,
   RECEIVED_ALL_ITEMS: null,
   RECEIVED_REMOVED_ITEM_ID: null,
-  RECEIVED_UPDATED_ITEM: null
+  RECEIVED_UPDATED_ITEM: null,
+  
+  RECEIVED_ALL_TAGS: null
 });
