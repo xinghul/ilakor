@@ -27,11 +27,17 @@ export default class ItemManageApp extends React.Component {
     super(props);
     
     this.state = {
+      // new item info
       name: "",
-      tag: [],
       weight: "",
+      tag: [],
+      unitNumber: "",
+      unitName: "",
+      unitType: "",
       
+      // items used to initialize the item display table
       items: [],
+      // tags used to initialize the tag multiselect
       tags: [],
       
       showItemInfoModal: false,
@@ -39,6 +45,9 @@ export default class ItemManageApp extends React.Component {
     };
   }
   
+  /**
+   * Handler when submit button is clicked.
+   */
   handleSubmit() {
     // FIXME: make it unclickable
     if (_.isEmpty(this.state.name) || _.isEmpty(this.state.weight) || _.isEmpty(this.state.tag)) {
@@ -48,30 +57,80 @@ export default class ItemManageApp extends React.Component {
     ItemManageAction.addItem({
       name: this.state.name,
       weight: this.state.weight,
-      tag: this.state.tag
+      tag: this.state.tag,
+      
+      unitNumber: this.state.unitNumber,
+      unitName: this.state.unitName,
+      unitType: this.state.unitType
     }).catch(function(err) {
       console.log(err);
     });
   }
   
+  /**
+   * Handler for name input value change.
+   * @param  {String} newValue the new name value.
+   */
   handleNameChange(newValue) {
     this.setState({
       name: newValue
     });
   }
   
+  /**
+   * Handler for weight input value change.
+   * @param  {String} newValue the new weight value.
+   */
   handleWeightChange(newValue) {
     this.setState({
       weight: newValue
     });
   }
   
-  handleTagsChange(newValue) {
+  /**
+   * Handler for tag input value change.
+   * @param  {[String]} newValue the new tag value.
+   */
+  handleTagChange(newValue) {
     this.setState({
       tag: newValue
     });
   }
   
+  /**
+   * Handler for unit number input value change.
+   * @param  {String} newValue the new unit number value.
+   */
+  handleUnitNumberChange(newValue) {
+    this.setState({
+      unitNumber: newValue
+    });
+  }
+  
+  /**
+   * Handler for unit name input value change.
+   * @param  {String} newValue the new unit name value.
+   */
+  handleUnitNameChange(newValue) {
+    this.setState({
+      unitName: newValue
+    });
+  }
+  
+  /**
+   * Handler for unit name input value change.
+   * @param  {String} newValue the new unit type value.
+   */
+  handleUnitTypeChange(newValue) {
+    this.setState({
+      unitType: newValue
+    });
+  }
+  
+  /**
+   * Handler for item in the table being clicked.
+   * @param  {Object} item the clicked item.
+   */
   handleItemClick(item) {
     this.setState({
       showItemInfoModal: true,
@@ -140,7 +199,10 @@ export default class ItemManageApp extends React.Component {
           <td>{index}</td>
           <td>{item.name}</td>
           <td>{item.weight}</td>
-          <td>{item.tag}</td>
+          <td>{item.tag.join(",")}</td>
+          <td>{item.unitNumber}</td>
+          <td>{item.unitName}</td>
+          <td>{item.unitType}</td>
         </tr>
       );
     }
@@ -152,7 +214,10 @@ export default class ItemManageApp extends React.Component {
             <th>#</th>
             <th>Name</th>
             <th>Weight</th>
-            <th>tag</th>
+            <th>Tag</th>
+            <th>Unit Number</th>
+            <th>Unit Name</th>
+            <th>Unit Type</th>
           </tr>
         </thead>
         <tbody>
@@ -212,7 +277,7 @@ export default class ItemManageApp extends React.Component {
       <BaseMultiSelect
         label="Tags"
         options={tagOptions}
-        handleChange={this.handleTagsChange.bind(this)} />
+        handleChange={this.handleTagChange.bind(this)} />
     );
     
     let weightInput = (
@@ -221,6 +286,30 @@ export default class ItemManageApp extends React.Component {
         label="Weight"
         placeholder="Enter weight in pounds"
         handleChange={this.handleWeightChange.bind(this)} />
+    );
+    
+    let unitNumberInput = (
+      <BaseInput
+        type="text"
+        label="Unit number"
+        placeholder="Enter unit number"
+        handleChange={this.handleUnitNumberChange.bind(this)} />
+    );
+    
+    let unitNameInput = (
+      <BaseInput
+        type="text"
+        label="Unit name"
+        placeholder="Enter unit name"
+        handleChange={this.handleUnitNameChange.bind(this)} />
+    );
+    
+    let unitTypeInput = (
+      <BaseInput
+        type="text"
+        label="Unit type"
+        placeholder="Enter unit tyoe"
+        handleChange={this.handleUnitTypeChange.bind(this)} />
     );
     
     let dimensionInput = (
@@ -285,6 +374,21 @@ export default class ItemManageApp extends React.Component {
         </Row>
         <Row>
           <Col xs={12}>
+            {unitNumberInput}
+          </Col>
+        </Row>
+        <Row>
+          <Col xs={12}>
+            {unitNameInput}
+          </Col>
+        </Row>
+        <Row>
+          <Col xs={12}>
+            {unitTypeInput}
+          </Col>
+        </Row>
+        <Row>
+          <Col xs={12}>
             {dimensionInput}
           </Col>
         </Row>
@@ -316,12 +420,12 @@ export default class ItemManageApp extends React.Component {
     return (
       <div>
         {itemInfoModal}
-        <Grid>
+        <Grid fluid>
           <Row>
-            <Col xs={4}>
+            <Col xs={3}>
               {addItemForm}
             </Col>
-            <Col xs={8}>
+            <Col xs={9}>
               {itemListForm}
             </Col>
           </Row>

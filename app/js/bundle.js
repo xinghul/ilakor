@@ -1116,17 +1116,27 @@ var ItemManageApp = (function (_React$Component) {
     _get(Object.getPrototypeOf(ItemManageApp.prototype), "constructor", this).call(this, props);
 
     this.state = {
+      // new item info
       name: "",
-      tag: [],
       weight: "",
+      tag: [],
+      unitNumber: "",
+      unitName: "",
+      unitType: "",
 
+      // items used to initialize the item display table
       items: [],
+      // tags used to initialize the tag multiselect
       tags: [],
 
       showItemInfoModal: false,
       selectedItem: null
     };
   }
+
+  /**
+   * Handler when submit button is clicked.
+   */
 
   _createClass(ItemManageApp, [{
     key: "handleSubmit",
@@ -1139,11 +1149,20 @@ var ItemManageApp = (function (_React$Component) {
       _actionsItemManageAction2["default"].addItem({
         name: this.state.name,
         weight: this.state.weight,
-        tag: this.state.tag
+        tag: this.state.tag,
+
+        unitNumber: this.state.unitNumber,
+        unitName: this.state.unitName,
+        unitType: this.state.unitType
       })["catch"](function (err) {
         console.log(err);
       });
     }
+
+    /**
+     * Handler for name input value change.
+     * @param  {String} newValue the new name value.
+     */
   }, {
     key: "handleNameChange",
     value: function handleNameChange(newValue) {
@@ -1151,6 +1170,11 @@ var ItemManageApp = (function (_React$Component) {
         name: newValue
       });
     }
+
+    /**
+     * Handler for weight input value change.
+     * @param  {String} newValue the new weight value.
+     */
   }, {
     key: "handleWeightChange",
     value: function handleWeightChange(newValue) {
@@ -1158,13 +1182,59 @@ var ItemManageApp = (function (_React$Component) {
         weight: newValue
       });
     }
+
+    /**
+     * Handler for tag input value change.
+     * @param  {[String]} newValue the new tag value.
+     */
   }, {
-    key: "handleTagsChange",
-    value: function handleTagsChange(newValue) {
+    key: "handleTagChange",
+    value: function handleTagChange(newValue) {
       this.setState({
         tag: newValue
       });
     }
+
+    /**
+     * Handler for unit number input value change.
+     * @param  {String} newValue the new unit number value.
+     */
+  }, {
+    key: "handleUnitNumberChange",
+    value: function handleUnitNumberChange(newValue) {
+      this.setState({
+        unitNumber: newValue
+      });
+    }
+
+    /**
+     * Handler for unit name input value change.
+     * @param  {String} newValue the new unit name value.
+     */
+  }, {
+    key: "handleUnitNameChange",
+    value: function handleUnitNameChange(newValue) {
+      this.setState({
+        unitName: newValue
+      });
+    }
+
+    /**
+     * Handler for unit name input value change.
+     * @param  {String} newValue the new unit type value.
+     */
+  }, {
+    key: "handleUnitTypeChange",
+    value: function handleUnitTypeChange(newValue) {
+      this.setState({
+        unitType: newValue
+      });
+    }
+
+    /**
+     * Handler for item in the table being clicked.
+     * @param  {Object} item the clicked item.
+     */
   }, {
     key: "handleItemClick",
     value: function handleItemClick(item) {
@@ -1252,7 +1322,22 @@ var ItemManageApp = (function (_React$Component) {
           _react2["default"].createElement(
             "td",
             null,
-            item.tag
+            item.tag.join(",")
+          ),
+          _react2["default"].createElement(
+            "td",
+            null,
+            item.unitNumber
+          ),
+          _react2["default"].createElement(
+            "td",
+            null,
+            item.unitName
+          ),
+          _react2["default"].createElement(
+            "td",
+            null,
+            item.unitType
           )
         ));
       }
@@ -1284,7 +1369,22 @@ var ItemManageApp = (function (_React$Component) {
             _react2["default"].createElement(
               "th",
               null,
-              "tag"
+              "Tag"
+            ),
+            _react2["default"].createElement(
+              "th",
+              null,
+              "Unit Number"
+            ),
+            _react2["default"].createElement(
+              "th",
+              null,
+              "Unit Name"
+            ),
+            _react2["default"].createElement(
+              "th",
+              null,
+              "Unit Type"
             )
           )
         ),
@@ -1328,8 +1428,6 @@ var ItemManageApp = (function (_React$Component) {
         }
       }
 
-      debugger;
-
       return tagOptions;
     }
   }, {
@@ -1366,13 +1464,31 @@ var ItemManageApp = (function (_React$Component) {
       var tagInput = _react2["default"].createElement(_libBaseMultiSelectJsx2["default"], {
         label: "Tags",
         options: tagOptions,
-        handleChange: this.handleTagsChange.bind(this) });
+        handleChange: this.handleTagChange.bind(this) });
 
       var weightInput = _react2["default"].createElement(_libBaseInputJsx2["default"], {
         type: "text",
         label: "Weight",
         placeholder: "Enter weight in pounds",
         handleChange: this.handleWeightChange.bind(this) });
+
+      var unitNumberInput = _react2["default"].createElement(_libBaseInputJsx2["default"], {
+        type: "text",
+        label: "Unit number",
+        placeholder: "Enter unit number",
+        handleChange: this.handleUnitNumberChange.bind(this) });
+
+      var unitNameInput = _react2["default"].createElement(_libBaseInputJsx2["default"], {
+        type: "text",
+        label: "Unit name",
+        placeholder: "Enter unit name",
+        handleChange: this.handleUnitNameChange.bind(this) });
+
+      var unitTypeInput = _react2["default"].createElement(_libBaseInputJsx2["default"], {
+        type: "text",
+        label: "Unit type",
+        placeholder: "Enter unit tyoe",
+        handleChange: this.handleUnitTypeChange.bind(this) });
 
       var dimensionInput = _react2["default"].createElement(
         _reactBootstrap.Input,
@@ -1471,6 +1587,33 @@ var ItemManageApp = (function (_React$Component) {
           _react2["default"].createElement(
             _reactBootstrap.Col,
             { xs: 12 },
+            unitNumberInput
+          )
+        ),
+        _react2["default"].createElement(
+          _reactBootstrap.Row,
+          null,
+          _react2["default"].createElement(
+            _reactBootstrap.Col,
+            { xs: 12 },
+            unitNameInput
+          )
+        ),
+        _react2["default"].createElement(
+          _reactBootstrap.Row,
+          null,
+          _react2["default"].createElement(
+            _reactBootstrap.Col,
+            { xs: 12 },
+            unitTypeInput
+          )
+        ),
+        _react2["default"].createElement(
+          _reactBootstrap.Row,
+          null,
+          _react2["default"].createElement(
+            _reactBootstrap.Col,
+            { xs: 12 },
             dimensionInput
           )
         ),
@@ -1510,18 +1653,18 @@ var ItemManageApp = (function (_React$Component) {
         itemInfoModal,
         _react2["default"].createElement(
           _reactBootstrap.Grid,
-          null,
+          { fluid: true },
           _react2["default"].createElement(
             _reactBootstrap.Row,
             null,
             _react2["default"].createElement(
               _reactBootstrap.Col,
-              { xs: 4 },
+              { xs: 3 },
               addItemForm
             ),
             _react2["default"].createElement(
               _reactBootstrap.Col,
-              { xs: 8 },
+              { xs: 9 },
               itemListForm
             )
           )
