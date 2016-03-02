@@ -7,21 +7,11 @@ export default class BaseInput extends React.Component {
   
   constructor(props) {
     super(props);
-    
-    this.state = { 
-      type: props.type,
-      
-      addonBefore: props.addonBefore
-    };
   }
   
   handleChange() {
     let newValue = this.refs[this.props.ref].getValue();
-    
-    this.setState({
-      value: newValue
-    });
-    
+
     this.props.handleChange(newValue);
   }
 
@@ -29,19 +19,20 @@ export default class BaseInput extends React.Component {
     
     let addonBeforeGlyphicon = null;
     
-    if (this.state.addonBefore) {
-      addonBeforeGlyphicon = <Glyphicon glyph={this.state.addonBefore} />;
+    if (this.props.addonBefore) {
+      addonBeforeGlyphicon = <Glyphicon glyph={this.props.addonBefore} />;
     }
     
     return (
       <Input 
-        type={this.state.type}
+        type={this.props.type}
         placeholder={this.props.placeholder}
         label={this.props.label}
         addonBefore={addonBeforeGlyphicon}
         onChange={this.handleChange.bind(this)}
         defaultValue={this.props.defaultValue}
         ref="input"
+        multiple={this.props.multiple}
         />
     );
     
@@ -59,6 +50,7 @@ BaseInput.propTypes = {
   label: React.PropTypes.string,
   defaultValue: React.PropTypes.any,
   ref: React.PropTypes.string,
+  multiple: React.PropTypes.bool,
   
   // least used props
   addonAfter: React.PropTypes.string,
@@ -74,6 +66,7 @@ BaseInput.defaultProps = {
   label: "",
   defaultValue: "",
   ref: "input",
+  multiple: false,
 
   addonAfter: "",
   feedbackIcon: "",

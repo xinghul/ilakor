@@ -54,11 +54,46 @@ let ItemManageAction = {
     
     return new Promise(function(resolve, reject) {
       
+      let formData = new FormData();
+      
+      for (let image of newItem.image)
+      {
+        formData.append("image", image);
+      }
+      
+      // delete the image property
+      delete newItem.image;
+      
+      formData.append("item", JSON.stringify(newItem));
+ 
+      var xhr = new XMLHttpRequest();
+      
+      xhr.open("post", "/api/items", true);
+      
+      xhr.onload = function () {
+        if (this.status == 200) {
+          let newItem = JSON.parse(this.response);
+          
+          AppDispatcher.handleAction({
+            actionType: ItemManageConstants.RECEIVED_ITEM,
+            item: newItem
+          });
+          
+          resolve();
+        } else {
+          reject(this.statusText);
+        }
+      };
+      
+      xhr.send(formData);
+        
+      return;
+      
+      // enable this when request support ES6
+      // https://github.com/request/request/issues/1961
       request.post({
         url: "http://localhost:3001/api/items",
-        form: {
-          item: JSON.stringify(newItem)
-        }
+        formData: newItem
       }, function(err, response, body) {
         if (err) {
           reject(err);

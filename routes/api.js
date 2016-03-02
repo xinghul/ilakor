@@ -1,8 +1,10 @@
 "use strict";
 
-let express = require("express")
-,   jwt     = require("jsonwebtoken")
-,   _       = require("underscore");
+let express    = require("express")
+,   fs         = require("fs")
+,   multiparty = require("multiparty")
+,   jwt        = require("jsonwebtoken")
+,   _          = require("underscore");
 
 let router = express.Router()
 ,   Item   = require("./api/item")
@@ -82,6 +84,28 @@ router.route("/items")
   })
   .post(function(req, res, next) {
     
+    let form = new multiparty.Form();
+    
+    form.parse(req, function(err, fields, files) {
+      
+      let rawData = JSON.parse(fields.item[0])
+      ,   images  = files.image;
+      
+      Item.add(rawData).then(function(newItem) {
+        return Item.uploadImage(newItem, images);
+      }).then(function(updatedItem) {
+        console.log(updatedItem);
+        res.status(200).json(updatedItem);
+      }).catch(function(err) {
+        console.log(err.stack);
+        
+        next(new CustomError(500, "Internal error."));
+      });
+    });
+    
+    return;
+    
+    // enable this when request support ES6
     let rawData;
     
     if (!req.body.item) {

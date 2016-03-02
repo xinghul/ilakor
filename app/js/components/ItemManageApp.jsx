@@ -34,6 +34,8 @@ export default class ItemManageApp extends React.Component {
       unitNumber: "",
       unitName: "",
       unitType: "",
+      image: null,
+      imagePreviewUrl: "",
       
       // items used to initialize the item display table
       items: [],
@@ -58,6 +60,7 @@ export default class ItemManageApp extends React.Component {
       name: this.state.name,
       weight: this.state.weight,
       tag: this.state.tag,
+      image: this.state.image,
       
       unitNumber: this.state.unitNumber,
       unitName: this.state.unitName,
@@ -125,6 +128,35 @@ export default class ItemManageApp extends React.Component {
     this.setState({
       unitType: newValue
     });
+  }
+  
+  /**
+   * Handler for image input value change.
+   * @param  {String} newValue the new image value.
+   */
+  handleImageChange(evt) {
+    evt.preventDefault();
+
+    let files  = evt.target.files
+    ,   images = [];
+    
+    for (let index = 0; index < files.length; index++)
+    {
+      let file = files[index]
+      ,   reader = new FileReader();
+      
+      reader.onloadend = () => {
+        images.push(file);
+        
+        if (index === files.length - 1) {
+          this.setState({
+            image: images
+          });
+        }
+      }
+      
+      reader.readAsDataURL(file);
+    }
   }
   
   /**
@@ -338,10 +370,9 @@ export default class ItemManageApp extends React.Component {
       <Input 
         type="file"
         label="Images"
-        placeholder="Select images"
         multiple
-        groupClassName="group-class"
-        labelClassName="label-class" />
+        placeholder="Select images"
+        onChange={this.handleImageChange.bind(this)} />
     );
     
     let submitButton = (

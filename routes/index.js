@@ -4,9 +4,9 @@
 var express = require("express")
 ,   _       = require("underscore");
 
-var api    = require("./api")
-,   auth   = require("./auth")
-,   router = express.Router();
+var api     = require("./api")
+,   auth    = require("./auth")
+,   router  = express.Router();
 
 function ensureLoggedIn(req, res, next) {
   if (req.isAuthenticated()) {

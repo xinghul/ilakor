@@ -3,8 +3,12 @@
 let mongoose = require("mongoose")
 ,   Promise  = require("bluebird");
 
+let S3 = require("../service/s3");
+
 let Item     = mongoose.model("Item")
 ,   ObjectId = mongoose.Types.ObjectId;
+
+let imageExtensionReg = new RegExp(/.+\.(gif|jpe?g|png)$/i);
 
 let ItemApi = {
   
@@ -85,7 +89,6 @@ let ItemApi = {
          if (err) {
            reject(err);
          } else {
-           console.log(updatedItem);
            resolve(updatedItem);
          }
        });
@@ -132,6 +135,62 @@ let ItemApi = {
          } else {
            resolve(result);
          }
+       });
+       
+     });
+     
+   },
+   
+   /**
+    * Uploads images to s3 and updates the image field.
+    * 
+    * @return {Promise} the new promise object.
+    */
+   uploadImage: function(item, images) {
+     
+     return new Promise(function(resolve, reject) {
+       
+       let _id       = item._id
+       ,   imageUrls = []
+       ,   promises  = [];
+       
+       for (let index = 0; index < images.length; index++)
+       {
+         let imageFile = images[index]
+         ,   matches   = imageFile.originalFilename.match(imageExtensionReg);
+         
+         // if it matches
+         if (matches && matches.length == 2) {
+           let extension = matches[1].toLowerCase()
+           ,   imageName = _id + '_' + index + '.' + extension;
+           
+           promises.push(
+             S3.uploadImage(imageName, imageFile).then(function(imageUrl) {
+               return imageUrl;
+             })
+           );
+         }
+       }
+       
+       Promise.all(promises).then(function(imageUrls) {
+         // stores the image urls
+         item.imageUrls = imageUrls;
+         
+         // sign the images
+         return S3.signImages(imageUrls).then(function(signedImageUrls) {
+           //store the signed image urls
+           item.signedImageUrls = signedImageUrls;
+           
+           item.save(function(err, updatedItem) {
+             if (err) {
+               reject(err);
+             } else {
+               resolve(updatedItem);
+             }
+           });   
+         });
+       }).catch(function(err) {
+         reject(err);
        });
        
      });
