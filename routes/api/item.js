@@ -150,9 +150,8 @@ let ItemApi = {
      
      return new Promise(function(resolve, reject) {
        
-       let _id       = item._id
-       ,   imageUrls = []
-       ,   promises  = [];
+       let _id        = item._id
+       ,   promises   = [];
        
        for (let index = 0; index < images.length; index++)
        {
@@ -166,28 +165,26 @@ let ItemApi = {
            
            promises.push(
              S3.uploadImage(imageName, imageFile).then(function(imageUrl) {
-               return imageUrl;
+               return {
+                 name: imageName,
+                 url: imageUrl
+               };
              })
            );
          }
        }
        
-       Promise.all(promises).then(function(imageUrls) {
-         // stores the image urls
-         item.imageUrls = imageUrls;
+       Promise.all(promises).then(function(images) {
+         // stores the images
+         item.images = images;
          
-         // sign the images
-         return S3.signImages(imageUrls).then(function(signedImageUrls) {
-           //store the signed image urls
-           item.signedImageUrls = signedImageUrls;
-           
-           item.save(function(err, updatedItem) {
-             if (err) {
-               reject(err);
-             } else {
-               resolve(updatedItem);
-             }
-           });   
+         // save the item with images added
+         item.save(function(err, updatedItem) {
+           if (err) {
+             reject(err);
+           } else {
+             resolve(updatedItem);
+           }
          });
        }).catch(function(err) {
          reject(err);

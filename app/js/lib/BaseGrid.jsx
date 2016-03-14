@@ -11,47 +11,14 @@ export default class BaseGrid extends React.Component {
   
   constructor(props) {
     super(props);
-    
-    this.state = { 
-      itemsConfig: props.itemsConfig,
-      items: []
-    };
   }
   
-  componentDidMount() {
-    let itemsConfig = this.state.itemsConfig
-    ,   items = [];
-    
-    for (let itemConfig of itemsConfig)
-    {
-      switch (itemConfig.type) {
-        
-        case "carousel":
-          items.push(this.createCarousel(itemConfig.items));
-          
-          break;
-          
-        case "item":
-          items.push(this.createItem(itemConfig));
-          
-          break;
-          
-        default: 
-          break;
-      }
-    }
-
-    this.setState({
-      items: items
-    });
-  }
-  
-  createItem(itemConfig) {
+  createItemJsx(item) {
     let itemJsx;
 
     itemJsx = (
-      <Col xs={6} md={4}>
-        <BaseItem item={itemConfig} />
+      <Col xs={4} md={3}>
+        <BaseItem item={item} />
       </Col>
     );
     
@@ -76,11 +43,18 @@ export default class BaseGrid extends React.Component {
   }
   
   render() {
+    let items    = this.props.items
+    ,   itemsJsx = [];
+
+    for (let item of items)
+    {
+      itemsJsx.push(this.createItemJsx(item));
+    }
     
     return (
       <Grid fluid>
         <Row>
-          {this.state.items}          
+          {itemsJsx}          
         </Row>
       </Grid>
     );
@@ -89,9 +63,9 @@ export default class BaseGrid extends React.Component {
 }
 
 BaseGrid.propTypes = { 
-  itemsConfig: React.PropTypes.array
+  items: React.PropTypes.array
 };
 
 BaseGrid.defaultProps = { 
-  itemsConfig: []
+  items: []
 };

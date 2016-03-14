@@ -7,32 +7,28 @@ export default class BaseItem extends React.Component {
   
   constructor(props) {
     super(props);
-    
-    this.state = { 
-      item: props.item
-    };
   }
   
-  createItem() {
-    let itemConfig = this.state.item;
-    
+  createItemJsx() {
+    let item     = this.props.item
+    ,   imageUrl = "http://d2nl38chx1zeob.cloudfront.net/" + item.images[0].name;
     
     return (
       <div>
-        <Thumbnail src={itemConfig.src} href={itemConfig.href} alt={itemConfig.alt} />
+        <Thumbnail src={imageUrl} />
         <div>
-          <div>{itemConfig.label}</div>
-          <div>{itemConfig.description}</div>
+          <div>{item.name}</div>
+          <div>{item.weight}</div>
         </div>
       </div>
     );
   }
   
   render() {
-    let item
+    let itemJsx
     ,   style;
     
-    item = this.createItem();
+    itemJsx = this.createItemJsx();
     
     style = {
       height: this.props.height + "px",
@@ -41,7 +37,7 @@ export default class BaseItem extends React.Component {
     
     return (
       <div>
-        {item}        
+        {itemJsx}        
       </div>
     );
     
