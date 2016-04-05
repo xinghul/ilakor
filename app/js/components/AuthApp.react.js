@@ -1,8 +1,9 @@
+"use strict";
+
 import React from "react"
 import { Button, Form, SplitButton, MenuItem, Modal } from "react-bootstrap"
 
-+function(undefined) {
-"use strict";
+import GhostButton from "../lib/GhostButton.jsx"
 
 var AuthStore   = require("../stores/AuthStore")
 ,   AuthActions = require("../actions/AuthActions");
@@ -147,7 +148,7 @@ var AuthApp = React.createClass({
       
       authArea = 
         <div>
-          <Button onClick={this.toggleModal}>Sign in</Button> 
+          <GhostButton onClick={this.toggleModal}>Sign in</GhostButton> 
           
           <Modal show={this.state.isModalOpen} onHide={this.toggleModal}>
             <Modal.Header>
@@ -178,5 +179,3 @@ var AuthApp = React.createClass({
 });
 
 module.exports = AuthApp;
-
-}();

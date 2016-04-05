@@ -1,0 +1,67 @@
+._app_js_lib_BaseItem__baseItem {
+  position: relative;
+  
+  padding: 20px;
+  margin-bottom: 30px;
+
+  background-color: #fff;  
+  transition-property: background-color;
+  transition-duration: .1s;
+  
+  border: solid 1px rgba(0, 0, 0, 0.3);
+  border-radius: 4px;
+  
+  cursor: pointer;
+}
+
+._app_js_lib_BaseItem__baseItem:hover {
+  background-color: #eee;
+}
+
+._app_js_lib_BaseItem__baseBanner {
+  position: absolute;
+  background-color: rgba(8, 8, 8, 0.3);
+  
+  height: 80px;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  
+  transition-property: opacity;
+  transition-duration: .5s;
+}
+
+._app_js_lib_BaseItem__itemName {
+  text-align: center;
+  
+  font-family: "Courgette", cursive;
+  font-size: 30px;
+  font-weight: 600;
+}
+
+._app_js_lib_BaseItem__itemPrice {
+  position: absolute;
+  bottom: 10px;
+  right: 10px;
+  
+  color: #893937;
+  
+  font-family: "Source Sans Pro", sans-serif;
+  font-weight: 600;
+}
+
+._app_js_lib_BaseItem__itemPrice:before {
+  content: "$ "
+}._app_js_lib_GhostButton__ghostButton {
+  font-weight: 700;
+  
+  background-color: rgba(255, 255, 255, 0.1);
+  transition-property: background-color;
+  transition-duration: .3s;
+  
+  border-width: 2px;
+}
+
+._app_js_lib_GhostButton__ghostButton:hover {
+  background-color: rgba(255, 255, 255, 0.2);
+}

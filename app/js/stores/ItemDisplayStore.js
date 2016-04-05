@@ -37,9 +37,8 @@ let ItemDisplayStore = _.extend({}, EventEmitter.prototype, {
 
 ItemDisplayStore.dispatchToken = AppDispatcher.register(function(payload) {
   var action = payload.action;
-
+  
   switch(action.actionType) {
-
     case ItemDisplayConstants.RECEIVED_ALL_ITEMS:
       ItemDisplayStore.setItems(action.items);
       ItemDisplayStore.emitChange();

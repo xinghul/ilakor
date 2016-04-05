@@ -33,6 +33,10 @@
 
   gulp.task("browserify", ["clean"], function() {
     return browserify("./app/js/app.js")
+      .plugin(require("css-modulesify"), {
+        rootDir: __dirname,
+        output: "./app/stylesheets/bundle.css"
+      })
       .bundle()
       .pipe(source("bundle.js"))
       .pipe(gulp.dest("./app/js/"));
@@ -56,6 +60,7 @@
     return del([
         "./app/views/*",
         "./app/stylesheets/main.css",
+        "./app/stylesheets/bundle.css",
         "./app/bundle.js"
       ], _callback);
   });

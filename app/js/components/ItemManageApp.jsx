@@ -26,6 +26,8 @@ export default class ItemManageApp extends React.Component {
   constructor(props) {
     super(props);
     
+    this._onChange = this._onChange.bind(this);
+    
     this.state = {
       // new item info
       name: "",
@@ -35,6 +37,8 @@ export default class ItemManageApp extends React.Component {
       unitName: "",
       unitType: "",
       image: null,
+      price: "",
+      stock: "",
       imagePreviewUrl: "",
       
       // items used to initialize the item display table
@@ -64,7 +68,13 @@ export default class ItemManageApp extends React.Component {
       
       unitNumber: this.state.unitNumber,
       unitName: this.state.unitName,
-      unitType: this.state.unitType
+      unitType: this.state.unitType,
+      
+      feature: {
+        price: this.state.price,
+        stock: this.state.stock
+      }
+      
     }).catch(function(err) {
       console.log(err);
     });
@@ -160,6 +170,26 @@ export default class ItemManageApp extends React.Component {
   }
   
   /**
+   * Handler for price input value change.
+   * @param  {String} newValue the new price value.
+   */
+  handlePriceChange(newValue) {
+    this.setState({
+      price: newValue
+    });
+  }
+  
+  /**
+   * Handler for stock input value change.
+   * @param  {String} newValue the new stock value.
+   */
+  handleStockChange(newValue) {
+    this.setState({
+      stock: newValue
+    });
+  }
+  
+  /**
    * Handler for item in the table being clicked.
    * @param  {Object} item the clicked item.
    */
@@ -206,7 +236,7 @@ export default class ItemManageApp extends React.Component {
   }
   
   componentDidMount() {
-    ItemManageStore.addChangeListener(this._onChange.bind(this));
+    ItemManageStore.addChangeListener(this._onChange);
     
     ItemManageAction.getAllItems();
     
@@ -214,7 +244,7 @@ export default class ItemManageApp extends React.Component {
   }
   
   componentWillUnmount() {
-    ItemManageStore.removeChangeListener(this._onChange.bind(this));
+    ItemManageStore.removeChangeListener(this._onChange);
   }
   
   createItemListTable() {
@@ -375,6 +405,22 @@ export default class ItemManageApp extends React.Component {
         onChange={this.handleImageChange.bind(this)} />
     );
     
+    let priceInput = (
+      <BaseInput
+        type="text"
+        label="Price"
+        placeholder="Enter price"
+        handleChange={this.handlePriceChange.bind(this)} />
+    );
+    
+    let stockInput = (
+      <BaseInput
+        type="text"
+        label="Stock left"
+        placeholder="Enter stock left"
+        handleChange={this.handleStockChange.bind(this)} />
+    );
+    
     let submitButton = (
       <Button onClick={this.handleSubmit.bind(this)}>
         Add
@@ -426,6 +472,16 @@ export default class ItemManageApp extends React.Component {
         <Row>
           <Col xs={12}>
             {imagesInput}
+          </Col>
+        </Row>
+        <Row>
+          <Col xs={12}>
+            {priceInput}
+          </Col>
+        </Row>
+        <Row>
+          <Col xs={12}>
+            {stockInput}
           </Col>
         </Row>
         <Row>

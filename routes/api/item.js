@@ -6,6 +6,7 @@ let mongoose = require("mongoose")
 let S3 = require("../service/s3");
 
 let Item     = mongoose.model("Item")
+,   Feature  = mongoose.model("Feature")
 ,   ObjectId = mongoose.Types.ObjectId;
 
 let imageExtensionReg = new RegExp(/.+\.(gif|jpe?g|png)$/i);
@@ -37,7 +38,8 @@ let ItemApi = {
      
      return new Promise(function(resolve, reject) {
        
-       let item = new Item(rawData);
+       let item = new Item(rawData)
+       ,   feature;
 
        item.save(function(err, newItem) {
          if (err) {
@@ -129,7 +131,9 @@ let ItemApi = {
      
      return new Promise(function(resolve, reject) {
        
-       Item.find({}, function(err, result) {
+       Item
+       .find({})
+       .exec(function(err, result) {
          if (err) {
            reject(err);
          } else {

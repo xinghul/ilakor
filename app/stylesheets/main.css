@@ -22,11 +22,7 @@ a {
   color: red !important; }
 
 #userArea {
-  margin: 8px 0 0 0; }
-
-.navbar-fixed-top {
-  top: 0;
-  border-width: 0 0 1px; }
+  margin: 8px 6px 0 0; }
 
 #mainContent {
   margin-top: 70px; }

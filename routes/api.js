@@ -90,11 +90,10 @@ router.route("/items")
       
       let rawData = JSON.parse(fields.item[0])
       ,   images  = files.image;
-      
+
       Item.add(rawData).then(function(newItem) {
         return Item.uploadImage(newItem, images);
       }).then(function(updatedItem) {
-        console.log(updatedItem);
         res.status(200).json(updatedItem);
       }).catch(function(err) {
         console.log(err.stack);
@@ -160,8 +159,56 @@ router.route("/items")
       next(new CustomError(400, "Item id not specified!"));
     }
   });
-  
-  
+
+/********************************************************
+ *                  Item Feature Routes                 *
+ ********************************************************/
+// Return information associated with items like price, stock left, reviews, etc
+router.route("/feature")
+  /**
+   * Global logic for path '/api/feature'.
+   */
+  .all(function(req, res, next) {
+
+    let itemId = req.query.id || req.params.id;
+    
+    if (_.isString(itemId)) {
+      req.itemId = itemId;
+    }
+    
+    next();
+  })
+  /**
+   * Gets a specific item info by id.
+   */
+  .get(function(req, res, next) {
+    
+    
+
+  })
+  /**
+   * Adds a new tag.
+   */
+  .post(function(req, res, next) {
+    
+    
+    
+  })
+  /**
+   * Updates a specific tag by id.
+   */
+  .put(function(req, res, next) {
+    
+  })
+  /**
+   * Deletes a specific tag by id.
+   */
+  .delete(function(req, res, next) {
+    
+  });
+
+
+
 /********************************************************
  *                      Tag Routes                      *
  ********************************************************/

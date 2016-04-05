@@ -17,8 +17,8 @@ export default class BaseGrid extends React.Component {
     let itemJsx;
 
     itemJsx = (
-      <Col xs={4} md={3}>
-        <BaseItem item={item} />
+      <Col xs={4} md={3} key={item._id}>
+        <BaseItem item={item} handleItemClick={this.props.handleItemClick}/>
       </Col>
     );
     
@@ -63,9 +63,11 @@ export default class BaseGrid extends React.Component {
 }
 
 BaseGrid.propTypes = { 
-  items: React.PropTypes.array
+  items: React.PropTypes.array,
+  handleItemClick: React.PropTypes.func
 };
 
 BaseGrid.defaultProps = { 
-  items: []
+  items: [],
+  handleItemClick: function() {}
 };
