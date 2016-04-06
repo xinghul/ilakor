@@ -370,7 +370,7 @@ export default class ItemManageApp extends React.Component {
       <BaseInput
         type="text"
         label="Unit type"
-        placeholder="Enter unit tyoe"
+        placeholder="Enter unit type"
         handleChange={this.handleUnitTypeChange.bind(this)} />
     );
     

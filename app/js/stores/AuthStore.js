@@ -1,23 +1,18 @@
-+function(undefined) {
 "use strict";
 
-var ReactCookie  = require("react-cookie")
-,   _            = require("underscore")
-,   EventEmitter = require("events").EventEmitter;
+import _ from "underscore"
+import { EventEmitter } from "events"
 
-var AppDispatcher = require("../dispatcher/AppDispatcher")
-,   AuthConstants = require("../constants/AuthConstants");
+import AppDispatcher from "../dispatcher/AppDispatcher"
+import AuthConstants from "../constants/AuthConstants"
 
-var CHANGE_EVENT = "change"
+const CHANGE_EVENT = "change";
+
+let _user = {}
 ,   _isSignUp = true
 ,   _isModalOpen = false;
 
-var _username = ""
-,   _password = ""
-,   _email = ""
-,   _user = {};
-
-var AuthStore = _.extend({}, EventEmitter.prototype, {
+let AuthStore = _.extend({}, EventEmitter.prototype, {
 
   toggleMode: function() {
     _isSignUp = !_isSignUp;
@@ -33,30 +28,6 @@ var AuthStore = _.extend({}, EventEmitter.prototype, {
 
   isModalOpen: function() {
     return _isModalOpen;
-  },
-
-  getUsernameInput: function() {
-    return _username;
-  },
-
-  inputUsername: function(username) {
-    _username = username;
-  },
-
-  getEmailInput: function() {
-    return _email;
-  },
-
-  inputEmail: function(email) {
-    _email = email;
-  },
-
-  getPasswordInput: function() {
-    return _password;
-  },
-
-  inputPassword: function(password) {
-    _password = password;
   },
 
   updateUser: function(user) {
@@ -82,7 +53,7 @@ var AuthStore = _.extend({}, EventEmitter.prototype, {
 });
 
 AuthStore.dispatchToken = AppDispatcher.register(function(payload) {
-  var action = payload.action;
+  let action = payload.action;
 
   switch(action.actionType) {
 
@@ -93,21 +64,6 @@ AuthStore.dispatchToken = AppDispatcher.register(function(payload) {
 
     case AuthConstants.TOGGLE_MODAL:
       AuthStore.toggleModal();
-      AuthStore.emitChange();
-      break;
-
-    case AuthConstants.INPUT_USERNAME:
-      AuthStore.inputUsername(action.username);
-      AuthStore.emitChange();
-      break;
-
-    case AuthConstants.INPUT_EMAIL:
-      AuthStore.inputEmail(action.email);
-      AuthStore.emitChange();
-      break;
-
-    case AuthConstants.INPUT_PASSWORD:
-      AuthStore.inputPassword(action.password);
       AuthStore.emitChange();
       break;
 
@@ -122,6 +78,4 @@ AuthStore.dispatchToken = AppDispatcher.register(function(payload) {
 
 });
 
-module.exports = AuthStore;
-
-}();
+export default AuthStore;

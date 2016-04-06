@@ -1,17 +1,10 @@
-+function(undefined) {
-  "use strict";
+"use strict";
 
-  var keyMirror = require("fbjs/lib/keyMirror");
+import keyMirror from "fbjs/lib/keyMirror";
 
-  module.exports = keyMirror({
-    TOGGLE_MODE: null,
-    TOGGLE_MODAL: null,
+export default keyMirror({
+  TOGGLE_MODE: null,
+  TOGGLE_MODAL: null,
 
-    INPUT_USERNAME: null,
-    INPUT_PASSWORD: null,
-    INPUT_EMAIL: null,
-
-    RECEIVED_USER: null
-  });
-
-}();
+  RECEIVED_USER: null
+});

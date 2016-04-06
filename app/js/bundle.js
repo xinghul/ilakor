@@ -566,11 +566,27 @@ var IndexApp = _react2["default"].createClass({
 },{"./components/ItemDisplayApp.jsx":9,"./components/ItemManageApp.jsx":12,"./components/NavbarApp.jsx":13,"history/lib/createBrowserHistory":311,"react":941,"react-dom":751,"react-router":779}],5:[function(require,module,exports){
 "use strict";
 
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+
+var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; desc = parent = undefined; continue _function; } } else if ("value" in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
 var _react = require("react");
 
 var _react2 = _interopRequireDefault(_react);
+
+var _underscore = require("underscore");
+
+var _underscore2 = _interopRequireDefault(_underscore);
 
 var _reactBootstrap = require("react-bootstrap");
 
@@ -578,499 +594,607 @@ var _libGhostButtonJsx = require("../lib/GhostButton.jsx");
 
 var _libGhostButtonJsx2 = _interopRequireDefault(_libGhostButtonJsx);
 
-var AuthStore = require("../stores/AuthStore"),
-    AuthActions = require("../actions/AuthActions");
+var _AuthAppEmailInputJsx = require("./AuthApp/EmailInput.jsx");
 
-var UsernameInput = require("./AuthApp/UsernameInput.react"),
-    EmailInput = require("./AuthApp/EmailInput.react"),
-    PasswordInput = require("./AuthApp/PasswordInput.react");
+var _AuthAppEmailInputJsx2 = _interopRequireDefault(_AuthAppEmailInputJsx);
+
+var _AuthAppUsernameInputJsx = require("./AuthApp/UsernameInput.jsx");
+
+var _AuthAppUsernameInputJsx2 = _interopRequireDefault(_AuthAppUsernameInputJsx);
+
+var _AuthAppPasswordInputJsx = require("./AuthApp/PasswordInput.jsx");
+
+var _AuthAppPasswordInputJsx2 = _interopRequireDefault(_AuthAppPasswordInputJsx);
+
+var _storesAuthStore = require("../stores/AuthStore");
+
+var _storesAuthStore2 = _interopRequireDefault(_storesAuthStore);
+
+var _actionsAuthActions = require("../actions/AuthActions");
+
+var _actionsAuthActions2 = _interopRequireDefault(_actionsAuthActions);
 
 function getStateFromStores() {
   return {
-    isModalOpen: AuthStore.isModalOpen(),
-    isSignUp: AuthStore.isSignUp(),
-    username: AuthStore.getUsernameInput(),
-    email: AuthStore.getEmailInput(),
-    password: AuthStore.getPasswordInput(),
-    user: AuthStore.getUser()
+    isModalOpen: _storesAuthStore2["default"].isModalOpen(),
+    isSignUp: _storesAuthStore2["default"].isSignUp(),
+    user: _storesAuthStore2["default"].getUser()
   };
 }
 
-var AuthApp = _react2["default"].createClass({
-  displayName: "AuthApp",
+var AuthApp = (function (_React$Component) {
+  _inherits(AuthApp, _React$Component);
 
-  getInitialState: function getInitialState() {
-    return getStateFromStores();
-  },
+  function AuthApp(props) {
+    _classCallCheck(this, AuthApp);
 
-  toggleMode: function toggleMode() {
-    AuthActions.toggleMode();
-  },
+    _get(Object.getPrototypeOf(AuthApp.prototype), "constructor", this).call(this, props);
 
-  toggleModal: function toggleModal() {
-    AuthActions.toggleModal();
-  },
+    this._onChange = this._onChange.bind(this);
+    this.handleEmailChange = this.handleEmailChange.bind(this);
+    this.handleUsernameChange = this.handleUsernameChange.bind(this);
+    this.handlePasswordChange = this.handlePasswordChange.bind(this);
 
-  handleSubmit: function handleSubmit() {
-    var self = this;
-    if (this.state.isSignUp) {
-      if (this.state.username && this.state.email && this.state.password) {
-        AuthActions.userSignUp({
+    this.handleLoginClick = this.handleLoginClick.bind(this);
+    this.handleSignupClick = this.handleSignupClick.bind(this);
 
-          username: this.state.username,
-          email: this.state.email,
-          password: this.state.password
+    this.state = {
+      username: "",
+      email: "",
+      password: ""
+    };
+  }
 
-        }).then(function () {
-          AuthActions.toggleModal();
-        })["catch"](function (err) {
-          console.log(err);
-
-          self.setState(err);
-        });
-      } else {
-        this.setState({
-          message: "Missing fields"
-        });
-      }
-    } else {
-      // handle log in
-      if (this.state.email && this.state.password) {
-        AuthActions.userLogIn({
-
-          email: this.state.email,
-          password: this.state.password
-
-        }).then(function () {
-          AuthActions.toggleModal();
-        })["catch"](function (err) {
-          console.log(err);
-
-          self.setState(err);
-        });
-      } else {
-        this.setState({
-          message: "Missing fields"
-        });
-      }
+  _createClass(AuthApp, [{
+    key: "toggleMode",
+    value: function toggleMode() {
+      _actionsAuthActions2["default"].toggleMode();
     }
-  },
+  }, {
+    key: "toggleModal",
+    value: function toggleModal() {
+      _actionsAuthActions2["default"].toggleModal();
+    }
+  }, {
+    key: "handleLoginClick",
+    value: function handleLoginClick() {
+      var self = this;
 
-  handleLogOut: function handleLogOut() {
-    AuthActions.removeUserFromCookie();
-  },
+      // handle log in
+      _actionsAuthActions2["default"].userLogIn({
 
-  componentDidMount: function componentDidMount() {
-    AuthStore.addChangeListener(this._onChange);
+        email: this.state.email,
+        password: this.state.password
 
-    AuthActions.logInFromCookie();
-  },
+      }).then(function () {
+        _actionsAuthActions2["default"].toggleModal();
+      })["catch"](function (err) {
+        console.log(err);
 
-  componentWillUnmount: function componentWillUnmount() {
-    AuthStore.removeChangeListener(this._onChange);
-  },
+        self.setState(err);
+      });
+    }
+  }, {
+    key: "handleSignupClick",
+    value: function handleSignupClick() {
+      var self = this;
 
-  _onChange: function _onChange() {
-    // XXX use store to set them seperately.
-    this.setState({
-      usernameError: null,
-      emailError: null,
-      passwordError: null,
-      message: null
-    });
+      _actionsAuthActions2["default"].userSignUp({
 
-    this.setState(getStateFromStores());
-  },
+        username: this.state.username,
+        email: this.state.email,
+        password: this.state.password
 
-  render: function render() {
-    var authArea;
-    var toggleModeMessage;
-    var socialLoginArea;
+      }).then(function () {
+        _actionsAuthActions2["default"].toggleModal();
+      })["catch"](function (err) {
+        console.log(err);
 
-    if (this.state.user.username) {
-      var title = "Hello, " + this.state.user.username;
+        self.setState(err);
+      });
+    }
+  }, {
+    key: "_onChange",
+    value: function _onChange() {
+      this.setState(getStateFromStores());
+    }
+  }, {
+    key: "handleEmailChange",
+    value: function handleEmailChange(newValue) {
+      this.setState({
+        email: newValue
+      });
+    }
+  }, {
+    key: "handlePasswordChange",
+    value: function handlePasswordChange(newValue) {
+      this.setState({
+        password: newValue
+      });
+    }
+  }, {
+    key: "handleUsernameChange",
+    value: function handleUsernameChange(newValue) {
+      this.setState({
+        username: newValue
+      });
+    }
+  }, {
+    key: "handleLogOut",
+    value: function handleLogOut() {
+      _actionsAuthActions2["default"].removeUserFromCookie();
+    }
+  }, {
+    key: "componentDidMount",
+    value: function componentDidMount() {
+      _storesAuthStore2["default"].addChangeListener(this._onChange);
 
-      authArea = _react2["default"].createElement(
-        _reactBootstrap.SplitButton,
-        { id: "sign-in", title: title, bsStyle: "default", pullRight: true },
-        _react2["default"].createElement(
-          _reactBootstrap.MenuItem,
-          null,
-          "My Account"
-        ),
-        _react2["default"].createElement(_reactBootstrap.MenuItem, { divider: true }),
-        _react2["default"].createElement(
-          _reactBootstrap.MenuItem,
-          { onSelect: this.handleLogOut },
-          "Log out"
-        )
-      );
-    } else {
-      if (this.state.isSignUp) {
-        toggleModeMessage = _react2["default"].createElement(
-          "span",
-          { className: "pull-left" },
-          "Already have an account? ",
-          _react2["default"].createElement(
-            "a",
-            { onClick: this.toggleMode },
-            "Sign In"
-          )
-        );
-      } else {
-        toggleModeMessage = _react2["default"].createElement(
-          "span",
-          { className: "pull-left" },
-          "New here? ",
-          _react2["default"].createElement(
-            "a",
-            { onClick: this.toggleMode },
-            "Sign Up"
-          )
-        );
+      _actionsAuthActions2["default"].logInFromCookie();
+    }
+  }, {
+    key: "componentWillUnmount",
+    value: function componentWillUnmount() {
+      _storesAuthStore2["default"].removeChangeListener(this._onChange);
+    }
+  }, {
+    key: "createModalBodyLogin",
+    value: function createModalBodyLogin() {
+      var disabled = _underscore2["default"].isEmpty(this.state.email) || _underscore2["default"].isEmpty(this.state.password);
 
-        socialLoginArea = _react2["default"].createElement(
-          "div",
-          null,
-          "login with",
-          _react2["default"].createElement(
-            _reactBootstrap.Button,
-            null,
-            _react2["default"].createElement(
-              "a",
-              { href: "/auth/facebook" },
-              "Facebook"
-            )
-          ),
-          _react2["default"].createElement(
-            _reactBootstrap.Button,
-            null,
-            "Google"
-          ),
-          _react2["default"].createElement(
-            _reactBootstrap.Button,
-            null,
-            "Twitter"
-          )
-        );
-      }
-
-      authArea = _react2["default"].createElement(
+      var socialLoginArea = _react2["default"].createElement(
         "div",
         null,
+        "login with",
         _react2["default"].createElement(
-          _libGhostButtonJsx2["default"],
-          { onClick: this.toggleModal },
-          "Sign in"
-        ),
-        _react2["default"].createElement(
-          _reactBootstrap.Modal,
-          { show: this.state.isModalOpen, onHide: this.toggleModal },
+          _reactBootstrap.Button,
+          null,
           _react2["default"].createElement(
-            _reactBootstrap.Modal.Header,
-            null,
-            _react2["default"].createElement(
-              _reactBootstrap.Modal.Title,
-              null,
-              this.state.isSignUp ? "Sign up" : "Sign In"
-            )
-          ),
-          _react2["default"].createElement(
-            _reactBootstrap.Modal.Body,
-            null,
-            this.state.isSignUp ? _react2["default"].createElement(UsernameInput, { usernameError: this.state.usernameError }) : null,
-            _react2["default"].createElement(EmailInput, { emailError: this.state.emailError }),
-            _react2["default"].createElement(PasswordInput, { passwordError: this.state.passwordError }),
-            _react2["default"].createElement(
-              "div",
-              { style: { color: "red" } },
-              this.state.message
-            ),
-            _react2["default"].createElement(
-              _reactBootstrap.Button,
-              { block: true, bsStyle: "success", onClick: this.handleSubmit },
-              "Sign in"
-            ),
-            socialLoginArea
-          ),
-          _react2["default"].createElement(
-            _reactBootstrap.Modal.Footer,
-            null,
-            toggleModeMessage,
-            _react2["default"].createElement(
-              _reactBootstrap.Button,
-              { onClick: this.toggleModal },
-              "Close"
-            )
+            "a",
+            { href: "/auth/facebook" },
+            "Facebook"
           )
         )
       );
+
+      return _react2["default"].createElement(
+        "div",
+        null,
+        _react2["default"].createElement(_AuthAppEmailInputJsx2["default"], { handleChange: this.handleEmailChange }),
+        _react2["default"].createElement(_AuthAppPasswordInputJsx2["default"], { handleChange: this.handlePasswordChange }),
+        _react2["default"].createElement(
+          _reactBootstrap.Button,
+          { disabled: disabled, block: true, bsStyle: "success", onClick: this.handleLoginClick },
+          "Log in"
+        ),
+        socialLoginArea
+      );
     }
+  }, {
+    key: "createModalBodySignup",
+    value: function createModalBodySignup() {
+      var disabled = _underscore2["default"].isEmpty(this.state.email) || _underscore2["default"].isEmpty(this.state.username) || _underscore2["default"].isEmpty(this.state.password);
 
-    return _react2["default"].createElement(
-      "div",
-      { id: "userArea" },
-      authArea
-    );
-  }
-});
+      return _react2["default"].createElement(
+        "div",
+        null,
+        _react2["default"].createElement(_AuthAppEmailInputJsx2["default"], { handleChange: this.handleEmailChange }),
+        _react2["default"].createElement(_AuthAppUsernameInputJsx2["default"], { handleChange: this.handleUsernameChange }),
+        _react2["default"].createElement(_AuthAppPasswordInputJsx2["default"], { handleChange: this.handlePasswordChange }),
+        _react2["default"].createElement(
+          _reactBootstrap.Button,
+          { disabled: disabled, block: true, bsStyle: "success", onClick: this.handleSignupClick },
+          "Sign up"
+        )
+      );
+    }
+  }, {
+    key: "render",
+    value: function render() {
+      var authArea;
+      var toggleModeMessage;
+      var socialLoginArea;
 
-module.exports = AuthApp;
+      if (this.state.user && this.state.user.username) {
+        var title = "Hello, " + this.state.user.username;
 
-},{"../actions/AuthActions":1,"../lib/GhostButton.jsx":26,"../stores/AuthStore":27,"./AuthApp/EmailInput.react":6,"./AuthApp/PasswordInput.react":7,"./AuthApp/UsernameInput.react":8,"react":941,"react-bootstrap":396}],6:[function(require,module,exports){
-"use strict";
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
-
-var _react = require("react");
-
-var _react2 = _interopRequireDefault(_react);
-
-var _reactBootstrap = require("react-bootstrap");
-
-var _reactAddonsLinkedStateMixin = require("react-addons-linked-state-mixin");
-
-var _reactAddonsLinkedStateMixin2 = _interopRequireDefault(_reactAddonsLinkedStateMixin);
-
-var AuthActions = require("../../actions/AuthActions");
-
-var innerGlyphicon = _react2["default"].createElement(_reactBootstrap.Glyphicon, { glyph: "envelope" });
-
-var EmailInput = _react2["default"].createClass({
-  displayName: "EmailInput",
-
-  mixins: [_reactAddonsLinkedStateMixin2["default"]],
-
-  getInitialState: function getInitialState() {
-    return {
-      value: ''
-    };
-  },
-
-  validationState: function validationState() {
-    var value = this.state.value;
-
-    var legalEmail = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i;
-
-    if (value.length > 0) {
-      if (legalEmail.test(value)) {
-        return "success";
+        authArea = _react2["default"].createElement(
+          _reactBootstrap.SplitButton,
+          { id: "sign-in", title: title, bsStyle: "default", pullRight: true },
+          _react2["default"].createElement(
+            _reactBootstrap.MenuItem,
+            null,
+            "My Account"
+          ),
+          _react2["default"].createElement(_reactBootstrap.MenuItem, { divider: true }),
+          _react2["default"].createElement(
+            _reactBootstrap.MenuItem,
+            { onSelect: this.handleLogOut },
+            "Log out"
+          )
+        );
       } else {
-        return "error";
+        if (this.state.isSignUp) {
+          toggleModeMessage = _react2["default"].createElement(
+            "span",
+            { className: "pull-left" },
+            "Already have an account? ",
+            _react2["default"].createElement(
+              "a",
+              { onClick: this.toggleMode },
+              "Log In"
+            )
+          );
+        } else {
+          toggleModeMessage = _react2["default"].createElement(
+            "span",
+            { className: "pull-left" },
+            "New here? ",
+            _react2["default"].createElement(
+              "a",
+              { onClick: this.toggleMode },
+              "Sign Up"
+            )
+          );
+        }
+
+        authArea = _react2["default"].createElement(
+          "div",
+          null,
+          _react2["default"].createElement(
+            _libGhostButtonJsx2["default"],
+            { onClick: this.toggleModal },
+            "Sign in"
+          ),
+          _react2["default"].createElement(
+            _reactBootstrap.Modal,
+            { show: this.state.isModalOpen, onHide: this.toggleModal },
+            _react2["default"].createElement(
+              _reactBootstrap.Modal.Header,
+              null,
+              _react2["default"].createElement(
+                _reactBootstrap.Modal.Title,
+                null,
+                this.state.isSignUp ? "Sign up" : "Log In"
+              )
+            ),
+            _react2["default"].createElement(
+              _reactBootstrap.Modal.Body,
+              null,
+              this.state.isSignUp ? this.createModalBodySignup() : this.createModalBodyLogin()
+            ),
+            _react2["default"].createElement(
+              _reactBootstrap.Modal.Footer,
+              null,
+              toggleModeMessage,
+              _react2["default"].createElement(
+                _reactBootstrap.Button,
+                { onClick: this.toggleModal },
+                "Close"
+              )
+            )
+          )
+        );
       }
+
+      return _react2["default"].createElement(
+        "div",
+        { id: "userArea" },
+        authArea
+      );
     }
-  },
+  }]);
 
-  handleChange: function handleChange(newValue) {
-    this.setState({
-      value: newValue
-    });
+  return AuthApp;
+})(_react2["default"].Component);
 
-    AuthActions.inputEmail(newValue);
-  },
+exports["default"] = AuthApp;
+;
+module.exports = exports["default"];
 
-  render: function render() {
-
-    var valueLink = {
-      value: this.state.value,
-      requestChange: this.handleChange
-    };
-
-    return _react2["default"].createElement(_reactBootstrap.Input, {
-      type: "email",
-      placeholder: "Enter email",
-      addonBefore: innerGlyphicon,
-      help: this.props.emailError,
-      bsStyle: this.validationState(),
-      hasFeedback: true,
-      groupClassName: "group-class",
-      labelClassName: "label-class",
-      valueLink: valueLink });
-  }
-
-});
-
-module.exports = EmailInput;
-
-},{"../../actions/AuthActions":1,"react":941,"react-addons-linked-state-mixin":324,"react-bootstrap":396}],7:[function(require,module,exports){
+},{"../actions/AuthActions":1,"../lib/GhostButton.jsx":26,"../stores/AuthStore":27,"./AuthApp/EmailInput.jsx":6,"./AuthApp/PasswordInput.jsx":7,"./AuthApp/UsernameInput.jsx":8,"react":941,"react-bootstrap":396,"underscore":1072}],6:[function(require,module,exports){
 "use strict";
 
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+
+var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; desc = parent = undefined; continue _function; } } else if ("value" in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
 var _react = require("react");
 
 var _react2 = _interopRequireDefault(_react);
 
-var _reactBootstrap = require("react-bootstrap");
+var _libBaseInputJsx = require("../../lib/BaseInput.jsx");
 
-var _reactAddonsLinkedStateMixin = require("react-addons-linked-state-mixin");
+var _libBaseInputJsx2 = _interopRequireDefault(_libBaseInputJsx);
 
-var _reactAddonsLinkedStateMixin2 = _interopRequireDefault(_reactAddonsLinkedStateMixin);
+function isValidEmail(email) {
+  var validEmailReg = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i;
 
-var AuthActions = require("../../actions/AuthActions");
+  if (validEmailReg.test(email)) {
+    return true;
+  }
 
-var innerGlyphicon = _react2["default"].createElement(_reactBootstrap.Glyphicon, { glyph: "lock" });
+  return false;
+}
 
-var PasswordInput = _react2["default"].createClass({
-  displayName: "PasswordInput",
+var EmailInput = (function (_React$Component) {
+  _inherits(EmailInput, _React$Component);
 
-  mixins: [_reactAddonsLinkedStateMixin2["default"]],
+  function EmailInput(props) {
+    _classCallCheck(this, EmailInput);
 
-  getInitialState: function getInitialState() {
-    return {
+    _get(Object.getPrototypeOf(EmailInput.prototype), "constructor", this).call(this, props);
+
+    this.handleEmailChange = this.handleEmailChange.bind(this);
+
+    this.state = {
+      isValid: false,
       value: ""
     };
-  },
-
-  validationState: function validationState() {
-    var value = this.state.value;
-
-    var minLength = 8,
-        maxLength = 20,
-        num = false,
-        lower = false,
-        upper = false,
-        match = 0;
-
-    var matchNum = /(?=.*\d)/,
-        matchLowerCase = /(?=.*[a-z])/,
-        matchUpperCase = /(?=.*[A-Z])/;
-
-    if (value.length > maxLength || value.length < minLength && value.length > 0) {
-      return "error";
-    } else {
-      if (matchNum.test(value)) {
-        match++;
-        num = true;
-      }
-      if (matchLowerCase.test(value)) {
-        match++;
-        lower = true;
-      }
-      if (matchUpperCase.test(value)) {
-        match++;
-        upper = true;
-      }
-
-      if (match > 2) {
-        return "success";
-      }
-      if (match > 0) {
-        return "warning";
-      }
-    }
-  },
-
-  handleChange: function handleChange(newValue) {
-    this.setState({
-      value: newValue
-    });
-
-    AuthActions.inputPassword(newValue);
-  },
-
-  render: function render() {
-    var valueLink = {
-      value: this.state.value,
-      requestChange: this.handleChange
-    };
-
-    return _react2["default"].createElement(_reactBootstrap.Input, {
-      type: "password",
-      placeholder: "Enter password",
-      addonBefore: innerGlyphicon,
-      help: this.props.passwordError,
-      bsStyle: this.validationState(),
-      hasFeedback: true,
-      groupClassName: "group-class",
-      labelClassName: "label-class",
-      valueLink: valueLink });
   }
 
-});
+  _createClass(EmailInput, [{
+    key: "handleEmailChange",
+    value: function handleEmailChange(newValue) {
+      var isValid = isValidEmail(newValue);
 
-module.exports = PasswordInput;
+      this.setState({
+        isValid: isValid,
+        value: newValue
+      });
 
-},{"../../actions/AuthActions":1,"react":941,"react-addons-linked-state-mixin":324,"react-bootstrap":396}],8:[function(require,module,exports){
+      this.props.handleChange(isValid ? newValue : "");
+    }
+  }, {
+    key: "createBsStyle",
+    value: function createBsStyle() {
+      if (!this.state.isValid) {
+        if (this.state.value === "") {
+          return null;
+        }
+
+        return "error";
+      }
+
+      return "success";
+    }
+  }, {
+    key: "render",
+    value: function render() {
+      var bsStyle = this.createBsStyle();
+
+      return _react2["default"].createElement(_libBaseInputJsx2["default"], {
+        type: "email",
+        placeholder: "Email",
+        addonBefore: "envelope",
+        bsStyle: bsStyle,
+        handleChange: this.handleEmailChange });
+    }
+  }]);
+
+  return EmailInput;
+})(_react2["default"].Component);
+
+exports["default"] = EmailInput;
+;
+
+EmailInput.propTypes = {
+  handleChange: _react2["default"].PropTypes.func.isRequired
+};
+module.exports = exports["default"];
+
+},{"../../lib/BaseInput.jsx":20,"react":941}],7:[function(require,module,exports){
 "use strict";
 
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+
+var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; desc = parent = undefined; continue _function; } } else if ("value" in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
 var _react = require("react");
 
 var _react2 = _interopRequireDefault(_react);
 
-var _reactBootstrap = require("react-bootstrap");
+var _libBaseInputJsx = require("../../lib/BaseInput.jsx");
 
-var _reactAddonsLinkedStateMixin = require("react-addons-linked-state-mixin");
+var _libBaseInputJsx2 = _interopRequireDefault(_libBaseInputJsx);
 
-var _reactAddonsLinkedStateMixin2 = _interopRequireDefault(_reactAddonsLinkedStateMixin);
+function isValidPassword(password) {
+  var validPasswordReg = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/i;
 
-var AuthActions = require("../../actions/AuthActions");
-
-var innerGlyphicon = _react2["default"].createElement(_reactBootstrap.Glyphicon, { glyph: "user" });
-
-var UsernameInput = _react2["default"].createClass({
-  displayName: "UsernameInput",
-
-  mixins: [_reactAddonsLinkedStateMixin2["default"]],
-
-  getInitialState: function getInitialState() {
-    return {
-      value: ''
-    };
-  },
-
-  validationState: function validationState() {
-    var legalUserReg = /^[a-zA-Z][a-zA-Z0-9]*$/,
-        minLength = 4,
-        maxLength = 20;
-
-    var value = this.state.value;
-
-    if (value.length > 0) {
-      if (value.length > maxLength || value.length < minLength) {
-        return "error";
-      } else if (!legalUserReg.test(value)) {
-        return "error";
-      } else {
-        return "success";
-      }
-    }
-  },
-
-  handleChange: function handleChange(newValue) {
-    this.setState({
-      value: newValue
-    });
-
-    AuthActions.inputUsername(newValue);
-  },
-
-  render: function render() {
-
-    var valueLink = {
-      value: this.state.value,
-      requestChange: this.handleChange
-    };
-
-    return _react2["default"].createElement(_reactBootstrap.Input, {
-      type: "text",
-      placeholder: "Enter username",
-      addonBefore: innerGlyphicon,
-      help: this.props.usernameError,
-      bsStyle: this.validationState(),
-      hasFeedback: true,
-      groupClassName: "group-class",
-      labelClassName: "label-class",
-      valueLink: valueLink });
+  if (validPasswordReg.test(password)) {
+    return true;
   }
 
+  return false;
+}
+
+var PasswordInput = (function (_React$Component) {
+  _inherits(PasswordInput, _React$Component);
+
+  function PasswordInput(props) {
+    _classCallCheck(this, PasswordInput);
+
+    _get(Object.getPrototypeOf(PasswordInput.prototype), "constructor", this).call(this, props);
+
+    this.handlePasswordChange = this.handlePasswordChange.bind(this);
+
+    this.state = {
+      isValid: false,
+      value: ""
+    };
+  }
+
+  _createClass(PasswordInput, [{
+    key: "handlePasswordChange",
+    value: function handlePasswordChange(newValue) {
+      var isValid = isValidPassword(newValue);
+
+      this.setState({
+        isValid: isValid,
+        value: newValue
+      });
+
+      this.props.handleChange(isValid ? newValue : "");
+    }
+  }, {
+    key: "createBsStyle",
+    value: function createBsStyle() {
+      if (!this.state.isValid) {
+        if (this.state.value === "") {
+          return null;
+        }
+
+        return "error";
+      }
+
+      return "success";
+    }
+  }, {
+    key: "render",
+    value: function render() {
+      var bsStyle = this.createBsStyle();
+
+      return _react2["default"].createElement(_libBaseInputJsx2["default"], {
+        type: "password",
+        placeholder: "Password",
+        addonBefore: "lock",
+        bsStyle: bsStyle,
+        handleChange: this.handlePasswordChange });
+    }
+  }]);
+
+  return PasswordInput;
+})(_react2["default"].Component);
+
+exports["default"] = PasswordInput;
+;
+
+PasswordInput.propTypes = {
+  handleChange: _react2["default"].PropTypes.func.isRequired
+};
+module.exports = exports["default"];
+
+},{"../../lib/BaseInput.jsx":20,"react":941}],8:[function(require,module,exports){
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
 });
 
-module.exports = UsernameInput;
+var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
 
-},{"../../actions/AuthActions":1,"react":941,"react-addons-linked-state-mixin":324,"react-bootstrap":396}],9:[function(require,module,exports){
+var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; desc = parent = undefined; continue _function; } } else if ("value" in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var _react = require("react");
+
+var _react2 = _interopRequireDefault(_react);
+
+var _libBaseInputJsx = require("../../lib/BaseInput.jsx");
+
+var _libBaseInputJsx2 = _interopRequireDefault(_libBaseInputJsx);
+
+function isValidUsername(username) {
+  var validUsernameReg = /^[a-zA-Z0-9]+([_\s\-]?[a-zA-Z0-9])*$/;
+
+  if (validUsernameReg.test(username)) {
+    return true;
+  }
+
+  return false;
+}
+
+var UsernameInput = (function (_React$Component) {
+  _inherits(UsernameInput, _React$Component);
+
+  function UsernameInput(props) {
+    _classCallCheck(this, UsernameInput);
+
+    _get(Object.getPrototypeOf(UsernameInput.prototype), "constructor", this).call(this, props);
+
+    this.handleUsernameChange = this.handleUsernameChange.bind(this);
+
+    this.state = {
+      isValid: false,
+      value: ""
+    };
+  }
+
+  _createClass(UsernameInput, [{
+    key: "handleUsernameChange",
+    value: function handleUsernameChange(newValue) {
+      var isValid = isValidUsername(newValue);
+
+      this.setState({
+        isValid: isValid,
+        value: newValue
+      });
+
+      this.props.handleChange(isValid ? newValue : "");
+    }
+  }, {
+    key: "createBsStyle",
+    value: function createBsStyle() {
+      if (!this.state.isValid) {
+        if (this.state.value === "") {
+          return null;
+        }
+
+        return "error";
+      }
+
+      return "success";
+    }
+  }, {
+    key: "render",
+    value: function render() {
+      var bsStyle = this.createBsStyle();
+
+      return _react2["default"].createElement(_libBaseInputJsx2["default"], {
+        type: "text",
+        placeholder: "Username",
+        addonBefore: "user",
+        bsStyle: bsStyle,
+        handleChange: this.handleUsernameChange });
+    }
+  }]);
+
+  return UsernameInput;
+})(_react2["default"].Component);
+
+exports["default"] = UsernameInput;
+;
+
+UsernameInput.propTypes = {
+  handleChange: _react2["default"].PropTypes.func.isRequired
+};
+module.exports = exports["default"];
+
+},{"../../lib/BaseInput.jsx":20,"react":941}],9:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -1800,7 +1924,7 @@ var ItemManageApp = (function (_React$Component) {
       var unitTypeInput = _react2["default"].createElement(_libBaseInputJsx2["default"], {
         type: "text",
         label: "Unit type",
-        placeholder: "Enter unit tyoe",
+        placeholder: "Enter unit type",
         handleChange: this.handleUnitTypeChange.bind(this) });
 
       var dimensionInput = _react2["default"].createElement(
@@ -2044,9 +2168,9 @@ var _react2 = _interopRequireDefault(_react);
 
 var _reactBootstrap = require("react-bootstrap");
 
-var _AuthAppReact = require("./AuthApp.react");
+var _AuthAppJsx = require("./AuthApp.jsx");
 
-var _AuthAppReact2 = _interopRequireDefault(_AuthAppReact);
+var _AuthAppJsx2 = _interopRequireDefault(_AuthAppJsx);
 
 var NarbarApp = (function (_React$Component) {
   _inherits(NarbarApp, _React$Component);
@@ -2105,7 +2229,7 @@ var NarbarApp = (function (_React$Component) {
         _react2["default"].createElement(
           _reactBootstrap.Nav,
           { pullRight: true, id: "authModalTrigger" },
-          _react2["default"].createElement(_AuthAppReact2["default"], null)
+          _react2["default"].createElement(_AuthAppJsx2["default"], null)
         )
       );
     }
@@ -2117,25 +2241,26 @@ var NarbarApp = (function (_React$Component) {
 exports["default"] = NarbarApp;
 module.exports = exports["default"];
 
-},{"./AuthApp.react":5,"react":941,"react-bootstrap":396}],14:[function(require,module,exports){
+},{"./AuthApp.jsx":5,"react":941,"react-bootstrap":396}],14:[function(require,module,exports){
 "use strict";
 
-+(function (undefined) {
-  "use strict";
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
 
-  var keyMirror = require("fbjs/lib/keyMirror");
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
 
-  module.exports = keyMirror({
-    TOGGLE_MODE: null,
-    TOGGLE_MODAL: null,
+var _fbjsLibKeyMirror = require("fbjs/lib/keyMirror");
 
-    INPUT_USERNAME: null,
-    INPUT_PASSWORD: null,
-    INPUT_EMAIL: null,
+var _fbjsLibKeyMirror2 = _interopRequireDefault(_fbjsLibKeyMirror);
 
-    RECEIVED_USER: null
-  });
-})();
+exports["default"] = (0, _fbjsLibKeyMirror2["default"])({
+  TOGGLE_MODE: null,
+  TOGGLE_MODAL: null,
+
+  RECEIVED_USER: null
+});
+module.exports = exports["default"];
 
 },{"fbjs/lib/keyMirror":294}],15:[function(require,module,exports){
 "use strict";
@@ -2445,6 +2570,8 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
+var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
 var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
 
 var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; desc = parent = undefined; continue _function; } } else if ("value" in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
@@ -2473,7 +2600,7 @@ var BaseInput = (function (_React$Component) {
   _createClass(BaseInput, [{
     key: "handleChange",
     value: function handleChange() {
-      var newValue = this.refs[this.props.ref].getValue();
+      var newValue = this.refs["input"].getValue();
 
       this.props.handleChange(newValue);
     }
@@ -2487,16 +2614,13 @@ var BaseInput = (function (_React$Component) {
         addonBeforeGlyphicon = _react2["default"].createElement(_reactBootstrap.Glyphicon, { glyph: this.props.addonBefore });
       }
 
-      return _react2["default"].createElement(_reactBootstrap.Input, {
-        type: this.props.type,
-        placeholder: this.props.placeholder,
-        label: this.props.label,
+      return _react2["default"].createElement(_reactBootstrap.Input, _extends({}, this.props, {
         addonBefore: addonBeforeGlyphicon,
+        hasFeedback: true,
+        spellCheck: false,
         onChange: this.handleChange.bind(this),
-        defaultValue: this.props.defaultValue,
-        ref: "input",
-        multiple: this.props.multiple
-      });
+        ref: "input"
+      }));
     }
   }]);
 
@@ -2511,33 +2635,12 @@ BaseInput.propTypes = {
 
   // most used props
   handleChange: _react2["default"].PropTypes.func,
-  addonBefore: _react2["default"].PropTypes.string,
-  placeholder: _react2["default"].PropTypes.string,
-  label: _react2["default"].PropTypes.string,
-  defaultValue: _react2["default"].PropTypes.any,
-  ref: _react2["default"].PropTypes.string,
-  multiple: _react2["default"].PropTypes.bool,
-
-  // least used props
-  addonAfter: _react2["default"].PropTypes.string,
-  feedbackIcon: _react2["default"].PropTypes.string,
-  groupClassName: _react2["default"].PropTypes.string,
-  labelClassName: _react2["default"].PropTypes.string
+  addonBefore: _react2["default"].PropTypes.string
 };
 
 BaseInput.defaultProps = {
   handleChange: function handleChange() {},
-  addonBefore: "",
-  placeholder: "",
-  label: "",
-  defaultValue: "",
-  ref: "input",
-  multiple: false,
-
-  addonAfter: "",
-  feedbackIcon: "",
-  groupClassName: "",
-  labelClassName: ""
+  addonBefore: ""
 };
 module.exports = exports["default"];
 
@@ -3044,133 +3147,101 @@ module.exports = exports["default"];
 },{"./GhostButton.css":25,"react":941,"react-bootstrap":396,"react-css-modules":573,"underscore":1072}],27:[function(require,module,exports){
 "use strict";
 
-+(function (undefined) {
-  "use strict";
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
 
-  var ReactCookie = require("react-cookie"),
-      _ = require("underscore"),
-      EventEmitter = require("events").EventEmitter;
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
 
-  var AppDispatcher = require("../dispatcher/AppDispatcher"),
-      AuthConstants = require("../constants/AuthConstants");
+var _underscore = require("underscore");
 
-  var CHANGE_EVENT = "change",
-      _isSignUp = true,
-      _isModalOpen = false;
+var _underscore2 = _interopRequireDefault(_underscore);
 
-  var _username = "",
-      _password = "",
-      _email = "",
-      _user = {};
+var _events = require("events");
 
-  var AuthStore = _.extend({}, EventEmitter.prototype, {
+var _dispatcherAppDispatcher = require("../dispatcher/AppDispatcher");
 
-    toggleMode: function toggleMode() {
-      _isSignUp = !_isSignUp;
-    },
+var _dispatcherAppDispatcher2 = _interopRequireDefault(_dispatcherAppDispatcher);
 
-    toggleModal: function toggleModal() {
-      _isModalOpen = !_isModalOpen;
-    },
+var _constantsAuthConstants = require("../constants/AuthConstants");
 
-    isSignUp: function isSignUp() {
-      return _isSignUp;
-    },
+var _constantsAuthConstants2 = _interopRequireDefault(_constantsAuthConstants);
 
-    isModalOpen: function isModalOpen() {
-      return _isModalOpen;
-    },
+var CHANGE_EVENT = "change";
 
-    getUsernameInput: function getUsernameInput() {
-      return _username;
-    },
+var _user = {},
+    _isSignUp = true,
+    _isModalOpen = false;
 
-    inputUsername: function inputUsername(username) {
-      _username = username;
-    },
+var AuthStore = _underscore2["default"].extend({}, _events.EventEmitter.prototype, {
 
-    getEmailInput: function getEmailInput() {
-      return _email;
-    },
+  toggleMode: function toggleMode() {
+    _isSignUp = !_isSignUp;
+  },
 
-    inputEmail: function inputEmail(email) {
-      _email = email;
-    },
+  toggleModal: function toggleModal() {
+    _isModalOpen = !_isModalOpen;
+  },
 
-    getPasswordInput: function getPasswordInput() {
-      return _password;
-    },
+  isSignUp: function isSignUp() {
+    return _isSignUp;
+  },
 
-    inputPassword: function inputPassword(password) {
-      _password = password;
-    },
+  isModalOpen: function isModalOpen() {
+    return _isModalOpen;
+  },
 
-    updateUser: function updateUser(user) {
-      _user = user;
-    },
+  updateUser: function updateUser(user) {
+    _user = user;
+  },
 
-    getUser: function getUser() {
-      return _user;
-    },
+  getUser: function getUser() {
+    return _user;
+  },
 
-    emitChange: function emitChange() {
-      this.emit(CHANGE_EVENT);
-    },
+  emitChange: function emitChange() {
+    this.emit(CHANGE_EVENT);
+  },
 
-    addChangeListener: function addChangeListener(callback) {
-      this.on(CHANGE_EVENT, callback);
-    },
+  addChangeListener: function addChangeListener(callback) {
+    this.on(CHANGE_EVENT, callback);
+  },
 
-    removeChangeListener: function removeChangeListener(callback) {
-      this.removeListener(CHANGE_EVENT, callback);
-    }
+  removeChangeListener: function removeChangeListener(callback) {
+    this.removeListener(CHANGE_EVENT, callback);
+  }
 
-  });
+});
 
-  AuthStore.dispatchToken = AppDispatcher.register(function (payload) {
-    var action = payload.action;
+AuthStore.dispatchToken = _dispatcherAppDispatcher2["default"].register(function (payload) {
+  var action = payload.action;
 
-    switch (action.actionType) {
+  switch (action.actionType) {
 
-      case AuthConstants.TOGGLE_MODE:
-        AuthStore.toggleMode();
-        AuthStore.emitChange();
-        break;
+    case _constantsAuthConstants2["default"].TOGGLE_MODE:
+      AuthStore.toggleMode();
+      AuthStore.emitChange();
+      break;
 
-      case AuthConstants.TOGGLE_MODAL:
-        AuthStore.toggleModal();
-        AuthStore.emitChange();
-        break;
+    case _constantsAuthConstants2["default"].TOGGLE_MODAL:
+      AuthStore.toggleModal();
+      AuthStore.emitChange();
+      break;
 
-      case AuthConstants.INPUT_USERNAME:
-        AuthStore.inputUsername(action.username);
-        AuthStore.emitChange();
-        break;
+    case _constantsAuthConstants2["default"].RECEIVED_USER:
+      AuthStore.updateUser(action.user);
+      AuthStore.emitChange();
+      break;
 
-      case AuthConstants.INPUT_EMAIL:
-        AuthStore.inputEmail(action.email);
-        AuthStore.emitChange();
-        break;
+    default:
+    // do nothing
+  }
+});
 
-      case AuthConstants.INPUT_PASSWORD:
-        AuthStore.inputPassword(action.password);
-        AuthStore.emitChange();
-        break;
+exports["default"] = AuthStore;
+module.exports = exports["default"];
 
-      case AuthConstants.RECEIVED_USER:
-        AuthStore.updateUser(action.user);
-        AuthStore.emitChange();
-        break;
-
-      default:
-      // do nothing
-    }
-  });
-
-  module.exports = AuthStore;
-})();
-
-},{"../constants/AuthConstants":14,"../dispatcher/AppDispatcher":17,"events":243,"react-cookie":569,"underscore":1072}],28:[function(require,module,exports){
+},{"../constants/AuthConstants":14,"../dispatcher/AppDispatcher":17,"events":243,"underscore":1072}],28:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {

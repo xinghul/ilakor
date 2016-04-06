@@ -3,7 +3,7 @@
 import React from "react"
 import { Navbar, Nav, NavItem } from "react-bootstrap"
 
-import AuthApp from "./AuthApp.react"
+import AuthApp from "./AuthApp.jsx"
 
 export default class NarbarApp extends React.Component {
   
