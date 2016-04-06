@@ -7,12 +7,12 @@ import { Grid, Row, Col } from "react-bootstrap"
 import { Modal, Table, Label, Input, Glyphicon, Button } from "react-bootstrap"
 import LinkedStateMixin from "react-addons-linked-state-mixin"
 
-import BaseInput from "../lib/BaseInput.jsx"
-import BaseMultiSelect from "../lib/BaseMultiSelect.jsx"
-import BaseModal from "../lib/BaseModal.jsx"
+import BaseInput from "lib/BaseInput.jsx"
+import BaseMultiSelect from "lib/BaseMultiSelect.jsx"
+import BaseModal from "lib/BaseModal.jsx"
 
-import ItemManageAction from "../actions/ItemManageAction"
-import ItemManageStore from "../stores/ItemManageStore"
+import ItemManageAction from "actions/ItemManageAction"
+import ItemManageStore from "stores/ItemManageStore"
 
 function getStateFromStores() {
   return {

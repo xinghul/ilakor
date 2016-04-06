@@ -5,9 +5,9 @@ import { render } from "react-dom"
 import { Router, Route, IndexRoute, Link, hashHistory } from "react-router"
 import createBrowserHistory from 'history/lib/createBrowserHistory'
 
-import ItemDisplayApp from "./components/ItemDisplayApp.jsx"
-import ItemManageApp from "./components/ItemManageApp.jsx"
-import NavbarApp from "./components/NavbarApp.jsx"
+import ItemDisplayApp from "components/ItemDisplayApp.jsx"
+import ItemManageApp from "components/ItemManageApp.jsx"
+import NavbarApp from "components/NavbarApp.jsx"
 
 class App extends React.Component {
     

@@ -3,7 +3,7 @@
 import React from "react"
 import { Modal, Button, Input, Tooltip } from "react-bootstrap"
 
-import BaseInput from "../lib/BaseInput.jsx"
+import BaseInput from "lib/BaseInput.jsx"
 
 export default class BaseModal extends React.Component {
   

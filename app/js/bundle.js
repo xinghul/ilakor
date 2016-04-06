@@ -1,53 +1,72 @@
 (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
 "use strict";
 
-var request = require("request"),
-    ReactCookie = require("react-cookie"),
-    Promise = require("bluebird");
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
 
-var AppDispatcher = require("../dispatcher/AppDispatcher"),
-    AuthConstants = require("../constants/AuthConstants");
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
+
+var _request = require("request");
+
+var _request2 = _interopRequireDefault(_request);
+
+var _reactCookie = require("react-cookie");
+
+var _reactCookie2 = _interopRequireDefault(_reactCookie);
+
+var _bluebird = require("bluebird");
+
+var _bluebird2 = _interopRequireDefault(_bluebird);
+
+var _dispatcherAppDispatcher = require("dispatcher/AppDispatcher");
+
+var _dispatcherAppDispatcher2 = _interopRequireDefault(_dispatcherAppDispatcher);
+
+var _constantsAuthConstants = require("constants/AuthConstants");
+
+var _constantsAuthConstants2 = _interopRequireDefault(_constantsAuthConstants);
 
 var AuthActions = {
 
   toggleMode: function toggleMode() {
-    AppDispatcher.handleAction({
-      actionType: AuthConstants.TOGGLE_MODE
+    _dispatcherAppDispatcher2["default"].handleAction({
+      actionType: _constantsAuthConstants2["default"].TOGGLE_MODE
     });
   },
 
   toggleModal: function toggleModal() {
-    AppDispatcher.handleAction({
-      actionType: AuthConstants.TOGGLE_MODAL
+    _dispatcherAppDispatcher2["default"].handleAction({
+      actionType: _constantsAuthConstants2["default"].TOGGLE_MODAL
     });
   },
 
   inputUsername: function inputUsername(username) {
-    AppDispatcher.handleAction({
-      actionType: AuthConstants.INPUT_USERNAME,
+    _dispatcherAppDispatcher2["default"].handleAction({
+      actionType: _constantsAuthConstants2["default"].INPUT_USERNAME,
       username: username
     });
   },
 
   inputEmail: function inputEmail(email) {
-    AppDispatcher.handleAction({
-      actionType: AuthConstants.INPUT_EMAIL,
+    _dispatcherAppDispatcher2["default"].handleAction({
+      actionType: _constantsAuthConstants2["default"].INPUT_EMAIL,
       email: email
     });
   },
 
   inputPassword: function inputPassword(password) {
-    AppDispatcher.handleAction({
-      actionType: AuthConstants.INPUT_PASSWORD,
+    _dispatcherAppDispatcher2["default"].handleAction({
+      actionType: _constantsAuthConstants2["default"].INPUT_PASSWORD,
       password: password
     });
   },
 
   userLogIn: function userLogIn(user) {
 
-    return new Promise(function (resolve, reject) {
+    return new _bluebird2["default"](function (resolve, reject) {
 
-      request.post({
+      _request2["default"].post({
         url: "http://localhost:3001/auth/session",
         form: {
           "email": user.email,
@@ -63,10 +82,10 @@ var AuthActions = {
                 token = response.token;
 
             // save jwt token into the cookie
-            ReactCookie.save("token", token);
+            _reactCookie2["default"].save("token", token);
 
-            AppDispatcher.handleAction({
-              actionType: AuthConstants.RECEIVED_USER,
+            _dispatcherAppDispatcher2["default"].handleAction({
+              actionType: _constantsAuthConstants2["default"].RECEIVED_USER,
               user: newUser
             });
 
@@ -81,9 +100,9 @@ var AuthActions = {
 
   userSignUp: function userSignUp(user) {
 
-    return new Promise(function (resolve, reject) {
+    return new _bluebird2["default"](function (resolve, reject) {
       // XXX check if all the fields are non-empty
-      request.post({
+      _request2["default"].post({
         url: "http://localhost:3001/auth/users",
         form: {
           "local.email": user.email,
@@ -97,8 +116,8 @@ var AuthActions = {
           if (res.statusCode === 200) {
             var newUser = JSON.parse(res.body);
 
-            AppDispatcher.handleAction({
-              actionType: AuthConstants.RECEIVED_USER,
+            _dispatcherAppDispatcher2["default"].handleAction({
+              actionType: _constantsAuthConstants2["default"].RECEIVED_USER,
               user: newUser
             });
 
@@ -112,11 +131,11 @@ var AuthActions = {
   },
 
   logInFromCookie: function logInFromCookie() {
-    var user = ReactCookie.load("user");
+    var user = _reactCookie2["default"].load("user");
 
     if (user) {
-      AppDispatcher.handleAction({
-        actionType: AuthConstants.RECEIVED_USER,
+      _dispatcherAppDispatcher2["default"].handleAction({
+        actionType: _constantsAuthConstants2["default"].RECEIVED_USER,
         user: user
       });
     }
@@ -124,19 +143,19 @@ var AuthActions = {
 
   removeUserFromCookie: function removeUserFromCookie() {
 
-    return new Promise(function (resolve, reject) {
+    return new _bluebird2["default"](function (resolve, reject) {
 
-      request.del({
+      _request2["default"].del({
         url: "http://localhost:3001/auth/session"
       }, function (err, res) {
         if (err) {
           reject(err);
         } else {
           if (res.statusCode === 200) {
-            ReactCookie.remove("user");
+            _reactCookie2["default"].remove("user");
 
-            AppDispatcher.handleAction({
-              actionType: AuthConstants.RECEIVED_USER,
+            _dispatcherAppDispatcher2["default"].handleAction({
+              actionType: _constantsAuthConstants2["default"].RECEIVED_USER,
               user: {}
             });
 
@@ -151,9 +170,10 @@ var AuthActions = {
 
 };
 
-module.exports = AuthActions;
+exports["default"] = AuthActions;
+module.exports = exports["default"];
 
-},{"../constants/AuthConstants":14,"../dispatcher/AppDispatcher":17,"bluebird":30,"react-cookie":569,"request":942}],2:[function(require,module,exports){
+},{"bluebird":30,"constants/AuthConstants":14,"dispatcher/AppDispatcher":17,"react-cookie":569,"request":942}],2:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -162,16 +182,21 @@ Object.defineProperty(exports, "__esModule", {
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
 
-var _dispatcherAppDispatcher = require("../dispatcher/AppDispatcher");
+var _request = require("request");
+
+var _request2 = _interopRequireDefault(_request);
+
+var _bluebird = require("bluebird");
+
+var _bluebird2 = _interopRequireDefault(_bluebird);
+
+var _dispatcherAppDispatcher = require("dispatcher/AppDispatcher");
 
 var _dispatcherAppDispatcher2 = _interopRequireDefault(_dispatcherAppDispatcher);
 
-var _constantsItemDisplayConstants = require("../constants/ItemDisplayConstants");
+var _constantsItemDisplayConstants = require("constants/ItemDisplayConstants");
 
 var _constantsItemDisplayConstants2 = _interopRequireDefault(_constantsItemDisplayConstants);
-
-var request = require("request"),
-    Promise = require("bluebird");
 
 var ItemDisplayAction = {
 
@@ -182,9 +207,9 @@ var ItemDisplayAction = {
    */
   getAllItems: function getAllItems() {
 
-    return new Promise(function (resolve, reject) {
+    return new _bluebird2["default"](function (resolve, reject) {
 
-      request.get({
+      _request2["default"].get({
         url: "http://localhost:3001/api/items"
       }, function (err, response) {
         if (err) {
@@ -212,7 +237,7 @@ var ItemDisplayAction = {
 exports["default"] = ItemDisplayAction;
 module.exports = exports["default"];
 
-},{"../constants/ItemDisplayConstants":15,"../dispatcher/AppDispatcher":17,"bluebird":30,"request":942}],3:[function(require,module,exports){
+},{"bluebird":30,"constants/ItemDisplayConstants":15,"dispatcher/AppDispatcher":17,"request":942}],3:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -221,16 +246,21 @@ Object.defineProperty(exports, "__esModule", {
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
 
-var _dispatcherAppDispatcher = require("../dispatcher/AppDispatcher");
+var _request = require("request");
+
+var _request2 = _interopRequireDefault(_request);
+
+var _bluebird = require("bluebird");
+
+var _bluebird2 = _interopRequireDefault(_bluebird);
+
+var _dispatcherAppDispatcher = require("dispatcher/AppDispatcher");
 
 var _dispatcherAppDispatcher2 = _interopRequireDefault(_dispatcherAppDispatcher);
 
-var _constantsItemManageConstants = require("../constants/ItemManageConstants");
+var _constantsItemManageConstants = require("constants/ItemManageConstants");
 
 var _constantsItemManageConstants2 = _interopRequireDefault(_constantsItemManageConstants);
-
-var request = require("request"),
-    Promise = require("bluebird");
 
 var ItemManageAction = {
 
@@ -241,9 +271,9 @@ var ItemManageAction = {
    */
   getAllItems: function getAllItems() {
 
-    return new Promise(function (resolve, reject) {
+    return new _bluebird2["default"](function (resolve, reject) {
 
-      request.get({
+      _request2["default"].get({
         url: "http://localhost:3001/api/items"
       }, function (err, response) {
         if (err) {
@@ -276,7 +306,7 @@ var ItemManageAction = {
    */
   addItem: function addItem(newItem) {
 
-    return new Promise(function (resolve, reject) {
+    return new _bluebird2["default"](function (resolve, reject) {
 
       var formData = new FormData();
 
@@ -336,7 +366,7 @@ var ItemManageAction = {
 
       // enable this when request support ES6
       // https://github.com/request/request/issues/1961
-      request.post({
+      _request2["default"].post({
         url: "http://localhost:3001/api/items",
         formData: newItem
       }, function (err, response, body) {
@@ -371,9 +401,9 @@ var ItemManageAction = {
    */
   updateItem: function updateItem(id, newValue) {
 
-    return new Promise(function (resolve, reject) {
+    return new _bluebird2["default"](function (resolve, reject) {
 
-      request.put({
+      _request2["default"].put({
         url: "http://localhost:3001/api/items",
         qs: {
           id: id
@@ -412,9 +442,9 @@ var ItemManageAction = {
    */
   removeItem: function removeItem(id) {
 
-    return new Promise(function (resolve, reject) {
+    return new _bluebird2["default"](function (resolve, reject) {
 
-      request.del({
+      _request2["default"].del({
         url: "http://localhost:3001/api/items",
         qs: {
           id: id
@@ -447,9 +477,9 @@ var ItemManageAction = {
    */
   getAllTags: function getAllTags() {
 
-    return new Promise(function (resolve, reject) {
+    return new _bluebird2["default"](function (resolve, reject) {
 
-      request.get({
+      _request2["default"].get({
         url: "http://localhost:3001/api/tags"
       }, function (err, response) {
         if (err) {
@@ -477,7 +507,7 @@ var ItemManageAction = {
 exports["default"] = ItemManageAction;
 module.exports = exports["default"];
 
-},{"../constants/ItemManageConstants":16,"../dispatcher/AppDispatcher":17,"bluebird":30,"request":942}],4:[function(require,module,exports){
+},{"bluebird":30,"constants/ItemManageConstants":16,"dispatcher/AppDispatcher":17,"request":942}],4:[function(require,module,exports){
 "use strict";
 
 var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
@@ -502,15 +532,15 @@ var _historyLibCreateBrowserHistory = require('history/lib/createBrowserHistory'
 
 var _historyLibCreateBrowserHistory2 = _interopRequireDefault(_historyLibCreateBrowserHistory);
 
-var _componentsItemDisplayAppJsx = require("./components/ItemDisplayApp.jsx");
+var _componentsItemDisplayAppJsx = require("components/ItemDisplayApp.jsx");
 
 var _componentsItemDisplayAppJsx2 = _interopRequireDefault(_componentsItemDisplayAppJsx);
 
-var _componentsItemManageAppJsx = require("./components/ItemManageApp.jsx");
+var _componentsItemManageAppJsx = require("components/ItemManageApp.jsx");
 
 var _componentsItemManageAppJsx2 = _interopRequireDefault(_componentsItemManageAppJsx);
 
-var _componentsNavbarAppJsx = require("./components/NavbarApp.jsx");
+var _componentsNavbarAppJsx = require("components/NavbarApp.jsx");
 
 var _componentsNavbarAppJsx2 = _interopRequireDefault(_componentsNavbarAppJsx);
 
@@ -563,7 +593,7 @@ var IndexApp = _react2["default"].createClass({
   )
 ), document.getElementById("mainContent"));
 
-},{"./components/ItemDisplayApp.jsx":9,"./components/ItemManageApp.jsx":12,"./components/NavbarApp.jsx":13,"history/lib/createBrowserHistory":311,"react":941,"react-dom":751,"react-router":779}],5:[function(require,module,exports){
+},{"components/ItemDisplayApp.jsx":9,"components/ItemManageApp.jsx":12,"components/NavbarApp.jsx":13,"history/lib/createBrowserHistory":311,"react":941,"react-dom":751,"react-router":779}],5:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -590,7 +620,7 @@ var _underscore2 = _interopRequireDefault(_underscore);
 
 var _reactBootstrap = require("react-bootstrap");
 
-var _libGhostButtonJsx = require("../lib/GhostButton.jsx");
+var _libGhostButtonJsx = require("lib/GhostButton.jsx");
 
 var _libGhostButtonJsx2 = _interopRequireDefault(_libGhostButtonJsx);
 
@@ -606,11 +636,11 @@ var _AuthAppPasswordInputJsx = require("./AuthApp/PasswordInput.jsx");
 
 var _AuthAppPasswordInputJsx2 = _interopRequireDefault(_AuthAppPasswordInputJsx);
 
-var _storesAuthStore = require("../stores/AuthStore");
+var _storesAuthStore = require("stores/AuthStore");
 
 var _storesAuthStore2 = _interopRequireDefault(_storesAuthStore);
 
-var _actionsAuthActions = require("../actions/AuthActions");
+var _actionsAuthActions = require("actions/AuthActions");
 
 var _actionsAuthActions2 = _interopRequireDefault(_actionsAuthActions);
 
@@ -891,7 +921,7 @@ exports["default"] = AuthApp;
 ;
 module.exports = exports["default"];
 
-},{"../actions/AuthActions":1,"../lib/GhostButton.jsx":26,"../stores/AuthStore":27,"./AuthApp/EmailInput.jsx":6,"./AuthApp/PasswordInput.jsx":7,"./AuthApp/UsernameInput.jsx":8,"react":941,"react-bootstrap":396,"underscore":1072}],6:[function(require,module,exports){
+},{"./AuthApp/EmailInput.jsx":6,"./AuthApp/PasswordInput.jsx":7,"./AuthApp/UsernameInput.jsx":8,"actions/AuthActions":1,"lib/GhostButton.jsx":26,"react":941,"react-bootstrap":396,"stores/AuthStore":27,"underscore":1072}],6:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -912,7 +942,7 @@ var _react = require("react");
 
 var _react2 = _interopRequireDefault(_react);
 
-var _libBaseInputJsx = require("../../lib/BaseInput.jsx");
+var _libBaseInputJsx = require("lib/BaseInput.jsx");
 
 var _libBaseInputJsx2 = _interopRequireDefault(_libBaseInputJsx);
 
@@ -992,7 +1022,7 @@ EmailInput.propTypes = {
 };
 module.exports = exports["default"];
 
-},{"../../lib/BaseInput.jsx":20,"react":941}],7:[function(require,module,exports){
+},{"lib/BaseInput.jsx":20,"react":941}],7:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -1013,7 +1043,7 @@ var _react = require("react");
 
 var _react2 = _interopRequireDefault(_react);
 
-var _libBaseInputJsx = require("../../lib/BaseInput.jsx");
+var _libBaseInputJsx = require("lib/BaseInput.jsx");
 
 var _libBaseInputJsx2 = _interopRequireDefault(_libBaseInputJsx);
 
@@ -1093,7 +1123,7 @@ PasswordInput.propTypes = {
 };
 module.exports = exports["default"];
 
-},{"../../lib/BaseInput.jsx":20,"react":941}],8:[function(require,module,exports){
+},{"lib/BaseInput.jsx":20,"react":941}],8:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -1114,7 +1144,7 @@ var _react = require("react");
 
 var _react2 = _interopRequireDefault(_react);
 
-var _libBaseInputJsx = require("../../lib/BaseInput.jsx");
+var _libBaseInputJsx = require("lib/BaseInput.jsx");
 
 var _libBaseInputJsx2 = _interopRequireDefault(_libBaseInputJsx);
 
@@ -1194,7 +1224,7 @@ UsernameInput.propTypes = {
 };
 module.exports = exports["default"];
 
-},{"../../lib/BaseInput.jsx":20,"react":941}],9:[function(require,module,exports){
+},{"lib/BaseInput.jsx":20,"react":941}],9:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -1215,15 +1245,15 @@ var _react = require("react");
 
 var _react2 = _interopRequireDefault(_react);
 
-var _libBaseGridJsx = require("../lib/BaseGrid.jsx");
+var _libBaseGridJsx = require("lib/BaseGrid.jsx");
 
 var _libBaseGridJsx2 = _interopRequireDefault(_libBaseGridJsx);
 
-var _storesItemDisplayStore = require("../stores/ItemDisplayStore");
+var _storesItemDisplayStore = require("stores/ItemDisplayStore");
 
 var _storesItemDisplayStore2 = _interopRequireDefault(_storesItemDisplayStore);
 
-var _actionsItemDisplayAction = require("../actions/ItemDisplayAction");
+var _actionsItemDisplayAction = require("actions/ItemDisplayAction");
 
 var _actionsItemDisplayAction2 = _interopRequireDefault(_actionsItemDisplayAction);
 
@@ -1309,7 +1339,7 @@ var ItemDisplayApp = (function (_React$Component) {
 exports["default"] = ItemDisplayApp;
 module.exports = exports["default"];
 
-},{"../actions/ItemDisplayAction":2,"../lib/BaseGrid.jsx":19,"../stores/ItemDisplayStore":28,"./ItemDisplayApp/ItemDetailModal.jsx":11,"react":941}],10:[function(require,module,exports){
+},{"./ItemDisplayApp/ItemDetailModal.jsx":11,"actions/ItemDisplayAction":2,"lib/BaseGrid.jsx":19,"react":941,"stores/ItemDisplayStore":28}],10:[function(require,module,exports){
 module.exports = {}
 },{}],11:[function(require,module,exports){
 "use strict";
@@ -1444,23 +1474,23 @@ var _reactAddonsLinkedStateMixin = require("react-addons-linked-state-mixin");
 
 var _reactAddonsLinkedStateMixin2 = _interopRequireDefault(_reactAddonsLinkedStateMixin);
 
-var _libBaseInputJsx = require("../lib/BaseInput.jsx");
+var _libBaseInputJsx = require("lib/BaseInput.jsx");
 
 var _libBaseInputJsx2 = _interopRequireDefault(_libBaseInputJsx);
 
-var _libBaseMultiSelectJsx = require("../lib/BaseMultiSelect.jsx");
+var _libBaseMultiSelectJsx = require("lib/BaseMultiSelect.jsx");
 
 var _libBaseMultiSelectJsx2 = _interopRequireDefault(_libBaseMultiSelectJsx);
 
-var _libBaseModalJsx = require("../lib/BaseModal.jsx");
+var _libBaseModalJsx = require("lib/BaseModal.jsx");
 
 var _libBaseModalJsx2 = _interopRequireDefault(_libBaseModalJsx);
 
-var _actionsItemManageAction = require("../actions/ItemManageAction");
+var _actionsItemManageAction = require("actions/ItemManageAction");
 
 var _actionsItemManageAction2 = _interopRequireDefault(_actionsItemManageAction);
 
-var _storesItemManageStore = require("../stores/ItemManageStore");
+var _storesItemManageStore = require("stores/ItemManageStore");
 
 var _storesItemManageStore2 = _interopRequireDefault(_storesItemManageStore);
 
@@ -2145,7 +2175,7 @@ var ItemManageApp = (function (_React$Component) {
 exports["default"] = ItemManageApp;
 module.exports = exports["default"];
 
-},{"../actions/ItemManageAction":3,"../lib/BaseInput.jsx":20,"../lib/BaseModal.jsx":23,"../lib/BaseMultiSelect.jsx":24,"../stores/ItemManageStore":29,"react":941,"react-addons-linked-state-mixin":324,"react-bootstrap":396,"underscore":1072}],13:[function(require,module,exports){
+},{"actions/ItemManageAction":3,"lib/BaseInput.jsx":20,"lib/BaseModal.jsx":23,"lib/BaseMultiSelect.jsx":24,"react":941,"react-addons-linked-state-mixin":324,"react-bootstrap":396,"stores/ItemManageStore":29,"underscore":1072}],13:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -2828,7 +2858,7 @@ var _react2 = _interopRequireDefault(_react);
 
 var _reactBootstrap = require("react-bootstrap");
 
-var _libBaseInputJsx = require("../lib/BaseInput.jsx");
+var _libBaseInputJsx = require("lib/BaseInput.jsx");
 
 var _libBaseInputJsx2 = _interopRequireDefault(_libBaseInputJsx);
 
@@ -2953,7 +2983,7 @@ BaseModal.defaultProps = {
 };
 module.exports = exports["default"];
 
-},{"../lib/BaseInput.jsx":20,"react":941,"react-bootstrap":396}],24:[function(require,module,exports){
+},{"lib/BaseInput.jsx":20,"react":941,"react-bootstrap":396}],24:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -3159,11 +3189,11 @@ var _underscore2 = _interopRequireDefault(_underscore);
 
 var _events = require("events");
 
-var _dispatcherAppDispatcher = require("../dispatcher/AppDispatcher");
+var _dispatcherAppDispatcher = require("dispatcher/AppDispatcher");
 
 var _dispatcherAppDispatcher2 = _interopRequireDefault(_dispatcherAppDispatcher);
 
-var _constantsAuthConstants = require("../constants/AuthConstants");
+var _constantsAuthConstants = require("constants/AuthConstants");
 
 var _constantsAuthConstants2 = _interopRequireDefault(_constantsAuthConstants);
 
@@ -3241,7 +3271,7 @@ AuthStore.dispatchToken = _dispatcherAppDispatcher2["default"].register(function
 exports["default"] = AuthStore;
 module.exports = exports["default"];
 
-},{"../constants/AuthConstants":14,"../dispatcher/AppDispatcher":17,"events":243,"underscore":1072}],28:[function(require,module,exports){
+},{"constants/AuthConstants":14,"dispatcher/AppDispatcher":17,"events":243,"underscore":1072}],28:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -3256,11 +3286,11 @@ var _underscore2 = _interopRequireDefault(_underscore);
 
 var _events = require("events");
 
-var _dispatcherAppDispatcher = require("../dispatcher/AppDispatcher");
+var _dispatcherAppDispatcher = require("dispatcher/AppDispatcher");
 
 var _dispatcherAppDispatcher2 = _interopRequireDefault(_dispatcherAppDispatcher);
 
-var _constantsItemDisplayConstants = require("../constants/ItemDisplayConstants");
+var _constantsItemDisplayConstants = require("constants/ItemDisplayConstants");
 
 var _constantsItemDisplayConstants2 = _interopRequireDefault(_constantsItemDisplayConstants);
 
@@ -3310,7 +3340,7 @@ ItemDisplayStore.dispatchToken = _dispatcherAppDispatcher2["default"].register(f
 exports["default"] = ItemDisplayStore;
 module.exports = exports["default"];
 
-},{"../constants/ItemDisplayConstants":15,"../dispatcher/AppDispatcher":17,"events":243,"underscore":1072}],29:[function(require,module,exports){
+},{"constants/ItemDisplayConstants":15,"dispatcher/AppDispatcher":17,"events":243,"underscore":1072}],29:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -3325,11 +3355,11 @@ var _underscore2 = _interopRequireDefault(_underscore);
 
 var _events = require("events");
 
-var _dispatcherAppDispatcher = require("../dispatcher/AppDispatcher");
+var _dispatcherAppDispatcher = require("dispatcher/AppDispatcher");
 
 var _dispatcherAppDispatcher2 = _interopRequireDefault(_dispatcherAppDispatcher);
 
-var _constantsItemManageConstants = require("../constants/ItemManageConstants");
+var _constantsItemManageConstants = require("constants/ItemManageConstants");
 
 var _constantsItemManageConstants2 = _interopRequireDefault(_constantsItemManageConstants);
 
@@ -3434,7 +3464,7 @@ ItemManageStore.dispatchToken = _dispatcherAppDispatcher2["default"].register(fu
 exports["default"] = ItemManageStore;
 module.exports = exports["default"];
 
-},{"../constants/ItemManageConstants":16,"../dispatcher/AppDispatcher":17,"events":243,"underscore":1072}],30:[function(require,module,exports){
+},{"constants/ItemManageConstants":16,"dispatcher/AppDispatcher":17,"events":243,"underscore":1072}],30:[function(require,module,exports){
 (function (process,global){
 /* @preserve
  * The MIT License (MIT)

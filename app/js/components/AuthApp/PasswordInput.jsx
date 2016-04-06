@@ -1,7 +1,7 @@
 "use strict";
 
 import React from "react"
-import BaseInput from "../../lib/BaseInput.jsx"
+import BaseInput from "lib/BaseInput.jsx"
 
 function isValidPassword(password) {
   let validPasswordReg = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/i;

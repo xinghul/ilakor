@@ -1,10 +1,10 @@
 "use strict";
 
-import AppDispatcher from "../dispatcher/AppDispatcher"
-import ItemManageConstants from "../constants/ItemManageConstants"
+import request from "request"
+import Promise from "bluebird"
 
-let request = require("request")
-,   Promise = require("bluebird");
+import AppDispatcher from "dispatcher/AppDispatcher"
+import ItemManageConstants from "constants/ItemManageConstants"
 
 let ItemManageAction = {
   

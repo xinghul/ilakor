@@ -32,7 +32,10 @@
   });
 
   gulp.task("browserify", ["clean"], function() {
-    return browserify("./app/js/app.js")
+    return browserify({
+        entries: ["./app/js/app.js"],
+        paths: ["./node_modules", "./app/js"]
+      })
       .plugin(require("css-modulesify"), {
         rootDir: __dirname,
         output: "./app/stylesheets/bundle.css"

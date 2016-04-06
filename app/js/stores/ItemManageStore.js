@@ -3,8 +3,8 @@
 import _ from "underscore"
 import { EventEmitter } from "events"
 
-import AppDispatcher from "../dispatcher/AppDispatcher"
-import ItemManageConstants from "../constants/ItemManageConstants"
+import AppDispatcher from "dispatcher/AppDispatcher"
+import ItemManageConstants from "constants/ItemManageConstants"
 
 const CHANGE_EVENT = "change";
 

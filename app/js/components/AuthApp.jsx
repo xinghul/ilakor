@@ -4,13 +4,13 @@ import React from "react"
 import _ from "underscore"
 import { Button, Form, SplitButton, MenuItem, Modal } from "react-bootstrap"
 
-import GhostButton from "../lib/GhostButton.jsx"
+import GhostButton from "lib/GhostButton.jsx"
 import EmailInput from "./AuthApp/EmailInput.jsx"
 import UsernameInput from "./AuthApp/UsernameInput.jsx"
 import PasswordInput from "./AuthApp/PasswordInput.jsx"
 
-import AuthStore from "../stores/AuthStore"
-import AuthActions from "../actions/AuthActions"
+import AuthStore from "stores/AuthStore"
+import AuthActions from "actions/AuthActions"
 
 function getStateFromStores() {
   return {

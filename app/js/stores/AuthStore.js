@@ -3,8 +3,8 @@
 import _ from "underscore"
 import { EventEmitter } from "events"
 
-import AppDispatcher from "../dispatcher/AppDispatcher"
-import AuthConstants from "../constants/AuthConstants"
+import AppDispatcher from "dispatcher/AppDispatcher"
+import AuthConstants from "constants/AuthConstants"
 
 const CHANGE_EVENT = "change";
 

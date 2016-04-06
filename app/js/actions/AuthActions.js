@@ -1,12 +1,11 @@
 "use strict";
 
-let request     = require("request")
-,   ReactCookie = require("react-cookie")
-,   Promise     = require("bluebird");
+import request from "request"
+import ReactCookie from "react-cookie"
+import Promise from "bluebird"
 
-let AppDispatcher = require("../dispatcher/AppDispatcher")
-,   AuthConstants = require("../constants/AuthConstants");
-
+import AppDispatcher from "dispatcher/AppDispatcher"
+import AuthConstants from "constants/AuthConstants"
 
 let AuthActions = {
 
@@ -154,4 +153,4 @@ let AuthActions = {
 
 };
 
-module.exports = AuthActions;
+export default AuthActions;

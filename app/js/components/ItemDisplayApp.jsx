@@ -2,10 +2,10 @@
 
 import React from "react"
 
-import BaseGrid from "../lib/BaseGrid.jsx"
+import BaseGrid from "lib/BaseGrid.jsx"
 
-import ItemDisplayStore from "../stores/ItemDisplayStore"
-import ItemDisplayAction from "../actions/ItemDisplayAction"
+import ItemDisplayStore from "stores/ItemDisplayStore"
+import ItemDisplayAction from "actions/ItemDisplayAction"
 import ItemDetailModal from "./ItemDisplayApp/ItemDetailModal.jsx"
 
 function getStateFromStores() {

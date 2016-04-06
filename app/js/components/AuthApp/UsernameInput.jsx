@@ -1,7 +1,7 @@
 "use strict";
 
 import React from "react"
-import BaseInput from "../../lib/BaseInput.jsx"
+import BaseInput from "lib/BaseInput.jsx"
 
 function isValidUsername(username) {
   let validUsernameReg = /^[a-zA-Z0-9]+([_\s\-]?[a-zA-Z0-9])*$/;
