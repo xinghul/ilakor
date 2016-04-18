@@ -49,163 +49,163 @@ let CustomError = require("./utils/CustomError");
  ********************************************************/
 
 router.route("/items")
-  .all(function(req, res, next) {
-    
-    let itemId = req.query.id || req.params.id;
-    
-    if (_.isString(itemId)) {
-      req.itemId = itemId;
-    }
-    
-    next();
-  })
-  .get(function(req, res, next) {
-    
-    let itemId = req.itemId;
-    
-    if (_.isString(itemId)) {
-      Item.get(itemId).then(function(item) {
-        res.status(200).json(item);
-      }).catch(function(err) {
-        console.log(err.stack);
-        
-        next(new CustomError(500, "Internal error"));
-      });
-    } else {
-      Item.getAll().then(function(items) {
-        res.status(200).json(items);
-      }).catch(function(err) {
-        console.log(err.stack);
-        
-        next(new CustomError(500, "Internal error"));
-      });
-    }
-
-  })
-  .post(function(req, res, next) {
-    
-    let form = new multiparty.Form();
-    
-    form.parse(req, function(err, fields, files) {
-      
-      let rawData = JSON.parse(fields.item[0])
-      ,   images  = files.image;
-
-      Item.add(rawData).then(function(newItem) {
-        return Item.uploadImage(newItem, images);
-      }).then(function(updatedItem) {
-        res.status(200).json(updatedItem);
-      }).catch(function(err) {
-        console.log(err.stack);
-        
-        next(new CustomError(500, "Internal error."));
-      });
-    });
-    
-    return;
-    
-    // enable this when request support ES6
-    let rawData;
-    
-    if (!req.body.item) {
-      return next(new CustomError(400, "Item info undefined."));
-    }
-    
-    try {
-      rawData = JSON.parse(req.body.item);
-    } catch (err) {
+.all(function(req, res, next) {
+  
+  let itemId = req.query.id || req.params.id;
+  
+  if (_.isString(itemId)) {
+    req.itemId = itemId;
+  }
+  
+  next();
+})
+.get(function(req, res, next) {
+  
+  let itemId = req.itemId;
+  
+  if (_.isString(itemId)) {
+    Item.get(itemId).then(function(item) {
+      res.status(200).json(item);
+    }).catch(function(err) {
       console.log(err.stack);
       
-      return next(new CustomError(400, "Malformed JSON."));
-    }
+      next(new CustomError(500, "Internal error"));
+    });
+  } else {
+    Item.getAll().then(function(items) {
+      res.status(200).json(items);
+    }).catch(function(err) {
+      console.log(err.stack);
+      
+      next(new CustomError(500, "Internal error"));
+    });
+  }
+
+})
+.post(function(req, res, next) {
+  
+  let form = new multiparty.Form();
+  
+  form.parse(req, function(err, fields, files) {
+    
+    let rawData = JSON.parse(fields.item[0])
+    ,   images  = files.image;
 
     Item.add(rawData).then(function(newItem) {
-      res.status(200).json(newItem);
+      return Item.uploadImage(newItem, images);
+    }).then(function(updatedItem) {
+      res.status(200).json(updatedItem);
     }).catch(function(err) {
       console.log(err.stack);
       
       next(new CustomError(500, "Internal error."));
     });
-    
-  })
-  .put(function(req, res, next) {
-    let itemId   = req.itemId
-    ,   newValue = JSON.parse(req.body.item) ;
-    
-    if (_.isString(itemId) && _.isObject(newValue)) {
-      Item.update(itemId, newValue).then(function(item) {
-        res.status(200).json(item);
-      }).catch(function(err) {
-        console.log(err.stack);
-        
-        next(new CustomError(500, "Internal error."));
-      });
-    } else {
-      next(new CustomError(400, "Item id not specified!"));
-    }
-  })
-  .delete(function(req, res, next) {
-    let itemId = req.itemId;
-    
-    if (_.isString(itemId)) {
-      Item.remove(itemId).then(function(item) {
-        res.status(200).json(item);
-      }).catch(function(err) {
-        console.log(err.stack);
-        
-        next(new CustomError(500, "Internal error."));
-      });
-    } else {
-      next(new CustomError(400, "Item id not specified!"));
-    }
   });
+  
+  return;
+  
+  // enable this when request support ES6
+  let rawData;
+  
+  if (!req.body.item) {
+    return next(new CustomError(400, "Item info undefined."));
+  }
+  
+  try {
+    rawData = JSON.parse(req.body.item);
+  } catch (err) {
+    console.log(err.stack);
+    
+    return next(new CustomError(400, "Malformed JSON."));
+  }
+
+  Item.add(rawData).then(function(newItem) {
+    res.status(200).json(newItem);
+  }).catch(function(err) {
+    console.log(err.stack);
+    
+    next(new CustomError(500, "Internal error."));
+  });
+  
+})
+.put(function(req, res, next) {
+  let itemId   = req.itemId
+  ,   newValue = JSON.parse(req.body.item) ;
+  
+  if (_.isString(itemId) && _.isObject(newValue)) {
+    Item.update(itemId, newValue).then(function(item) {
+      res.status(200).json(item);
+    }).catch(function(err) {
+      console.log(err.stack);
+      
+      next(new CustomError(500, "Internal error."));
+    });
+  } else {
+    next(new CustomError(400, "Item id not specified!"));
+  }
+})
+.delete(function(req, res, next) {
+  let itemId = req.itemId;
+  
+  if (_.isString(itemId)) {
+    Item.remove(itemId).then(function(item) {
+      res.status(200).json(item);
+    }).catch(function(err) {
+      console.log(err.stack);
+      
+      next(new CustomError(500, "Internal error."));
+    });
+  } else {
+    next(new CustomError(400, "Item id not specified!"));
+  }
+});
 
 /********************************************************
  *                  Item Feature Routes                 *
  ********************************************************/
 // Return information associated with items like price, stock left, reviews, etc
 router.route("/feature")
-  /**
-   * Global logic for path '/api/feature'.
-   */
-  .all(function(req, res, next) {
+/**
+ * Global logic for path '/api/feature'.
+ */
+.all(function(req, res, next) {
 
-    let itemId = req.query.id || req.params.id;
-    
-    if (_.isString(itemId)) {
-      req.itemId = itemId;
-    }
-    
-    next();
-  })
-  /**
-   * Gets a specific item info by id.
-   */
-  .get(function(req, res, next) {
-    
-    
+  let itemId = req.query.id || req.params.id;
+  
+  if (_.isString(itemId)) {
+    req.itemId = itemId;
+  }
+  
+  next();
+})
+/**
+ * Gets a specific item info by id.
+ */
+.get(function(req, res, next) {
+  
+  
 
-  })
-  /**
-   * Adds a new tag.
-   */
-  .post(function(req, res, next) {
-    
-    
-    
-  })
-  /**
-   * Updates a specific tag by id.
-   */
-  .put(function(req, res, next) {
-    
-  })
-  /**
-   * Deletes a specific tag by id.
-   */
-  .delete(function(req, res, next) {
-    
-  });
+})
+/**
+ * Adds a new tag.
+ */
+.post(function(req, res, next) {
+  
+  
+  
+})
+/**
+ * Updates a specific tag by id.
+ */
+.put(function(req, res, next) {
+  
+})
+/**
+ * Deletes a specific tag by id.
+ */
+.delete(function(req, res, next) {
+  
+});
 
 
 

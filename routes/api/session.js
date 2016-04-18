@@ -31,7 +31,7 @@
         });
 
         return res.json({
-          "user": req.user.infoLocal,
+          "user": req.user,
           "token": token
         });
       }
@@ -95,7 +95,7 @@
           });
           
           res.json({
-            "user": req.user.infoLocal,
+            "user": req.user,
             "token": token
           });
         });

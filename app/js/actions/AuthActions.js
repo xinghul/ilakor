@@ -8,39 +8,6 @@ import AppDispatcher from "dispatcher/AppDispatcher"
 import AuthConstants from "constants/AuthConstants"
 
 let AuthActions = {
-
-  toggleMode: function() {
-    AppDispatcher.handleAction({
-      actionType: AuthConstants.TOGGLE_MODE
-    });
-  },
-
-  toggleModal: function() {
-    AppDispatcher.handleAction({
-      actionType: AuthConstants.TOGGLE_MODAL
-    });
-  },
-
-  inputUsername: function(username) {
-    AppDispatcher.handleAction({
-      actionType: AuthConstants.INPUT_USERNAME,
-      username: username
-    });
-  },
-
-  inputEmail: function(email) {
-    AppDispatcher.handleAction({
-      actionType: AuthConstants.INPUT_EMAIL,
-      email: email
-    });
-  },
-
-  inputPassword: function(password) {
-    AppDispatcher.handleAction({
-      actionType: AuthConstants.INPUT_PASSWORD,
-      password: password
-    });
-  },
   
   userLogIn: function(user) {
     
@@ -84,11 +51,13 @@ let AuthActions = {
     return new Promise(function(resolve, reject) {
       // XXX check if all the fields are non-empty
       request.post({
-        url: "http://localhost:3001/auth/users",
+        url: "http://localhost:3001/auth/user",
         form: {
-          "local.email": user.email,
-          "local.username": user.username,
-          "local.password": user.password
+          user: JSON.stringify({
+            "local.email": user.email,
+            "local.username": user.username,
+            "local.password": user.password
+          })
         }
       }, function(err, res) {
         if (err) {

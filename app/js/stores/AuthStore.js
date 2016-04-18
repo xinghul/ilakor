@@ -8,27 +8,9 @@ import AuthConstants from "constants/AuthConstants"
 
 const CHANGE_EVENT = "change";
 
-let _user = {}
-,   _isSignUp = true
-,   _isModalOpen = false;
+let _user = {};
 
 let AuthStore = _.extend({}, EventEmitter.prototype, {
-
-  toggleMode: function() {
-    _isSignUp = !_isSignUp;
-  },
-
-  toggleModal: function() {
-    _isModalOpen = !_isModalOpen;
-  },
-
-  isSignUp: function() {
-    return _isSignUp;
-  },
-
-  isModalOpen: function() {
-    return _isModalOpen;
-  },
 
   updateUser: function(user) {
     _user = user;
@@ -56,16 +38,6 @@ AuthStore.dispatchToken = AppDispatcher.register(function(payload) {
   let action = payload.action;
 
   switch(action.actionType) {
-
-    case AuthConstants.TOGGLE_MODE:
-      AuthStore.toggleMode();
-      AuthStore.emitChange();
-      break;
-
-    case AuthConstants.TOGGLE_MODAL:
-      AuthStore.toggleModal();
-      AuthStore.emitChange();
-      break;
 
     case AuthConstants.RECEIVED_USER:
       AuthStore.updateUser(action.user);

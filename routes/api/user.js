@@ -1,93 +1,51 @@
 "use strict";
 
-var mongoose = require("mongoose")
-,   passport = require("passport");
+let mongoose = require("mongoose")
+,   bluebird = require("bluebird");
 
-var User     = mongoose.model("User")
+let User     = mongoose.model("User")
 ,   ObjectId = mongoose.Types.ObjectId;
 
-var UserApi = {
-  
-  /**
-   * Creates a new user.
-   * 
-   * @param  {Request}  req  the request object.
-   * @param  {Response} res  the response object.
-   * @param  {Function} next the next middleware.
-   *
-   * req.body:
-   * {
-   * 	local.email: String
-   * 	local.username: String
-   * 	local.password: String
-   * }
-   */
-  create: function(req, res, next) {
-    var newUser = new User(req.body);
-    
-    // do a check here
-    newUser.save(function(err) {
-      if (err) {
-        var errObj = {};
-
-        if (err.errors["local.username"]) {
-          errObj.usernameError = err.errors["local.username"].message;
-        }
-
-        if (err.errors["local.email"]) {
-          errObj.emailError = err.errors["local.email"].message;
-        }
-
-        return next(errObj);
-      }
-
-      req.logIn(newUser, function(err) {
+let UserApi = {
+  get: function(userId) {
+    return new Promise(function(resolve, reject) {
+      User.findById(ObjectId(userId), function(err, user) {
         if (err) {
-          return next(err);
+          reject(err);
+        } else {
+          resolve(user);
         }
-
-        return res.json(newUser.infoLocal);
       });
     });
   },
   
-  /**
-   * Returns user specified by given user id, if it exists.
-   * 
-   * @param  {Request}   req  the request object.
-   * @param  {Response}  res  the response object.
-   * @param  {Function} next the next middleware.
-   */
-  get: function(req, res, next) {
-    var userId = req.params.userId;
+  add: function(rawData) {
+    return new Promise(function(resolve, reject) {
+      let user = new User(rawData);
+      
+      user.save(function(err, newUser) {
+        if (err) {
+          if (err.errors) {
+            let errObj = {};
+            
+            errObj["collision"] = true;
 
-    User.findById(ObjectId(userId), function(err, user) {
-      if (err) {
-        return next(new Error("Failed to load User"));
-      }
-      
-      if (user) {
-        res.json(user.infoLocal);
-      } else {
-        res.send(404, "USER NOT FOUND")
-      }
-    });
-  },
-  
-  /**
-   * Returns all users.
-   * 
-   * @param  {Request}   req  the request object.
-   * @param  {Response}  res  the response object.
-   * @param  {Function} next the next middleware.
-   */
-  getAll: function(req, res, next) {
-    User.find({}, function(err, users) {
-      if (err) {
-        return next(new Error("Failed to load Users"));
-      }
-      
-      res.json(users);
+            if (err.errors["local.username"]) {
+              errObj["usernameError"] = err.errors["local.username"].message;
+            }
+
+            if (err.errors["local.email"]) {
+              errObj["emailError"] = err.errors["local.email"].message;
+            }
+
+            return reject(errObj);
+          }
+          
+          reject(err);
+        } else {
+          resolve(newUser);
+        }
+      });
     });
   }
 

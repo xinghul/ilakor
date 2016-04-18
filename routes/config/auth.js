@@ -6,7 +6,7 @@
     'facebookAuth' : {
       'clientID'      : '1015863301820553',
       'clientSecret'  : '6ed78eb8641f7fcd84f3988ab96fb5dc',
-      'callbackURL'   : 'http://localhost:3001/auth/facebook/callback'
+      'callbackURL'   : '/auth/facebook/callback'
     },
 
     'twitterAuth' : {

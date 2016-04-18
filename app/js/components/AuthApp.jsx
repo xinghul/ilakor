@@ -14,8 +14,6 @@ import AuthActions from "actions/AuthActions"
 
 function getStateFromStores() {
   return {
-    isModalOpen: AuthStore.isModalOpen(),
-    isSignUp: AuthStore.isSignUp(),
     user: AuthStore.getUser()
   };
 }
@@ -26,6 +24,9 @@ export default class AuthApp extends React.Component {
     super(props);
     
     this._onChange = this._onChange.bind(this);
+    this.toggleMode = this.toggleMode.bind(this);
+    this.toggleModal = this.toggleModal.bind(this);
+    
     this.handleEmailChange = this.handleEmailChange.bind(this);
     this.handleUsernameChange = this.handleUsernameChange.bind(this);
     this.handlePasswordChange = this.handlePasswordChange.bind(this);
@@ -34,6 +35,9 @@ export default class AuthApp extends React.Component {
     this.handleSignupClick = this.handleSignupClick.bind(this);
     
     this.state = {
+      isModalOpen: false,
+      isSignUp: false,
+      
       username: "",
       email: "",
       password: ""
@@ -41,11 +45,15 @@ export default class AuthApp extends React.Component {
   }
 
   toggleMode() {
-    AuthActions.toggleMode();
+    this.setState({
+      isSignUp: !this.state.isSignUp
+    });
   }
   
   toggleModal() {
-    AuthActions.toggleModal();
+    this.setState({
+      isModalOpen: !this.state.isModalOpen
+    });
   }
   
   handleLoginClick() {
@@ -157,12 +165,12 @@ export default class AuthApp extends React.Component {
   }
 
   render() {
-    var authArea;
-    var toggleModeMessage;
-    var socialLoginArea;
+    let authArea;
+    let toggleModeMessage;
+    let socialLoginArea;
     
-    if (this.state.user && this.state.user.username) {
-      var title = "Hello, " + this.state.user.username;
+    if (this.state.user && this.state.user._id) {
+      let title = "Hello, " + this.state.user._id;
       
       authArea =
         <SplitButton id="sign-in" title={title} bsStyle="default" pullRight>

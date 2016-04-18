@@ -7,6 +7,7 @@ import createBrowserHistory from 'history/lib/createBrowserHistory'
 
 import ItemDisplayApp from "components/ItemDisplayApp.jsx"
 import ItemManageApp from "components/ItemManageApp.jsx"
+import AccountApp from "components/AccountApp.jsx"
 import NavbarApp from "components/NavbarApp.jsx"
 
 class App extends React.Component {
@@ -33,6 +34,7 @@ render((
       <IndexRoute component={IndexApp} />
       <Route path="itemDisplay" component={ItemDisplayApp} />
       <Route path="itemManage" component={ItemManageApp} />
+      <Route path="account" component={AccountApp} />
       <Route path="*" component={IndexApp} />
     </Route>
   </Router>

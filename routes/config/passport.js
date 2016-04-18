@@ -1,15 +1,17 @@
 +function(undefined) {
 "use strict";
 
-var mongoose = require("mongoose")
+let mongoose = require("mongoose")
+,   _        = require("underscore")
 ,   passport = require("passport");
 
-var LocalStrategy    = require("passport-local").Strategy
+let LocalStrategy    = require("passport-local").Strategy
 ,   FacebookStrategy = require("passport-facebook").Strategy
 ,   TwitterStrategy  = require("passport-twitter").Strategy
 ,   GoogleStrategy   = require("passport-google-oauth").OAuth2Strategy;
 
-var configAuth = require("./auth")
+let configAuth = require("./auth")
+,   UserUtil   = require("../utils/UserUtil")
 ,   User       = mongoose.model("User");
 
 module.exports = {
@@ -72,52 +74,87 @@ module.exports = {
     passport.use(new FacebookStrategy({
 
       // pull in our app id and secret from our auth.js file
-      clientID        : configAuth.facebookAuth.clientID,
-      clientSecret    : configAuth.facebookAuth.clientSecret,
-      callbackURL     : configAuth.facebookAuth.callbackURL,
-      profileFields   : ["id", "emails", "photos", "name"]
-    }, function (token, refreshToken, profile, done) {
+      clientID         : configAuth.facebookAuth.clientID,
+      clientSecret     : configAuth.facebookAuth.clientSecret,
+      callbackURL      : configAuth.facebookAuth.callbackURL,
+      passReqToCallback: true,
+      profileFields    : ["id", "emails", "photos", "name"]
+    }, function (req, token, refreshToken, profile, done) {
 
-      // asynchronous
       process.nextTick(function () {
+        // check if the user has logged in
+        if (!req.user) {
+          
+          // find the user in the database based on their facebook id
+          User.findOne({ "facebook.id" : profile.id }, function (err, user) {
 
-        // find the user in the database based on their facebook id
-        User.findOne({ "facebook.id" : profile.id }, function (err, user) {
+            // if there is an error, stop everything and return that
+            // ie an error connecting to the database
+            if (err) {
+              return done(err);            
+            }
 
-          // if there is an error, stop everything and return that
-          // ie an error connecting to the database
-          if (err)
-          return done(err);
+            // if the user is found, then log them in
+            if (user) {
+              return done(null, user); // user found, return that user
+            } else {
+              // if there is no user found with that facebook id, create them
+              let newUser = new User();
 
-          // if the user is found, then log them in
-          if (user) {
-            return done(null, user); // user found, return that user
+              // set all of the facebook information in our user model
+              newUser.facebook.id       = profile.id;
+              newUser.facebook.token    = token;
+              newUser.facebook.fullname = 
+                profile.name.givenName + ' ' + profile.name.familyName;
+              newUser.facebook.nickname = profile.name.givenName;
+              newUser.facebook.email    = profile.emails[0].value;
+              newUser.facebook.photo    = profile.photos[0].value;
+
+              // save our user to the database
+              newUser.save(function (err) {
+                if (err) {
+                  throw err;                
+                }
+
+                // if successful, return the new user
+                return done(null, newUser);
+              });
+            }
+
+          });
+        } else {
+          let user = req.user
+          ,   newUser = new User();
+          
+          if (_.isEmpty(user.local)) {
+            return done(new Error("User needs to log in using email."))
           }
+          
+          newUser.local = user.local;
 
-          else {
-            // if there is no user found with that facebook id, create them
-            var newUser                = new User();
+          newUser.facebook.id       = profile.id;
+          newUser.facebook.token    = token;
+          newUser.facebook.fullname = 
+            profile.name.givenName + ' ' + profile.name.familyName;
+          newUser.facebook.nickname = profile.name.givenName;
+          newUser.facebook.email    = profile.emails[0].value;
+          newUser.facebook.photo    = profile.photos[0].value;
 
-            // set all of the facebook information in our user model
-            newUser.facebook.id        = profile.id; // set the users facebook id
-            newUser.facebook.token     = token; // we will save the token that facebook provides to the user
-            newUser.facebook.fullname  = profile.name.givenName + ' ' + profile.name.familyName; // look at the passport user profile to see how names are returned
-            newUser.facebook.nickname  = profile.name.givenName;
-            newUser.facebook.email     = profile.emails[0].value; // facebook can return multiple emails so we'll take the first
-            newUser.facebook.photo     = profile.photos[0].value;
+          UserUtil.facebook.remove(profile.id)
+          .then(function() {
+            return UserUtil.local.remove(user._id);
+          })
+          .then(newUser.save)
+          .then(function() {
+            done(null, newUser);
+          })
+          .catch(function(err) {
+            done(err);
+          });
+          
+        }
 
-            // save our user to the database
-            newUser.save(function (err) {
-              if (err) {
-                throw err;                
-              }
-
-              // if successful, return the new user
-              return done(null, newUser);
-            });
-          }
-
-        });
+        
       });
     }));
 
@@ -149,7 +186,7 @@ module.exports = {
             return done(null, user); // user found, return that user
           } else {
             // if there is no user, create them
-            var newUser                 = new User();
+            let newUser                 = new User();
 
             // set all of the user data that we need
             newUser.twitter.id          = profile.id;
@@ -198,7 +235,7 @@ module.exports = {
             return done(null, user);
           } else {
             // if the user isnt in our database, create a new user
-            var newUser              = new User();
+            let newUser              = new User();
 
             // set all of the relevant information
             newUser.google.id        = profile.id;

@@ -4,21 +4,21 @@
 /**********************************************************
 *                      Load Modules                      *
 **********************************************************/
-// load env variables first
+// load env letiables first
 require("dotenv").load();
 
-var express  = require("express")
+let express  = require("express")
 ,   path     = require("path")
 ,   fs       = require("fs")
 ,   session  = require("express-session")
 ,   passport = require("passport");
 
-var favicon      = require("serve-favicon")
+let favicon      = require("serve-favicon")
 ,   logger       = require("morgan")
 ,   cookieParser = require("cookie-parser")
 ,   bodyParser   = require("body-parser");
 
-var app        = express()
+let app        = express()
 ,   MongoStore = require("connect-mongo")(session);
 
 // set server root for future use
@@ -28,7 +28,7 @@ global.serverRoot = path.resolve(__dirname);
 * Connect MongoDB, Bootstrap models and Config passport  *
 **********************************************************/
 
-var db_url = process.env.MONGODB_URL || "mongodb://127.0.0.1:27017/cramford";
+let db_url = process.env.MONGODB_URL || "mongodb://127.0.0.1:27017/cramford";
 require("mongoose").connect(db_url, function (err) {
   if (err) {
     console.log(err, err.stack);
@@ -37,7 +37,7 @@ require("mongoose").connect(db_url, function (err) {
   }
 });
 
-var modelsPath = path.join(__dirname, "lib/models");
+let modelsPath = path.join(__dirname, "lib/models");
 fs.readdirSync(modelsPath).forEach(function(file) {
   require(modelsPath + "/" + file);
 });
@@ -65,7 +65,7 @@ app.use(session({
 }));
 
 // configure the passport settings.
-require("./lib/config/passport").configure(app);
+require("./routes/config/passport").configure(app);
 
 app.use(express.static(path.join(__dirname, "app")));
 
@@ -76,13 +76,20 @@ app.use(express.static(path.join(__dirname, "app")));
 //     res.setHeader('Last-Modified', (new Date()).toUTCString());
 //     next();
 // });
+// 
+app.use(function(req, res, next) {
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header("Access-Control-Allow-Methods", "GET,PUT,POST,DELETE");
+  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+  next();
+});
 
-var routes = require("./routes/index");
+let routes = require("./routes/index");
 app.use("/", routes);
 
 /// catch 404 and forward to error handler
 app.use(function(req, res, next) {
-  var err = new Error("Not Found");
+  let err = new Error("Not Found");
   err.status = 404;
   next(err);
 });
@@ -97,7 +104,7 @@ if (app.get("env") === "development") {
     
     // send back the json for now
     // because we're not using jade as view engine
-    // so render with variable injection does not work
+    // so render with letiable injection does not work
     res.json(err);
     
     // res.render("error", {
