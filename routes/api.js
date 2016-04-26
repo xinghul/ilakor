@@ -61,7 +61,9 @@ router.route("/items")
 })
 .get(function(req, res, next) {
   
-  let itemId = req.itemId;
+  let itemId = req.itemId
+  ,   limit
+  ,   skip;
   
   if (_.isString(itemId)) {
     Item.get(itemId).then(function(item) {
@@ -72,7 +74,10 @@ router.route("/items")
       next(new CustomError(500, "Internal error"));
     });
   } else {
-    Item.getAll().then(function(items) {
+    limit = req.query.limit;
+    skip = req.query.skip;
+    
+    Item.getAll(skip, limit).then(function(items) {
       res.status(200).json(items);
     }).catch(function(err) {
       console.log(err.stack);

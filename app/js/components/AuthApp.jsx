@@ -174,7 +174,7 @@ export default class AuthApp extends React.Component {
       
       authArea =
         <SplitButton id="sign-in" title={title} bsStyle="default" pullRight>
-          <MenuItem>My Account</MenuItem>
+          <MenuItem href="#/account">My Account</MenuItem>
           <MenuItem divider />
           <MenuItem onSelect={this.handleLogOut}>Log out</MenuItem>
         </SplitButton>

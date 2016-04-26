@@ -5,6 +5,8 @@ let mongoose = require("mongoose")
 ,   _        = require("underscore")
 ,   passport = require("passport");
 
+let FB = require("fb");
+
 let LocalStrategy    = require("passport-local").Strategy
 ,   FacebookStrategy = require("passport-facebook").Strategy
 ,   TwitterStrategy  = require("passport-twitter").Strategy
@@ -96,7 +98,16 @@ module.exports = {
 
             // if the user is found, then log them in
             if (user) {
-              return done(null, user); // user found, return that user
+              user.facebook.token = token;
+              
+              user.save(function(err) {
+                if (err) {
+                  return done(err);
+                }
+                
+                return done(null, user); // user found, return that user                
+              });
+              
             } else {
               // if there is no user found with that facebook id, create them
               let newUser = new User();
@@ -109,6 +120,27 @@ module.exports = {
               newUser.facebook.nickname = profile.name.givenName;
               newUser.facebook.email    = profile.emails[0].value;
               newUser.facebook.photo    = profile.photos[0].value;
+              
+              // FB.setAccessToken(token);
+              // 
+              // 
+              // FB.api("/" + profile.id + "/feed", function (res) {
+              //   if(!res || res.error) {
+              //    console.log(!res ? 'error occurred' : res.error);
+              //    return;
+              //   }
+              //   
+              //   console.dir(res);
+              // });
+              // 
+              // FB.api("/me/feed", function (res) {
+              //   if(!res || res.error) {
+              //    console.log(!res ? 'error occurred' : res.error);
+              //    return;
+              //   }
+              //   
+              //   console.dir(res);
+              // });
 
               // save our user to the database
               newUser.save(function (err) {

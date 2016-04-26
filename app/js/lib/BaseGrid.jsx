@@ -14,6 +14,7 @@ export default class BaseGrid extends React.Component {
   }
   
   createItemJsx(item) {
+
     let itemJsx;
 
     itemJsx = (

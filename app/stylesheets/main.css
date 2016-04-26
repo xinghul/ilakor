@@ -4,7 +4,7 @@ body {
   padding: 0; }
 
 body {
-  font: 14px Helvetica Neue, Muli, helvetica, arial;
+  font: 14px "Source Sans Pro", sans-serif, Helvetica Neue;
   background: #eaeaea url("/images/base.png");
   -webkit-font-smoothing: antialiased;
   -moz-font-smoothing: antialiased;

@@ -17,15 +17,15 @@ class BaseItem extends React.Component {
   constructor(props) {
     super(props);
     
+    this.handleImageLoaded = this.handleImageLoaded.bind(this);
+    
     this.state = {
       imageLoaded: false,
-      bannerOpacity: 0
+      bannerBottom: "-80px"
     };
   }
   
-  onImageLoad() {
-    return;
-    
+  handleImageLoaded() {
     if (this.state.imageLoaded) {
       return;
     }
@@ -45,7 +45,7 @@ class BaseItem extends React.Component {
     };
     
     return (
-      <img style={imgStyle} src={imageUrl} />
+      <img style={imgStyle} src={imageUrl} onLoad={this.handleImageLoaded} />
     );
   }
   
@@ -54,7 +54,7 @@ class BaseItem extends React.Component {
     ,   bannerStyle;
     
     bannerStyle = {
-      opacity: this.state.bannerOpacity
+      bottom: this.state.bannerBottom
     };
     
     return (
@@ -67,13 +67,13 @@ class BaseItem extends React.Component {
   
   handleMouseEnter() {
     this.setState({
-      bannerOpacity: 1
+      bannerBottom: "0px"
     });
   }
   
   handleMouseLeave() {
     this.setState({
-      bannerOpacity: 0
+      bannerBottom: "-80px"
     });
   }
   
@@ -83,14 +83,20 @@ class BaseItem extends React.Component {
   
   render() {
     let itemJsx
-    ,   bannerJsx;
+    ,   bannerJsx
+    ,   style;
     
     itemJsx = this.createImageJsx();
     
     bannerJsx = this.createBannerJsx();
     
+    style = {
+      display: this.state.imageLoaded ? "block" : "none"
+    };
+    
     return (
       <div styleName="baseItem" 
+        style={style}
         onMouseEnter={this.handleMouseEnter.bind(this)}
         onMouseLeave={this.handleMouseLeave.bind(this)}
         onClick={this.handleClick.bind(this)}>

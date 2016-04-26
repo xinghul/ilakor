@@ -3,5 +3,8 @@
 import keyMirror from "fbjs/lib/keyMirror";
 
 export default keyMirror({
-  RECEIVED_ALL_ITEMS: null
+  RECEIVED_ITEMS: null,
+  CLEAR_ITEMS: null,
+  
+  NO_MORE_ITEMS: null
 });

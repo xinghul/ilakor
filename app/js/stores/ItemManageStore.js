@@ -78,7 +78,7 @@ ItemManageStore.dispatchToken = AppDispatcher.register(function(payload) {
   var action = payload.action;
 
   switch(action.actionType) {
-    case ItemManageConstants.RECEIVED_ALL_ITEMS:
+    case ItemManageConstants.RECEIVED_ITEMS_RESET:
       ItemManageStore.setItems(action.items);
       ItemManageStore.emitChange();
       break;

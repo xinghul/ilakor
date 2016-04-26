@@ -5,7 +5,6 @@ import _ from "underscore"
 import React from "react"
 import { Grid, Row, Col } from "react-bootstrap"
 import { Modal, Table, Label, Input, Glyphicon, Button } from "react-bootstrap"
-import LinkedStateMixin from "react-addons-linked-state-mixin"
 
 import BaseInput from "lib/BaseInput.jsx"
 import BaseMultiSelect from "lib/BaseMultiSelect.jsx"
@@ -238,7 +237,7 @@ export default class ItemManageApp extends React.Component {
   componentDidMount() {
     ItemManageStore.addChangeListener(this._onChange);
     
-    ItemManageAction.getAllItems();
+    ItemManageAction.getItems();
     
     ItemManageAction.getAllTags();
   }

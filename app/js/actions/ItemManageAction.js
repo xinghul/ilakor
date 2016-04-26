@@ -13,7 +13,7 @@ let ItemManageAction = {
    *
    * @return {Promise} the promise object.
    */
-  getAllItems: function() {
+  getItems: function() {
     
     return new Promise(function(resolve, reject) {
       
@@ -28,7 +28,7 @@ let ItemManageAction = {
             let items = JSON.parse(response.body);
             
             AppDispatcher.handleAction({
-              actionType: ItemManageConstants.RECEIVED_ALL_ITEMS,
+              actionType: ItemManageConstants.RECEIVED_ITEMS_RESET,
               items: items
             });
             

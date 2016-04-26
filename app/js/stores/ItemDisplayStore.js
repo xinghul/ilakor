@@ -9,16 +9,30 @@ import ItemDisplayConstants from "constants/ItemDisplayConstants"
 const CHANGE_EVENT = "change";
 
 // items in this store
-let _items = [];
+let _items = []
+,   _filters = {}
+,   _hasMoreItems = true;
 
 let ItemDisplayStore = _.extend({}, EventEmitter.prototype, {
   
-  setItems: function(newItems) {
-    _items = newItems;
+  addItems: function(newItems) {
+    _items = _items.concat(newItems);
   },
   
   getItems: function() {
     return _items;
+  },
+  
+  clearItems: function() {
+    _items = [];
+  },
+  
+  setHasMoreItems: function(hasMoreItems) {
+    _hasMoreItems = hasMoreItems
+  },
+  
+  getHasMoreItems: function() {
+    return _hasMoreItems;
   },
   
   emitChange: function() {
@@ -37,13 +51,23 @@ let ItemDisplayStore = _.extend({}, EventEmitter.prototype, {
 
 ItemDisplayStore.dispatchToken = AppDispatcher.register(function(payload) {
   var action = payload.action;
-  
+
   switch(action.actionType) {
-    case ItemDisplayConstants.RECEIVED_ALL_ITEMS:
-      ItemDisplayStore.setItems(action.items);
+    case ItemDisplayConstants.RECEIVED_ITEMS:
+      ItemDisplayStore.addItems(action.items);
       ItemDisplayStore.emitChange();
       break;
-
+      
+    case ItemDisplayConstants.CLEAR_ITEMS:
+      ItemDisplayStore.clearItems();
+      ItemDisplayStore.emitChange();
+      break;
+      
+    case ItemDisplayConstants.NO_MORE_ITEMS:
+      ItemDisplayStore.setHasMoreItems(false);
+      ItemDisplayStore.emitChange();
+      break;
+    
     default:
       // do nothing
   }

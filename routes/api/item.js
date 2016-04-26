@@ -123,21 +123,30 @@ let ItemApi = {
    },
    
    /**
-    * Returns all items.
+    * Returns all items with given limit.
+    *
+    * @param {Number} skip the number of records to skip.
+    * @param {Number} limit the limit of items to return.
     * 
     * @return {Promise} the new promise object.
     */
-   getAll: function() {
+   getAll: function(skip, limit) {
+     skip = skip || 0;
+     limit = limit || 20;
      
      return new Promise(function(resolve, reject) {
        
        Item
        .find({})
+       .skip(skip)
+       .limit(limit)
        .exec(function(err, result) {
          if (err) {
            reject(err);
          } else {
-           resolve(result);
+           setTimeout(function() {
+             resolve(result);
+           }, 3000);
          }
        });
        
