@@ -8,6 +8,7 @@ import Loader from "lib/Loader.jsx"
 
 import ItemDisplayStore from "stores/ItemDisplayStore"
 import ItemDisplayAction from "actions/ItemDisplayAction"
+import ShoppingCartAction from "actions/ShoppingCartAction"
 import ItemDetailModal from "./ItemDisplayApp/ItemDetailModal.jsx"
 
 function getStateFromStores() {
@@ -23,7 +24,7 @@ export default class ItemDisplayApp extends React.Component {
     super(props);
     
     this._onChange = this._onChange.bind(this);
-    this.handleItemClick = this.handleItemClick.bind(this);
+    // this.handleItemClick = this.handleItemClick.bind(this);
     this.onItemDetailModalClose = this.onItemDetailModalClose.bind(this);
     this.handleInfiniteLoad = this.handleInfiniteLoad.bind(this);
     
@@ -42,8 +43,6 @@ export default class ItemDisplayApp extends React.Component {
   }
   
   componentDidMount() {
-    let me = this;
-    
     ItemDisplayStore.addChangeListener(this._onChange);
   }
   
@@ -51,12 +50,20 @@ export default class ItemDisplayApp extends React.Component {
     ItemDisplayStore.removeChangeListener(this._onChange);    
   }
   
-  handleItemClick(item) {
+  handleItemClick = (item) => {
     this.setState({
       selectedItem: item,
       showItemDetailModal: true
     });
-  }
+  };
+  
+  handleAddToCartClick = (item) => {
+    ShoppingCartAction
+    .addToCart(item)
+    .finally(function() {
+      console.log("added to cart", item);
+    });
+  };
   
   handleInfiniteLoad() {
     if (!this.state.hasMoreItems) {
@@ -116,7 +123,8 @@ export default class ItemDisplayApp extends React.Component {
           
           <BaseGrid
             items={this.state.items} 
-            handleItemClick={this.handleItemClick} />
+            handleItemClick={this.handleItemClick}
+            handleAddToCartClick={this.handleAddToCartClick} />
         </Infinite>
       </div>
     );

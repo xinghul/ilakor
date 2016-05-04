@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "start": "nodemon nodemon.js",
-    "test": "jest"
+    "test": "jest --verbose --no-cache"
   },
   "dependencies": {
     "aws-sdk": "^2.2.39",
@@ -52,18 +52,21 @@
   },
   "devDependencies": {
     "babel-core": "^6.4.5",
+    "babel-jest": "^11.0.2",
     "babel-loader": "^6.2.1",
     "babel-plugin-transform-runtime": "^6.4.3",
     "babel-preset-es2015": "^6.3.13",
     "babel-preset-react": "^6.3.13",
+    "babel-preset-stage-0": "^6.5.0",
     "babel-runtime": "^6.3.19",
-    "babelify": "^6.3.0",
-    "browserify": "^10.2.1",
+    "babelify": "^7.3.0",
+    "browserify": "^13.0.0",
     "del": "^2.2.0",
     "envify": "^3.4.0",
     "gulp": "^3.8.11",
     "gulp-jade": "^1.0.1",
     "gulp-sass": "^2.1.1",
+    "jest-cli": "^11.0.2",
     "jsdom": "^6.5.1",
     "json-loader": "^0.5.4",
     "mocha": "^2.2.5",
@@ -71,6 +74,16 @@
     "should": "^7.0.1",
     "vinyl-source-stream": "^1.1.0",
     "webpack": "^1.12.12"
+  },
+  "jest": {
+    "scriptPreprocessor": "<rootDir>/node_modules/babel-jest"
+  },
+  "babel": {
+    "presets": [
+      "es2015",
+      "stage-0",
+      "react"
+    ]
   },
   "browserify": {
     "transform": [

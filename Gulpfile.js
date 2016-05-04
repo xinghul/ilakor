@@ -1,7 +1,7 @@
 +function(undefined) {
   "use strict";
 
-  var gulp       = require("gulp")
+  let gulp       = require("gulp")
   ,   jade       = require("gulp-jade")
   ,   sass       = require("gulp-sass")
   ,   del        = require("del")

@@ -4,6 +4,7 @@ import React from "react"
 import { Navbar, Nav, NavItem } from "react-bootstrap"
 
 import AuthApp from "./AuthApp.jsx"
+import ShoppingCartApp from "./ShoppingCartApp.jsx"
 
 export default class NarbarApp extends React.Component {
   
@@ -40,6 +41,9 @@ export default class NarbarApp extends React.Component {
         </Nav>
         <Nav pullRight id="authModalTrigger">
           <AuthApp />
+        </Nav>
+        <Nav pullRight>
+          <ShoppingCartApp />
         </Nav>
       </Navbar>
     );

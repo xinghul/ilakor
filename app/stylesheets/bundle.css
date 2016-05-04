@@ -1,4 +1,6 @@
-._app_js_lib_Loader__loaderText {
+._app_js_components_ShoppingCartApp__shoppingCart {
+  margin: 8px 6px 0 0;
+}._app_js_lib_Loader__loaderText {
   margin-top: 20px;
   text-align: center;
   
@@ -124,16 +126,13 @@
 ._app_js_lib_BaseItem__itemPrice {
   position: absolute;
   bottom: 10px;
-  right: 10px;
-  
-  color: #893937;
-  
-  font-family: "Source Sans Pro", sans-serif;
-  font-weight: 600;
+  right: 10px;  
 }
 
-._app_js_lib_BaseItem__itemPrice:before {
-  content: "$ "
+._app_js_lib_BaseItem__cartIcon {
+  position: absolute;
+  bottom: 6px;
+  left: 10px;
 }._app_js_lib_GhostButton__ghostButton {
   font-weight: 700;
   

@@ -2,15 +2,13 @@
 
 import React from "react"
 import CSSModules from "react-css-modules"
-import { Thumbnail, Button } from "react-bootstrap"
+import { Thumbnail, Button, Glyphicon } from "react-bootstrap"
+
+import GhostButton from "lib/GhostButton.jsx"
 
 import styles from "./BaseItem.css"
 
-function createPrice(price) {
-  if (price) {
-    return price.toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, "$1,");
-  }
-}
+import ItemUtil from "utils/ItemUtil"
 
 class BaseItem extends React.Component {
   
@@ -60,7 +58,13 @@ class BaseItem extends React.Component {
     return (
       <div style={bannerStyle} styleName="baseBanner">
         <div styleName="itemName">{item.name}</div>
-        <div styleName="itemPrice">{createPrice(item.feature.price)}</div>
+        <div styleName="cartIcon" onClick={this.handleAddToCartClick}>
+          <GhostButton color="grey" bsSize="xsmall">
+            <Glyphicon glyph="shopping-cart" />
+            Add to cart
+          </GhostButton>
+        </div>
+        <div styleName="itemPrice">{ItemUtil.createPriceJsx(item.feature.price)}</div>
       </div>      
     );
   }
@@ -77,9 +81,17 @@ class BaseItem extends React.Component {
     });
   }
   
-  handleClick() {
+  handleAddToCartClick = (evt) => {
+    evt.preventDefault();
+    
+    evt.stopPropagation();
+    
+    this.props.handleAddToCartClick(this.props.item);
+  };
+  
+  handleItemClick = () => {
     this.props.handleItemClick(this.props.item);
-  }
+  };
   
   render() {
     let itemJsx
@@ -99,7 +111,7 @@ class BaseItem extends React.Component {
         style={style}
         onMouseEnter={this.handleMouseEnter.bind(this)}
         onMouseLeave={this.handleMouseLeave.bind(this)}
-        onClick={this.handleClick.bind(this)}>
+        onClick={this.handleItemClick}>
         {itemJsx}
         {bannerJsx}
       </div>
@@ -110,12 +122,14 @@ class BaseItem extends React.Component {
 
 BaseItem.propTypes = { 
   item: React.PropTypes.object.isRequired,
-  handleItemClick: React.PropTypes.func
+  handleItemClick: React.PropTypes.func,
+  handleAddToCartClick: React.PropTypes.func
 };
 
 BaseItem.defaultProps = { 
   item: {},
-  handleItemClick: function() {}
+  handleItemClick: function() {},
+  handleAddToCartClick: function() {}
 };
 
 export default CSSModules(BaseItem, styles)
