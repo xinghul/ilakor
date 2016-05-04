@@ -23,18 +23,9 @@ export default class AuthApp extends React.Component {
   constructor(props) {
     super(props);
     
-    this._onChange = this._onChange.bind(this);
-    this.toggleMode = this.toggleMode.bind(this);
-    this.toggleModal = this.toggleModal.bind(this);
-    
-    this.handleEmailChange = this.handleEmailChange.bind(this);
-    this.handleUsernameChange = this.handleUsernameChange.bind(this);
-    this.handlePasswordChange = this.handlePasswordChange.bind(this);
-    
-    this.handleLoginClick = this.handleLoginClick.bind(this);
-    this.handleSignupClick = this.handleSignupClick.bind(this);
-    
     this.state = {
+      user: AuthStore.getUser(),
+      
       isModalOpen: false,
       isSignUp: false,
       
@@ -43,20 +34,34 @@ export default class AuthApp extends React.Component {
       password: ""
     };
   }
+  
+  componentDidMount() {
+    AuthStore.addChangeListener(this._onChange);
+    
+    AuthActions.logInFromCookie();
+  }
 
-  toggleMode() {
+  componentWillUnmount() {
+    AuthStore.removeChangeListener(this._onChange);
+  }
+
+  _onChange = () => {
+    this.setState(getStateFromStores());
+  };
+
+  toggleMode = () => {
     this.setState({
       isSignUp: !this.state.isSignUp
     });
-  }
+  };
   
-  toggleModal() {
+  toggleModal = () => {
     this.setState({
       isModalOpen: !this.state.isModalOpen
     });
-  }
+  };
   
-  handleLoginClick() {
+  handleLoginClick = () => {
     let self = this;
     
     // handle log in
@@ -72,9 +77,9 @@ export default class AuthApp extends React.Component {
 
       self.setState(err);
     });
-  }
+  };
   
-  handleSignupClick() {
+  handleSignupClick = () => {
     let self = this;
     
     AuthActions.userSignUp({
@@ -90,44 +95,30 @@ export default class AuthApp extends React.Component {
 
       self.setState(err);
     });
-  }
+  };
   
-  _onChange() {
-    this.setState(getStateFromStores());
-  }
-  
-  handleEmailChange(newValue) {
+  handleEmailChange = (newValue) => {
     this.setState({
       email: newValue
     });
-  }
+  };
   
-  handlePasswordChange(newValue) {
+  handlePasswordChange = (newValue) => {
     this.setState({
       password: newValue
     });
-  }
+  };
   
-  handleUsernameChange(newValue) {
+  handleUsernameChange = (newValue) => {
     this.setState({
       username: newValue
     });
-  }
+  };
 
   handleLogOut() {
     AuthActions.removeUserFromCookie();
   }
 
-  componentDidMount() {
-    AuthStore.addChangeListener(this._onChange);
-    
-    AuthActions.logInFromCookie();
-  }
-
-  componentWillUnmount() {
-    AuthStore.removeChangeListener(this._onChange);
-  }
-  
   createModalBodyLogin() {
     let disabled = _.isEmpty(this.state.email) ||
                    _.isEmpty(this.state.password);

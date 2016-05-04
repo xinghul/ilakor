@@ -12,9 +12,9 @@ class ItemDetailModal extends React.Component {
     super(props);
   }
   
-  onClose() {
+  onClose = () => {
     this.props.onClose();
-  }
+  };
   
   createItemDetailJsx() {
     let item = this.props.item;
@@ -30,7 +30,7 @@ class ItemDetailModal extends React.Component {
     let itemDetailJsx = this.createItemDetailJsx();
 
     return (
-      <Modal show={this.props.showModal} onHide={this.onClose.bind(this)}>
+      <Modal show={this.props.showModal} onHide={this.onClose}>
         <Modal.Header closeButton>
           <Modal.Title>{this.props.item.name}</Modal.Title>
         </Modal.Header>

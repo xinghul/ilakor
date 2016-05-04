@@ -223,8 +223,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 var LOAD_SIZE = 20;
 
-var _skip = 0,
-    _hasMore = true;
+var _skip = 0;
 
 var ItemDisplayAction = {
 
@@ -239,10 +238,6 @@ var ItemDisplayAction = {
         limit = LOAD_SIZE;
 
     return new _bluebird2.default(function (resolve, reject) {
-      if (!_hasMore) {
-        return resolve();
-      }
-
       _request2.default.get({
         url: "http://localhost:3001/api/items",
         qs: {
@@ -257,21 +252,12 @@ var ItemDisplayAction = {
           if (response.statusCode === 200) {
             var items = JSON.parse(response.body);
 
-            if (items.length > 0) {
+            _AppDispatcher2.default.handleAction({
+              actionType: _ItemDisplayConstants2.default.RECEIVED_ITEMS,
+              items: items
+            });
 
-              _AppDispatcher2.default.handleAction({
-                actionType: _ItemDisplayConstants2.default.RECEIVED_ITEMS,
-                items: items
-              });
-
-              _skip += items.length;
-            } else {
-              _hasMore = false;
-
-              _AppDispatcher2.default.handleAction({
-                actionType: _ItemDisplayConstants2.default.NO_MORE_ITEMS
-              });
-            }
+            _skip += items.length;
 
             resolve();
           } else {
@@ -764,11 +750,11 @@ var IndexApp = _react2.default.createClass({
 },{"components/AccountApp.jsx":7,"components/ItemDisplayApp.jsx":14,"components/ItemManageApp.jsx":17,"components/NavbarApp.jsx":18,"components/SocialApp.jsx":21,"history/lib/createBrowserHistory":307,"react":1001,"react-dom":767,"react-router":808}],7:[function(require,module,exports){
 "use strict";
 
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 var _react = require("react");
 
@@ -810,7 +796,9 @@ var AccountApp = function (_React$Component) {
 
     var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(AccountApp).call(this, props));
 
-    _this._onChange = _this._onChange.bind(_this);
+    _this._onChange = function () {
+      _this.setState(getStateFromStores());
+    };
 
     _this.state = getStateFromStores();
     return _this;
@@ -825,11 +813,6 @@ var AccountApp = function (_React$Component) {
     key: "componentWillUnmount",
     value: function componentWillUnmount() {
       _AuthStore2.default.removeChangeListener(this._onChange);
-    }
-  }, {
-    key: "_onChange",
-    value: function _onChange() {
-      this.setState(getStateFromStores());
     }
   }, {
     key: "render",
@@ -864,11 +847,11 @@ exports.default = AccountApp;
 },{"./AccountApp/FacebookInfo.jsx":8,"./AccountApp/LocalInfo.jsx":9,"react":1001,"react-bootstrap":411,"stores/AuthStore":40}],8:[function(require,module,exports){
 "use strict";
 
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 var _react = require("react");
 
@@ -902,26 +885,24 @@ var FacebookInfo = function (_React$Component) {
 
     var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(FacebookInfo).call(this, props));
 
-    _this.onConnectFacebookClick = _this.onConnectFacebookClick.bind(_this);
-    return _this;
-  }
-
-  _createClass(FacebookInfo, [{
-    key: "onConnectFacebookClick",
-    value: function onConnectFacebookClick() {
+    _this.onConnectFacebookClick = function () {
       _AccountAction2.default.connectFacebook().then(function (result) {
         console.log(result);
       }).catch(function (err) {
         console.log(err);
       });
-    }
-  }, {
+    };
+
+    return _this;
+  }
+
+  _createClass(FacebookInfo, [{
     key: "render",
     value: function render() {
       var user = this.props.user,
           facebookInfo = user.facebook,
           localInfo = user.local,
-          infoArea = undefined;
+          infoArea = void 0;
 
       if (_underscore2.default.isEmpty(facebookInfo)) {
         if (_underscore2.default.isEmpty(localInfo)) {
@@ -971,11 +952,11 @@ FacebookInfo.propTypes = {
 },{"actions/AccountAction":1,"lib/SocialButton/FacebookButton.jsx":39,"react":1001,"underscore":1132}],9:[function(require,module,exports){
 "use strict";
 
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 var _react = require("react");
 
@@ -1008,7 +989,7 @@ var LocalInfo = function (_React$Component) {
     key: "render",
     value: function render() {
       var info = this.props.info,
-          infoArea = undefined;
+          infoArea = void 0;
 
       if (_underscore2.default.isEmpty(info)) {
         infoArea = _react2.default.createElement(
@@ -1064,11 +1045,11 @@ LocalInfo.defaultProps = {
 },{"react":1001,"react-bootstrap":411,"underscore":1132}],10:[function(require,module,exports){
 "use strict";
 
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 var _react = require("react");
 
@@ -1126,18 +1107,79 @@ var AuthApp = function (_React$Component) {
 
     var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(AuthApp).call(this, props));
 
-    _this._onChange = _this._onChange.bind(_this);
-    _this.toggleMode = _this.toggleMode.bind(_this);
-    _this.toggleModal = _this.toggleModal.bind(_this);
+    _this._onChange = function () {
+      _this.setState(getStateFromStores());
+    };
 
-    _this.handleEmailChange = _this.handleEmailChange.bind(_this);
-    _this.handleUsernameChange = _this.handleUsernameChange.bind(_this);
-    _this.handlePasswordChange = _this.handlePasswordChange.bind(_this);
+    _this.toggleMode = function () {
+      _this.setState({
+        isSignUp: !_this.state.isSignUp
+      });
+    };
 
-    _this.handleLoginClick = _this.handleLoginClick.bind(_this);
-    _this.handleSignupClick = _this.handleSignupClick.bind(_this);
+    _this.toggleModal = function () {
+      _this.setState({
+        isModalOpen: !_this.state.isModalOpen
+      });
+    };
+
+    _this.handleLoginClick = function () {
+      var self = _this;
+
+      // handle log in
+      _AuthActions2.default.userLogIn({
+
+        email: _this.state.email,
+        password: _this.state.password
+
+      }).then(function () {
+        _AuthActions2.default.toggleModal();
+      }).catch(function (err) {
+        console.log(err);
+
+        self.setState(err);
+      });
+    };
+
+    _this.handleSignupClick = function () {
+      var self = _this;
+
+      _AuthActions2.default.userSignUp({
+
+        username: _this.state.username,
+        email: _this.state.email,
+        password: _this.state.password
+
+      }).then(function () {
+        _AuthActions2.default.toggleModal();
+      }).catch(function (err) {
+        console.log(err);
+
+        self.setState(err);
+      });
+    };
+
+    _this.handleEmailChange = function (newValue) {
+      _this.setState({
+        email: newValue
+      });
+    };
+
+    _this.handlePasswordChange = function (newValue) {
+      _this.setState({
+        password: newValue
+      });
+    };
+
+    _this.handleUsernameChange = function (newValue) {
+      _this.setState({
+        username: newValue
+      });
+    };
 
     _this.state = {
+      user: _AuthStore2.default.getUser(),
+
       isModalOpen: false,
       isSignUp: false,
 
@@ -1149,89 +1191,6 @@ var AuthApp = function (_React$Component) {
   }
 
   _createClass(AuthApp, [{
-    key: "toggleMode",
-    value: function toggleMode() {
-      this.setState({
-        isSignUp: !this.state.isSignUp
-      });
-    }
-  }, {
-    key: "toggleModal",
-    value: function toggleModal() {
-      this.setState({
-        isModalOpen: !this.state.isModalOpen
-      });
-    }
-  }, {
-    key: "handleLoginClick",
-    value: function handleLoginClick() {
-      var self = this;
-
-      // handle log in
-      _AuthActions2.default.userLogIn({
-
-        email: this.state.email,
-        password: this.state.password
-
-      }).then(function () {
-        _AuthActions2.default.toggleModal();
-      }).catch(function (err) {
-        console.log(err);
-
-        self.setState(err);
-      });
-    }
-  }, {
-    key: "handleSignupClick",
-    value: function handleSignupClick() {
-      var self = this;
-
-      _AuthActions2.default.userSignUp({
-
-        username: this.state.username,
-        email: this.state.email,
-        password: this.state.password
-
-      }).then(function () {
-        _AuthActions2.default.toggleModal();
-      }).catch(function (err) {
-        console.log(err);
-
-        self.setState(err);
-      });
-    }
-  }, {
-    key: "_onChange",
-    value: function _onChange() {
-      this.setState(getStateFromStores());
-    }
-  }, {
-    key: "handleEmailChange",
-    value: function handleEmailChange(newValue) {
-      this.setState({
-        email: newValue
-      });
-    }
-  }, {
-    key: "handlePasswordChange",
-    value: function handlePasswordChange(newValue) {
-      this.setState({
-        password: newValue
-      });
-    }
-  }, {
-    key: "handleUsernameChange",
-    value: function handleUsernameChange(newValue) {
-      this.setState({
-        username: newValue
-      });
-    }
-  }, {
-    key: "handleLogOut",
-    value: function handleLogOut() {
-      _AuthActions2.default.removeUserFromCookie();
-    }
-  }, {
     key: "componentDidMount",
     value: function componentDidMount() {
       _AuthStore2.default.addChangeListener(this._onChange);
@@ -1242,6 +1201,11 @@ var AuthApp = function (_React$Component) {
     key: "componentWillUnmount",
     value: function componentWillUnmount() {
       _AuthStore2.default.removeChangeListener(this._onChange);
+    }
+  }, {
+    key: "handleLogOut",
+    value: function handleLogOut() {
+      _AuthActions2.default.removeUserFromCookie();
     }
   }, {
     key: "createModalBodyLogin",
@@ -1297,9 +1261,9 @@ var AuthApp = function (_React$Component) {
   }, {
     key: "render",
     value: function render() {
-      var authArea = undefined;
-      var toggleModeMessage = undefined;
-      var socialLoginArea = undefined;
+      var authArea = void 0;
+      var toggleModeMessage = void 0;
+      var socialLoginArea = void 0;
 
       if (this.state.user && this.state.user._id) {
         var title = "Hello, " + this.state.user._id;
@@ -1400,11 +1364,11 @@ exports.default = AuthApp;
 },{"./AuthApp/EmailInput.jsx":11,"./AuthApp/PasswordInput.jsx":12,"./AuthApp/UsernameInput.jsx":13,"actions/AuthActions":2,"lib/GhostButton.jsx":35,"react":1001,"react-bootstrap":411,"stores/AuthStore":40,"underscore":1132}],11:[function(require,module,exports){
 "use strict";
 
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 var _react = require("react");
 
@@ -1440,7 +1404,16 @@ var EmailInput = function (_React$Component) {
 
     var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(EmailInput).call(this, props));
 
-    _this.handleEmailChange = _this.handleEmailChange.bind(_this);
+    _this.handleEmailChange = function (newValue) {
+      var isValid = isValidEmail(newValue);
+
+      _this.setState({
+        isValid: isValid,
+        value: newValue
+      });
+
+      _this.props.handleChange(isValid ? newValue : "");
+    };
 
     _this.state = {
       isValid: false,
@@ -1450,18 +1423,6 @@ var EmailInput = function (_React$Component) {
   }
 
   _createClass(EmailInput, [{
-    key: "handleEmailChange",
-    value: function handleEmailChange(newValue) {
-      var isValid = isValidEmail(newValue);
-
-      this.setState({
-        isValid: isValid,
-        value: newValue
-      });
-
-      this.props.handleChange(isValid ? newValue : "");
-    }
-  }, {
     key: "createBsStyle",
     value: function createBsStyle() {
       if (!this.state.isValid) {
@@ -1501,11 +1462,11 @@ EmailInput.propTypes = {
 },{"lib/BaseInput.jsx":29,"react":1001}],12:[function(require,module,exports){
 "use strict";
 
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 var _react = require("react");
 
@@ -1541,7 +1502,16 @@ var PasswordInput = function (_React$Component) {
 
     var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(PasswordInput).call(this, props));
 
-    _this.handlePasswordChange = _this.handlePasswordChange.bind(_this);
+    _this.handlePasswordChange = function (newValue) {
+      var isValid = isValidPassword(newValue);
+
+      _this.setState({
+        isValid: isValid,
+        value: newValue
+      });
+
+      _this.props.handleChange(isValid ? newValue : "");
+    };
 
     _this.state = {
       isValid: false,
@@ -1551,18 +1521,6 @@ var PasswordInput = function (_React$Component) {
   }
 
   _createClass(PasswordInput, [{
-    key: "handlePasswordChange",
-    value: function handlePasswordChange(newValue) {
-      var isValid = isValidPassword(newValue);
-
-      this.setState({
-        isValid: isValid,
-        value: newValue
-      });
-
-      this.props.handleChange(isValid ? newValue : "");
-    }
-  }, {
     key: "createBsStyle",
     value: function createBsStyle() {
       if (!this.state.isValid) {
@@ -1602,11 +1560,11 @@ PasswordInput.propTypes = {
 },{"lib/BaseInput.jsx":29,"react":1001}],13:[function(require,module,exports){
 "use strict";
 
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 var _react = require("react");
 
@@ -1642,7 +1600,16 @@ var UsernameInput = function (_React$Component) {
 
     var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(UsernameInput).call(this, props));
 
-    _this.handleUsernameChange = _this.handleUsernameChange.bind(_this);
+    _this.handleUsernameChange = function (newValue) {
+      var isValid = isValidUsername(newValue);
+
+      _this.setState({
+        isValid: isValid,
+        value: newValue
+      });
+
+      _this.props.handleChange(isValid ? newValue : "");
+    };
 
     _this.state = {
       isValid: false,
@@ -1652,18 +1619,6 @@ var UsernameInput = function (_React$Component) {
   }
 
   _createClass(UsernameInput, [{
-    key: "handleUsernameChange",
-    value: function handleUsernameChange(newValue) {
-      var isValid = isValidUsername(newValue);
-
-      this.setState({
-        isValid: isValid,
-        value: newValue
-      });
-
-      this.props.handleChange(isValid ? newValue : "");
-    }
-  }, {
     key: "createBsStyle",
     value: function createBsStyle() {
       if (!this.state.isValid) {
@@ -1703,11 +1658,11 @@ UsernameInput.propTypes = {
 },{"lib/BaseInput.jsx":29,"react":1001}],14:[function(require,module,exports){
 "use strict";
 
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 var _react = require("react");
 
@@ -1752,7 +1707,7 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 function getStateFromStores() {
   return {
     items: _ItemDisplayStore2.default.getItems(),
-    hasMoreItems: _ItemDisplayStore2.default.getHasMoreItems()
+    hasMoreItems: _ItemDisplayStore2.default.hasMoreItems()
   };
 }
 
@@ -1763,6 +1718,10 @@ var ItemDisplayApp = function (_React$Component) {
     _classCallCheck(this, ItemDisplayApp);
 
     var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(ItemDisplayApp).call(this, props));
+
+    _this._onChange = function () {
+      _this.setState(getStateFromStores());
+    };
 
     _this.handleItemClick = function (item) {
       _this.setState({
@@ -1777,14 +1736,33 @@ var ItemDisplayApp = function (_React$Component) {
       });
     };
 
-    _this._onChange = _this._onChange.bind(_this);
-    // this.handleItemClick = this.handleItemClick.bind(this);
-    _this.onItemDetailModalClose = _this.onItemDetailModalClose.bind(_this);
-    _this.handleInfiniteLoad = _this.handleInfiniteLoad.bind(_this);
+    _this.handleInfiniteLoad = function () {
+      if (!_this.state.hasMoreItems) {
+        return false;
+      }
+
+      var me = _this;
+
+      _this.setState({
+        isLoading: true
+      });
+
+      _ItemDisplayAction2.default.getItems().finally(function () {
+        me.setState({
+          isLoading: false
+        });
+      });
+    };
+
+    _this.onItemDetailModalClose = function () {
+      _this.setState({
+        showItemDetailModal: false
+      });
+    };
 
     _this.state = {
       items: _ItemDisplayStore2.default.getItems(),
-      hasMoreItems: _ItemDisplayStore2.default.getHasMoreItems(),
+      hasMoreItems: _ItemDisplayStore2.default.hasMoreItems(),
 
       selectedItem: {},
       showItemDetailModal: false,
@@ -1794,11 +1772,6 @@ var ItemDisplayApp = function (_React$Component) {
   }
 
   _createClass(ItemDisplayApp, [{
-    key: "_onChange",
-    value: function _onChange() {
-      this.setState(getStateFromStores());
-    }
-  }, {
     key: "componentDidMount",
     value: function componentDidMount() {
       _ItemDisplayStore2.default.addChangeListener(this._onChange);
@@ -1807,32 +1780,6 @@ var ItemDisplayApp = function (_React$Component) {
     key: "componentWillUnmount",
     value: function componentWillUnmount() {
       _ItemDisplayStore2.default.removeChangeListener(this._onChange);
-    }
-  }, {
-    key: "handleInfiniteLoad",
-    value: function handleInfiniteLoad() {
-      if (!this.state.hasMoreItems) {
-        return;
-      }
-
-      var me = this;
-
-      this.setState({
-        isLoading: true
-      });
-
-      _ItemDisplayAction2.default.getItems().finally(function () {
-        me.setState({
-          isLoading: false
-        });
-      });
-    }
-  }, {
-    key: "onItemDetailModalClose",
-    value: function onItemDetailModalClose() {
-      this.setState({
-        showItemDetailModal: false
-      });
     }
   }, {
     key: "elementInfiniteLoad",
@@ -1859,7 +1806,7 @@ var ItemDisplayApp = function (_React$Component) {
           {
             elementHeight: 200,
             useWindowAsScrollContainer: true,
-            infiniteLoadBeginEdgeOffset: 200,
+            infiniteLoadBeginEdgeOffset: 40,
             onInfiniteLoad: this.handleInfiniteLoad,
             loadingSpinnerDelegate: this.elementInfiniteLoad(),
             isInfiniteLoading: this.state.isLoading },
@@ -1882,11 +1829,11 @@ module.exports = {}
 },{}],16:[function(require,module,exports){
 "use strict";
 
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 var _react = require("react");
 
@@ -1916,15 +1863,16 @@ var ItemDetailModal = function (_React$Component) {
   function ItemDetailModal(props) {
     _classCallCheck(this, ItemDetailModal);
 
-    return _possibleConstructorReturn(this, Object.getPrototypeOf(ItemDetailModal).call(this, props));
+    var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(ItemDetailModal).call(this, props));
+
+    _this.onClose = function () {
+      _this.props.onClose();
+    };
+
+    return _this;
   }
 
   _createClass(ItemDetailModal, [{
-    key: "onClose",
-    value: function onClose() {
-      this.props.onClose();
-    }
-  }, {
     key: "createItemDetailJsx",
     value: function createItemDetailJsx() {
       var item = this.props.item;
@@ -1939,7 +1887,7 @@ var ItemDetailModal = function (_React$Component) {
 
       return _react2.default.createElement(
         _reactBootstrap.Modal,
-        { show: this.props.showModal, onHide: this.onClose.bind(this) },
+        { show: this.props.showModal, onHide: this.onClose },
         _react2.default.createElement(
           _reactBootstrap.Modal.Header,
           { closeButton: true },
@@ -1983,11 +1931,11 @@ exports.default = (0, _reactCssModules2.default)(ItemDetailModal, _ItemDetailMod
 },{"./ItemDetailModal.css":15,"react":1001,"react-bootstrap":411,"react-css-modules":589}],17:[function(require,module,exports){
 "use strict";
 
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 var _underscore = require("underscore");
 
@@ -2021,6 +1969,8 @@ var _ItemManageStore2 = _interopRequireDefault(_ItemManageStore);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
@@ -2038,156 +1988,79 @@ var ItemManageApp = function (_React$Component) {
   _inherits(ItemManageApp, _React$Component);
 
   function ItemManageApp(props) {
+    var _this$state;
+
     _classCallCheck(this, ItemManageApp);
 
     var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(ItemManageApp).call(this, props));
 
-    _this._onChange = _this._onChange.bind(_this);
-
-    _this.state = {
-      // new item info
-      name: "",
-      weight: "",
-      tag: [],
-      unitNumber: "",
-      unitName: "",
-      unitType: "",
-      image: null,
-      price: "",
-      stock: "",
-      imagePreviewUrl: "",
-
-      // items used to initialize the item display table
-      items: [],
-      // tags used to initialize the tag multiselect
-      tags: [],
-
-      showItemInfoModal: false,
-      selectedItem: null
+    _this._onChange = function () {
+      _this.setState(getStateFromStores());
     };
-    return _this;
-  }
 
-  /**
-   * Handler when submit button is clicked.
-   */
-
-  _createClass(ItemManageApp, [{
-    key: "handleSubmit",
-    value: function handleSubmit() {
+    _this.handleSubmit = function () {
       // FIXME: make it unclickable
-      if (_underscore2.default.isEmpty(this.state.name) || _underscore2.default.isEmpty(this.state.weight) || _underscore2.default.isEmpty(this.state.tag)) {
+      if (_underscore2.default.isEmpty(_this.state.name) || _underscore2.default.isEmpty(_this.state.weight) || _underscore2.default.isEmpty(_this.state.tag)) {
         return;
       }
 
       _ItemManageAction2.default.addItem({
-        name: this.state.name,
-        weight: this.state.weight,
-        tag: this.state.tag,
-        image: this.state.image,
+        name: _this.state.name,
+        weight: _this.state.weight,
+        tag: _this.state.tag,
+        image: _this.state.image,
 
-        unitNumber: this.state.unitNumber,
-        unitName: this.state.unitName,
-        unitType: this.state.unitType,
+        unitNumber: _this.state.unitNumber,
+        unitName: _this.state.unitName,
+        unitType: _this.state.unitType,
 
         feature: {
-          price: this.state.price,
-          stock: this.state.stock
+          price: _this.state.price,
+          stock: _this.state.stock
         }
 
       }).catch(function (err) {
         console.log(err);
       });
-    }
+    };
 
-    /**
-     * Handler for name input value change.
-     * @param  {String} newValue the new name value.
-     */
-
-  }, {
-    key: "handleNameChange",
-    value: function handleNameChange(newValue) {
-      this.setState({
+    _this.handleNameChange = function (newValue) {
+      _this.setState({
         name: newValue
       });
-    }
+    };
 
-    /**
-     * Handler for weight input value change.
-     * @param  {String} newValue the new weight value.
-     */
-
-  }, {
-    key: "handleWeightChange",
-    value: function handleWeightChange(newValue) {
-      this.setState({
+    _this.handleWeightChange = function (newValue) {
+      _this.setState({
         weight: newValue
       });
-    }
+    };
 
-    /**
-     * Handler for tag input value change.
-     * @param  {[String]} newValue the new tag value.
-     */
-
-  }, {
-    key: "handleTagChange",
-    value: function handleTagChange(newValue) {
-      this.setState({
+    _this.handleTagChange = function (newValue) {
+      _this.setState({
         tag: newValue
       });
-    }
+    };
 
-    /**
-     * Handler for unit number input value change.
-     * @param  {String} newValue the new unit number value.
-     */
-
-  }, {
-    key: "handleUnitNumberChange",
-    value: function handleUnitNumberChange(newValue) {
-      this.setState({
+    _this.handleUnitNumberChange = function (newValue) {
+      _this.setState({
         unitNumber: newValue
       });
-    }
+    };
 
-    /**
-     * Handler for unit name input value change.
-     * @param  {String} newValue the new unit name value.
-     */
-
-  }, {
-    key: "handleUnitNameChange",
-    value: function handleUnitNameChange(newValue) {
-      this.setState({
+    _this.handleUnitNameChange = function (newValue) {
+      _this.setState({
         unitName: newValue
       });
-    }
+    };
 
-    /**
-     * Handler for unit name input value change.
-     * @param  {String} newValue the new unit type value.
-     */
-
-  }, {
-    key: "handleUnitTypeChange",
-    value: function handleUnitTypeChange(newValue) {
-      this.setState({
+    _this.handleUnitTypeChange = function (newValue) {
+      _this.setState({
         unitType: newValue
       });
-    }
+    };
 
-    /**
-     * Handler for image input value change.
-     * @param  {String} newValue the new image value.
-     */
-
-  }, {
-    key: "handleImageChange",
-    value: function handleImageChange(evt) {
-      var _this2 = this;
-
+    _this.handleImageChange = function (evt) {
       evt.preventDefault();
 
       var files = evt.target.files,
@@ -2201,7 +2074,7 @@ var ItemManageApp = function (_React$Component) {
           images.push(file);
 
           if (index === files.length - 1) {
-            _this2.setState({
+            _this.setState({
               image: images
             });
           }
@@ -2213,82 +2086,74 @@ var ItemManageApp = function (_React$Component) {
       for (var index = 0; index < files.length; index++) {
         _loop(index);
       }
-    }
+    };
 
-    /**
-     * Handler for price input value change.
-     * @param  {String} newValue the new price value.
-     */
-
-  }, {
-    key: "handlePriceChange",
-    value: function handlePriceChange(newValue) {
-      this.setState({
+    _this.handlePriceChange = function (newValue) {
+      _this.setState({
         price: newValue
       });
-    }
+    };
 
-    /**
-     * Handler for stock input value change.
-     * @param  {String} newValue the new stock value.
-     */
-
-  }, {
-    key: "handleStockChange",
-    value: function handleStockChange(newValue) {
-      this.setState({
+    _this.handleStockChange = function (newValue) {
+      _this.setState({
         stock: newValue
       });
-    }
+    };
 
-    /**
-     * Handler for item in the table being clicked.
-     * @param  {Object} item the clicked item.
-     */
-
-  }, {
-    key: "handleItemClick",
-    value: function handleItemClick(item) {
-      this.setState({
+    _this.handleItemClick = function (item) {
+      _this.setState({
         showItemInfoModal: true,
         selectedItem: item
       });
-    }
-  }, {
-    key: "onItemInfoModalClose",
-    value: function onItemInfoModalClose() {
-      this.setState({
+    };
+
+    _this.onItemInfoModalClose = function () {
+      _this.setState({
         showItemInfoModal: false
       });
-    }
-  }, {
-    key: "onItemInfoModalApply",
-    value: function onItemInfoModalApply(newValue) {
-      var me = this;
+    };
 
-      _ItemManageAction2.default.updateItem(this.state.selectedItem._id, newValue).then(function () {
+    _this.onItemInfoModalApply = function (newValue) {
+      var me = _this;
+
+      _ItemManageAction2.default.updateItem(_this.state.selectedItem._id, newValue).then(function () {
         me.onItemInfoModalClose();
       }).catch(function (err) {
         console.log(err);
       });
-    }
-  }, {
-    key: "onItemInfoModalDelete",
-    value: function onItemInfoModalDelete() {
-      var me = this;
+    };
 
-      _ItemManageAction2.default.removeItem(this.state.selectedItem._id).then(function () {
+    _this.onItemInfoModalDelete = function () {
+      var me = _this;
+
+      _ItemManageAction2.default.removeItem(_this.state.selectedItem._id).then(function () {
         me.onItemInfoModalClose();
       }).catch(function (err) {
         console.log(err);
       });
-    }
-  }, {
-    key: "_onChange",
-    value: function _onChange() {
-      this.setState(getStateFromStores());
-    }
-  }, {
+    };
+
+    _this.state = (_this$state = {
+      items: _ItemManageStore2.default.getItems(),
+      tags: _ItemManageStore2.default.getTags(),
+
+      // new item info
+      name: "",
+      weight: "",
+      tag: [],
+      unitNumber: "",
+      unitName: "",
+      unitType: "",
+      image: null,
+      price: "",
+      stock: "",
+      imagePreviewUrl: ""
+
+    }, _defineProperty(_this$state, "items", []), _defineProperty(_this$state, "tags", []), _defineProperty(_this$state, "showItemInfoModal", false), _defineProperty(_this$state, "selectedItem", null), _this$state);
+    return _this;
+  }
+
+  _createClass(ItemManageApp, [{
     key: "componentDidMount",
     value: function componentDidMount() {
       _ItemManageStore2.default.addChangeListener(this._onChange);
@@ -2302,11 +2167,76 @@ var ItemManageApp = function (_React$Component) {
     value: function componentWillUnmount() {
       _ItemManageStore2.default.removeChangeListener(this._onChange);
     }
+
+    /**
+     * Handler when submit button is clicked.
+     */
+
+
+    /**
+     * Handler for name input value change.
+     * @param  {String} newValue the new name value.
+     */
+
+
+    /**
+     * Handler for weight input value change.
+     * @param  {String} newValue the new weight value.
+     */
+
+
+    /**
+     * Handler for tag input value change.
+     * @param  {[String]} newValue the new tag value.
+     */
+
+
+    /**
+     * Handler for unit number input value change.
+     * @param  {String} newValue the new unit number value.
+     */
+
+
+    /**
+     * Handler for unit name input value change.
+     * @param  {String} newValue the new unit name value.
+     */
+
+
+    /**
+     * Handler for unit name input value change.
+     * @param  {String} newValue the new unit type value.
+     */
+
+
+    /**
+     * Handler for image input value change.
+     * @param  {String} newValue the new image value.
+     */
+
+
+    /**
+     * Handler for price input value change.
+     * @param  {String} newValue the new price value.
+     */
+
+
+    /**
+     * Handler for stock input value change.
+     * @param  {String} newValue the new stock value.
+     */
+
+
+    /**
+     * Handler for item in the table being clicked.
+     * @param  {Object} item the clicked item.
+     */
+
   }, {
     key: "createItemListTable",
     value: function createItemListTable() {
       var items = this.state.items,
-          item = undefined,
+          item = void 0,
           tableBody = [];
 
       for (var index = 0; index < items.length; index++) {
@@ -2459,47 +2389,42 @@ var ItemManageApp = function (_React$Component) {
         left: "-10px"
       };
 
-      var nameValueLink = {
-        value: this.state.name,
-        requestChange: this.handleNameChange
-      };
-
       var nameInput = _react2.default.createElement(_BaseInput2.default, {
         type: "text",
         placeholder: "Enter name",
         addonBefore: "info-sign",
-        handleChange: this.handleNameChange.bind(this) });
+        handleChange: this.handleNameChange });
 
       var tagOptions = this.createTagOptions();
 
       var tagInput = _react2.default.createElement(_BaseMultiSelect2.default, {
         label: "Tags",
         options: tagOptions,
-        handleChange: this.handleTagChange.bind(this) });
+        handleChange: this.handleTagChange });
 
       var weightInput = _react2.default.createElement(_BaseInput2.default, {
         type: "text",
         label: "Weight",
         placeholder: "Enter weight in pounds",
-        handleChange: this.handleWeightChange.bind(this) });
+        handleChange: this.handleWeightChange });
 
       var unitNumberInput = _react2.default.createElement(_BaseInput2.default, {
         type: "text",
         label: "Unit number",
         placeholder: "Enter unit number",
-        handleChange: this.handleUnitNumberChange.bind(this) });
+        handleChange: this.handleUnitNumberChange });
 
       var unitNameInput = _react2.default.createElement(_BaseInput2.default, {
         type: "text",
         label: "Unit name",
         placeholder: "Enter unit name",
-        handleChange: this.handleUnitNameChange.bind(this) });
+        handleChange: this.handleUnitNameChange });
 
       var unitTypeInput = _react2.default.createElement(_BaseInput2.default, {
         type: "text",
         label: "Unit type",
         placeholder: "Enter unit type",
-        handleChange: this.handleUnitTypeChange.bind(this) });
+        handleChange: this.handleUnitTypeChange });
 
       var dimensionInput = _react2.default.createElement(
         _reactBootstrap.Input,
@@ -2536,23 +2461,23 @@ var ItemManageApp = function (_React$Component) {
         label: "Images",
         multiple: true,
         placeholder: "Select images",
-        onChange: this.handleImageChange.bind(this) });
+        onChange: this.handleImageChange });
 
       var priceInput = _react2.default.createElement(_BaseInput2.default, {
         type: "text",
         label: "Price",
         placeholder: "Enter price",
-        handleChange: this.handlePriceChange.bind(this) });
+        handleChange: this.handlePriceChange });
 
       var stockInput = _react2.default.createElement(_BaseInput2.default, {
         type: "text",
         label: "Stock left",
         placeholder: "Enter stock left",
-        handleChange: this.handleStockChange.bind(this) });
+        handleChange: this.handleStockChange });
 
       var submitButton = _react2.default.createElement(
         _reactBootstrap.Button,
-        { onClick: this.handleSubmit.bind(this) },
+        { onClick: this.handleSubmit },
         "Add"
       );
 
@@ -2682,9 +2607,9 @@ var ItemManageApp = function (_React$Component) {
       var itemInfoModal = _react2.default.createElement(_BaseModal2.default, {
         showModal: this.state.showItemInfoModal,
         item: this.state.selectedItem,
-        onClose: this.onItemInfoModalClose.bind(this),
-        onApply: this.onItemInfoModalApply.bind(this),
-        onDelete: this.onItemInfoModalDelete.bind(this)
+        onClose: this.onItemInfoModalClose,
+        onApply: this.onItemInfoModalApply,
+        onDelete: this.onItemInfoModalDelete
       });
 
       return _react2.default.createElement(
@@ -2721,11 +2646,11 @@ exports.default = ItemManageApp;
 },{"actions/ItemManageAction":4,"lib/BaseInput.jsx":29,"lib/BaseModal.jsx":32,"lib/BaseMultiSelect.jsx":33,"react":1001,"react-bootstrap":411,"stores/ItemManageStore":42,"underscore":1132}],18:[function(require,module,exports){
 "use strict";
 
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 var _react = require("react");
 
@@ -2768,6 +2693,7 @@ var NarbarApp = function (_React$Component) {
    * 
    * @return {JSX} the JSX created.
    */
+
 
   _createClass(NarbarApp, [{
     key: "render",
@@ -2827,11 +2753,11 @@ module.exports = {"shoppingCart":"_app_js_components_ShoppingCartApp__shoppingCa
 },{}],20:[function(require,module,exports){
 "use strict";
 
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 var _react = require("react");
 
@@ -3133,11 +3059,11 @@ exports.default = (0, _reactCssModules2.default)(ShoppingCartApp, _ShoppingCartA
 },{"./ShoppingCartApp.css":19,"actions/ShoppingCartAction":5,"lib/GhostButton.jsx":35,"react":1001,"react-bootstrap":411,"react-css-modules":589,"stores/ShoppingCartStore":43,"utils/ItemUtil":44}],21:[function(require,module,exports){
 "use strict";
 
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 var _react = require("react");
 
@@ -3298,10 +3224,11 @@ exports.default = (0, _keyMirror2.default)({
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-var Dispatcher = require("flux").Dispatcher;
+
+var _flux = require("flux");
 
 // Create dispatcher instance
-var AppDispatcher = new Dispatcher();
+var AppDispatcher = new _flux.Dispatcher();
 
 // Convenience method to handle dispatch requests
 AppDispatcher.handleAction = function (action) {
@@ -3316,11 +3243,11 @@ exports.default = AppDispatcher;
 },{"flux":299}],27:[function(require,module,exports){
 "use strict";
 
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 var _react = require("react");
 
@@ -3412,6 +3339,7 @@ var BaseCarousel = function (_React$Component) {
 
 exports.default = BaseCarousel;
 
+
 BaseCarousel.propTypes = {
   items: _react2.default.PropTypes.array.isRequired,
   height: _react2.default.PropTypes.number
@@ -3425,11 +3353,11 @@ BaseCarousel.defaultProps = {
 },{"react":1001,"react-bootstrap":411}],28:[function(require,module,exports){
 "use strict";
 
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 var _react = require("react");
 
@@ -3466,7 +3394,7 @@ var BaseGrid = function (_React$Component) {
     key: "createItemJsx",
     value: function createItemJsx(item) {
 
-      var itemJsx = undefined;
+      var itemJsx = void 0;
 
       itemJsx = _react2.default.createElement(
         _reactBootstrap.Col,
@@ -3544,6 +3472,7 @@ var BaseGrid = function (_React$Component) {
 
 exports.default = BaseGrid;
 
+
 BaseGrid.propTypes = {
   items: _react2.default.PropTypes.array,
   handleItemClick: _react2.default.PropTypes.func,
@@ -3559,13 +3488,13 @@ BaseGrid.defaultProps = {
 },{"./BaseCarousel.jsx":27,"./BaseItem.jsx":31,"react":1001,"react-bootstrap":411}],29:[function(require,module,exports){
 "use strict";
 
-var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
-
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
+
+var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 var _react = require("react");
 
@@ -3587,17 +3516,18 @@ var BaseInput = function (_React$Component) {
   function BaseInput(props) {
     _classCallCheck(this, BaseInput);
 
-    return _possibleConstructorReturn(this, Object.getPrototypeOf(BaseInput).call(this, props));
+    var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(BaseInput).call(this, props));
+
+    _this.handleChange = function () {
+      var newValue = _this.refs["input"].getValue();
+
+      _this.props.handleChange(newValue);
+    };
+
+    return _this;
   }
 
   _createClass(BaseInput, [{
-    key: "handleChange",
-    value: function handleChange() {
-      var newValue = this.refs["input"].getValue();
-
-      this.props.handleChange(newValue);
-    }
-  }, {
     key: "render",
     value: function render() {
 
@@ -3613,7 +3543,7 @@ var BaseInput = function (_React$Component) {
         _react2.default.createElement(_reactBootstrap.Input, _extends({}, this.props, {
           addonBefore: addonBeforeGlyphicon,
           spellCheck: false,
-          onChange: this.handleChange.bind(this),
+          onChange: this.handleChange,
           ref: "input"
         }))
       );
@@ -3624,6 +3554,7 @@ var BaseInput = function (_React$Component) {
 }(_react2.default.Component);
 
 exports.default = BaseInput;
+
 
 BaseInput.propTypes = {
   // required props
@@ -3644,11 +3575,11 @@ module.exports = {"baseItem":"_app_js_lib_BaseItem__baseItem","baseBanner":"_app
 },{}],31:[function(require,module,exports){
 "use strict";
 
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 var _react = require("react");
 
@@ -3688,6 +3619,28 @@ var BaseItem = function (_React$Component) {
 
     var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(BaseItem).call(this, props));
 
+    _this.handleImageLoaded = function () {
+      if (_this.state.imageLoaded) {
+        return;
+      }
+
+      _this.setState({
+        imageLoaded: true
+      });
+    };
+
+    _this.handleMouseEnter = function () {
+      _this.setState({
+        bannerBottom: "0px"
+      });
+    };
+
+    _this.handleMouseLeave = function () {
+      _this.setState({
+        bannerBottom: "-80px"
+      });
+    };
+
     _this.handleAddToCartClick = function (evt) {
       evt.preventDefault();
 
@@ -3700,8 +3653,6 @@ var BaseItem = function (_React$Component) {
       _this.props.handleItemClick(_this.props.item);
     };
 
-    _this.handleImageLoaded = _this.handleImageLoaded.bind(_this);
-
     _this.state = {
       imageLoaded: false,
       bannerBottom: "-80px"
@@ -3710,17 +3661,6 @@ var BaseItem = function (_React$Component) {
   }
 
   _createClass(BaseItem, [{
-    key: "handleImageLoaded",
-    value: function handleImageLoaded() {
-      if (this.state.imageLoaded) {
-        return;
-      }
-
-      this.setState({
-        imageLoaded: true
-      });
-    }
-  }, {
     key: "createImageJsx",
     value: function createImageJsx() {
       var item = this.props.item,
@@ -3737,7 +3677,7 @@ var BaseItem = function (_React$Component) {
     key: "createBannerJsx",
     value: function createBannerJsx() {
       var item = this.props.item,
-          bannerStyle = undefined;
+          bannerStyle = void 0;
 
       bannerStyle = {
         bottom: this.state.bannerBottom
@@ -3769,25 +3709,11 @@ var BaseItem = function (_React$Component) {
       );
     }
   }, {
-    key: "handleMouseEnter",
-    value: function handleMouseEnter() {
-      this.setState({
-        bannerBottom: "0px"
-      });
-    }
-  }, {
-    key: "handleMouseLeave",
-    value: function handleMouseLeave() {
-      this.setState({
-        bannerBottom: "-80px"
-      });
-    }
-  }, {
     key: "render",
     value: function render() {
-      var itemJsx = undefined,
-          bannerJsx = undefined,
-          style = undefined;
+      var itemJsx = void 0,
+          bannerJsx = void 0,
+          style = void 0;
 
       itemJsx = this.createImageJsx();
 
@@ -3801,8 +3727,8 @@ var BaseItem = function (_React$Component) {
         "div",
         { styleName: "baseItem",
           style: style,
-          onMouseEnter: this.handleMouseEnter.bind(this),
-          onMouseLeave: this.handleMouseLeave.bind(this),
+          onMouseEnter: this.handleMouseEnter,
+          onMouseLeave: this.handleMouseLeave,
           onClick: this.handleItemClick },
         itemJsx,
         bannerJsx
@@ -3830,11 +3756,11 @@ exports.default = (0, _reactCssModules2.default)(BaseItem, _BaseItem2.default);
 },{"./BaseItem.css":30,"lib/GhostButton.jsx":35,"react":1001,"react-bootstrap":411,"react-css-modules":589,"utils/ItemUtil":44}],32:[function(require,module,exports){
 "use strict";
 
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 var _react = require("react");
 
@@ -3860,32 +3786,31 @@ var BaseModal = function (_React$Component) {
   function BaseModal(props) {
     _classCallCheck(this, BaseModal);
 
-    return _possibleConstructorReturn(this, Object.getPrototypeOf(BaseModal).call(this, props));
-  }
+    var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(BaseModal).call(this, props));
 
-  _createClass(BaseModal, [{
-    key: "onApply",
-    value: function onApply() {
-      var itemInfo = this.props.item,
+    _this.onApply = function () {
+      var itemInfo = _this.props.item,
           newValue = {};
 
       for (var key in itemInfo) {
-        newValue[key] = this.refs[key].getValue();
+        newValue[key] = _this.refs[key].getValue();
       }
 
-      this.props.onApply(newValue);
-    }
-  }, {
-    key: "onDelete",
-    value: function onDelete() {
-      this.props.onDelete();
-    }
-  }, {
-    key: "onClose",
-    value: function onClose() {
-      this.props.onClose();
-    }
-  }, {
+      _this.props.onApply(newValue);
+    };
+
+    _this.onDelete = function () {
+      _this.props.onDelete();
+    };
+
+    _this.onClose = function () {
+      _this.props.onClose();
+    };
+
+    return _this;
+  }
+
+  _createClass(BaseModal, [{
     key: "createKeyValueForm",
     value: function createKeyValueForm(itemInfo) {
       var formItems = [];
@@ -3919,7 +3844,7 @@ var BaseModal = function (_React$Component) {
 
       return _react2.default.createElement(
         _reactBootstrap.Modal,
-        { show: this.props.showModal, onHide: this.onClose.bind(this) },
+        { show: this.props.showModal, onHide: this.onClose },
         _react2.default.createElement(
           _reactBootstrap.Modal.Header,
           { closeButton: true },
@@ -3939,12 +3864,12 @@ var BaseModal = function (_React$Component) {
           null,
           _react2.default.createElement(
             _reactBootstrap.Button,
-            { bsStyle: "danger", onClick: this.onDelete.bind(this) },
+            { bsStyle: "danger", onClick: this.onDelete },
             "Delete"
           ),
           _react2.default.createElement(
             _reactBootstrap.Button,
-            { bsStyle: "success", onClick: this.onApply.bind(this) },
+            { bsStyle: "success", onClick: this.onApply },
             "Apply"
           )
         )
@@ -3956,6 +3881,7 @@ var BaseModal = function (_React$Component) {
 }(_react2.default.Component);
 
 exports.default = BaseModal;
+
 
 BaseModal.propTypes = {
   // required props
@@ -3977,11 +3903,11 @@ BaseModal.defaultProps = {
 },{"lib/BaseInput.jsx":29,"react":1001,"react-bootstrap":411}],33:[function(require,module,exports){
 "use strict";
 
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 var _react = require("react");
 
@@ -4003,17 +3929,18 @@ var BaseMultiSelect = function (_React$Component) {
   function BaseMultiSelect(props) {
     _classCallCheck(this, BaseMultiSelect);
 
-    return _possibleConstructorReturn(this, Object.getPrototypeOf(BaseMultiSelect).call(this, props));
+    var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(BaseMultiSelect).call(this, props));
+
+    _this.handleChange = function () {
+      var newValue = _this.refs["input"].getValue();
+
+      _this.props.handleChange(newValue);
+    };
+
+    return _this;
   }
 
   _createClass(BaseMultiSelect, [{
-    key: "handleChange",
-    value: function handleChange() {
-      var newValue = this.refs["input"].getValue();
-
-      this.props.handleChange(newValue);
-    }
-  }, {
     key: "createOptions",
     value: function createOptions(values) {
       var options = [];
@@ -4061,7 +3988,7 @@ var BaseMultiSelect = function (_React$Component) {
           type: "select",
           multiple: true,
           label: this.props.label,
-          onChange: this.handleChange.bind(this),
+          onChange: this.handleChange,
           ref: "input" },
         options
       );
@@ -4072,6 +3999,7 @@ var BaseMultiSelect = function (_React$Component) {
 }(_react2.default.Component);
 
 exports.default = BaseMultiSelect;
+
 
 BaseMultiSelect.propTypes = {
   options: _react2.default.PropTypes.arrayOf(_react2.default.PropTypes.string),
@@ -4090,13 +4018,13 @@ module.exports = {"ghostButton":"_app_js_lib_GhostButton__ghostButton"}
 },{}],35:[function(require,module,exports){
 "use strict";
 
-var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
-
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
+
+var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 var _react = require("react");
 
@@ -4168,11 +4096,11 @@ module.exports = {"loaderText":"_app_js_lib_Loader__loaderText","loader":"_app_j
 },{}],37:[function(require,module,exports){
 "use strict";
 
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 var _react = require("react");
 
@@ -4230,13 +4158,13 @@ module.exports = {"facebookButton":"_app_js_lib_SocialButton_FacebookButton__fac
 },{}],39:[function(require,module,exports){
 "use strict";
 
-var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
-
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
+
+var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 var _react = require("react");
 
@@ -4388,6 +4316,12 @@ var _items = [],
 var ItemDisplayStore = _underscore2.default.extend({}, _events.EventEmitter.prototype, {
 
   addItems: function addItems(newItems) {
+    if (newItems.length === 0) {
+      _hasMoreItems = false;
+
+      return;
+    }
+
     _items = _items.concat(newItems);
   },
 
@@ -4399,11 +4333,7 @@ var ItemDisplayStore = _underscore2.default.extend({}, _events.EventEmitter.prot
     _items = [];
   },
 
-  setHasMoreItems: function setHasMoreItems(hasMoreItems) {
-    _hasMoreItems = hasMoreItems;
-  },
-
-  getHasMoreItems: function getHasMoreItems() {
+  hasMoreItems: function hasMoreItems() {
     return _hasMoreItems;
   },
 
@@ -4432,11 +4362,6 @@ ItemDisplayStore.dispatchToken = _AppDispatcher2.default.register(function (payl
 
     case _ItemDisplayConstants2.default.CLEAR_ITEMS:
       ItemDisplayStore.clearItems();
-      ItemDisplayStore.emitChange();
-      break;
-
-    case _ItemDisplayConstants2.default.NO_MORE_ITEMS:
-      ItemDisplayStore.setHasMoreItems(false);
       ItemDisplayStore.emitChange();
       break;
 

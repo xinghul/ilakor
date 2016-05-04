@@ -16,6 +16,12 @@ let _items = []
 let ItemDisplayStore = _.extend({}, EventEmitter.prototype, {
   
   addItems: function(newItems) {
+    if (newItems.length === 0) {
+      _hasMoreItems = false;
+      
+      return;
+    }
+    
     _items = _items.concat(newItems);
   },
   
@@ -27,11 +33,7 @@ let ItemDisplayStore = _.extend({}, EventEmitter.prototype, {
     _items = [];
   },
   
-  setHasMoreItems: function(hasMoreItems) {
-    _hasMoreItems = hasMoreItems
-  },
-  
-  getHasMoreItems: function() {
+  hasMoreItems: function() {
     return _hasMoreItems;
   },
   
@@ -63,11 +65,6 @@ ItemDisplayStore.dispatchToken = AppDispatcher.register(function(payload) {
       ItemDisplayStore.emitChange();
       break;
       
-    case ItemDisplayConstants.NO_MORE_ITEMS:
-      ItemDisplayStore.setHasMoreItems(false);
-      ItemDisplayStore.emitChange();
-      break;
-    
     default:
       // do nothing
   }

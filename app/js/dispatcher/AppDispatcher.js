@@ -1,6 +1,6 @@
 "use strict";
 
-let Dispatcher = require("flux").Dispatcher;
+import { Dispatcher } from "flux"
 
 // Create dispatcher instance
 let AppDispatcher = new Dispatcher();

@@ -14,7 +14,7 @@ import ItemDetailModal from "./ItemDisplayApp/ItemDetailModal.jsx"
 function getStateFromStores() {
   return {
     items: ItemDisplayStore.getItems(),
-    hasMoreItems: ItemDisplayStore.getHasMoreItems()
+    hasMoreItems: ItemDisplayStore.hasMoreItems()
   };
 }
 
@@ -23,23 +23,14 @@ export default class ItemDisplayApp extends React.Component {
   constructor(props) {
     super(props);
     
-    this._onChange = this._onChange.bind(this);
-    // this.handleItemClick = this.handleItemClick.bind(this);
-    this.onItemDetailModalClose = this.onItemDetailModalClose.bind(this);
-    this.handleInfiniteLoad = this.handleInfiniteLoad.bind(this);
-    
     this.state = {
       items: ItemDisplayStore.getItems(),
-      hasMoreItems: ItemDisplayStore.getHasMoreItems(), 
+      hasMoreItems: ItemDisplayStore.hasMoreItems(), 
       
       selectedItem: {},
       showItemDetailModal: false,
       isLoading: false
     };
-  }
-  
-  _onChange() {
-    this.setState(getStateFromStores());
   }
   
   componentDidMount() {
@@ -49,6 +40,10 @@ export default class ItemDisplayApp extends React.Component {
   componentWillUnmount() {
     ItemDisplayStore.removeChangeListener(this._onChange);    
   }
+  
+  _onChange = () => {
+    this.setState(getStateFromStores());
+  };
   
   handleItemClick = (item) => {
     this.setState({
@@ -65,9 +60,9 @@ export default class ItemDisplayApp extends React.Component {
     });
   };
   
-  handleInfiniteLoad() {
+  handleInfiniteLoad = () => {
     if (!this.state.hasMoreItems) {
-      return;
+      return false;
     }
     
     let me = this;
@@ -83,13 +78,13 @@ export default class ItemDisplayApp extends React.Component {
         isLoading: false
       });
     });
-  }
+  };
   
-  onItemDetailModalClose() {
+  onItemDetailModalClose = () => {
     this.setState({
       showItemDetailModal: false
     });
-  }
+  };
   
   elementInfiniteLoad() {
     let loadSpinner = (
@@ -108,15 +103,13 @@ export default class ItemDisplayApp extends React.Component {
         />
     );
     
-    
-    
     return (
       <div>
         {itemDetailModal}
         <Infinite
           elementHeight={200}
           useWindowAsScrollContainer
-          infiniteLoadBeginEdgeOffset={200}
+          infiniteLoadBeginEdgeOffset={40}
           onInfiniteLoad={this.handleInfiniteLoad}
           loadingSpinnerDelegate={this.elementInfiniteLoad()}
           isInfiniteLoading={this.state.isLoading}>

@@ -51,12 +51,12 @@
     "when": "^3.7.3"
   },
   "devDependencies": {
-    "babel-core": "^6.4.5",
-    "babel-jest": "^11.0.2",
-    "babel-loader": "^6.2.1",
+    "babel-core": "^6.8.0",
+    "babel-jest": "^12.0.2",
+    "babel-loader": "^6.2.4",
     "babel-plugin-transform-runtime": "^6.4.3",
-    "babel-preset-es2015": "^6.3.13",
-    "babel-preset-react": "^6.3.13",
+    "babel-preset-es2015": "^6.6.0",
+    "babel-preset-react": "^6.5.0",
     "babel-preset-stage-0": "^6.5.0",
     "babel-runtime": "^6.3.19",
     "babelify": "^7.3.0",
@@ -77,18 +77,5 @@
   },
   "jest": {
     "scriptPreprocessor": "<rootDir>/node_modules/babel-jest"
-  },
-  "babel": {
-    "presets": [
-      "es2015",
-      "stage-0",
-      "react"
-    ]
-  },
-  "browserify": {
-    "transform": [
-      "babelify",
-      "envify"
-    ]
   }
 }

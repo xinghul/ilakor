@@ -11,7 +11,7 @@ export default class BaseModal extends React.Component {
     super(props);
   }
   
-  onApply() {
+  onApply = () => {
     let itemInfo = this.props.item
     ,   newValue = {};
     
@@ -21,15 +21,15 @@ export default class BaseModal extends React.Component {
     }
     
     this.props.onApply(newValue);
-  }
+  };
   
-  onDelete() {
+  onDelete = () => {
     this.props.onDelete();
-  }
+  };
   
-  onClose() {
+  onClose = () => {
     this.props.onClose();
-  }
+  };
   
   createKeyValueForm(itemInfo) {
     let formItems = [];
@@ -64,7 +64,7 @@ export default class BaseModal extends React.Component {
     let keyValueForm = this.createKeyValueForm(itemInfo);
 
     return (
-      <Modal show={this.props.showModal} onHide={this.onClose.bind(this)}>
+      <Modal show={this.props.showModal} onHide={this.onClose}>
         <Modal.Header closeButton>
           <Modal.Title>Item info</Modal.Title>
         </Modal.Header>
@@ -72,8 +72,8 @@ export default class BaseModal extends React.Component {
           {keyValueForm}
         </Modal.Body>
         <Modal.Footer>
-          <Button bsStyle="danger" onClick={this.onDelete.bind(this)}>Delete</Button>
-          <Button bsStyle="success" onClick={this.onApply.bind(this)}>Apply</Button>  
+          <Button bsStyle="danger" onClick={this.onDelete}>Delete</Button>
+          <Button bsStyle="success" onClick={this.onApply}>Apply</Button>  
         </Modal.Footer>
       </Modal>
     );

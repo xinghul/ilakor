@@ -145,10 +145,6 @@ class ShoppingCartApp extends React.Component {
     this.state = getStateFromStores();
   }
   
-  _onChange = () => {
-    this.setState(getStateFromStores());
-  };
-  
   componentDidMount() {
     ShoppingCartStore.addChangeListener(this._onChange);
   }
@@ -156,6 +152,10 @@ class ShoppingCartApp extends React.Component {
   componentWillUnmount() {
     ShoppingCartStore.removeChangeListener(this._onChange);
   }
+
+  _onChange = () => {
+    this.setState(getStateFromStores());
+  };
   
   render() {
     let popover = createCartPopover(this.state.items);

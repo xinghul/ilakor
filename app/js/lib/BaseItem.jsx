@@ -15,15 +15,13 @@ class BaseItem extends React.Component {
   constructor(props) {
     super(props);
     
-    this.handleImageLoaded = this.handleImageLoaded.bind(this);
-    
     this.state = {
       imageLoaded: false,
       bannerBottom: "-80px"
     };
   }
   
-  handleImageLoaded() {
+  handleImageLoaded = () => {
     if (this.state.imageLoaded) {
       return;
     }
@@ -31,7 +29,7 @@ class BaseItem extends React.Component {
     this.setState({
       imageLoaded: true
     });
-  }
+  };
   
   createImageJsx() {
     let item     = this.props.item
@@ -69,17 +67,17 @@ class BaseItem extends React.Component {
     );
   }
   
-  handleMouseEnter() {
+  handleMouseEnter = () => {
     this.setState({
       bannerBottom: "0px"
     });
-  }
+  };
   
-  handleMouseLeave() {
+  handleMouseLeave = () => {
     this.setState({
       bannerBottom: "-80px"
     });
-  }
+  };
   
   handleAddToCartClick = (evt) => {
     evt.preventDefault();
@@ -109,8 +107,8 @@ class BaseItem extends React.Component {
     return (
       <div styleName="baseItem" 
         style={style}
-        onMouseEnter={this.handleMouseEnter.bind(this)}
-        onMouseLeave={this.handleMouseLeave.bind(this)}
+        onMouseEnter={this.handleMouseEnter}
+        onMouseLeave={this.handleMouseLeave}
         onClick={this.handleItemClick}>
         {itemJsx}
         {bannerJsx}

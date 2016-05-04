@@ -8,8 +8,7 @@ import ItemDisplayConstants from "constants/ItemDisplayConstants"
 
 const LOAD_SIZE = 20;
 
-let _skip = 0
-,   _hasMore = true;
+let _skip = 0;
 
 let ItemDisplayAction = {
   
@@ -24,10 +23,6 @@ let ItemDisplayAction = {
     ,   limit = LOAD_SIZE;
     
     return new Promise(function(resolve, reject) {
-      if (!_hasMore) {
-        return resolve();
-      }
-      
       request.get({
         url: "http://localhost:3001/api/items",
         qs: {
@@ -42,21 +37,12 @@ let ItemDisplayAction = {
           if (response.statusCode === 200) {
             let items = JSON.parse(response.body);
             
-            if (items.length > 0) {
-              
-              AppDispatcher.handleAction({
-                actionType: ItemDisplayConstants.RECEIVED_ITEMS,
-                items: items
-              });
-              
-              _skip += items.length;
-            } else {
-              _hasMore = false;
-              
-              AppDispatcher.handleAction({
-                actionType: ItemDisplayConstants.NO_MORE_ITEMS
-              });
-            }
+            AppDispatcher.handleAction({
+              actionType: ItemDisplayConstants.RECEIVED_ITEMS,
+              items: items
+            });
+            
+            _skip += items.length;
             
             resolve(); 
                        

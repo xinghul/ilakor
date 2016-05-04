@@ -18,15 +18,13 @@ export default class PasswordInput extends React.Component {
   constructor(props) {
     super(props);
     
-    this.handlePasswordChange = this.handlePasswordChange.bind(this);
-    
     this.state = {
       isValid: false,
       value: ""
     };
   }
   
-  handlePasswordChange(newValue) {
+  handlePasswordChange = (newValue) => {
     let isValid = isValidPassword(newValue);
 
     this.setState({
@@ -35,7 +33,7 @@ export default class PasswordInput extends React.Component {
     });
     
     this.props.handleChange(isValid ? newValue : "");
-  }
+  };
   
   createBsStyle() {
     if (!this.state.isValid) {

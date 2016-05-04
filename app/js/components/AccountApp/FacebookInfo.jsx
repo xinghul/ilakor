@@ -10,17 +10,15 @@ import AccountAction from "actions/AccountAction"
 export default class FacebookInfo extends React.Component {
   constructor(props) {
     super(props);
-    
-    this.onConnectFacebookClick = this.onConnectFacebookClick.bind(this);
   }
   
-  onConnectFacebookClick() {
+  onConnectFacebookClick = () => {
     AccountAction.connectFacebook().then(function(result) {
       console.log(result);
     }).catch(function(err) {
       console.log(err);
     });
-  }
+  };
   
   render() {
     let user = this.props.user

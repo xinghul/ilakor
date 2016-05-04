@@ -18,8 +18,6 @@ export default class AccountApp extends React.Component {
   constructor(props) {
     super(props);
     
-    this._onChange = this._onChange.bind(this);
-    
     this.state = getStateFromStores();
   }
   
@@ -31,9 +29,9 @@ export default class AccountApp extends React.Component {
     AuthStore.removeChangeListener(this._onChange);
   }
   
-  _onChange() {
+  _onChange = () => {
     this.setState(getStateFromStores());
-  }
+  };
 
   render() {
     

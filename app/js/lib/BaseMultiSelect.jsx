@@ -9,11 +9,11 @@ export default class BaseMultiSelect extends React.Component {
     super(props);
   }
   
-  handleChange() {
+  handleChange = () => {
     let newValue = this.refs["input"].getValue();
     
     this.props.handleChange(newValue);
-  }
+  };
   
   createOptions(values) {
     let options = [];
@@ -36,7 +36,7 @@ export default class BaseMultiSelect extends React.Component {
         type="select" 
         multiple 
         label={this.props.label} 
-        onChange={this.handleChange.bind(this)} 
+        onChange={this.handleChange} 
         ref="input">{options}
       </Input>
     );

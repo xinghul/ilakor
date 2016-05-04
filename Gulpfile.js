@@ -6,6 +6,8 @@
   ,   sass       = require("gulp-sass")
   ,   del        = require("del")
   ,   browserify = require("browserify")
+  ,   babelify   = require("babelify")
+  ,   envify     = require("envify")
   ,   source     = require("vinyl-source-stream");
 
   // var jest = require('gulp-jest');
@@ -36,6 +38,8 @@
         entries: ["./app/js/app.js"],
         paths: ["./node_modules", "./app/js"]
       })
+      .transform(babelify)
+      .transform(envify)
       .plugin(require("css-modulesify"), {
         rootDir: __dirname,
         output: "./app/stylesheets/bundle.css"

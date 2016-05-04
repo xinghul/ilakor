@@ -9,11 +9,11 @@ export default class BaseInput extends React.Component {
     super(props);
   }
   
-  handleChange() {
+  handleChange = () => {
     let newValue = this.refs["input"].getValue();
 
     this.props.handleChange(newValue);
-  }
+  };
 
   render() {
     
@@ -29,7 +29,7 @@ export default class BaseInput extends React.Component {
           {...this.props}
           addonBefore={addonBeforeGlyphicon}
           spellCheck={false}
-          onChange={this.handleChange.bind(this)}
+          onChange={this.handleChange}
           ref="input"
           />
       </div>

@@ -25,9 +25,10 @@ export default class ItemManageApp extends React.Component {
   constructor(props) {
     super(props);
     
-    this._onChange = this._onChange.bind(this);
-    
     this.state = {
+      items: ItemManageStore.getItems(),
+      tags: ItemManageStore.getTags(),
+      
       // new item info
       name: "",
       weight: "",
@@ -50,10 +51,26 @@ export default class ItemManageApp extends React.Component {
     };
   }
   
+  componentDidMount() {
+    ItemManageStore.addChangeListener(this._onChange);
+    
+    ItemManageAction.getItems();
+    
+    ItemManageAction.getAllTags();
+  }
+  
+  componentWillUnmount() {
+    ItemManageStore.removeChangeListener(this._onChange);
+  }
+  
+  _onChange = () => {
+    this.setState(getStateFromStores());
+  };
+  
   /**
    * Handler when submit button is clicked.
    */
-  handleSubmit() {
+  handleSubmit = () => {
     // FIXME: make it unclickable
     if (_.isEmpty(this.state.name) || _.isEmpty(this.state.weight) || _.isEmpty(this.state.tag)) {
       return;  
@@ -77,73 +94,73 @@ export default class ItemManageApp extends React.Component {
     }).catch(function(err) {
       console.log(err);
     });
-  }
+  };
   
   /**
    * Handler for name input value change.
    * @param  {String} newValue the new name value.
    */
-  handleNameChange(newValue) {
+  handleNameChange = (newValue) => {
     this.setState({
       name: newValue
     });
-  }
+  };
   
   /**
    * Handler for weight input value change.
    * @param  {String} newValue the new weight value.
    */
-  handleWeightChange(newValue) {
+  handleWeightChange = (newValue) => {
     this.setState({
       weight: newValue
     });
-  }
+  };
   
   /**
    * Handler for tag input value change.
    * @param  {[String]} newValue the new tag value.
    */
-  handleTagChange(newValue) {
+  handleTagChange = (newValue) => {
     this.setState({
       tag: newValue
     });
-  }
+  };
   
   /**
    * Handler for unit number input value change.
    * @param  {String} newValue the new unit number value.
    */
-  handleUnitNumberChange(newValue) {
+  handleUnitNumberChange = (newValue) => {
     this.setState({
       unitNumber: newValue
     });
-  }
+  };
   
   /**
    * Handler for unit name input value change.
    * @param  {String} newValue the new unit name value.
    */
-  handleUnitNameChange(newValue) {
+  handleUnitNameChange = (newValue) => {
     this.setState({
       unitName: newValue
     });
-  }
+  };
   
   /**
    * Handler for unit name input value change.
    * @param  {String} newValue the new unit type value.
    */
-  handleUnitTypeChange(newValue) {
+  handleUnitTypeChange = (newValue) => {
     this.setState({
       unitType: newValue
     });
-  }
+  };
   
   /**
    * Handler for image input value change.
    * @param  {String} newValue the new image value.
    */
-  handleImageChange(evt) {
+  handleImageChange = (evt) => {
     evt.preventDefault();
 
     let files  = evt.target.files
@@ -166,46 +183,46 @@ export default class ItemManageApp extends React.Component {
       
       reader.readAsDataURL(file);
     }
-  }
+  };
   
   /**
    * Handler for price input value change.
    * @param  {String} newValue the new price value.
    */
-  handlePriceChange(newValue) {
+  handlePriceChange = (newValue) => {
     this.setState({
       price: newValue
     });
-  }
+  };
   
   /**
    * Handler for stock input value change.
    * @param  {String} newValue the new stock value.
    */
-  handleStockChange(newValue) {
+  handleStockChange = (newValue) => {
     this.setState({
       stock: newValue
     });
-  }
+  };
   
   /**
    * Handler for item in the table being clicked.
    * @param  {Object} item the clicked item.
    */
-  handleItemClick(item) {
+  handleItemClick = (item) => {
     this.setState({
       showItemInfoModal: true,
       selectedItem: item
     });
-  }
+  };
   
-  onItemInfoModalClose() {
+  onItemInfoModalClose = () => {
     this.setState({
       showItemInfoModal: false
     });
-  }
+  };
   
-  onItemInfoModalApply(newValue) {
+  onItemInfoModalApply = (newValue) => {
     let me = this;
     
     ItemManageAction.updateItem(
@@ -216,9 +233,9 @@ export default class ItemManageApp extends React.Component {
     }).catch(function(err) {
       console.log(err);
     })
-  }
+  };
   
-  onItemInfoModalDelete() {
+  onItemInfoModalDelete = () => {
     let me = this;
     
     ItemManageAction.removeItem(
@@ -228,23 +245,7 @@ export default class ItemManageApp extends React.Component {
     }).catch(function(err) {
       console.log(err);
     })
-  }
-  
-  _onChange() {
-    this.setState(getStateFromStores());
-  }
-  
-  componentDidMount() {
-    ItemManageStore.addChangeListener(this._onChange);
-    
-    ItemManageAction.getItems();
-    
-    ItemManageAction.getAllTags();
-  }
-  
-  componentWillUnmount() {
-    ItemManageStore.removeChangeListener(this._onChange);
-  }
+  };
   
   createItemListTable() {
     let items = this.state.items
@@ -318,18 +319,12 @@ export default class ItemManageApp extends React.Component {
       left: "-10px"
     };
     
-    let nameValueLink = {
-      value: this.state.name,
-      requestChange: this.handleNameChange
-    };
-    
-
     let nameInput = (
       <BaseInput
         type="text"
         placeholder="Enter name"
         addonBefore="info-sign"
-        handleChange={this.handleNameChange.bind(this)} />
+        handleChange={this.handleNameChange} />
     );
     
     let tagOptions = this.createTagOptions();
@@ -338,7 +333,7 @@ export default class ItemManageApp extends React.Component {
       <BaseMultiSelect
         label="Tags"
         options={tagOptions}
-        handleChange={this.handleTagChange.bind(this)} />
+        handleChange={this.handleTagChange} />
     );
     
     let weightInput = (
@@ -346,7 +341,7 @@ export default class ItemManageApp extends React.Component {
         type="text"
         label="Weight"
         placeholder="Enter weight in pounds"
-        handleChange={this.handleWeightChange.bind(this)} />
+        handleChange={this.handleWeightChange} />
     );
     
     let unitNumberInput = (
@@ -354,7 +349,7 @@ export default class ItemManageApp extends React.Component {
         type="text"
         label="Unit number"
         placeholder="Enter unit number"
-        handleChange={this.handleUnitNumberChange.bind(this)} />
+        handleChange={this.handleUnitNumberChange} />
     );
     
     let unitNameInput = (
@@ -362,7 +357,7 @@ export default class ItemManageApp extends React.Component {
         type="text"
         label="Unit name"
         placeholder="Enter unit name"
-        handleChange={this.handleUnitNameChange.bind(this)} />
+        handleChange={this.handleUnitNameChange} />
     );
     
     let unitTypeInput = (
@@ -370,7 +365,7 @@ export default class ItemManageApp extends React.Component {
         type="text"
         label="Unit type"
         placeholder="Enter unit type"
-        handleChange={this.handleUnitTypeChange.bind(this)} />
+        handleChange={this.handleUnitTypeChange} />
     );
     
     let dimensionInput = (
@@ -401,7 +396,7 @@ export default class ItemManageApp extends React.Component {
         label="Images"
         multiple
         placeholder="Select images"
-        onChange={this.handleImageChange.bind(this)} />
+        onChange={this.handleImageChange} />
     );
     
     let priceInput = (
@@ -409,7 +404,7 @@ export default class ItemManageApp extends React.Component {
         type="text"
         label="Price"
         placeholder="Enter price"
-        handleChange={this.handlePriceChange.bind(this)} />
+        handleChange={this.handlePriceChange} />
     );
     
     let stockInput = (
@@ -417,11 +412,11 @@ export default class ItemManageApp extends React.Component {
         type="text"
         label="Stock left"
         placeholder="Enter stock left"
-        handleChange={this.handleStockChange.bind(this)} />
+        handleChange={this.handleStockChange} />
     );
     
     let submitButton = (
-      <Button onClick={this.handleSubmit.bind(this)}>
+      <Button onClick={this.handleSubmit}>
         Add
       </Button>
     );
@@ -497,9 +492,9 @@ export default class ItemManageApp extends React.Component {
       <BaseModal 
         showModal={this.state.showItemInfoModal} 
         item={this.state.selectedItem}
-        onClose={this.onItemInfoModalClose.bind(this)}
-        onApply={this.onItemInfoModalApply.bind(this)}
-        onDelete={this.onItemInfoModalDelete.bind(this)}
+        onClose={this.onItemInfoModalClose}
+        onApply={this.onItemInfoModalApply}
+        onDelete={this.onItemInfoModalDelete}
         />
     );
     

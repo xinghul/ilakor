@@ -18,15 +18,13 @@ export default class UsernameInput extends React.Component {
   constructor(props) {
     super(props);
     
-    this.handleUsernameChange = this.handleUsernameChange.bind(this);
-    
     this.state = {
       isValid: false,
       value: ""
     };
   }
   
-  handleUsernameChange(newValue) {
+  handleUsernameChange = (newValue) => {
     let isValid = isValidUsername(newValue);
 
     this.setState({
@@ -35,7 +33,7 @@ export default class UsernameInput extends React.Component {
     });
     
     this.props.handleChange(isValid ? newValue : "");
-  }
+  };
   
   createBsStyle() {
     if (!this.state.isValid) {

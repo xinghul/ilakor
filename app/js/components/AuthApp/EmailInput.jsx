@@ -13,12 +13,9 @@ function isValidEmail(email) {
   return false;
 }
 
-
 export default class EmailInput extends React.Component {
   constructor(props) {
     super(props);
-    
-    this.handleEmailChange = this.handleEmailChange.bind(this);
     
     this.state = {
       isValid: false,
@@ -26,7 +23,7 @@ export default class EmailInput extends React.Component {
     };
   }
   
-  handleEmailChange(newValue) {
+  handleEmailChange = (newValue) => {
     let isValid = isValidEmail(newValue);
     
     this.setState({
@@ -35,7 +32,7 @@ export default class EmailInput extends React.Component {
     });
     
     this.props.handleChange(isValid ? newValue : "");
-  }
+  };
   
   createBsStyle() {
     if (!this.state.isValid) {
