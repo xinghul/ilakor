@@ -2,7 +2,7 @@
 
 import React from "react"
 import CSSModules from "react-css-modules"
-import { Thumbnail, Button, Glyphicon } from "react-bootstrap"
+import { Thumbnail, Image, Button, Glyphicon } from "react-bootstrap"
 
 import GhostButton from "lib/GhostButton.jsx"
 
@@ -41,7 +41,7 @@ class BaseItem extends React.Component {
     };
     
     return (
-      <img style={imgStyle} src={imageUrl} onLoad={this.handleImageLoaded} />
+      <Image style={imgStyle} src={imageUrl} onLoad={this.handleImageLoaded} />
     );
   }
   
@@ -64,6 +64,20 @@ class BaseItem extends React.Component {
         </div>
         <div styleName="itemPrice">{ItemUtil.createPriceJsx(item.feature.price)}</div>
       </div>      
+    );
+  }
+  
+  createLoadSpinnerJsx() {
+    let style = {
+      opacity: this.state.imageLoaded ? "0" : "1"
+    };
+    
+    return (
+      <div style={style} styleName="loader">
+        <div styleName="inner one"></div>
+        <div styleName="inner two"></div>
+        <div styleName="inner three"></div>
+      </div>
     );
   }
   
@@ -94,24 +108,23 @@ class BaseItem extends React.Component {
   render() {
     let itemJsx
     ,   bannerJsx
+    ,   loadSpinnerJsx
     ,   style;
     
     itemJsx = this.createImageJsx();
     
     bannerJsx = this.createBannerJsx();
     
-    style = {
-      display: this.state.imageLoaded ? "block" : "none"
-    };
+    loadSpinnerJsx = this.createLoadSpinnerJsx();
     
     return (
       <div styleName="baseItem" 
-        style={style}
         onMouseEnter={this.handleMouseEnter}
         onMouseLeave={this.handleMouseLeave}
         onClick={this.handleItemClick}>
         {itemJsx}
         {bannerJsx}
+        {loadSpinnerJsx}
       </div>
     );
     
@@ -130,4 +143,4 @@ BaseItem.defaultProps = {
   handleAddToCartClick: function() {}
 };
 
-export default CSSModules(BaseItem, styles)
+export default CSSModules(BaseItem, styles, { allowMultiple: true })

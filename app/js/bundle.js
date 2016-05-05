@@ -1676,9 +1676,9 @@ var _BaseGrid = require("lib/BaseGrid.jsx");
 
 var _BaseGrid2 = _interopRequireDefault(_BaseGrid);
 
-var _Loader = require("lib/Loader.jsx");
+var _LoadSpinner = require("lib/LoadSpinner.jsx");
 
-var _Loader2 = _interopRequireDefault(_Loader);
+var _LoadSpinner2 = _interopRequireDefault(_LoadSpinner);
 
 var _ItemDisplayStore = require("stores/ItemDisplayStore");
 
@@ -1736,7 +1736,10 @@ var ItemDisplayApp = function (_React$Component) {
       });
     };
 
-    _this.handleInfiniteLoad = function () {
+    _this.doInfiniteLoad = function () {
+
+      window.removeEventListener("scroll", _this.handleScroll);
+
       if (!_this.state.hasMoreItems) {
         return false;
       }
@@ -1751,6 +1754,8 @@ var ItemDisplayApp = function (_React$Component) {
         me.setState({
           isLoading: false
         });
+
+        window.addEventListener("scroll", me.handleScroll);
       });
     };
 
@@ -1758,6 +1763,16 @@ var ItemDisplayApp = function (_React$Component) {
       _this.setState({
         showItemDetailModal: false
       });
+    };
+
+    _this.handleScroll = function () {
+      var scrollTop = document.documentElement && document.documentElement.scrollTop || document.body.scrollTop;
+
+      var scrollHeight = document.documentElement && document.documentElement.scrollHeight || document.body.scrollHeight;
+
+      if (scrollTop + window.innerHeight >= scrollHeight) {
+        _this.doInfiniteLoad();
+      }
     };
 
     _this.state = {
@@ -1775,18 +1790,13 @@ var ItemDisplayApp = function (_React$Component) {
     key: "componentDidMount",
     value: function componentDidMount() {
       _ItemDisplayStore2.default.addChangeListener(this._onChange);
+
+      this.doInfiniteLoad();
     }
   }, {
     key: "componentWillUnmount",
     value: function componentWillUnmount() {
       _ItemDisplayStore2.default.removeChangeListener(this._onChange);
-    }
-  }, {
-    key: "elementInfiniteLoad",
-    value: function elementInfiniteLoad() {
-      var loadSpinner = _react2.default.createElement(_Loader2.default, { hidden: !this.state.isLoading });
-
-      return loadSpinner;
     }
   }, {
     key: "render",
@@ -1801,20 +1811,11 @@ var ItemDisplayApp = function (_React$Component) {
         "div",
         null,
         itemDetailModal,
-        _react2.default.createElement(
-          _reactInfinite2.default,
-          {
-            elementHeight: 200,
-            useWindowAsScrollContainer: true,
-            infiniteLoadBeginEdgeOffset: 40,
-            onInfiniteLoad: this.handleInfiniteLoad,
-            loadingSpinnerDelegate: this.elementInfiniteLoad(),
-            isInfiniteLoading: this.state.isLoading },
-          _react2.default.createElement(_BaseGrid2.default, {
-            items: this.state.items,
-            handleItemClick: this.handleItemClick,
-            handleAddToCartClick: this.handleAddToCartClick })
-        )
+        _react2.default.createElement(_BaseGrid2.default, {
+          items: this.state.items,
+          handleItemClick: this.handleItemClick,
+          handleAddToCartClick: this.handleAddToCartClick }),
+        _react2.default.createElement(_LoadSpinner2.default, { hidden: !this.state.isLoading })
       );
     }
   }]);
@@ -1824,7 +1825,7 @@ var ItemDisplayApp = function (_React$Component) {
 
 exports.default = ItemDisplayApp;
 
-},{"./ItemDisplayApp/ItemDetailModal.jsx":16,"actions/ItemDisplayAction":3,"actions/ShoppingCartAction":5,"lib/BaseGrid.jsx":28,"lib/Loader.jsx":37,"react":1001,"react-infinite":771,"stores/ItemDisplayStore":41}],15:[function(require,module,exports){
+},{"./ItemDisplayApp/ItemDetailModal.jsx":16,"actions/ItemDisplayAction":3,"actions/ShoppingCartAction":5,"lib/BaseGrid.jsx":28,"lib/LoadSpinner.jsx":37,"react":1001,"react-infinite":771,"stores/ItemDisplayStore":41}],15:[function(require,module,exports){
 module.exports = {}
 },{}],16:[function(require,module,exports){
 "use strict";
@@ -3571,7 +3572,7 @@ BaseInput.defaultProps = {
 };
 
 },{"react":1001,"react-bootstrap":411}],30:[function(require,module,exports){
-module.exports = {"baseItem":"_app_js_lib_BaseItem__baseItem","baseBanner":"_app_js_lib_BaseItem__baseBanner","itemName":"_app_js_lib_BaseItem__itemName","itemPrice":"_app_js_lib_BaseItem__itemPrice","cartIcon":"_app_js_lib_BaseItem__cartIcon"}
+module.exports = {"baseItem":"_app_js_lib_BaseItem__baseItem","baseBanner":"_app_js_lib_BaseItem__baseBanner","itemName":"_app_js_lib_BaseItem__itemName","itemPrice":"_app_js_lib_BaseItem__itemPrice","cartIcon":"_app_js_lib_BaseItem__cartIcon","loader":"_app_js_lib_BaseItem__loader","inner":"_app_js_lib_BaseItem__inner","one":"_app_js_lib_BaseItem__one","rotate-one":"_app_js_lib_BaseItem__rotate-one","two":"_app_js_lib_BaseItem__two","rotate-two":"_app_js_lib_BaseItem__rotate-two","three":"_app_js_lib_BaseItem__three","rotate-three":"_app_js_lib_BaseItem__rotate-three"}
 },{}],31:[function(require,module,exports){
 "use strict";
 
@@ -3671,7 +3672,7 @@ var BaseItem = function (_React$Component) {
         maxHeight: "100%"
       };
 
-      return _react2.default.createElement("img", { style: imgStyle, src: imageUrl, onLoad: this.handleImageLoaded });
+      return _react2.default.createElement(_reactBootstrap.Image, { style: imgStyle, src: imageUrl, onLoad: this.handleImageLoaded });
     }
   }, {
     key: "createBannerJsx",
@@ -3709,29 +3710,43 @@ var BaseItem = function (_React$Component) {
       );
     }
   }, {
+    key: "createLoadSpinnerJsx",
+    value: function createLoadSpinnerJsx() {
+      var style = {
+        opacity: this.state.imageLoaded ? "0" : "1"
+      };
+
+      return _react2.default.createElement(
+        "div",
+        { style: style, styleName: "loader" },
+        _react2.default.createElement("div", { styleName: "inner one" }),
+        _react2.default.createElement("div", { styleName: "inner two" }),
+        _react2.default.createElement("div", { styleName: "inner three" })
+      );
+    }
+  }, {
     key: "render",
     value: function render() {
       var itemJsx = void 0,
           bannerJsx = void 0,
+          loadSpinnerJsx = void 0,
           style = void 0;
 
       itemJsx = this.createImageJsx();
 
       bannerJsx = this.createBannerJsx();
 
-      style = {
-        display: this.state.imageLoaded ? "block" : "none"
-      };
+      loadSpinnerJsx = this.createLoadSpinnerJsx();
 
       return _react2.default.createElement(
         "div",
         { styleName: "baseItem",
-          style: style,
           onMouseEnter: this.handleMouseEnter,
           onMouseLeave: this.handleMouseLeave,
           onClick: this.handleItemClick },
         itemJsx,
-        bannerJsx
+        bannerJsx,
+        loadSpinnerJsx
       );
     }
   }]);
@@ -3751,7 +3766,7 @@ BaseItem.defaultProps = {
   handleAddToCartClick: function handleAddToCartClick() {}
 };
 
-exports.default = (0, _reactCssModules2.default)(BaseItem, _BaseItem2.default);
+exports.default = (0, _reactCssModules2.default)(BaseItem, _BaseItem2.default, { allowMultiple: true });
 
 },{"./BaseItem.css":30,"lib/GhostButton.jsx":35,"react":1001,"react-bootstrap":411,"react-css-modules":589,"utils/ItemUtil":44}],32:[function(require,module,exports){
 "use strict";
@@ -4092,7 +4107,7 @@ GhostButton.defaultProps = {
 exports.default = (0, _reactCssModules2.default)(GhostButton, _GhostButton2.default);
 
 },{"./GhostButton.css":34,"react":1001,"react-bootstrap":411,"react-css-modules":589,"underscore":1132}],36:[function(require,module,exports){
-module.exports = {"loaderText":"_app_js_lib_Loader__loaderText","loader":"_app_js_lib_Loader__loader","rotate":"_app_js_lib_Loader__rotate","ball1":"_app_js_lib_Loader__ball1","ball2":"_app_js_lib_Loader__ball2"}
+module.exports = {"loaderText":"_app_js_lib_LoadSpinner__loaderText","loader":"_app_js_lib_LoadSpinner__loader","rotate":"_app_js_lib_LoadSpinner__rotate","ball1":"_app_js_lib_LoadSpinner__ball1","ball2":"_app_js_lib_LoadSpinner__ball2"}
 },{}],37:[function(require,module,exports){
 "use strict";
 
@@ -4110,9 +4125,9 @@ var _reactCssModules = require("react-css-modules");
 
 var _reactCssModules2 = _interopRequireDefault(_reactCssModules);
 
-var _Loader = require("./Loader.css");
+var _LoadSpinner = require("./LoadSpinner.css");
 
-var _Loader2 = _interopRequireDefault(_Loader);
+var _LoadSpinner2 = _interopRequireDefault(_LoadSpinner);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -4151,9 +4166,9 @@ var Loader = function (_React$Component) {
   return Loader;
 }(_react2.default.Component);
 
-exports.default = (0, _reactCssModules2.default)(Loader, _Loader2.default);
+exports.default = (0, _reactCssModules2.default)(Loader, _LoadSpinner2.default);
 
-},{"./Loader.css":36,"react":1001,"react-css-modules":589}],38:[function(require,module,exports){
+},{"./LoadSpinner.css":36,"react":1001,"react-css-modules":589}],38:[function(require,module,exports){
 module.exports = {"facebookButton":"_app_js_lib_SocialButton_FacebookButton__facebookButton"}
 },{}],39:[function(require,module,exports){
 "use strict";

@@ -4,7 +4,7 @@ import React from "react"
 import Infinite from "react-infinite"
 
 import BaseGrid from "lib/BaseGrid.jsx"
-import Loader from "lib/Loader.jsx"
+import LoadSpinner from "lib/LoadSpinner.jsx"
 
 import ItemDisplayStore from "stores/ItemDisplayStore"
 import ItemDisplayAction from "actions/ItemDisplayAction"
@@ -35,10 +35,12 @@ export default class ItemDisplayApp extends React.Component {
   
   componentDidMount() {
     ItemDisplayStore.addChangeListener(this._onChange);
+    
+    this.doInfiniteLoad();
   }
   
   componentWillUnmount() {
-    ItemDisplayStore.removeChangeListener(this._onChange);    
+    ItemDisplayStore.removeChangeListener(this._onChange);
   }
   
   _onChange = () => {
@@ -60,7 +62,10 @@ export default class ItemDisplayApp extends React.Component {
     });
   };
   
-  handleInfiniteLoad = () => {
+  doInfiniteLoad = () => {
+    
+    window.removeEventListener("scroll", this.handleScroll);    
+
     if (!this.state.hasMoreItems) {
       return false;
     }
@@ -70,13 +75,15 @@ export default class ItemDisplayApp extends React.Component {
     this.setState({
       isLoading: true
     });
-    
+
     ItemDisplayAction
     .getItems()
     .finally(function() {
       me.setState({
         isLoading: false
       });
+      
+      window.addEventListener("scroll", me.handleScroll);        
     });
   };
   
@@ -86,13 +93,19 @@ export default class ItemDisplayApp extends React.Component {
     });
   };
   
-  elementInfiniteLoad() {
-    let loadSpinner = (
-      <Loader hidden={!this.state.isLoading} />
-    );
+  handleScroll = () => {
+    let scrollTop = 
+      document.documentElement && document.documentElement.scrollTop || 
+      document.body.scrollTop;
     
-    return loadSpinner;
-  }
+    let scrollHeight = 
+      document.documentElement && document.documentElement.scrollHeight || 
+      document.body.scrollHeight; 
+    
+    if ((scrollTop + window.innerHeight) >= scrollHeight) {
+      this.doInfiniteLoad();
+    }
+  };
   
   render() {
     let itemDetailModal = (
@@ -106,19 +119,11 @@ export default class ItemDisplayApp extends React.Component {
     return (
       <div>
         {itemDetailModal}
-        <Infinite
-          elementHeight={200}
-          useWindowAsScrollContainer
-          infiniteLoadBeginEdgeOffset={40}
-          onInfiniteLoad={this.handleInfiniteLoad}
-          loadingSpinnerDelegate={this.elementInfiniteLoad()}
-          isInfiniteLoading={this.state.isLoading}>
-          
-          <BaseGrid
-            items={this.state.items} 
-            handleItemClick={this.handleItemClick}
-            handleAddToCartClick={this.handleAddToCartClick} />
-        </Infinite>
+        <BaseGrid
+          items={this.state.items} 
+          handleItemClick={this.handleItemClick}
+          handleAddToCartClick={this.handleAddToCartClick} />
+        <LoadSpinner hidden={!this.state.isLoading} />
       </div>
     );
   }

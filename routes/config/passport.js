@@ -80,7 +80,8 @@ module.exports = {
       clientSecret     : configAuth.facebookAuth.clientSecret,
       callbackURL      : configAuth.facebookAuth.callbackURL,
       passReqToCallback: true,
-      profileFields    : ["id", "emails", "photos", "name"]
+      profileFields    : ["id", "emails", "photos", "name"],
+      scope            : ["email", "user_posts"]
     }, function (req, token, refreshToken, profile, done) {
 
       process.nextTick(function () {
