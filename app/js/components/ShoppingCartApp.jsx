@@ -3,11 +3,11 @@
 import React from "react"
 import CSSModules from "react-css-modules"
 
-import GhostButton from "lib/GhostButton.jsx"
 import { Glyphicon, OverlayTrigger, Popover, MenuItem } from "react-bootstrap"
 import { Image, Button, SplitButton, ButtonToolbar } from "react-bootstrap"
 import { Grid, Row, Col } from "react-bootstrap"
 
+import CheckoutApp from "components/CheckoutApp.jsx"
 import ShoppingCartStore from "stores/ShoppingCartStore"
 import ShoppingCartAction from "actions/ShoppingCartAction"
 import ItemUtil from "utils/ItemUtil"
@@ -16,7 +16,8 @@ import styles from "./ShoppingCartApp.css"
 
 function getStateFromStores() {
   return {
-    items: ShoppingCartStore.getItems()
+    items: ShoppingCartStore.getItems(),
+    totalPrice: ShoppingCartStore.getTotalPrice()
   };
 }
 
@@ -108,35 +109,6 @@ function createCartPopoverItem(itemInfo) {
   );
 }
 
-function createCartPopover(items) {
-  let displayItems = []
-  ,   totalPrice = 0;
-  
-  for (let key of Object.keys(items))
-  {
-    totalPrice += items[key].item.feature.price * items[key].count;
-    
-    displayItems.push(createCartPopoverItem(items[key]));
-  }
-  
-  let priceStyle = {
-    marginBottom: "10px",
-    textAlign: "right",
-    fontSize: "20px"
-  };
-  
-  return (
-    <Popover id="shoppingCartPopover" title="Shopping cart">
-      {displayItems}
-      <div style={priceStyle}>Total: {ItemUtil.createPriceJsx(totalPrice)}</div>
-      <ButtonToolbar>
-        <Button onClick={handleClearCart}>Clear cart</Button>
-        <Button bsStyle="warning">Checkout</Button>
-      </ButtonToolbar>
-    </Popover>
-  );
-}
-
 class ShoppingCartApp extends React.Component {
   
   constructor(props) {
@@ -157,8 +129,36 @@ class ShoppingCartApp extends React.Component {
     this.setState(getStateFromStores());
   };
   
+  createCartPopover() {
+    let items = this.state.items
+    ,   displayItems = []
+    ,   totalPrice = this.state.totalPrice;
+    
+    for (let key of Object.keys(items))
+    {
+      displayItems.push(createCartPopoverItem(items[key]));
+    }
+    
+    let priceStyle = {
+      marginBottom: "10px",
+      textAlign: "right",
+      fontSize: "20px"
+    };
+    
+    return (
+      <Popover id="shoppingCartPopover" title="Shopping cart">
+        {displayItems}
+        <div style={priceStyle}>Total: {ItemUtil.createPriceJsx(totalPrice)}</div>
+        <ButtonToolbar>
+          <Button onClick={handleClearCart}>Clear cart</Button>
+          <Button bsStyle="warning" href="#/checkout">Checkout</Button>
+        </ButtonToolbar>
+      </Popover>
+    );
+  }
+  
   render() {
-    let popover = createCartPopover(this.state.items);
+    let popover = this.createCartPopover();
     
     return (
       <div styleName="shoppingCart">
@@ -166,10 +166,10 @@ class ShoppingCartApp extends React.Component {
           trigger="focus" 
           placement="bottom" 
           overlay={popover}>
-          <GhostButton>
+          <Button styleName="cartButton" bsStyle="warning">
             <Glyphicon glyph="shopping-cart" />
             ({Object.keys(this.state.items).length})
-          </GhostButton>
+          </Button>
         </OverlayTrigger>
       </div>
     );

@@ -26,7 +26,6 @@
  * 	5. Adds 2 to 5 items, each for 2 to 5 times
  * 	6. Clears items using clear cart
  */
-jest.disableAutomock();
 jest.mock("../../dispatcher/AppDispatcher");
 
 import ShoppingCartConstants from "../../constants/ShoppingCartConstants"

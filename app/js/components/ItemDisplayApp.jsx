@@ -18,6 +18,8 @@ function getStateFromStores() {
   };
 }
 
+let _getItemPromise = null;
+
 export default class ItemDisplayApp extends React.Component {
   
   constructor(props) {
@@ -41,6 +43,10 @@ export default class ItemDisplayApp extends React.Component {
   
   componentWillUnmount() {
     ItemDisplayStore.removeChangeListener(this._onChange);
+    
+    if (_getItemPromise) {
+      _getItemPromise.cancel();
+    }
   }
   
   _onChange = () => {
@@ -76,9 +82,9 @@ export default class ItemDisplayApp extends React.Component {
       isLoading: true
     });
 
-    ItemDisplayAction
+    _getItemPromise = ItemDisplayAction
     .getItems()
-    .finally(function() {
+    .then(function() {
       me.setState({
         isLoading: false
       });

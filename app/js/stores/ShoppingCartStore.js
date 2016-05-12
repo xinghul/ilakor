@@ -63,8 +63,20 @@ let _cartStore = {
   }
 };
 
+function getTotalPrice(items) {
+  let totalPrice = 0;
+  
+  for (let key of Object.keys(items))
+  {
+    totalPrice += items[key].item.feature.price * items[key].count;
+  }
+  
+  return totalPrice;
+}
+
 // initialize the items from local storage
-let _items = _cartStore.get();
+let _items = _cartStore.get()
+,   _totlePrice = getTotalPrice(_items);
 
 let ShoppingCartStore = _.extend({}, EventEmitter.prototype, {
   
@@ -123,8 +135,18 @@ let ShoppingCartStore = _.extend({}, EventEmitter.prototype, {
     return _items;
   },
   
+  getTotalPrice: function() {
+    return _totlePrice;
+  },
+  
+  setTotalPrice: function(totlePrice) {
+    _totlePrice = totlePrice;
+  },
+   
   emitChange: function() {
     console.log("Item store: ", _items);
+    
+    this.setTotalPrice(getTotalPrice(_items));
     
     this.emit(CHANGE_EVENT);
   },

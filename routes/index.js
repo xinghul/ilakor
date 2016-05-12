@@ -1,24 +1,12 @@
-+function(undefined) {
 "use strict";
 
-var express = require("express")
+let express = require("express")
 ,   _       = require("underscore");
 
-var api     = require("./api")
+let api     = require("./api")
 ,   auth    = require("./auth")
+,   charge  = require("./charge")
 ,   router  = express.Router();
-
-function ensureLoggedIn(req, res, next) {
-  if (req.isAuthenticated()) {
-    return next();
-  }
-  
-  res.redirect("/");
-}
-
-// router.get("*", function (req, res){
-//   res.render("index");
-// });
 
 /* GET home page. */
 router.get("/", function(req, res, next) {
@@ -45,14 +33,10 @@ router.get("/", function(req, res, next) {
   res.render("index");
 });
 
-router.get("/profile", ensureLoggedIn, function(req, res) {
-  res.render("profile");
-});
-
 router.use("/api", api);
 
 router.use("/auth", auth);
 
-module.exports = router;
+router.use("/charge", charge);
 
-}();
+module.exports = router;

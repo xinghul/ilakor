@@ -15,7 +15,11 @@ class Loader extends React.Component {
     
     return (
       <div {...this.props}>
-        <div styleName="loader"></div>
+        <div styleName="loader">
+          <div styleName="inner one"></div>
+          <div styleName="inner two"></div>
+          <div styleName="inner three"></div>
+        </div>
         <div styleName="loaderText">LOADING</div>
       </div>
       
@@ -23,4 +27,4 @@ class Loader extends React.Component {
   }
 }
 
-export default CSSModules(Loader, styles)
+export default CSSModules(Loader, styles, { allowMultiple: true })

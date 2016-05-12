@@ -4,8 +4,6 @@ import React from "react"
 import CSSModules from "react-css-modules"
 import { Thumbnail, Image, Button, Glyphicon } from "react-bootstrap"
 
-import GhostButton from "lib/GhostButton.jsx"
-
 import styles from "./BaseItem.css"
 
 import ItemUtil from "utils/ItemUtil"
@@ -57,10 +55,10 @@ class BaseItem extends React.Component {
       <div style={bannerStyle} styleName="baseBanner">
         <div styleName="itemName">{item.name}</div>
         <div styleName="cartIcon" onClick={this.handleAddToCartClick}>
-          <GhostButton color="grey" bsSize="xsmall">
+          <Button bsStyle="warning" bsSize="xsmall">
             <Glyphicon glyph="shopping-cart" />
             Add to cart
-          </GhostButton>
+          </Button>
         </div>
         <div styleName="itemPrice">{ItemUtil.createPriceJsx(item.feature.price)}</div>
       </div>      
@@ -69,15 +67,14 @@ class BaseItem extends React.Component {
   
   createLoadSpinnerJsx() {
     let style = {
-      opacity: this.state.imageLoaded ? "0" : "1"
+      display: this.state.imageLoaded ? "none" : "block"
     };
     
     return (
-      <div style={style} styleName="loader">
-        <div styleName="inner one"></div>
-        <div styleName="inner two"></div>
-        <div styleName="inner three"></div>
+      <div styleName="loaderWrapper" style={style}>
+        <div styleName="loader"></div>
       </div>
+      
     );
   }
   

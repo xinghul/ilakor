@@ -26,3 +26,11 @@ a {
 
 #mainContent {
   margin-top: 70px; }
+
+.mainColor {
+  color: white;
+  background-color: #3B2F25; }
+
+.mainColorReverse {
+  color: #3B2F25;
+  background-color: white; }

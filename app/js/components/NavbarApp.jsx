@@ -1,12 +1,15 @@
 "use strict"
 
 import React from "react"
+import CSSModules from "react-css-modules"
 import { Navbar, Nav, NavItem } from "react-bootstrap"
+
+import styles from "./NavbarApp.css"
 
 import AuthApp from "./AuthApp.jsx"
 import ShoppingCartApp from "./ShoppingCartApp.jsx"
 
-export default class NarbarApp extends React.Component {
+class NarbarApp extends React.Component {
   
   constructor(props) {
     super(props);
@@ -25,7 +28,7 @@ export default class NarbarApp extends React.Component {
   render() {
 
     return (
-      <Navbar fluid inverse fixedTop>
+      <Navbar fluid inverse fixedTop styleName="navbarApp">
         <Navbar.Header>
           <Navbar.Brand>
             <a href="#">Cramford</a>
@@ -50,4 +53,6 @@ export default class NarbarApp extends React.Component {
     
   }
 
-}
+};
+
+export default CSSModules(NarbarApp, styles)

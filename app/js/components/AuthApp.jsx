@@ -1,6 +1,7 @@
 "use strict";
 
 import React from "react"
+import CSSModules from "react-css-modules"
 import _ from "underscore"
 import { Button, Form, SplitButton, MenuItem, Modal } from "react-bootstrap"
 
@@ -12,13 +13,15 @@ import PasswordInput from "./AuthApp/PasswordInput.jsx"
 import AuthStore from "stores/AuthStore"
 import AuthActions from "actions/AuthActions"
 
+import styles from "./AuthApp.css"
+
 function getStateFromStores() {
   return {
     user: AuthStore.getUser()
   };
 }
 
-export default class AuthApp extends React.Component {
+class AuthApp extends React.Component {
   
   constructor(props) {
     super(props);
@@ -122,11 +125,21 @@ export default class AuthApp extends React.Component {
   createModalBodyLogin() {
     let disabled = _.isEmpty(this.state.email) ||
                    _.isEmpty(this.state.password);
+    
+    let buttonWrapperStyle = {
+      textAlign: "center"
+    };
+          
+    let linkStyle = {
+      color: "white",
+      fontSize: "14px"
+    };
                    
     let socialLoginArea = (
-      <div>
-        login with
-        <Button><a href="/auth/facebook">Facebook</a></Button>
+      <div style={buttonWrapperStyle}>
+        <Button styleName="loginBtn loginBtnFacebook">
+          <a style={linkStyle} href="/auth/facebook">Login with Facebook</a>
+        </Button>
       </div>
     );
     
@@ -159,9 +172,9 @@ export default class AuthApp extends React.Component {
     let authArea;
     let toggleModeMessage;
     let socialLoginArea;
-    
+
     if (this.state.user && this.state.user._id) {
-      let title = "Hello, " + this.state.user._id;
+      let title = "Hello, " + this.state.user.facebook.nickname;
       
       authArea =
         <SplitButton id="sign-in" title={title} bsStyle="default" pullRight>
@@ -211,3 +224,5 @@ export default class AuthApp extends React.Component {
     );
   }
 };
+
+export default CSSModules(AuthApp, styles, { allowMultiple: true })

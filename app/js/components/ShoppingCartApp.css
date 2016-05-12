@@ -1,3 +1,7 @@
 .shoppingCart {
   margin: 8px 6px 0 0;
 }
+
+.cartButton {
+  height: 36px;
+}
