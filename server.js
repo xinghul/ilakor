@@ -90,10 +90,10 @@ app.use(function(req, res, next) {
 });
 
 var forceSsl = function (req, res, next) {
-  if (app.get("env") === "production" && !req.secure) {
-    return res.redirect("https://localhost:3002/");
-  }
-  
+  // if (app.get("env") === "production" && !req.secure) {
+  //   return res.redirect("https://localhost:3002/");
+  // }
+  // 
   return next();
 };
 
