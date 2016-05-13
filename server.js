@@ -31,8 +31,8 @@ app.set("https_port", process.env.HTTPS_PORT || "3002");
 * Connect MongoDB, Bootstrap models and Config passport  *
 **********************************************************/
 
-let db_url = process.env.MONGODB_URL || "mongodb://levi:Lxh_6589775@ds021922.mlab.com:21922/cramford";
-require("mongoose").connect(db_url, function (err) {
+let mongodbUrl = process.env.MONGODB_URL || "mongodb://127.0.0.1:27017/cramford";
+require("mongoose").connect(mongodbUrl, function (err) {
   if (err) {
     console.log(err, err.stack);
   } else {
@@ -63,6 +63,7 @@ app.use(session({
   resave: true,
   saveUninitialized: true,
   store: new MongoStore({
+    url: mongodbUrl,
     db : "cramford",
     collection: "sessions"
   })
