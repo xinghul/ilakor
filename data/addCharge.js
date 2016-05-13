@@ -41,7 +41,7 @@ stripe.tokens.create({
   charge.charge.source = token.id;
   
   request.post({
-    url: "http://localhost:3001/charge",
+    url: "https://localhost:3001/charge",
     form: {
       charge: JSON.stringify(charge)
     }

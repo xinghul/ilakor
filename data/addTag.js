@@ -7,7 +7,7 @@ var tag = {
 };
 
 request.post({
-  url: "http://localhost:3001/api/tags",
+  url: "https://localhost:3001/api/tags",
   form: {
     tag: JSON.stringify(tag)
   }
@@ -20,7 +20,7 @@ request.post({
 });
 
 // request.put({
-//   url: "http://localhost:3001/api/tags",
+//   url: "https://localhost:3001/api/tags",
 //   qs: {
 //     id: "56cb900598fa6fe4a888d931"
 //   },

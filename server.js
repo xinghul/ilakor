@@ -1,4 +1,3 @@
-+function(undefined) {
 "use strict";
 
 /**********************************************************
@@ -23,6 +22,10 @@ let app        = express()
 
 // set server root for future use
 global.serverRoot = path.resolve(__dirname);
+
+// set port for http and https
+app.set("http_port", process.env.HTTP_PORT || "3001");
+app.set("https_port", process.env.HTTPS_PORT || "3002");
 
 /**********************************************************
 * Connect MongoDB, Bootstrap models and Config passport  *
@@ -50,6 +53,7 @@ app.engine("html", require("ejs").renderFile);
 app.set("view engine", "html");
 
 app.use(favicon(__dirname + "/app/favicon.ico"));
+// app.enable("trust proxy");
 app.use(logger("dev"));
 app.use(cookieParser());
 app.use(bodyParser.json());
@@ -83,6 +87,17 @@ app.use(function(req, res, next) {
   res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
   next();
 });
+
+var forceSsl = function (req, res, next) {
+  if (app.get("env") === "production" && !req.secure) {
+    return res.redirect("https://localhost:3002/");
+  }
+  
+  return next();
+};
+
+app.use(forceSsl);
+
 
 let routes = require("./routes/index");
 app.use("/", routes);
@@ -126,5 +141,3 @@ app.use(function(err, req, res, next) {
 
 //exports for future use
 module.exports = app;
-
-}();

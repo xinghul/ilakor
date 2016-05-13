@@ -15,7 +15,7 @@ var item = {
 };
 
 request.post({
-  url: "http://localhost:3001/api/items",
+  url: "https://localhost:3001/api/items",
   form: {
     item: JSON.stringify(item)
   }
