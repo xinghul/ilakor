@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "start": "nodemon nodemon.js",
+    "start": "node ./bin/www",
     "test": "jest --no-cache"
   },
   "dependencies": {
