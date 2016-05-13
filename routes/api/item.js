@@ -144,7 +144,7 @@ let ItemApi = {
          if (err) {
            reject(err);
          } else {
-           setTimeout(function() {
+           setTimeout(() => {
              resolve(result);
            }, 3000);
          }

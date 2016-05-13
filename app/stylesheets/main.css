@@ -24,6 +24,34 @@ a {
 #userArea {
   margin: 8px 6px 0 0; }
 
+.item-enter {
+  opacity: 0.01; }
+
+.item-enter.item-enter-active {
+  opacity: 1;
+  transition: all 300ms ease-in; }
+
+.item-leave {
+  opacity: 1; }
+
+.item-leave.item-leave-active {
+  opacity: 0.01;
+  transition: all 300ms ease-in; }
+
+.route-enter {
+  opacity: 0.01;
+  transition: opacity 300ms ease-in; }
+
+.route-enter.route-enter-active {
+  opacity: 1; }
+
+.route-leave {
+  opacity: 1;
+  transition: opacity 300ms ease-in; }
+
+.route-leave.route-leave-active {
+  opacity: 0.01; }
+
 #mainContent {
   margin-top: 70px; }
 

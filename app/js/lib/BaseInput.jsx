@@ -1,7 +1,7 @@
 "use strict"
 
 import React from "react"
-import { Input, Glyphicon, FormControl } from "react-bootstrap"
+import { FormGroup, Glyphicon, FormControl } from "react-bootstrap"
 
 export default class BaseInput extends React.Component {
   
@@ -9,8 +9,8 @@ export default class BaseInput extends React.Component {
     super(props);
   }
   
-  handleChange = () => {
-    let newValue = this.refs["input"].getValue();
+  handleChange = (evt) => {
+    let newValue = evt.target.value;
 
     this.props.handleChange(newValue);
   };
@@ -24,15 +24,12 @@ export default class BaseInput extends React.Component {
     }
     
     return (
-      <div>
-        <Input 
+      <FormGroup>
+        <FormControl 
           {...this.props}
           addonBefore={addonBeforeGlyphicon}
-          spellCheck={false}
-          onChange={this.handleChange}
-          ref="input"
-          />
-      </div>
+          onChange={this.handleChange} />
+      </FormGroup>
       
     );
     

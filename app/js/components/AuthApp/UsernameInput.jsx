@@ -56,6 +56,7 @@ export default class UsernameInput extends React.Component {
         placeholder="Username"
         addonBefore="user"
         bsStyle={bsStyle}
+        autoComplete="none"
         handleChange={this.handleUsernameChange} />
     );
   }

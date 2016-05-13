@@ -183,11 +183,9 @@ class CheckoutApp extends React.Component {
       [key]: value
     });
     
-    setTimeout(function() {
-      console.dir(this.state);
-      
+    setTimeout(() => {
       this.checkFormFilled();
-    }.bind(this));
+    });
   };
   
   handleCardNumberChange = (evt) => {
@@ -205,7 +203,9 @@ class CheckoutApp extends React.Component {
       cardType: cardType
     });
     
-    setTimeout(this.checkFormFilled);
+    setTimeout(() => {
+      this.checkFormFilled();
+    });
   };
   
   handlePhoneNumberChange = (evt) => {
@@ -248,7 +248,9 @@ class CheckoutApp extends React.Component {
         phoneNumber: mask
       });
       
-      setTimeout(this.checkFormFilled);
+      setTimeout(() => {
+        this.checkFormFilled();
+      });
     }
   };
   

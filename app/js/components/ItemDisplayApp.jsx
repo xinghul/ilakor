@@ -1,7 +1,7 @@
 "use strict"
 
 import React from "react"
-import Infinite from "react-infinite"
+import Promise from "bluebird"
 
 import BaseGrid from "lib/BaseGrid.jsx"
 import LoadSpinner from "lib/LoadSpinner.jsx"
@@ -31,18 +31,23 @@ export default class ItemDisplayApp extends React.Component {
       
       selectedItem: {},
       showItemDetailModal: false,
-      isLoading: false
+      isLoading: false,
+      isItemsAdded: true
     };
   }
   
   componentDidMount() {
     ItemDisplayStore.addChangeListener(this._onChange);
     
-    this.doInfiniteLoad();
+    window.addEventListener("scroll", this.checkScrollToBottom);
+    
+    this.checkScrollToBottom();
   }
   
   componentWillUnmount() {
     ItemDisplayStore.removeChangeListener(this._onChange);
+    
+    window.removeEventListener("scroll", this.checkScrollToBottom); 
     
     if (_getItemPromise) {
       _getItemPromise.cancel();
@@ -50,7 +55,42 @@ export default class ItemDisplayApp extends React.Component {
   }
   
   _onChange = () => {
-    this.setState(getStateFromStores());
+    let newState = getStateFromStores()
+    ,   items = this.state.items;
+
+    let newItems = newState.items.slice(items.length);
+    
+    this.setState({
+      hasMoreItems: newState.hasMoreItems,
+      isItemsAdded: false
+    });
+    
+    let p = Promise.cast();
+    
+    for (let item of newItems)
+    {
+      p = p.then(() => {
+        return new Promise((resolve, reject) => {
+          Promise.delay(200).then(() => {
+            items.push(item);
+
+            this.setState({
+              items: items
+            });
+            
+            resolve();
+          });
+        });
+      });
+    }
+    
+    p.then(() => {
+      this.setState({
+        isItemsAdded: true
+      });
+    }).catch(function(err) {
+      console.log(err);
+    });
   };
   
   handleItemClick = (item) => {
@@ -69,14 +109,14 @@ export default class ItemDisplayApp extends React.Component {
   };
   
   doInfiniteLoad = () => {
-    
-    window.removeEventListener("scroll", this.handleScroll);    
-
-    if (!this.state.hasMoreItems) {
-      return false;
+    // do nothing when it's already in the loading process
+    // or when there's no more items 
+    // or when new items are not fully added to the grid
+    if (this.state.isLoading || 
+       !this.state.hasMoreItems || 
+       !this.state.isItemsAdded) {
+      return;
     }
-    
-    let me = this;
     
     this.setState({
       isLoading: true
@@ -84,12 +124,10 @@ export default class ItemDisplayApp extends React.Component {
 
     _getItemPromise = ItemDisplayAction
     .getItems()
-    .then(function() {
-      me.setState({
+    .then(() => {
+      this.setState({
         isLoading: false
       });
-      
-      window.addEventListener("scroll", me.handleScroll);        
     });
   };
   
@@ -99,7 +137,7 @@ export default class ItemDisplayApp extends React.Component {
     });
   };
   
-  handleScroll = () => {
+  checkScrollToBottom = () => {
     let scrollTop = 
       document.documentElement && document.documentElement.scrollTop || 
       document.body.scrollTop;

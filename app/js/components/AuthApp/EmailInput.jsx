@@ -55,6 +55,7 @@ export default class EmailInput extends React.Component {
         placeholder="Email"
         addonBefore="envelope"
         bsStyle={bsStyle}
+        autoComplete="none"
         handleChange={this.handleEmailChange} />
     );
   }

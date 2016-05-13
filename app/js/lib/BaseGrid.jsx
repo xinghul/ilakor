@@ -1,6 +1,7 @@
 "use strict"
 
 import React from "react"
+import ReactCSSTransitionGroup from "react-addons-css-transition-group"
 import { Grid, Row, Col } from "react-bootstrap"
 import { Carousel, CarouselItem } from "react-bootstrap"
 
@@ -58,7 +59,11 @@ export default class BaseGrid extends React.Component {
     return (
       <Grid fluid>
         <Row>
-          {itemsJsx}          
+          <ReactCSSTransitionGroup transitionName="item" 
+            transitionEnterTimeout={300} 
+            transitionLeaveTimeout={300}>
+            {itemsJsx}          
+          </ReactCSSTransitionGroup>
         </Row>
       </Grid>
     );

@@ -56,6 +56,7 @@ export default class PasswordInput extends React.Component {
         placeholder="Password"
         addonBefore="lock"
         bsStyle={bsStyle}
+        autoComplete="none"
         handleChange={this.handlePasswordChange} />
     );
   }
