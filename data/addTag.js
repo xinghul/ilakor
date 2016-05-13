@@ -3,11 +3,11 @@
 var request = require("request");
 
 var tag = {
-  name: "Bed"
+  name: "Table"
 };
 
 request.post({
-  url: "https://localhost:3001/api/tags",
+  url: "http://localhost:3001/api/tags",
   form: {
     tag: JSON.stringify(tag)
   }
