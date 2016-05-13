@@ -1,7 +1,7 @@
 "use strict"
 
 import React from "react"
-import { Modal, Button, Input, Tooltip } from "react-bootstrap"
+import { Modal, Button, Tooltip } from "react-bootstrap"
 
 import BaseInput from "lib/BaseInput.jsx"
 
@@ -43,14 +43,14 @@ export default class BaseModal extends React.Component {
       }
       
       formItems.push(
-        <Input 
+        <BaseInput 
           key={key}
           type="text"
           label={key}
           ref={key}
           disabled={isDisabled}
           defaultValue={itemInfo[key]}
-          />        
+        />        
       );
     }
 

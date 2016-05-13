@@ -2,7 +2,7 @@
 
 import React from "react"
 import CSSModules from "react-css-modules"
-import { Modal, Button, Input } from "react-bootstrap"
+import { Modal, Button } from "react-bootstrap"
 
 import styles from "./ItemDetailModal.css"
 

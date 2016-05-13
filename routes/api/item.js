@@ -132,7 +132,8 @@ let ItemApi = {
     */
    getAll: function(skip, limit) {
      skip = skip || 0;
-     limit = limit || 20;
+     // make it 100 for item manage app
+     limit = limit || 100;
      
      return new Promise(function(resolve, reject) {
        

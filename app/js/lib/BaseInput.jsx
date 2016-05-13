@@ -1,7 +1,8 @@
 "use strict"
 
 import React from "react"
-import { FormGroup, Glyphicon, FormControl } from "react-bootstrap"
+import _ from "underscore"
+import { FormGroup, InputGroup, FormControl, ControlLabel, Glyphicon } from "react-bootstrap"
 
 export default class BaseInput extends React.Component {
   
@@ -17,18 +18,69 @@ export default class BaseInput extends React.Component {
 
   render() {
     
-    let addonBeforeGlyphicon = null;
+    let addonBeforeGlyphicon = null
+    ,   controlLabel = null
+    ,   selectOptions = null;
     
-    if (this.props.addonBefore) {
-      addonBeforeGlyphicon = <Glyphicon glyph={this.props.addonBefore} />;
+    let newProps = _.clone(this.props);
+
+    if (!_.isEmpty(newProps.addonBefore)) {
+      addonBeforeGlyphicon = (
+        <InputGroup.Addon>
+          <Glyphicon glyph={newProps.addonBefore} />
+        </InputGroup.Addon>
+      );
+      
+      delete newProps.addonBefore;
+    }
+    
+    if (!_.isEmpty(newProps.label)) {
+      controlLabel = (
+        <ControlLabel>{newProps.label}</ControlLabel>
+      );
+      
+      delete newProps.label;
+    }
+    
+    if (newProps.type === "select") {
+      selectOptions = [];
+      
+      for (let optionValue of newProps.options)
+      {
+        selectOptions.push(
+          <option key={optionValue} value={optionValue}>{optionValue}</option>
+        );
+      }
+      
+      delete newProps.options;
+    }
+    
+    // special case for 'select' and 'textarea'
+    if (newProps.type === "select" || newProps.type === "textarea") {
+      newProps.componentClass = newProps.type;
+      
+      delete newProps.type;
     }
     
     return (
-      <FormGroup>
-        <FormControl 
-          {...this.props}
-          addonBefore={addonBeforeGlyphicon}
-          onChange={this.handleChange} />
+      <FormGroup controlId={newProps.key}>
+        {controlLabel}
+        {do {
+          if (addonBeforeGlyphicon !== null) {
+            <InputGroup>
+              {addonBeforeGlyphicon}
+              <FormControl 
+                {...newProps}
+                onChange={this.handleChange}
+              >{selectOptions}</FormControl>
+            </InputGroup>
+          } else {
+            <FormControl 
+              {...newProps}
+              onChange={this.handleChange}
+            >{selectOptions}</FormControl>
+          }
+        }}
       </FormGroup>
       
     );
@@ -43,9 +95,11 @@ BaseInput.propTypes = {
   // most used props
   handleChange: React.PropTypes.func,
   addonBefore: React.PropTypes.string,
+  label: React.PropTypes.string
 };
 
 BaseInput.defaultProps = {
   handleChange: function() {},
   addonBefore: "",
+  label: ""
 };

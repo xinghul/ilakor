@@ -4,10 +4,10 @@ import _ from "underscore"
 
 import React from "react"
 import { Grid, Row, Col } from "react-bootstrap"
-import { Modal, Table, Label, Input, Glyphicon, Button } from "react-bootstrap"
+import { FormGroup, FormControl, ControlLabel } from "react-bootstrap"
+import { Modal, Table, Label, Glyphicon, Button } from "react-bootstrap"
 
 import BaseInput from "lib/BaseInput.jsx"
-import BaseMultiSelect from "lib/BaseMultiSelect.jsx"
 import BaseModal from "lib/BaseModal.jsx"
 
 import ItemManageAction from "actions/ItemManageAction"
@@ -322,6 +322,7 @@ export default class ItemManageApp extends React.Component {
     let nameInput = (
       <BaseInput
         type="text"
+        label="Name"
         placeholder="Enter name"
         addonBefore="info-sign"
         handleChange={this.handleNameChange} />
@@ -330,7 +331,9 @@ export default class ItemManageApp extends React.Component {
     let tagOptions = this.createTagOptions();
     
     let tagInput = (
-      <BaseMultiSelect
+      <BaseInput
+        type="select" 
+        multiple 
         label="Tags"
         options={tagOptions}
         handleChange={this.handleTagChange} />
@@ -369,34 +372,38 @@ export default class ItemManageApp extends React.Component {
     );
     
     let dimensionInput = (
-      <Input label="Dimension" wrapperClassName="wrapper">
+      <FormGroup bsSize="small" controlId="demension">
+        <ControlLabel>Demension</ControlLabel>
         <Row>
           <Col xs={4}>
-            <Input 
+            <FormControl 
               type="text"
               placeholder="Length" />
           </Col>
           <Col xs={4}>
-            <Input 
+            <FormControl 
               type="text"
               placeholder="Width" />
           </Col>
           <Col xs={4}>
-            <Input 
+            <FormControl 
               type="text"
               placeholder="Height" />
           </Col>
         </Row>
-      </Input>
+      </FormGroup>
     );
     
     let imagesInput = (
-      <Input 
-        type="file"
-        label="Images"
-        multiple
-        placeholder="Select images"
-        onChange={this.handleImageChange} />
+      <FormGroup controlId="image">
+        <ControlLabel>Images</ControlLabel>
+          <FormControl 
+            type="file"
+            multiple
+            placeholder="Select images"
+            onChange={this.handleImageChange} 
+          />
+      </FormGroup>
     );
     
     let priceInput = (
