@@ -9,6 +9,7 @@ require("dotenv").load();
 let express  = require("express")
 ,   path     = require("path")
 ,   fs       = require("fs")
+,   os       = require("os")
 ,   session  = require("express-session")
 ,   passport = require("passport");
 
@@ -22,6 +23,8 @@ let app        = express()
 
 // set server root for future use
 global.serverRoot = path.resolve(__dirname);
+
+global.HOSTNAME = os.hostname();
 
 // set port for http and https
 app.set("http_port", process.env.PORT || "8080");

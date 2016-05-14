@@ -6,7 +6,9 @@ import Promise from "bluebird"
 import AppDispatcher from "dispatcher/AppDispatcher"
 import ItemDisplayConstants from "constants/ItemDisplayConstants"
 
-const LOAD_SIZE = 20;
+const LOAD_SIZE = 20
+,     API_URL = `${window.location.protocol}//${window.location.hostname}:${window.location.port}/api/items`;
+
 
 let _skip = 0;
 
@@ -24,7 +26,7 @@ let ItemDisplayAction = {
     
     return new Promise(function(resolve, reject) {
       request.get({
-        url: "http://localhost:3001/api/items",
+        url: API_URL,
         qs: {
           skip: skip,
           limit: limit

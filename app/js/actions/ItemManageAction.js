@@ -6,6 +6,8 @@ import Promise from "bluebird"
 import AppDispatcher from "dispatcher/AppDispatcher"
 import ItemManageConstants from "constants/ItemManageConstants"
 
+const API_URL = `${window.location.protocol}//${window.location.hostname}:${window.location.port}/api/`;
+
 let ItemManageAction = {
   
   /**
@@ -18,7 +20,7 @@ let ItemManageAction = {
     return new Promise(function(resolve, reject) {
       
       request.get({
-        url: "http://localhost:3001/api/items"
+        url: API_URL + "items"
       }, function(err, response) {
         if (err) {
           reject(err);
@@ -92,7 +94,7 @@ let ItemManageAction = {
       // enable this when request support ES6
       // https://github.com/request/request/issues/1961
       request.post({
-        url: "http://localhost:3001/api/items",
+        url: API_URL,
         formData: newItem
       }, function(err, response, body) {
         if (err) {
@@ -131,7 +133,7 @@ let ItemManageAction = {
     return new Promise(function(resolve, reject) {
       
       request.put({
-        url: "http://localhost:3001/api/items",
+        url: API_URL + "items",
         qs: {
           id: id
         },
@@ -174,7 +176,7 @@ let ItemManageAction = {
     return new Promise(function(resolve, reject) {
       
       request.del({
-        url: "http://localhost:3001/api/items",
+        url: API_URL + "items",
         qs: {
           id: id
         }
@@ -211,7 +213,7 @@ let ItemManageAction = {
     return new Promise(function(resolve, reject) {
       
       request.get({
-        url: "http://localhost:3001/api/tags"
+        url: API_URL + "tags"
       }, function(err, response) {
         if (err) {
           reject(err);

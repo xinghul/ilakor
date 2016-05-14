@@ -7,6 +7,8 @@ import Promise from "bluebird"
 import AppDispatcher from "dispatcher/AppDispatcher"
 import AuthConstants from "constants/AuthConstants"
 
+const API_URL = `${window.location.hostname}:${window.location.port}/auth/`;
+
 let AuthActions = {
   
   userLogIn: function(user) {
@@ -14,7 +16,7 @@ let AuthActions = {
     return new Promise(function(resolve, reject) {
       
       request.post({
-        url: "http://localhost:3001/auth/session",
+        url: API_URL + "session",
         form: {
           "email": user.email,
           "password": user.password
@@ -51,7 +53,7 @@ let AuthActions = {
     return new Promise(function(resolve, reject) {
       // XXX check if all the fields are non-empty
       request.post({
-        url: "http://localhost:3001/auth/user",
+        url: API_URL + "user",
         form: {
           user: JSON.stringify({
             "local.email": user.email,
@@ -97,7 +99,7 @@ let AuthActions = {
     return new Promise(function(resolve, reject) {
       
       request.del({
-        url: "http://localhost:3001/auth/session"
+        url: API_URL + "session"
       }, function(err, res) {
         if (err) {
           reject(err);

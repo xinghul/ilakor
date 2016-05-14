@@ -19,6 +19,8 @@ var _AppDispatcher2 = _interopRequireDefault(_AppDispatcher);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
+var API_URL = window.location.hostname + ":" + window.location.port + "/auth/facebook";
+
 var AccountActions = {
 
   connectFacebook: function connectFacebook(user) {
@@ -26,7 +28,7 @@ var AccountActions = {
     return new _bluebird2.default(function (resolve, reject) {
 
       _request2.default.get({
-        url: "http://localhost:3001/auth/facebook"
+        url: API_URL
       }, function (err, res) {
         if (err) {
           reject(err);
@@ -82,6 +84,8 @@ var _AuthConstants2 = _interopRequireDefault(_AuthConstants);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
+var API_URL = window.location.hostname + ":" + window.location.port + "/auth/";
+
 var AuthActions = {
 
   userLogIn: function userLogIn(user) {
@@ -89,7 +93,7 @@ var AuthActions = {
     return new _bluebird2.default(function (resolve, reject) {
 
       _request2.default.post({
-        url: "http://localhost:3001/auth/session",
+        url: API_URL + "session",
         form: {
           "email": user.email,
           "password": user.password
@@ -125,7 +129,7 @@ var AuthActions = {
     return new _bluebird2.default(function (resolve, reject) {
       // XXX check if all the fields are non-empty
       _request2.default.post({
-        url: "http://localhost:3001/auth/user",
+        url: API_URL + "user",
         form: {
           user: JSON.stringify({
             "local.email": user.email,
@@ -170,7 +174,7 @@ var AuthActions = {
     return new _bluebird2.default(function (resolve, reject) {
 
       _request2.default.del({
-        url: "http://localhost:3001/auth/session"
+        url: API_URL + "session"
       }, function (err, res) {
         if (err) {
           reject(err);
@@ -221,6 +225,8 @@ var _AppDispatcher2 = _interopRequireDefault(_AppDispatcher);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
+var API_URL = window.location.protocol + "//" + window.location.hostname + ":" + window.location.port + "/charge";
+
 var CheckoutAction = {
 
   /**
@@ -266,7 +272,7 @@ var CheckoutAction = {
         };
 
         _request2.default.post({
-          url: "http://localhost:3001/charge",
+          url: API_URL,
           form: {
             charge: JSON.stringify(charge)
           }
@@ -310,7 +316,8 @@ var _ItemDisplayConstants2 = _interopRequireDefault(_ItemDisplayConstants);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-var LOAD_SIZE = 20;
+var LOAD_SIZE = 20,
+    API_URL = window.location.protocol + "//" + window.location.hostname + ":" + window.location.port + "/api/items";
 
 var _skip = 0;
 
@@ -328,7 +335,7 @@ var ItemDisplayAction = {
 
     return new _bluebird2.default(function (resolve, reject) {
       _request2.default.get({
-        url: "http://localhost:3001/api/items",
+        url: API_URL,
         qs: {
           skip: skip,
           limit: limit
@@ -399,6 +406,8 @@ var _ItemManageConstants2 = _interopRequireDefault(_ItemManageConstants);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
+var API_URL = window.location.protocol + "//" + window.location.hostname + ":" + window.location.port + "/api/";
+
 var ItemManageAction = {
 
   /**
@@ -411,7 +420,7 @@ var ItemManageAction = {
     return new _bluebird2.default(function (resolve, reject) {
 
       _request2.default.get({
-        url: "http://localhost:3001/api/items"
+        url: API_URL + "items"
       }, function (err, response) {
         if (err) {
           reject(err);
@@ -504,7 +513,7 @@ var ItemManageAction = {
       // enable this when request support ES6
       // https://github.com/request/request/issues/1961
       _request2.default.post({
-        url: "http://localhost:3001/api/items",
+        url: API_URL,
         formData: newItem
       }, function (err, response, body) {
         if (err) {
@@ -541,7 +550,7 @@ var ItemManageAction = {
     return new _bluebird2.default(function (resolve, reject) {
 
       _request2.default.put({
-        url: "http://localhost:3001/api/items",
+        url: API_URL + "items",
         qs: {
           id: id
         },
@@ -582,7 +591,7 @@ var ItemManageAction = {
     return new _bluebird2.default(function (resolve, reject) {
 
       _request2.default.del({
-        url: "http://localhost:3001/api/items",
+        url: API_URL + "items",
         qs: {
           id: id
         }
@@ -617,7 +626,7 @@ var ItemManageAction = {
     return new _bluebird2.default(function (resolve, reject) {
 
       _request2.default.get({
-        url: "http://localhost:3001/api/tags"
+        url: API_URL + "tags"
       }, function (err, response) {
         if (err) {
           reject(err);

@@ -5,6 +5,8 @@ import Promise from "bluebird"
 
 import AppDispatcher from "dispatcher/AppDispatcher"
 
+const API_URL = `${window.location.hostname}:${window.location.port}/auth/facebook`;
+
 let AccountActions = {
   
   connectFacebook: function(user) {
@@ -12,7 +14,7 @@ let AccountActions = {
     return new Promise(function(resolve, reject) {
       
       request.get({
-        url: "http://localhost:3001/auth/facebook"
+        url: API_URL
       }, function(err, res) {
         if (err) {
           reject(err);

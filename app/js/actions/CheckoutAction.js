@@ -6,6 +6,8 @@ import _ from "underscore"
 
 import AppDispatcher from "dispatcher/AppDispatcher"
 
+const API_URL = `${window.location.protocol}//${window.location.hostname}:${window.location.port}/charge`;
+
 let CheckoutAction = {
   
   /**
@@ -51,7 +53,7 @@ let CheckoutAction = {
         };
         
         request.post({
-          url: "http://localhost:3001/charge",
+          url: API_URL,
           form: {
             charge: JSON.stringify(charge)
           }
