@@ -1,18 +1,24 @@
 
 .route-enter {
-  opacity: 0.01;
-  transition: opacity 300ms ease-in;
+  // opacity: 0.01;
+  transform: translateX(100%);
 }
 
 .route-enter.route-enter-active {
-  opacity: 1;
+  transform: translateX(0%);
+  transition: transform 300ms ease-in-out;
+
+  // opacity: 1;
 }
 
 .route-leave {
-  opacity: 1;
-  transition: opacity 300ms ease-in;
+  // opacity: 1;
+  transform: translateX(0%);
 }
 
 .route-leave.route-leave-active {
-  opacity: 0.01;
+  transform: translateX(-100%);
+  transition: transform 300ms ease-in-out;
+
+  // opacity: 0.01;
 }

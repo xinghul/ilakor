@@ -1,6 +1,7 @@
 .checkoutApp {
-  height: 1000px;
-  width: inherit;
+  position: absolute;
+  
+  width: 101%;
   margin: -20px;
   
   background-color: black;
@@ -11,8 +12,8 @@
 }
 
 .checkoutForm {
-  position: absolute;
-  right: 0px;
+  position: relative;
+  float: right;
 
   width: 40%;
   margin: 30px;

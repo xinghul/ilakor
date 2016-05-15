@@ -2,6 +2,7 @@
 
 import React from "react"
 import Promise from "bluebird"
+import CSSModules from "react-css-modules"
 
 import BaseGrid from "lib/BaseGrid.jsx"
 import LoadSpinner from "lib/LoadSpinner.jsx"
@@ -11,6 +12,10 @@ import ItemDisplayAction from "actions/ItemDisplayAction"
 import ShoppingCartAction from "actions/ShoppingCartAction"
 import ItemDetailModal from "./ItemDisplayApp/ItemDetailModal.jsx"
 
+import styles from "./ItemDisplayApp.css"
+
+Promise.config({cancellation: true});
+
 function getStateFromStores() {
   return {
     items: ItemDisplayStore.getItems(),
@@ -18,9 +23,10 @@ function getStateFromStores() {
   };
 }
 
-let _getItemPromise = null;
+let _getItemPromise = null
+,   _addItemPromise = null;
 
-export default class ItemDisplayApp extends React.Component {
+class ItemDisplayApp extends React.Component {
   
   constructor(props) {
     super(props);
@@ -48,10 +54,14 @@ export default class ItemDisplayApp extends React.Component {
     ItemDisplayStore.removeChangeListener(this._onChange);
     
     window.removeEventListener("scroll", this.checkScrollToBottom); 
-    
+
     if (_getItemPromise) {
       _getItemPromise.cancel();
     }
+
+    // if (_addItemPromise) {
+    //   _addItemPromise.cancel();
+    // }
   }
   
   _onChange = () => {
@@ -65,11 +75,11 @@ export default class ItemDisplayApp extends React.Component {
       isItemsAdded: false
     });
     
-    let p = Promise.cast();
+    _addItemPromise = Promise.cast();
     
     for (let item of newItems)
     {
-      p = p.then(() => {
+      _addItemPromise = _addItemPromise.then(() => {
         return new Promise((resolve, reject) => {
           Promise.delay(200).then(() => {
             items.push(item);
@@ -84,7 +94,7 @@ export default class ItemDisplayApp extends React.Component {
       });
     }
     
-    p.then(() => {
+    _addItemPromise.then(() => {
       this.setState({
         isItemsAdded: true
       });
@@ -161,7 +171,7 @@ export default class ItemDisplayApp extends React.Component {
     );
     
     return (
-      <div>
+      <div styleName="itemDisplayApp">
         {itemDetailModal}
         <BaseGrid
           items={this.state.items} 
@@ -172,4 +182,6 @@ export default class ItemDisplayApp extends React.Component {
     );
   }
   
-}
+};
+
+export default CSSModules(ItemDisplayApp, styles)

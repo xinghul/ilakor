@@ -33,13 +33,8 @@ class BaseItem extends React.Component {
     let item     = this.props.item
     ,   imageUrl = "http://d2nl38chx1zeob.cloudfront.net/" + item.images[0].name;
     
-    let imgStyle = {
-      maxWidth: "100%",
-      maxHeight: "100%"
-    };
-    
     return (
-      <Image style={imgStyle} src={imageUrl} onLoad={this.handleImageLoaded} />
+      <Image styleName="itemImage" src={imageUrl} onLoad={this.handleImageLoaded} />
     );
   }
   

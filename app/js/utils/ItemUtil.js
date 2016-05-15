@@ -5,7 +5,7 @@ import React from "react"
 export default {
   createPriceJsx: function(price) {
     let style = {
-      color: "#893937",
+      color: "#E5615E",
       
       fontWeight: "600"
     };

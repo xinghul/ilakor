@@ -505,8 +505,12 @@ export default class ItemManageApp extends React.Component {
         />
     );
     
+    let style = {
+      position: "absolute"
+    };
+    
     return (
-      <div>
+      <div style={style}>
         {itemInfoModal}
         <Grid fluid>
           <Row>

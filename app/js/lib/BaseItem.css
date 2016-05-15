@@ -35,6 +35,8 @@
 .itemName {
   text-align: center;
   
+  color: white;
+  
   font-family: "Courgette", cursive;
   font-size: 30px;
   font-weight: 600;
@@ -52,6 +54,12 @@
   position: absolute;
   bottom: 6px;
   left: 10px;
+}
+
+.itemImage {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 
 .loaderWrapper {

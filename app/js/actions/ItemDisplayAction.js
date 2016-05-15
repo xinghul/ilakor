@@ -9,8 +9,9 @@ import ItemDisplayConstants from "constants/ItemDisplayConstants"
 const LOAD_SIZE = 20
 ,     API_URL = `${window.location.protocol}//${window.location.hostname}:${window.location.port}/api/items`;
 
-
 let _skip = 0;
+
+Promise.config({cancellation: true});
 
 let ItemDisplayAction = {
   
@@ -24,14 +25,15 @@ let ItemDisplayAction = {
     let skip = _skip
     ,   limit = LOAD_SIZE;
     
-    return new Promise(function(resolve, reject) {
-      request.get({
+    return new Promise(function(resolve, reject, onCancel) {
+      let _request = request.get({
         url: API_URL,
         qs: {
           skip: skip,
           limit: limit
         }
       }, function(err, response) {
+
         if (err) {
           reject(err);
         } else {
@@ -54,6 +56,9 @@ let ItemDisplayAction = {
         }
       });
       
+      onCancel(() => {
+        _request.abort();
+      });
     });
   },
   

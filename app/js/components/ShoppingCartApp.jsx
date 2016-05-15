@@ -1,10 +1,11 @@
 "use strict"
 
 import React from "react"
+import _ from "underscore"
 import CSSModules from "react-css-modules"
 
 import { Glyphicon, OverlayTrigger, Popover, MenuItem } from "react-bootstrap"
-import { Image, Button, SplitButton, ButtonToolbar } from "react-bootstrap"
+import { Image, Button, SplitButton } from "react-bootstrap"
 import { Grid, Row, Col } from "react-bootstrap"
 
 import CheckoutApp from "components/CheckoutApp.jsx"
@@ -48,8 +49,10 @@ function createCartPopoverItem(itemInfo) {
   
   let imageStyle = {
     float: "left",
-    maxWidth: "100%",
-    maxHeight: "100%"
+    width: "60px",
+    height: "60px",
+    
+    objectFit: "cover"
   };
   
   let infoStyle = {
@@ -61,8 +64,7 @@ function createCartPopoverItem(itemInfo) {
     height: "30px",
     fontFamily: "Courgette, cursive",
     fontSize: "20px",
-    fontWeight: "600",
-    textAlign: "center"
+    fontWeight: "600"
   };
   
   let priceCountStyle = {
@@ -132,7 +134,8 @@ class ShoppingCartApp extends React.Component {
   createCartPopover() {
     let items = this.state.items
     ,   displayItems = []
-    ,   totalPrice = this.state.totalPrice;
+    ,   totalPrice = this.state.totalPrice
+    ,   checkoutDisabled = _.isEmpty(items);
     
     for (let key of Object.keys(items))
     {
@@ -145,14 +148,22 @@ class ShoppingCartApp extends React.Component {
       fontSize: "20px"
     };
     
+    let buttonGroupStyle = {
+      textAlign: "right"
+    };
+    
+    let clearCartButtonStyle = {
+      marginRight: "10px"
+    };
+    
     return (
       <Popover id="shoppingCartPopover" title="Shopping cart">
         {displayItems}
         <div style={priceStyle}>Total: {ItemUtil.createPriceJsx(totalPrice)}</div>
-        <ButtonToolbar>
-          <Button onClick={handleClearCart}>Clear cart</Button>
-          <Button bsStyle="warning" href="#/checkout">Checkout</Button>
-        </ButtonToolbar>
+        <div style={buttonGroupStyle}>
+          <Button style={clearCartButtonStyle} onClick={handleClearCart}>Clear cart</Button>
+          <Button disabled={checkoutDisabled} bsStyle="warning" href="#/checkout">Checkout</Button>
+        </div>
       </Popover>
     );
   }

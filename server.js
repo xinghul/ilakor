@@ -24,8 +24,6 @@ let app        = express()
 // set server root for future use
 global.serverRoot = path.resolve(__dirname);
 
-global.HOSTNAME = os.hostname();
-
 // set port for http and https
 app.set("http_port", process.env.PORT || "8080");
 app.set("https_port", process.env.HTTPS_PORT || "3002");
