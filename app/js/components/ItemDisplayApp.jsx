@@ -55,13 +55,13 @@ class ItemDisplayApp extends React.Component {
     
     window.removeEventListener("scroll", this.checkScrollToBottom); 
 
-    if (_getItemPromise) {
+    if (_getItemPromise && _getItemPromise.isCancellable()) {
       _getItemPromise.cancel();
     }
 
-    // if (_addItemPromise) {
-    //   _addItemPromise.cancel();
-    // }
+    if (_addItemPromise && _addItemPromise.isCancellable()) {
+      _addItemPromise.cancel();
+    }
   }
   
   _onChange = () => {
@@ -79,21 +79,19 @@ class ItemDisplayApp extends React.Component {
     
     for (let item of newItems)
     {
-      _addItemPromise = _addItemPromise.then(() => {
+      _addItemPromise = _addItemPromise.delay(200).then(() => {
         return new Promise((resolve, reject) => {
-          Promise.delay(200).then(() => {
-            items.push(item);
+          items.push(item);
 
-            this.setState({
-              items: items
-            });
-            
-            resolve();
+          this.setState({
+            items: items
           });
+          
+          resolve();
         });
       });
     }
-    
+
     _addItemPromise.then(() => {
       this.setState({
         isItemsAdded: true

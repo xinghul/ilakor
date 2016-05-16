@@ -2920,17 +2920,15 @@ var ItemDisplayApp = function (_React$Component) {
         var _loop = function _loop() {
           var item = _step.value;
 
-          _addItemPromise = _addItemPromise.then(function () {
+          _addItemPromise = _addItemPromise.delay(200).then(function () {
             return new _bluebird2.default(function (resolve, reject) {
-              _bluebird2.default.delay(200).then(function () {
-                items.push(item);
+              items.push(item);
 
-                _this.setState({
-                  items: items
-                });
-
-                resolve();
+              _this.setState({
+                items: items
               });
+
+              resolve();
             });
           });
         };
@@ -3038,13 +3036,13 @@ var ItemDisplayApp = function (_React$Component) {
 
       window.removeEventListener("scroll", this.checkScrollToBottom);
 
-      if (_getItemPromise) {
+      if (_getItemPromise && _getItemPromise.isCancellable()) {
         _getItemPromise.cancel();
       }
 
-      // if (_addItemPromise) {
-      //   _addItemPromise.cancel();
-      // }
+      if (_addItemPromise && _addItemPromise.isCancellable()) {
+        _addItemPromise.cancel();
+      }
     }
   }, {
     key: "render",
