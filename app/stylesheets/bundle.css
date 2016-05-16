@@ -107,12 +107,6 @@
   pointer-events: none;
   
   background-color: #3B2F25;
-}._app_js_components_ShoppingCartApp__shoppingCart {
-  margin: 8px 6px 0 0;
-}
-
-._app_js_components_ShoppingCartApp__cartButton {
-  height: 36px;
 }._app_js_components_AuthApp__loginBtn {
   box-sizing: border-box;
   position: relative;
@@ -158,6 +152,12 @@
 ._app_js_components_AuthApp__loginBtnFacebook:focus {
   background-color: #5B7BD5;
   background-image: linear-gradient(#5B7BD5, #4864B1);
+}._app_js_components_ShoppingCartApp__shoppingCart {
+  margin: 8px 6px 0 0;
+}
+
+._app_js_components_ShoppingCartApp__cartButton {
+  height: 36px;
 }._app_js_lib_LoadSpinner__loaderText {
   margin-top: 20px;
   text-align: center;

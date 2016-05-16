@@ -2,7 +2,11 @@
   "name": "cramford",
   "version": "1.0.0",
   "private": true,
+  "engines": {
+    "node": "4.4.4"
+  },
   "scripts": {
+    "postinstall": "bower install && gulp",
     "start": "node ./bin/www",
     "test": "jest --no-cache"
   },

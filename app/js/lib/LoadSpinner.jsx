@@ -25,6 +25,6 @@ class Loader extends React.Component {
       
     );
   }
-}
+};
 
 export default CSSModules(Loader, styles, { allowMultiple: true })

@@ -14,6 +14,8 @@ import NavbarApp from "components/NavbarApp.jsx"
 import SocialApp from "components/SocialApp.jsx"
 import CheckoutApp from "components/CheckoutApp.jsx"
 
+import MultiSelectInput from "lib/MultiSelectInput.jsx"
+
 class App extends React.Component {
     
   render() {
