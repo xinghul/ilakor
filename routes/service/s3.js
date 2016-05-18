@@ -15,6 +15,10 @@ AWS.config.update({
 let bucketName      = process.env.S3_BUCKET
 ,   imageFolderName = process.env.S3_IMAGE_FOLDER;
 
+let s3 = new AWS.S3({
+  apiVersion: "2006-03-01"
+});
+
 let S3Api = {
   
   /**
@@ -36,22 +40,24 @@ let S3Api = {
         if (err) {
           reject(err);
         } else {
-          let s3bucket = new AWS.S3({params: {Bucket: bucketName}})
-          ,   imageUrl = imageFolderName + '/' + imageName;
+          let imageUrl = imageFolderName + '/' + imageName;
           
-          s3bucket.createBucket(function() {
-            let params = {Key: imageUrl, Body: data};
-            s3bucket.upload(params, function(err, data) {
-              if (err) {
-                reject(err);
-              } else {
-                // delete the tmp file when upload succeeded
-                // use retry approach later
-                fs.unlink(imagePath, function() {
-                  resolve(imageUrl);
-                });
-              }
-            });
+          let params = {
+            Bucket: bucketName,
+            Key: imageUrl, 
+            Body: data
+          };
+          
+          s3.upload(params, function(err, data) {
+            if (err) {
+              reject(err);
+            } else {
+              // delete the tmp file when upload succeeded
+              // use retry approach later
+              fs.unlink(imagePath, function() {
+                resolve(imageUrl);
+              });
+            }
           });
           
         }
@@ -60,6 +66,30 @@ let S3Api = {
       
     });
 
+  },
+  
+  /**
+   * Removes a image with given url on S3.
+   * 
+   * @param  {String} imageUrl the given image url.
+   * 
+   * @return {Promise} the new promise object.
+   */
+  removeImage: function(imageUrl) {
+    return new Promise(function(resolve, reject) {
+      let params = {
+        Bucket: bucketName,
+        Key: imageUrl
+      };
+      
+      s3.deleteObject(params, function(err, data) {
+        if (err){
+          reject(err);
+        } else {
+          resolve(data);
+        }        
+      });
+    });
   },
   
   /**

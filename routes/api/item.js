@@ -206,6 +206,43 @@ let ItemApi = {
        
      });
      
+   },
+   
+   /**
+    * Removes all images associated with item id on S3.
+    *
+    * @param {String} id the item id.
+    * 
+    * @return {Promise} the new promise object.
+    */
+   removeImages: function(id) {
+     
+     return new Promise(function(resolve, reject) {
+       
+       Item.findById(ObjectId(id), function(err, item) {
+         if (err) {
+           reject(err);
+         } else {
+           let images = item.images,
+               promises = [];
+           
+           for (let image of images)
+           {
+             promises.push(
+               S3.removeImage(image.url)
+             );
+           }
+           
+           Promise.all(promises).then(function() {
+             resolve();
+           }).catch(function(err) {
+             reject(err);
+           });
+         }
+       });
+       
+     });
+     
    }
 
 };

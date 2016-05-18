@@ -153,8 +153,10 @@ router.route("/items")
   let itemId = req.itemId;
   
   if (_.isString(itemId)) {
-    Item.remove(itemId).then(function(item) {
-      res.status(200).json(item);
+    Item.removeImages(itemId).then(function() {
+      return Item.remove(itemId);
+    }).then(function(result) {
+      res.status(200).json(result);
     }).catch(function(err) {
       console.log(err.stack);
       
