@@ -11,6 +11,7 @@ import ItemDisplayStore from "stores/ItemDisplayStore"
 import ItemDisplayAction from "actions/ItemDisplayAction"
 import ShoppingCartAction from "actions/ShoppingCartAction"
 import ItemDetailModal from "./ItemDisplayApp/ItemDetailModal.jsx"
+import ItemFilterApp from "./ItemDisplayApp/ItemFilterApp.jsx"
 
 import styles from "./ItemDisplayApp.css"
 
@@ -160,22 +161,25 @@ class ItemDisplayApp extends React.Component {
   };
   
   render() {
-    let itemDetailModal = (
-      <ItemDetailModal 
-        showModal={this.state.showItemDetailModal} 
-        item={this.state.selectedItem}
-        onClose={this.onItemDetailModalClose}
-        />
-    );
-    
     return (
-      <div styleName="itemDisplayApp">
-        {itemDetailModal}
-        <BaseGrid
-          items={this.state.items} 
-          handleItemClick={this.handleItemClick}
-          handleAddToCartClick={this.handleAddToCartClick} />
-        <LoadSpinner hidden={!this.state.isLoading} />
+      <div styleName="item-display-app">
+        <ItemDetailModal 
+          showModal={this.state.showItemDetailModal} 
+          item={this.state.selectedItem}
+          onClose={this.onItemDetailModalClose}
+        />
+      <div styleName="main-content">
+          <div styleName="filter-section">
+            <ItemFilterApp />
+          </div>
+          <div styleName="item-display-section">
+            <BaseGrid
+              items={this.state.items} 
+              handleItemClick={this.handleItemClick}
+              handleAddToCartClick={this.handleAddToCartClick} />
+            <LoadSpinner hidden={!this.state.isLoading} />
+          </div>
+        </div>
       </div>
     );
   }

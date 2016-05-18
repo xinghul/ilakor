@@ -1,5 +1,21 @@
-.itemDisplayApp {
+.item-display-app {
   position: absolute;
+  left: 0;
   
   width: 100%;
+}
+
+.main-content {
+  display: flex;
+  flex-direction: row;
+}
+
+.filter-section {
+  margin-right: 10px;
+  
+  display: flex;
+}
+
+.item-display-section {
+  flex: 1;  
 }

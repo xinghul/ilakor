@@ -1,6 +1,7 @@
 "use strict";
 
 import _ from "underscore"
+import invariant from "invariant"
 import { EventEmitter } from "events"
 
 import AppDispatcher from "dispatcher/AppDispatcher"
@@ -37,6 +38,23 @@ let ItemDisplayStore = _.extend({}, EventEmitter.prototype, {
     return _hasMoreItems;
   },
   
+  addFilter: function(newFilter) {
+    invariant(!_filters.hasOwnProperty(newFilter.type), `${filterType} is already applied!`);
+    invariant(!_.isEmpty(newFilter.value), "filter value can not be null!");
+    
+    _filters[newFilter.type] = newFilter.value;
+  },
+  
+  removeFilter: function(filterType) {
+    invariant(_filters.hasOwnProperty(filterType), `${filterType} is not applied!`);
+    
+    delete _filters[filterType];
+  },
+  
+  getFilters: function() {
+    return _filters;
+  },
+  
   emitChange: function() {
     this.emit(CHANGE_EVENT);
   },
@@ -52,7 +70,7 @@ let ItemDisplayStore = _.extend({}, EventEmitter.prototype, {
 });
 
 ItemDisplayStore.dispatchToken = AppDispatcher.register(function(payload) {
-  var action = payload.action;
+  let action = payload.action;
 
   switch(action.actionType) {
     case ItemDisplayConstants.RECEIVED_ITEMS:

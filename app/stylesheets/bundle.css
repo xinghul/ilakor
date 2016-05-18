@@ -1,11 +1,23 @@
-._app_js_components_ItemDisplayApp__itemDisplayApp {
+._app_js_components_ItemDisplayApp__item-display-app {
   position: absolute;
+  left: 0;
   
   width: 100%;
-}._app_js_components_NavbarApp__navbarApp {
-  background-color: #3B2F25;
+}
+
+._app_js_components_ItemDisplayApp__main-content {
+  display: flex;
+  flex-direction: row;
+}
+
+._app_js_components_ItemDisplayApp__filter-section {
+  margin-right: 10px;
   
-  font-weight: 600;
+  display: flex;
+}
+
+._app_js_components_ItemDisplayApp__item-display-section {
+  flex: 1;  
 }._app_js_components_CheckoutApp__checkoutApp {
   position: absolute;
   
@@ -107,6 +119,10 @@
   pointer-events: none;
   
   background-color: #3B2F25;
+}._app_js_components_NavbarApp__navbarApp {
+  background-color: #3B2F25;
+  
+  font-weight: 600;
 }._app_js_components_AuthApp__loginBtn {
   box-sizing: border-box;
   position: relative;
@@ -158,6 +174,68 @@
 
 ._app_js_components_ShoppingCartApp__cartButton {
   height: 36px;
+}._app_js_components_ItemDisplayApp_ItemFilterApp__item-filter-app {
+  position: relative;
+  top: 30px;
+  height: 400px;
+  
+  border: 1px solid #999;
+  border-left: none;
+  border-radius: 4px;
+  box-shadow: 0 0 15px #555;
+  
+  transition: width 300ms ease-in;
+}
+
+._app_js_components_ItemDisplayApp_ItemFilterApp__collapse-button {
+  position: absolute;
+  top: 45%;
+  height: 50px;
+  right: -12px;
+}
+
+._app_js_components_ItemDisplayApp_ItemFilterApp__filter-item-section {
+  padding: 20px 15px;
+}
+
+._app_js_components_ItemDisplayApp_ItemFilterApp__filter-item {
+  
+}
+
+._app_js_components_ItemDisplayApp_ItemFilterApp__filter-item-title {
+  
+}
+
+._app_js_components_ItemDisplayApp_ItemFilterApp__filter-item-content {
+  
+}._app_js_components_ItemDisplayApp_ColorFilter__expand-button {
+  
+}
+
+._app_js_components_ItemDisplayApp_ColorFilter__color-panel {
+  border: none;
+  box-shadow: 0 0 1px #333;
+  margin-top: 3px;
+}
+
+._app_js_components_ItemDisplayApp_ColorFilter__panel-body {
+  padding: 5px;
+}
+ 
+._app_js_components_ItemDisplayApp_ColorFilter__color-container {
+  padding: 0;
+  margin: -10px;
+}
+
+._app_js_components_ItemDisplayApp_ColorFilter__color-item {
+  display: inline-block;
+  margin: 4px 6px;
+}
+
+._app_js_components_ItemDisplayApp_ColorFilter__color-circle {
+  border-radius: 50%;
+  height: 26px;
+  width: 26px;
 }._app_js_lib_LoadSpinner__loaderText {
   margin-top: 20px;
   text-align: center;

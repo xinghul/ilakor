@@ -1,36 +1,39 @@
-+function(undefined) {
 "use strict";
 
-var path = require("path");
-console.log(path.resolve("./node_modules"));
-module.exports = {
-  entry: path.join(__dirname, "app/js/app.js"),
+let webpack = require("webpack"),
+    path = require("path");
+
+let APP_DIR = path.resolve(__dirname, "app/js/");
+
+let config = {
+  entry: APP_DIR + "/app.js",
   output: {
-    filename: path.join(__dirname, "app/js/bundle.js")
-  },
-  resolve: {
-    root: [
-      path.resolve("."),
-      path.resolve("app/js")
-    ]
+    path: APP_DIR,
+    filename: "bundle.js"
   },
   node: {
     fs: "empty",
     net: "empty",
     tls: "empty"
   },
-  module: {
-    loaders: [
-      // the 'transform-runtime' plugin tells babel to require the runtime 
-      // instead of inlining it. 
+  resolve: {
+    root: [
+      path.resolve("app/js")
+    ]
+  },
+  module : {
+    loaders : [
       {
-        test: /\.(jsx|js)?$/,
-        exclude: /(node_modules|bower_components)/,
-        loader: 'babel',
-        query: {
-          presets: ['react', 'es2015'],
-          plugins: ['transform-runtime']
-        }
+        test : /\.(js|jsx)?/,
+        include : APP_DIR,
+        loader : "babel"
+      },
+      {
+        test: /\.css$/,
+        loaders: [
+          "style?sourceMap",
+          "css?modules&importLoaders=1&localIdentName=[path]___[name]__[local]___[hash:base64:5]"
+        ]
       },
       {
         test: /\.json$/,
@@ -38,5 +41,6 @@ module.exports = {
       }
     ]
   }
-}
-}();
+};
+
+module.exports = config;
