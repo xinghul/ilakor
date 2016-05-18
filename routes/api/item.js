@@ -84,7 +84,7 @@ let ItemApi = {
     * @return {Promise} the new promise object.
     */
    update: function(id, newValue) {
-     
+     console.log(id, newValue);
      return new Promise(function(resolve, reject) {
        
        Item.findOneAndUpdate({_id: ObjectId(id)}, {$set: newValue}, {new: true}, function(err, updatedItem) {
@@ -223,8 +223,8 @@ let ItemApi = {
          if (err) {
            reject(err);
          } else {
-           let images = item.images,
-               promises = [];
+           let images = item.images
+           ,   promises = [];
            
            for (let image of images)
            {

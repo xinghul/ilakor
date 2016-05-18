@@ -95,7 +95,7 @@ router.route("/items")
     
     let rawData = JSON.parse(fields.item[0])
     ,   images  = files.image;
-
+    
     Item.add(rawData).then(function(newItem) {
       return Item.uploadImage(newItem, images);
     }).then(function(updatedItem) {
@@ -134,8 +134,16 @@ router.route("/items")
   
 })
 .put(function(req, res, next) {
-  let itemId   = req.itemId
-  ,   newValue = JSON.parse(req.body.item) ;
+  let itemId = req.itemId
+  ,   newValue;
+  
+  try {
+    newValue = JSON.parse(req.body.item) 
+  } catch (err) {
+    console.log(err.stack);
+    
+    return next(new CustomError(400, "Malformed JSON."));
+  }
   
   if (_.isString(itemId) && _.isObject(newValue)) {
     Item.update(itemId, newValue).then(function(item) {
