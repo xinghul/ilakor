@@ -12,6 +12,7 @@ import ItemDisplayAction from "actions/ItemDisplayAction"
 import ShoppingCartAction from "actions/ShoppingCartAction"
 import ItemDetailModal from "./ItemDisplayApp/ItemDetailModal.jsx"
 import ItemFilterApp from "./ItemDisplayApp/ItemFilterApp.jsx"
+import FilterDisplayApp from "./ItemDisplayApp/FilterDisplayApp.jsx"
 
 import styles from "./ItemDisplayApp.css"
 
@@ -20,6 +21,7 @@ Promise.config({cancellation: true});
 function getStateFromStores() {
   return {
     items: ItemDisplayStore.getItems(),
+    filters: ItemDisplayStore.getFilters(),
     hasMoreItems: ItemDisplayStore.hasMoreItems()
   };
 }
@@ -34,6 +36,7 @@ class ItemDisplayApp extends React.Component {
     
     this.state = {
       items: ItemDisplayStore.getItems(),
+      filters: ItemDisplayStore.getFilters(),
       hasMoreItems: ItemDisplayStore.hasMoreItems(), 
       
       selectedItem: {},
@@ -66,6 +69,11 @@ class ItemDisplayApp extends React.Component {
   }
   
   _onChange = () => {
+    if (_addItemPromise && _addItemPromise.isCancellable())
+    {
+      _addItemPromise.cancel();
+    }
+    
     let newState = getStateFromStores()
     ,   items = this.state.items;
 
@@ -100,6 +108,16 @@ class ItemDisplayApp extends React.Component {
     }).catch(function(err) {
       console.log(err);
     });
+  };
+  
+  handleRemoveFilter = (filterType, filterValue) => {
+    ItemDisplayAction.removeFilter(filterType, filterValue).then(function() {
+      
+      console.log("removed " + filterType + ": " + filterValue);
+
+    }).catch(function(err) {
+      console.log(err);
+    })
   };
   
   handleItemClick = (item) => {
@@ -168,11 +186,12 @@ class ItemDisplayApp extends React.Component {
           item={this.state.selectedItem}
           onClose={this.onItemDetailModalClose}
         />
-      <div styleName="main-content">
+        <div styleName="main-content">
           <div styleName="filter-section">
             <ItemFilterApp />
           </div>
           <div styleName="item-display-section">
+            <FilterDisplayApp handleRemoveFilter={this.handleRemoveFilter} filters={this.state.filters}/>
             <BaseGrid
               items={this.state.items} 
               handleItemClick={this.handleItemClick}

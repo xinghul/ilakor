@@ -8,7 +8,7 @@
   "scripts": {
     "postinstall": "bower install && gulp",
     "start": "node ./bin/www",
-    "test": "jest --no-cache"
+    "test": "jest --no-cache && mocha --recursive"
   },
   "dependencies": {
     "aws-sdk": "^2.2.39",

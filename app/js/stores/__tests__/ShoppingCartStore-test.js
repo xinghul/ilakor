@@ -57,7 +57,9 @@ describe("ShoppingCartStore", function() {
         actionType: ShoppingCartConstants.ADD_TO_CART,
         item: {
           _id: "5719076ab5e5032c2264ff5c", 
-          info: {}
+          feature: {
+            price: 100
+          }
         }
       }
     };
@@ -95,7 +97,9 @@ describe("ShoppingCartStore", function() {
         actionType: ShoppingCartConstants.ADD_TO_CART,
         item: {
           _id: itemId, 
-          info: {}
+          feature: {
+            price: 100
+          }
         }
       }
     };
@@ -168,7 +172,9 @@ describe("ShoppingCartStore", function() {
           actionType: ShoppingCartConstants.ADD_TO_CART,
           item: {
             _id: key, 
-            info: {}
+            feature: {
+              price: 100
+            }
           }
         }
       };

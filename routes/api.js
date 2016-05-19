@@ -97,7 +97,7 @@ router.route("/items")
     ,   images  = files.image;
     
     Item.add(rawData).then(function(newItem) {
-      return Item.uploadImage(newItem, images);
+      return Item.uploadImages(newItem, images);
     }).then(function(updatedItem) {
       res.status(200).json(updatedItem);
     }).catch(function(err) {

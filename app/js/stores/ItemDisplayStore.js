@@ -11,7 +11,11 @@ const CHANGE_EVENT = "change";
 
 // items in this store
 let _items = []
-,   _filters = {}
+,   _filters = {
+  color: "red",
+  location: "kitchen",
+  made: "China"
+}
 ,   _hasMoreItems = true;
 
 let ItemDisplayStore = _.extend({}, EventEmitter.prototype, {
@@ -82,6 +86,11 @@ ItemDisplayStore.dispatchToken = AppDispatcher.register(function(payload) {
       ItemDisplayStore.clearItems();
       ItemDisplayStore.emitChange();
       break;
+    
+    case ItemDisplayConstants.REMOVE_FILTER:
+      ItemDisplayStore.removeFilter(action.filterType);
+      ItemDisplayStore.emitChange();
+      break;  
       
     default:
       // do nothing

@@ -1,0 +1,27 @@
+.filter-display-app {
+  padding-left: 15px;
+  height: 45px;
+}
+
+.filter-item {
+  display: inline-block;
+  margin-right: 10px;
+}
+
+.filter-item-info {
+  display: inline-block;
+  padding: 5px;
+  
+  border: 1px solid #8a6d3b;
+  border-radius: 10px 0 0 10px;
+}
+
+.filter-item-remove {
+  position: relative;
+  height: 28px;
+  top: -1px;
+  
+  border: 1px solid #8a6d3b;
+  border-radius: 0 10px 10px 0;
+  border-left: none;
+}

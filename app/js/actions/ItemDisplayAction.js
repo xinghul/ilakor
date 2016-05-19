@@ -75,6 +75,20 @@ let ItemDisplayAction = {
       resolve();
       
     });
+  },
+  
+  removeFilter: function(filterType, filterValue) {
+    return new Promise(function(resolve, reject) {
+      
+      AppDispatcher.handleAction({
+        actionType: ItemDisplayConstants.REMOVE_FILTER,
+        filterType: filterType,
+        filterValue: filterValue
+      });
+      
+      resolve();
+      
+    });
   }
 };
 
