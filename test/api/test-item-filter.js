@@ -2,7 +2,7 @@
 
 let fs = require("fs")
 ,   path = require("path")
-,   mockStr = require("mock-data").string(24, 24, "#a")
+,   mock = require("mock-data")
 ,   chai = require("chai")
 ,   chaiHttp = require("chai-http")
 ,   server = require("../../bin/www")
@@ -12,12 +12,57 @@ chai.use(chaiHttp);
 
 const API_URL = "/api/items";
 
-describe("Items", function() {
+let mockName = mock.string(24, 24, "#a")
+,   mockTag = 
+
+describe("Item filters", function() {
   this.timeout(20000);
   
-  let itemCount
-  ,   itemId
+  let itemCount1 = 
   ,   itemName = mockStr.generate();
+  
+  // creates multiple items with two different tags
+  before(function(done) {
+    let rawData = {
+      name: itemName,
+      tag: ["TABLE"],
+      weight: 100,
+      feature: {
+        price: 3100, 
+        stock: 1
+      },
+      dimension: {
+        length: 11,
+        width: 12,
+        height: 13
+      }
+    };
+    
+    chai.request(server)
+      .post(API_URL)
+      .field("item", JSON.stringify(rawData))
+      .attach("image", fs.readFileSync(path.resolve(__dirname, "test-image.jpg")), "TEST_IMAGE.jpg")
+      .then(function(res) {
+        res.should.have.status(200);
+        
+        let newItem = res.body;
+        
+        newItem.should.be.an("object");
+        newItem._id.should.be.ok;
+        
+        itemId = newItem._id;
+
+        done();
+      })
+      .catch(function(err) {
+        throw err;
+      });
+  });
+  
+  // deletes multiple items created in the beginning
+  after(function(done) {
+    
+  });
       
   it("should list ALL items on /api/items GET", function(done) {
     chai.request(server)
