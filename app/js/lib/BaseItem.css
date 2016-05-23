@@ -74,7 +74,7 @@
   transition-duration: .3s;
 }
 
-.loader {
+.baseItem .loader {
   position: relative;
   top: 40%;
   margin: auto;
@@ -84,7 +84,7 @@
   border-radius: 50%;
 }
 
-.loader:before, .loader:after {
+.baseItem .loader:before, .baseItem .loader:after {
   content: '';
   border: 1px #000 solid;
   border-radius: 50%;
@@ -94,14 +94,14 @@
   left: 0px;
 }
 
-.loader:before {
+.baseItem .loader:before {
   transform: scale(1, 1);
   opacity: 1;
   -webkit-animation: spWaveBe .8s infinite linear;
   animation: spWaveBe .8s infinite linear;
 }
 
-.loader:after {
+.baseItem .loader:after {
   transform: scale(0, 0);
   opacity: 0;
   -webkit-animation: spWaveAf .8s infinite linear;

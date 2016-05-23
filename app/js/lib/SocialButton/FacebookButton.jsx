@@ -2,12 +2,11 @@
 
 import React from "react"
 import _ from "underscore"
-import CSSModules from "react-css-modules"
 
 import { Button } from "react-bootstrap"
 import styles from "./FacebookButton.css"
 
-class FacebookButton extends React.Component {
+export default class FacebookButton extends React.Component {
   
   constructor(props) {
     super(props);
@@ -17,9 +16,7 @@ class FacebookButton extends React.Component {
     let newProps = _.clone(this.props);
     
     return (
-      <Button {...newProps} styleName="facebookButton" />
+      <Button {...newProps} className="facebookButton" />
     );
   }
 }
-
-export default CSSModules(FacebookButton, styles)

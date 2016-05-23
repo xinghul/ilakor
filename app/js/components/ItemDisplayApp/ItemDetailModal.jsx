@@ -1,12 +1,11 @@
 "use strict"
 
 import React from "react"
-import CSSModules from "react-css-modules"
 import { Modal, Button } from "react-bootstrap"
 
 import styles from "./ItemDetailModal.css"
 
-class ItemDetailModal extends React.Component {
+export default class ItemDetailModal extends React.Component {
   
   constructor(props) {
     super(props);
@@ -54,5 +53,3 @@ ItemDetailModal.propTypes = {
 
 ItemDetailModal.defaultProps = {
 };
-
-export default CSSModules(ItemDetailModal, styles)

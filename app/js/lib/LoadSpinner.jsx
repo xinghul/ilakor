@@ -1,11 +1,10 @@
 "use strict"
 
 import React from "react"
-import CSSModules from "react-css-modules"
 
 import styles from "./LoadSpinner.css"
 
-class Loader extends React.Component {
+export default class Loader extends React.Component {
   
   constructor(props) {
     super(props);
@@ -14,17 +13,15 @@ class Loader extends React.Component {
   render() {
     
     return (
-      <div {...this.props}>
-        <div styleName="loader">
-          <div styleName="inner one"></div>
-          <div styleName="inner two"></div>
-          <div styleName="inner three"></div>
+      <div className="load-spinner" {...this.props}>
+        <div className="loader">
+          <div className="inner one"></div>
+          <div className="inner two"></div>
+          <div className="inner three"></div>
         </div>
-        <div styleName="loaderText">LOADING</div>
+        <div className="loader-text">LOADING</div>
       </div>
       
     );
   }
-};
-
-export default CSSModules(Loader, styles, { allowMultiple: true })
+}

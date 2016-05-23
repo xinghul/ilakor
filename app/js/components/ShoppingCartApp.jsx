@@ -2,7 +2,6 @@
 
 import React from "react"
 import _ from "underscore"
-import CSSModules from "react-css-modules"
 
 import { Glyphicon, OverlayTrigger, Popover, MenuItem } from "react-bootstrap"
 import { Image, Button, SplitButton } from "react-bootstrap"
@@ -111,7 +110,7 @@ function createCartPopoverItem(itemInfo) {
   );
 }
 
-class ShoppingCartApp extends React.Component {
+export default class ShoppingCartApp extends React.Component {
   
   constructor(props) {
     super(props);
@@ -172,12 +171,12 @@ class ShoppingCartApp extends React.Component {
     let popover = this.createCartPopover();
     
     return (
-      <div styleName="shoppingCart">
+      <div className="shoppingCart">
         <OverlayTrigger 
           trigger="focus" 
           placement="bottom" 
           overlay={popover}>
-          <Button styleName="cartButton" bsStyle="warning">
+          <Button className="cartButton" bsStyle="warning">
             <Glyphicon glyph="shopping-cart" />
             ({Object.keys(this.state.items).length})
           </Button>
@@ -187,5 +186,3 @@ class ShoppingCartApp extends React.Component {
   }
   
 }
-
-export default CSSModules(ShoppingCartApp, styles)

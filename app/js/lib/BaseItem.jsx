@@ -1,14 +1,13 @@
 "use strict"
 
 import React from "react"
-import CSSModules from "react-css-modules"
 import { Thumbnail, Image, Button, Glyphicon } from "react-bootstrap"
 
 import styles from "./BaseItem.css"
 
 import ItemUtil from "utils/ItemUtil"
 
-class BaseItem extends React.Component {
+export default class BaseItem extends React.Component {
   
   constructor(props) {
     super(props);
@@ -34,7 +33,7 @@ class BaseItem extends React.Component {
     ,   imageUrl = "http://d2nl38chx1zeob.cloudfront.net/" + item.images[0].name;
     
     return (
-      <Image styleName="itemImage" src={imageUrl} onLoad={this.handleImageLoaded} />
+      <Image className="itemImage" src={imageUrl} onLoad={this.handleImageLoaded} />
     );
   }
   
@@ -47,15 +46,15 @@ class BaseItem extends React.Component {
     };
     
     return (
-      <div style={bannerStyle} styleName="baseBanner">
-        <div styleName="itemName">{item.name}</div>
-        <div styleName="cartIcon" onClick={this.handleAddToCartClick}>
+      <div style={bannerStyle} className="baseBanner">
+        <div className="itemName">{item.name}</div>
+        <div className="cartIcon" onClick={this.handleAddToCartClick}>
           <Button bsStyle="warning" bsSize="xsmall">
             <Glyphicon glyph="shopping-cart" />
             Add to cart
           </Button>
         </div>
-        <div styleName="itemPrice">{ItemUtil.createPriceJsx(item.feature.price)}</div>
+        <div className="itemPrice">{ItemUtil.createPriceJsx(item.feature.price)}</div>
       </div>      
     );
   }
@@ -66,8 +65,8 @@ class BaseItem extends React.Component {
     };
     
     return (
-      <div styleName="loaderWrapper" style={style}>
-        <div styleName="loader"></div>
+      <div className="loaderWrapper" style={style}>
+        <div className="loader"></div>
       </div>
       
     );
@@ -110,7 +109,7 @@ class BaseItem extends React.Component {
     loadSpinnerJsx = this.createLoadSpinnerJsx();
     
     return (
-      <div styleName="baseItem" 
+      <div className="baseItem" 
         onMouseEnter={this.handleMouseEnter}
         onMouseLeave={this.handleMouseLeave}
         onClick={this.handleItemClick}>
@@ -134,5 +133,3 @@ BaseItem.defaultProps = {
   handleItemClick: function() {},
   handleAddToCartClick: function() {}
 };
-
-export default CSSModules(BaseItem, styles, { allowMultiple: true })

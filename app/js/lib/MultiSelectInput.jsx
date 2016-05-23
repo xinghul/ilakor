@@ -1,11 +1,10 @@
 "use strict"
 
 import React from "react"
-import CSSModules from "react-css-modules"
 
 import styles from "./MultiSelectInput.css"
 
-class MultiSelectInput extends React.Component {
+export default class MultiSelectInput extends React.Component {
   
   constructor(props) {
     super(props);
@@ -23,10 +22,8 @@ class MultiSelectInput extends React.Component {
       
     );
   }
-};
+}
 
 MultiSelectInput.propTypes = {
   options: React.PropTypes.array.isRequired
 };
-
-export default CSSModules(MultiSelectInput, styles, { allowMultiple: true })

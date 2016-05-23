@@ -3,11 +3,10 @@
 import React from "react"
 import _ from "underscore"
 import { Button } from "react-bootstrap"
-import CSSModules from "react-css-modules"
 
 import styles from "./GhostButton.css"
 
-class GhostButton extends React.Component {
+export default class GhostButton extends React.Component {
   
   constructor(props) {
     super(props);
@@ -25,7 +24,7 @@ class GhostButton extends React.Component {
     };
     
     return (
-      <Button {...newProps} styleName="ghostButton" />
+      <Button {...newProps} className="ghostButton" />
     );
   }
 }
@@ -37,5 +36,3 @@ GhostButton.propTypes = {
 GhostButton.defaultProps = {
   color: "white"
 };
-
-export default CSSModules(GhostButton, styles)

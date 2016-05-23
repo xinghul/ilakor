@@ -2,11 +2,9 @@
 
 import React from "react"
 import { Button, Glyphicon, Panel } from "react-bootstrap"
-import CSSModules from "react-css-modules"
-
 import styles from "./ColorFilter.css"
 
-class ColorFilter extends React.Component {
+export default class ColorFilter extends React.Component {
   
   constructor(props) {
     super(props);
@@ -51,10 +49,10 @@ class ColorFilter extends React.Component {
       };
       
       colorItemsJsx.push(
-        <li key={color} styleName="color-item">
+        <li key={color} className="color-item">
           <Button 
             style={style} 
-            styleName="color-circle"
+            className="color-circle"
             onClick={this.onColorSelect.bind(this, color)}
           />
         </li>
@@ -62,7 +60,7 @@ class ColorFilter extends React.Component {
     }
     
     return (
-      <ul styleName="color-container">
+      <ul className="color-container">
         {colorItemsJsx}
       </ul>
     )
@@ -86,11 +84,11 @@ class ColorFilter extends React.Component {
     
     return (
       <div>
-        <Button styleName="expand-button" bsSize="xsmall" onClick={this.handleCollapseButtonClick}>
+        <Button className="expand-button" bsSize="xsmall" onClick={this.handleCollapseButtonClick}>
           COLORS
           <Glyphicon glyph={glyph} />
         </Button>
-        <Panel styleName="color-panel" collapsible expanded={this.state.expanded}>
+        <Panel className="color-panel" collapsible expanded={this.state.expanded}>
           {this.createColorItems()}
         </Panel>
       </div>
@@ -98,5 +96,3 @@ class ColorFilter extends React.Component {
     
   }
 }
-
-export default CSSModules(ColorFilter, styles)

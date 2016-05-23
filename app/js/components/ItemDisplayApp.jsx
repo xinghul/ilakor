@@ -2,7 +2,6 @@
 
 import React from "react"
 import Promise from "bluebird"
-import CSSModules from "react-css-modules"
 
 import BaseGrid from "lib/BaseGrid.jsx"
 import LoadSpinner from "lib/LoadSpinner.jsx"
@@ -29,7 +28,7 @@ function getStateFromStores() {
 let _getItemPromise = null
 ,   _addItemPromise = null;
 
-class ItemDisplayApp extends React.Component {
+export default class ItemDisplayApp extends React.Component {
   
   constructor(props) {
     super(props);
@@ -180,17 +179,17 @@ class ItemDisplayApp extends React.Component {
   
   render() {
     return (
-      <div styleName="item-display-app">
+      <div className="item-display-app">
         <ItemDetailModal 
           showModal={this.state.showItemDetailModal} 
           item={this.state.selectedItem}
           onClose={this.onItemDetailModalClose}
         />
-        <div styleName="main-content">
-          <div styleName="filter-section">
+        <div className="main-content">
+          <div className="filter-section">
             <ItemFilterApp />
           </div>
-          <div styleName="item-display-section">
+          <div className="item-display-section">
             <FilterDisplayApp handleRemoveFilter={this.handleRemoveFilter} filters={this.state.filters}/>
             <BaseGrid
               items={this.state.items} 
@@ -203,6 +202,4 @@ class ItemDisplayApp extends React.Component {
     );
   }
   
-};
-
-export default CSSModules(ItemDisplayApp, styles)
+}

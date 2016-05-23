@@ -1,7 +1,6 @@
 "use strict"
 
 import React from "react"
-import CSSModules from "react-css-modules"
 import { Button, Glyphicon, Accordion, Panel } from "react-bootstrap"
 
 import styles from "./ItemFilterApp.css"
@@ -15,7 +14,7 @@ function getStateFromStores() {
   }
 }
 
-class ItemFilterApp extends React.Component {
+export default class ItemFilterApp extends React.Component {
   
   constructor(props) {
     super(props);
@@ -47,7 +46,7 @@ class ItemFilterApp extends React.Component {
   
   createFilterItems() {
     return (
-      <div styleName="filter-item-section">
+      <div className="filter-item-section">
         <ColorFilter />
       </div>
     );
@@ -78,8 +77,8 @@ class ItemFilterApp extends React.Component {
     let filterItems = this.createFilterItems();
     
     return (
-      <div style={style} styleName="item-filter-app">
-        <Button bsSize="xsmall" onClick={this.handleCollapseButtonClick} styleName="collapse-button">
+      <div style={style} className="item-filter-app">
+        <Button bsSize="xsmall" onClick={this.handleCollapseButtonClick} className="collapse-button">
           <Glyphicon glyph={glyph}/>
         </Button>
         <div hidden={this.state.isCollapsed}>
@@ -90,5 +89,3 @@ class ItemFilterApp extends React.Component {
     
   }
 }
-
-export default CSSModules(ItemFilterApp, styles)

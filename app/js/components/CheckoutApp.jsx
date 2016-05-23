@@ -1,7 +1,6 @@
 "use strict";
 
 import React from "react"
-import CSSModules from "react-css-modules"
 import _ from "underscore"
 import getCardTypes from "credit-card-type"
 import CreditCard from "credit-card"
@@ -87,7 +86,7 @@ function validateCard(cardNumber, cardType) {
   return "error";
 }
 
-class CheckoutApp extends React.Component {
+export default class CheckoutApp extends React.Component {
   
   constructor(props) {
     super(props);
@@ -301,7 +300,7 @@ class CheckoutApp extends React.Component {
     
     return (
       <div>
-        <div styleName="sectionHeader">
+        <div className="sectionHeader">
           Receipt summary
         </div>
         {itemPriceJsx}
@@ -338,7 +337,7 @@ class CheckoutApp extends React.Component {
         
     return (
       <div>
-        <div styleName="sectionHeader">
+        <div className="sectionHeader">
           Shipping information
         </div>
         <Form>
@@ -456,7 +455,7 @@ class CheckoutApp extends React.Component {
     
     return (
       <div>
-        <div styleName="sectionHeader">
+        <div className="sectionHeader">
           Payment information
         </div>
         <Form>
@@ -537,14 +536,14 @@ class CheckoutApp extends React.Component {
               </FormGroup>
             </Col>
             <Col xs={6} md={4}>
-              <span styleName="cvcHelper"><a>What is CVC?</a></span>
+              <span className="cvcHelper"><a>What is CVC?</a></span>
             </Col>
           </Row>
         </Form>
         <Button disabled={!this.state.formFilled || this.state.isSubmitting} 
           onClick={this.handleConfirm}
-          styleName="submitButton" bsSize="large" block>
-          <div hidden={!this.state.isSubmitting} styleName="submitSpinner">
+          className="submitButton" bsSize="large" block>
+          <div hidden={!this.state.isSubmitting} className="submitSpinner">
             <BaseSpinner />
           </div>
           <Glyphicon glyph="lock" />
@@ -563,7 +562,7 @@ class CheckoutApp extends React.Component {
   createConfirmation() {
     return (
       <div>
-        <div styleName="sectionHeader">
+        <div className="sectionHeader">
           Confirmation
         </div>
         <div>
@@ -578,20 +577,20 @@ class CheckoutApp extends React.Component {
     let items = this.state.items;
     
     return (
-      <div styleName="checkoutApp">
-        <div styleName="checkoutForm">
+      <div className="checkoutApp">
+        <div className="checkoutForm">
           <div hidden={this.state.checkoutFinish}>
-            <div styleName="summarySection">
+            <div className="summarySection">
               {this.createSummary()}
             </div>
-            <div styleName="shippingSection">
+            <div className="shippingSection">
               {this.createShipping()}
             </div>
-            <div styleName="paymentSection">
+            <div className="paymentSection">
               {this.createPayment()}
             </div>
           </div>
-          <div id="confirmationSection" styleName="confirmationSection" 
+          <div id="confirmationSection" className="confirmationSection" 
             hidden={!this.state.checkoutFinish}>
             {this.createConfirmation()}
           </div>
@@ -599,6 +598,4 @@ class CheckoutApp extends React.Component {
       </div>
     );
   }
-};
-
-export default CSSModules(CheckoutApp, styles, { allowMultiple: true })
+}

@@ -1,11 +1,10 @@
 "use strict"
 
 import React from "react"
-import CSSModules from "react-css-modules"
 
 import styles from "./BaseSpinner.css"
 
-class BaseSpinner extends React.Component {
+export default class BaseSpinner extends React.Component {
   
   constructor(props) {
     super(props);
@@ -14,12 +13,10 @@ class BaseSpinner extends React.Component {
   render() {
     
     return (
-      <div styleName="spinnerWrapper" {...this.props}>
-        <div styleName="spinner"></div>
+      <div className="spinnerWrapper" {...this.props}>
+        <div className="spinner"></div>
       </div>
       
     );
   }
 }
-
-export default CSSModules(BaseSpinner, styles, { allowMultiple: true })

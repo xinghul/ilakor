@@ -1,9 +1,9 @@
 "use strict";
 
-let webpack = require("webpack"),
-    path = require("path");
+let webpack = require("webpack")
+,   path = require("path");
 
-let APP_DIR = path.resolve(__dirname, "app/js/");
+const APP_DIR = path.resolve(__dirname, "app/js/");
 
 let config = {
   entry: APP_DIR + "/app.js",
@@ -19,21 +19,23 @@ let config = {
   resolve: {
     root: [
       path.resolve("app/js")
-    ]
+    ],
+    extensions: ['', '.js', '.jsx']
   },
-  module : {
+  module: {
+    noParse: /node_modules\/json-schema\/lib\/validate\.js/,
     loaders : [
       {
-        test : /\.(js|jsx)$/,
-        include : APP_DIR,
-        loader : "babel"
+        exclude: /node_modules/,
+        loader: 'babel'
       },
       {
-        test: /\.css$/,
-        loaders: [
-          "style?sourceMap",
-          "css?modules&importLoaders=1&localIdentName=[path]___[name]__[local]___[hash:base64:5]"
-        ]
+        test: /\.css$/, 
+        loader: "style-loader!css-loader" 
+      },
+      {
+        test: /\.woff($|\?)|\.woff2($|\?)|\.ttf($|\?)|\.eot($|\?)|\.svg($|\?)/,
+        loader: 'url-loader?limit=1000000'
       },
       {
         test: /\.json$/,

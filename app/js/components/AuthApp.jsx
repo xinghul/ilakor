@@ -1,7 +1,6 @@
 "use strict";
 
 import React from "react"
-import CSSModules from "react-css-modules"
 import _ from "underscore"
 import { Button, Form, SplitButton, MenuItem, Modal } from "react-bootstrap"
 
@@ -21,7 +20,7 @@ function getStateFromStores() {
   };
 }
 
-class AuthApp extends React.Component {
+export default class AuthApp extends React.Component {
   
   constructor(props) {
     super(props);
@@ -137,7 +136,7 @@ class AuthApp extends React.Component {
                    
     let socialLoginArea = (
       <div style={buttonWrapperStyle}>
-        <Button styleName="loginBtn loginBtnFacebook">
+        <Button className="loginBtn loginBtnFacebook">
           <a style={linkStyle} href="/auth/facebook">Login with Facebook</a>
         </Button>
       </div>
@@ -223,6 +222,4 @@ class AuthApp extends React.Component {
       </div>
     );
   }
-};
-
-export default CSSModules(AuthApp, styles, { allowMultiple: true })
+}
