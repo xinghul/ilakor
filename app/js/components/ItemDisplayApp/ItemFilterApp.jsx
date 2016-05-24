@@ -3,7 +3,7 @@
 import React from "react"
 import { Button, Glyphicon, Accordion, Panel } from "react-bootstrap"
 
-import styles from "./ItemFilterApp.css"
+import styles from "components/ItemDisplayApp/ItemFilterApp.scss"
 
 import ColorFilter from "./ColorFilter.jsx"
 import ItemDisplayStore from "stores/ItemDisplayStore"
@@ -46,7 +46,7 @@ export default class ItemFilterApp extends React.Component {
   
   createFilterItems() {
     return (
-      <div className="filter-item-section">
+      <div className={styles.filterItemSection}>
         <ColorFilter />
       </div>
     );
@@ -77,8 +77,8 @@ export default class ItemFilterApp extends React.Component {
     let filterItems = this.createFilterItems();
     
     return (
-      <div style={style} className="item-filter-app">
-        <Button bsSize="xsmall" onClick={this.handleCollapseButtonClick} className="collapse-button">
+      <div style={style} className={styles.itemFilterApp}>
+        <Button bsSize="xsmall" onClick={this.handleCollapseButtonClick} className={styles.collapseButton}>
           <Glyphicon glyph={glyph}/>
         </Button>
         <div hidden={this.state.isCollapsed}>

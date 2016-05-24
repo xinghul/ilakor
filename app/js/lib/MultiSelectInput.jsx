@@ -2,7 +2,7 @@
 
 import React from "react"
 
-import styles from "./MultiSelectInput.css"
+import styles from "lib/MultiSelectInput.scss"
 
 export default class MultiSelectInput extends React.Component {
   

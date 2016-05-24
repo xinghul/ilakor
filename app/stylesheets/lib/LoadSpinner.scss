@@ -1,8 +1,4 @@
-.load-spinner {
-  
-}
-
-.load-spinner .loader-text {
+.loaderText {
   margin-top: 20px;
   text-align: center;
   
@@ -10,7 +6,7 @@
   font-weight: 600;
 }
 
-.load-spinner .loader {
+.loader {
   position: relative;
   margin: auto;
 
@@ -20,7 +16,7 @@
   perspective: 800px;
 }
 
-.load-spinner .inner {
+.inner {
   position: absolute;
   box-sizing: border-box;
   width: 100%;
@@ -28,28 +24,28 @@
   border-radius: 50%;  
 }
 
-.load-spinner .inner.one {
+.inner.one {
   left: 0%;
   top: 0%;
-  animation: rotate-one 1s linear infinite;
+  animation: rotateOne 1s linear infinite;
   border-bottom: 3px solid #3B2F25;
 }
 
-.load-spinner .inner.two {
+.inner.two {
   right: 0%;
   top: 0%;
-  animation: rotate-two 1s linear infinite;
+  animation: rotateTwo 1s linear infinite;
   border-right: 3px solid #3B2F25;
 }
 
-.load-spinner .inner.three {
+.inner.three {
   right: 0%;
   bottom: 0%;
-  animation: rotate-three 1s linear infinite;
+  animation: rotateThree 1s linear infinite;
   border-top: 3px solid #3B2F25;
 }
 
-@keyframes rotate-one {
+@keyframes rotateOne {
   0% {
     transform: rotateX(35deg) rotateY(-45deg) rotateZ(0deg);
   }
@@ -58,7 +54,7 @@
   }
 }
 
-@keyframes rotate-two {
+@keyframes rotateTwo {
   0% {
     transform: rotateX(50deg) rotateY(10deg) rotateZ(0deg);
   }
@@ -67,7 +63,7 @@
   }
 }
 
-@keyframes rotate-three {
+@keyframes rotateThree {
   0% {
     transform: rotateX(35deg) rotateY(55deg) rotateZ(0deg);
   }

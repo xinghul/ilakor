@@ -13,7 +13,7 @@ import ItemDetailModal from "./ItemDisplayApp/ItemDetailModal.jsx"
 import ItemFilterApp from "./ItemDisplayApp/ItemFilterApp.jsx"
 import FilterDisplayApp from "./ItemDisplayApp/FilterDisplayApp.jsx"
 
-import styles from "./ItemDisplayApp.css"
+import styles from "components/ItemDisplayApp.scss"
 
 Promise.config({cancellation: true});
 
@@ -179,17 +179,17 @@ export default class ItemDisplayApp extends React.Component {
   
   render() {
     return (
-      <div className="item-display-app">
+      <div className={styles.itemDisplayApp}>
         <ItemDetailModal 
           showModal={this.state.showItemDetailModal} 
           item={this.state.selectedItem}
           onClose={this.onItemDetailModalClose}
         />
-        <div className="main-content">
-          <div className="filter-section">
+      <div className={styles.mainContent}>
+          <div className={styles.filterSection}>
             <ItemFilterApp />
           </div>
-          <div className="item-display-section">
+          <div className={styles.itemDisplaySection}>
             <FilterDisplayApp handleRemoveFilter={this.handleRemoveFilter} filters={this.state.filters}/>
             <BaseGrid
               items={this.state.items} 

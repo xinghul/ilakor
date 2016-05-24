@@ -1,22 +1,22 @@
-.item-display-app {
+.itemDisplayApp {
   position: absolute;
   left: 0;
   
   width: 100%;
 }
 
-.main-content {
+.mainContent {
   display: flex;
   flex-direction: row;
 }
 
-.filter-section {
+.filterSection {
   margin-right: 10px;
   
   display: flex;
 }
 
-.item-display-section {
+.itemDisplaySection {
   flex: 1;  
   
   display: flex;

@@ -1,8 +1,8 @@
-"use strict"
+"use strict";
 
 import React from "react"
 
-import styles from "./LoadSpinner.css"
+import styles from "lib/LoadSpinner.scss"
 
 export default class Loader extends React.Component {
   
@@ -13,13 +13,13 @@ export default class Loader extends React.Component {
   render() {
     
     return (
-      <div className="load-spinner" {...this.props}>
-        <div className="loader">
-          <div className="inner one"></div>
-          <div className="inner two"></div>
-          <div className="inner three"></div>
+      <div {...this.props}>
+        <div className={styles.loader}>
+          <div className={styles.inner + ' ' + styles.one}></div>
+          <div className={styles.inner + ' ' + styles.two}></div>
+          <div className={styles.inner + ' ' + styles.three}></div>
         </div>
-        <div className="loader-text">LOADING</div>
+        <div className={styles.loaderText}>LOADING</div>
       </div>
       
     );

@@ -3,7 +3,7 @@
 import React from "react"
 import { Thumbnail, Image, Button, Glyphicon } from "react-bootstrap"
 
-import styles from "./BaseItem.css"
+import styles from "lib/BaseItem.scss"
 
 import ItemUtil from "utils/ItemUtil"
 
@@ -33,7 +33,7 @@ export default class BaseItem extends React.Component {
     ,   imageUrl = "http://d2nl38chx1zeob.cloudfront.net/" + item.images[0].name;
     
     return (
-      <Image className="itemImage" src={imageUrl} onLoad={this.handleImageLoaded} />
+      <Image className={styles.itemImage} src={imageUrl} onLoad={this.handleImageLoaded} />
     );
   }
   
@@ -46,15 +46,15 @@ export default class BaseItem extends React.Component {
     };
     
     return (
-      <div style={bannerStyle} className="baseBanner">
-        <div className="itemName">{item.name}</div>
-        <div className="cartIcon" onClick={this.handleAddToCartClick}>
+      <div style={bannerStyle} className={styles.baseBanner}>
+        <div className={styles.itemName}>{item.name}</div>
+        <div className={styles.cartIcon} onClick={this.handleAddToCartClick}>
           <Button bsStyle="warning" bsSize="xsmall">
             <Glyphicon glyph="shopping-cart" />
             Add to cart
           </Button>
         </div>
-        <div className="itemPrice">{ItemUtil.createPriceJsx(item.feature.price)}</div>
+        <div className={styles.itemPrice}>{ItemUtil.createPriceJsx(item.feature.price)}</div>
       </div>      
     );
   }
@@ -65,8 +65,8 @@ export default class BaseItem extends React.Component {
     };
     
     return (
-      <div className="loaderWrapper" style={style}>
-        <div className="loader"></div>
+      <div className={styles.loaderWrapper} style={style}>
+        <div className={styles.loader}></div>
       </div>
       
     );
@@ -109,7 +109,7 @@ export default class BaseItem extends React.Component {
     loadSpinnerJsx = this.createLoadSpinnerJsx();
     
     return (
-      <div className="baseItem" 
+      <div className={styles.baseItem} 
         onMouseEnter={this.handleMouseEnter}
         onMouseLeave={this.handleMouseLeave}
         onClick={this.handleItemClick}>

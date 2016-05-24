@@ -16,6 +16,8 @@ import CheckoutApp from "components/CheckoutApp.jsx"
 
 import MultiSelectInput from "lib/MultiSelectInput.jsx"
 
+import LoadSpinner from "lib/LoadSpinner"
+
 class App extends React.Component {
     
   render() {
@@ -45,7 +47,7 @@ class IndexApp extends React.Component {
   
   render() {
     return (
-      <div></div>
+      <LoadSpinner />
     );
   }
 };

@@ -8,7 +8,7 @@ import { Image, Button, Glyphicon } from "react-bootstrap"
 import { Form, FormGroup, FormControl, ControlLabel } from "react-bootstrap"
 import { Grid, Row, Col } from "react-bootstrap"
 
-import styles from "./CheckoutApp.css"
+import styles from "components/CheckoutApp.scss"
 
 import ItemUtil from "utils/ItemUtil"
 
@@ -300,7 +300,7 @@ export default class CheckoutApp extends React.Component {
     
     return (
       <div>
-        <div className="sectionHeader">
+        <div className={styles.sectionHeader}>
           Receipt summary
         </div>
         {itemPriceJsx}
@@ -337,7 +337,7 @@ export default class CheckoutApp extends React.Component {
         
     return (
       <div>
-        <div className="sectionHeader">
+        <div className={styles.sectionHeader}>
           Shipping information
         </div>
         <Form>
@@ -455,7 +455,7 @@ export default class CheckoutApp extends React.Component {
     
     return (
       <div>
-        <div className="sectionHeader">
+        <div className={styles.sectionHeader}>
           Payment information
         </div>
         <Form>
@@ -536,14 +536,14 @@ export default class CheckoutApp extends React.Component {
               </FormGroup>
             </Col>
             <Col xs={6} md={4}>
-              <span className="cvcHelper"><a>What is CVC?</a></span>
+              <span className={styles.cvcHelper}><a>What is CVC?</a></span>
             </Col>
           </Row>
         </Form>
         <Button disabled={!this.state.formFilled || this.state.isSubmitting} 
           onClick={this.handleConfirm}
-          className="submitButton" bsSize="large" block>
-          <div hidden={!this.state.isSubmitting} className="submitSpinner">
+          className={styles.submitButton} bsSize="large" block>
+          <div hidden={!this.state.isSubmitting} className={styles.submitSpinner}>
             <BaseSpinner />
           </div>
           <Glyphicon glyph="lock" />
@@ -562,7 +562,7 @@ export default class CheckoutApp extends React.Component {
   createConfirmation() {
     return (
       <div>
-        <div className="sectionHeader">
+        <div className={styles.sectionHeader}>
           Confirmation
         </div>
         <div>
@@ -577,20 +577,20 @@ export default class CheckoutApp extends React.Component {
     let items = this.state.items;
     
     return (
-      <div className="checkoutApp">
-        <div className="checkoutForm">
+      <div className={styles.checkoutApp}>
+        <div className={styles.checkoutForm}>
           <div hidden={this.state.checkoutFinish}>
-            <div className="summarySection">
+            <div className={styles.summarySection}>
               {this.createSummary()}
             </div>
-            <div className="shippingSection">
+            <div className={styles.shippingSection}>
               {this.createShipping()}
             </div>
-            <div className="paymentSection">
+            <div className={styles.paymentSection}>
               {this.createPayment()}
             </div>
           </div>
-          <div id="confirmationSection" className="confirmationSection" 
+          <div id="confirmationSection" className={styles.confirmationSection} 
             hidden={!this.state.checkoutFinish}>
             {this.createConfirmation()}
           </div>

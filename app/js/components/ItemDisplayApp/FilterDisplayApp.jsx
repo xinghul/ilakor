@@ -4,7 +4,7 @@ import React from "react"
 import ReactCSSTransitionGroup from "react-addons-css-transition-group"
 import { Button, Glyphicon, Grid } from "react-bootstrap"
 
-import styles from "./FilterDisplayApp.css"
+import styles from "components/ItemDisplayApp/FilterDisplayApp.scss"
 
 export default class FilterDisplayApp extends React.Component {
   
@@ -25,13 +25,13 @@ export default class FilterDisplayApp extends React.Component {
       let filterValue = filters[filterType];
       
       jsxFilterItems.push(
-        <div key={filterType} className="filter-item">
-          <div className="filter-item-info">
+        <div key={filterType} className={styles.filterItem}>
+          <div className={styles.filterItemInfo}>
             {filterType}:{filterValue}
           </div>
           <Button 
             onClick={this.removeFilter.bind(this, filterType, filterValue)} 
-            bsSize="small" className="filter-item-remove">
+            bsSize="small" className={styles.filterItemRemove}>
             <Glyphicon glyph="remove" />  
           </Button>
         </div>
@@ -47,7 +47,7 @@ export default class FilterDisplayApp extends React.Component {
     let jsxFilterItems = this.createJsxFilterItems();
     
     return (
-      <div fluid className="filter-display-app">
+      <div fluid className={styles.filterDisplayApp}>
         <ReactCSSTransitionGroup transitionName="filter" 
           transitionEnterTimeout={300} 
           transitionLeaveTimeout={300}>

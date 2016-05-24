@@ -2,7 +2,7 @@
 
 import React from "react"
 
-import styles from "./BaseSpinner.css"
+import styles from "lib/BaseSpinner.scss"
 
 export default class BaseSpinner extends React.Component {
   
@@ -13,8 +13,8 @@ export default class BaseSpinner extends React.Component {
   render() {
     
     return (
-      <div className="spinnerWrapper" {...this.props}>
-        <div className="spinner"></div>
+      <div className={styles.spinnerWrapper} {...this.props}>
+        <div className={styles.spinner}></div>
       </div>
       
     );

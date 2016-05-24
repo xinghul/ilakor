@@ -12,7 +12,7 @@ import ShoppingCartStore from "stores/ShoppingCartStore"
 import ShoppingCartAction from "actions/ShoppingCartAction"
 import ItemUtil from "utils/ItemUtil"
 
-import styles from "./ShoppingCartApp.css"
+import styles from "components/ShoppingCartApp.scss"
 
 function getStateFromStores() {
   return {
@@ -171,12 +171,12 @@ export default class ShoppingCartApp extends React.Component {
     let popover = this.createCartPopover();
     
     return (
-      <div className="shoppingCart">
+      <div className={styles.shoppingCart}>
         <OverlayTrigger 
           trigger="focus" 
           placement="bottom" 
           overlay={popover}>
-          <Button className="cartButton" bsStyle="warning">
+          <Button className={styles.cartButton} bsStyle="warning">
             <Glyphicon glyph="shopping-cart" />
             ({Object.keys(this.state.items).length})
           </Button>

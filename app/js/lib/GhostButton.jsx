@@ -4,7 +4,7 @@ import React from "react"
 import _ from "underscore"
 import { Button } from "react-bootstrap"
 
-import styles from "./GhostButton.css"
+import styles from "lib/GhostButton.scss"
 
 export default class GhostButton extends React.Component {
   
@@ -24,7 +24,7 @@ export default class GhostButton extends React.Component {
     };
     
     return (
-      <Button {...newProps} className="ghostButton" />
+      <Button {...newProps} className={styles.ghostButton} />
     );
   }
 }

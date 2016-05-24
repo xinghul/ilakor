@@ -3,7 +3,7 @@
 import React from "react"
 import { Navbar, Nav, NavItem } from "react-bootstrap"
 
-import styles from "./NavbarApp.css"
+import styles from "components/NavbarApp.scss"
 
 import AuthApp from "./AuthApp.jsx"
 import ShoppingCartApp from "./ShoppingCartApp.jsx"
@@ -27,7 +27,7 @@ export default class NarbarApp extends React.Component {
   render() {
 
     return (
-      <Navbar fluid inverse fixedTop className="navbarApp">
+      <Navbar fluid inverse fixedTop className={styles.navbarApp}>
         <Navbar.Header>
           <Navbar.Brand>
             <a href="#">Cramford</a>

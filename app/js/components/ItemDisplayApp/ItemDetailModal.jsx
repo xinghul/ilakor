@@ -3,7 +3,7 @@
 import React from "react"
 import { Modal, Button } from "react-bootstrap"
 
-import styles from "./ItemDetailModal.css"
+import styles from "components/ItemDisplayApp/ItemDetailModal.scss"
 
 export default class ItemDetailModal extends React.Component {
   

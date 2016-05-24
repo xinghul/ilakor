@@ -18,20 +18,25 @@ let config = {
   },
   resolve: {
     root: [
-      path.resolve("app/js")
+      path.resolve("app/js"),
+      path.resolve("app/stylesheets")
     ],
-    extensions: ['', '.js', '.jsx']
+    extensions: ["", ".js", ".jsx"]
   },
   module: {
     noParse: /node_modules\/json-schema\/lib\/validate\.js/,
     loaders : [
       {
         exclude: /node_modules/,
-        loader: 'babel'
+        loader: "babel"
+      },
+      {
+        test: /\.scss$/,
+        loaders: ["style", "css?modules&importLoaders=1&localIdentName=[name]__[local]___[hash:base64:5]", "sass"]
       },
       {
         test: /\.css$/, 
-        loader: "style-loader!css-loader" 
+        loader: "style-loader!css-loader?modules&importLoaders=1&localIdentName=[name]__[local]___[hash:base64:5]" 
       },
       {
         test: /\.woff($|\?)|\.woff2($|\?)|\.ttf($|\?)|\.eot($|\?)|\.svg($|\?)/,

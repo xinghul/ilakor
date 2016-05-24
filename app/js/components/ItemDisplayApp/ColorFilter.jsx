@@ -2,7 +2,7 @@
 
 import React from "react"
 import { Button, Glyphicon, Panel } from "react-bootstrap"
-import styles from "./ColorFilter.css"
+import styles from "components/ItemDisplayApp/ColorFilter.scss"
 
 export default class ColorFilter extends React.Component {
   
@@ -49,10 +49,10 @@ export default class ColorFilter extends React.Component {
       };
       
       colorItemsJsx.push(
-        <li key={color} className="color-item">
+        <li key={color} className={styles.colorItem}>
           <Button 
             style={style} 
-            className="color-circle"
+            className={styles.colorCircle}
             onClick={this.onColorSelect.bind(this, color)}
           />
         </li>
@@ -60,7 +60,7 @@ export default class ColorFilter extends React.Component {
     }
     
     return (
-      <ul className="color-container">
+      <ul className={styles.colorContainer}>
         {colorItemsJsx}
       </ul>
     )
@@ -84,11 +84,11 @@ export default class ColorFilter extends React.Component {
     
     return (
       <div>
-        <Button className="expand-button" bsSize="xsmall" onClick={this.handleCollapseButtonClick}>
+        <Button className={styles.expandButton} bsSize="xsmall" onClick={this.handleCollapseButtonClick}>
           COLORS
           <Glyphicon glyph={glyph} />
         </Button>
-        <Panel className="color-panel" collapsible expanded={this.state.expanded}>
+        <Panel className={styles.colorPanel} collapsible expanded={this.state.expanded}>
           {this.createColorItems()}
         </Panel>
       </div>

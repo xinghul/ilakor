@@ -12,7 +12,7 @@ import PasswordInput from "./AuthApp/PasswordInput.jsx"
 import AuthStore from "stores/AuthStore"
 import AuthActions from "actions/AuthActions"
 
-import styles from "./AuthApp.css"
+import styles from "components/AuthApp.scss"
 
 function getStateFromStores() {
   return {
@@ -136,7 +136,7 @@ export default class AuthApp extends React.Component {
                    
     let socialLoginArea = (
       <div style={buttonWrapperStyle}>
-        <Button className="loginBtn loginBtnFacebook">
+        <Button className={styles.loginBtn + ' ' + styles.loginBtnFacebook}>
           <a style={linkStyle} href="/auth/facebook">Login with Facebook</a>
         </Button>
       </div>
