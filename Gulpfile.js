@@ -1,7 +1,6 @@
 "use strict";
 
 let gulp       = require("gulp")
-,   jade       = require("gulp-jade")
 ,   sass       = require("gulp-sass")
 ,   gutil      = require("gulp-util")
 ,   nodemon    = require("gulp-nodemon")
@@ -77,14 +76,6 @@ gulp.task("watch:server", function() {
     })
 })
 
-gulp.task("jade", function() {
-  return gulp.src("./build/jade/*.jade")
-    .pipe(jade({
-      pretty: true
-    }))
-    .pipe(gulp.dest("./app/views/"));
-})
-
 gulp.task("sass", function() {
   return gulp.src("./build/sass/*.scss")
     .pipe(sass())
@@ -93,7 +84,7 @@ gulp.task("sass", function() {
 
 gulp.task("watch", ["watch:server", "watch:js"])
 
-gulp.task("default", ["bundle:js", "jade", "sass"], function() {
+gulp.task("default", ["bundle:js", "sass"], function() {
   console.log("Build succeeded.");
 });
 

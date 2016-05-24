@@ -50,8 +50,8 @@ fs.readdirSync(modelsPath).forEach(function(file) {
 *                     Configuration                      *
 **********************************************************/
 app.set("views", path.join(__dirname, "app/views"));
-app.engine("html", require("ejs").renderFile);
-app.set("view engine", "html");
+// app.engine("html", require("ejs").renderFile);
+app.set("view engine", "pug");
 
 app.use(favicon(__dirname + "/app/favicon.ico"));
 // app.enable("trust proxy");
