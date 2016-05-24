@@ -15,16 +15,16 @@ gulp.task("sass", function() {
 
 gulp.task("webpack", function() {
   return gulp
-    .src("app/js/app.js")
+    .src("app/javascripts/app.js")
     .pipe(webpack(webpackConfig))
-    .pipe(gulp.dest("app/js"));
+    .pipe(gulp.dest("app/javascripts"));
 });
 
 gulp.task("webpack:watch", function() {
   return gulp
-    .src("app/js/app.js")
+    .src("app/javascripts/app.js")
     .pipe(webpack(Object.assign({watch: true}, webpackConfig)))
-    .pipe(gulp.dest("app/js"));
+    .pipe(gulp.dest("app/javascripts"));
 });
 
 gulp.task("watch:server", function() {

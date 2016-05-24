@@ -3,7 +3,7 @@
 /**********************************************************
 *                      Load Modules                      *
 **********************************************************/
-// load env letiables first
+// load env variables first
 require("dotenv").load();
 
 let express  = require("express")

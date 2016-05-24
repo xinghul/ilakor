@@ -3,7 +3,7 @@
 let webpack = require("webpack")
 ,   path = require("path");
 
-const APP_DIR = path.resolve(__dirname, "app/js/");
+const APP_DIR = path.resolve(__dirname, "app/javascripts/");
 
 let config = {
   entry: APP_DIR + "/app.js",
@@ -18,7 +18,7 @@ let config = {
   },
   resolve: {
     root: [
-      path.resolve("app/js"),
+      path.resolve("app/javascripts"),
       path.resolve("app/stylesheets")
     ],
     extensions: ["", ".js", ".jsx"]
