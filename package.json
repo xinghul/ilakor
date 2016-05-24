@@ -57,8 +57,7 @@
     "serve-favicon": "~2.2.0",
     "stripe": "^4.6.0",
     "style-loader": "0.13.1",
-    "underscore": "^1.8.3",
-    "when": "^3.7.3"
+    "underscore": "^1.8.3"
   },
   "devDependencies": {
     "babel-core": "^6.8.0",
@@ -70,31 +69,21 @@
     "babel-preset-react": "^6.5.0",
     "babel-preset-stage-0": "^6.5.0",
     "babel-runtime": "^6.3.19",
-    "babelify": "^7.3.0",
-    "browserify": "^13.0.0",
     "chai": "3.5.0",
     "chai-http": "2.0.1",
-    "del": "^2.2.0",
-    "envify": "^3.4.0",
     "extract-text-webpack-plugin": "1.0.1",
     "gulp": "^3.8.11",
     "gulp-nodemon": "2.0.7",
     "gulp-sass": "^2.1.1",
-    "gulp-util": "3.0.7",
     "jest-cli": "^11.0.2",
     "jsdom": "^6.5.1",
     "json-loader": "^0.5.4",
-    "livereactload": "2.2.3",
     "mocha": "2.4.5",
     "node-sass": "3.7.0",
     "react-proxy": "1.1.8",
-    "reactify": "^1.1.1",
     "sass-loader": "3.2.0",
-    "should": "^7.0.1",
-    "vinyl-buffer": "1.0.0",
-    "vinyl-source-stream": "^1.1.0",
-    "watchify": "3.7.0",
-    "webpack": "^1.12.12"
+    "webpack": "^1.12.12",
+    "webpack-stream": "3.2.0"
   },
   "jest": {
     "scriptPreprocessor": "<rootDir>/node_modules/babel-jest",
