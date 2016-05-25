@@ -1,12 +1,13 @@
 "use strict";
 
 let webpack = require("webpack")
-,   path = require("path");
+,   path = require("path")
+,   ExtractTextPlugin = require("extract-text-webpack-plugin");
 
 const APP_DIR = path.resolve(__dirname, "app/javascripts/");
 
 let config = {
-  entry: APP_DIR + "/app.js",
+  entry: APP_DIR + "/app.jsx",
   output: {
     path: APP_DIR,
     filename: "bundle.js"
@@ -23,6 +24,7 @@ let config = {
     ],
     extensions: ["", ".js", ".jsx"]
   },
+  stats: { children: false },
   module: {
     noParse: /node_modules\/json-schema\/lib\/validate\.js/,
     loaders : [
@@ -32,11 +34,11 @@ let config = {
       },
       {
         test: /\.scss$/,
-        loaders: ["style", "css?modules&importLoaders=1&localIdentName=[name]__[local]___[hash:base64:5]", "sass"]
+        loader: ExtractTextPlugin.extract("style-loader", "css-loader?modules&importLoaders=1&localIdentName=[name]__[local]___[hash:base64:5]!sass-loader!postcss-loader")
       },
       {
         test: /\.css$/, 
-        loader: "style-loader!css-loader?modules&importLoaders=1&localIdentName=[name]__[local]___[hash:base64:5]" 
+        loader: ExtractTextPlugin.extract("style-loader", "css-loader?modules&importLoaders=1&localIdentName=[name]__[local]___[hash:base64:5]!postcss-loader")
       },
       {
         test: /\.woff($|\?)|\.woff2($|\?)|\.ttf($|\?)|\.eot($|\?)|\.svg($|\?)/,
@@ -47,7 +49,13 @@ let config = {
         loader: "json-loader" 
       }
     ]
-  }
+  },
+  postcss: function () {
+    return [require("postcss-sorting"), require("autoprefixer")];
+  },
+  plugins: [
+    new ExtractTextPlugin("../stylesheets/bundle.css", { allChunks: true })
+  ]
 };
 
 module.exports = config;

@@ -1,7 +1,7 @@
 "use strict"
 
 import React from "react"
-import { Navbar, Nav, NavItem } from "react-bootstrap"
+import { Navbar, Nav, NavItem, Image } from "react-bootstrap"
 
 import styles from "components/NavbarApp.scss"
 
@@ -27,10 +27,12 @@ export default class NarbarApp extends React.Component {
   render() {
 
     return (
-      <Navbar fluid inverse fixedTop className={styles.navbarApp}>
+      <Navbar fluid inverse fixedBottom className={styles.navbarApp}>
         <Navbar.Header>
           <Navbar.Brand>
-            <a href="#">Cramford</a>
+            <a href="#">
+              <Image alt="Cramford" src="/images/logo.png" />
+            </a>
           </Navbar.Brand>
         </Navbar.Header>
         <Nav>
