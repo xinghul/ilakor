@@ -81,8 +81,8 @@ router.route("/user")
       }
     });
   }).catch(function(err) {
-    if (err.collision) {
-      res.status(400).json(err);
+    if (err.status === 422) {
+      next(err);
     } else {
       console.log(err.stack);
       

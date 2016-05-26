@@ -1,12 +1,10 @@
 "use strict";
 
-import request from "request"
+import request from "superagent-bluebird-promise"
 import Promise from "bluebird"
 
 import AppDispatcher from "dispatcher/AppDispatcher"
 import ItemManageConstants from "constants/ItemManageConstants"
-
-const API_URL = `${window.location.protocol}//${window.location.hostname}:${window.location.port}/api/`;
 
 let ItemManageAction = {
   
@@ -19,28 +17,20 @@ let ItemManageAction = {
     
     return new Promise(function(resolve, reject) {
       
-      request.get({
-        url: API_URL + "items"
-      }, function(err, response) {
-        if (err) {
+      request.get("/api/items")
+        .then(function(res) {
+          let items = res.body;
+          
+          AppDispatcher.handleAction({
+            actionType: ItemManageConstants.RECEIVED_ITEMS_RESET,
+            items: items
+          });
+          
+          resolve();
+        })
+        .catch(function(err) {
           reject(err);
-        } else {
-          // make sure the response status code is 200
-          if (response.statusCode === 200) {
-            let items = JSON.parse(response.body);
-            
-            AppDispatcher.handleAction({
-              actionType: ItemManageConstants.RECEIVED_ITEMS_RESET,
-              items: items
-            });
-            
-            resolve();
-            
-          } else {
-            reject(JSON.parse(response.body));
-          }
-        }
-      });
+        });
       
     });
   },
@@ -132,34 +122,22 @@ let ItemManageAction = {
     
     return new Promise(function(resolve, reject) {
       
-      request.put({
-        url: API_URL + "items",
-        qs: {
-          id: id
-        },
-        form: {
-          item: JSON.stringify(newValue)
-        }
-      }, function(err, response, body) {
-        if (err) {
+      request.put("/api/items")
+        .query({id: id})
+        .send({item: JSON.stringify(newValue)})
+        .then(function(res) {
+          let newItem = res.body;
+          
+          AppDispatcher.handleAction({
+            actionType: ItemManageConstants.RECEIVED_UPDATED_ITEM,
+            item: newItem
+          });
+          
+          resolve();
+        })
+        .catch(function(err) {
           reject(err);
-        } else {
-          // make sure the response status code is 200
-          if (response.statusCode === 200) {
-            let newItem = JSON.parse(body);
-            
-            AppDispatcher.handleAction({
-              actionType: ItemManageConstants.RECEIVED_UPDATED_ITEM,
-              item: newItem
-            });
-            
-            resolve();
-            
-          } else {
-            reject(JSON.parse(response.body));
-          }
-        }
-      });
+        });
       
     });
   },
@@ -175,30 +153,19 @@ let ItemManageAction = {
     
     return new Promise(function(resolve, reject) {
       
-      request.del({
-        url: API_URL + "items",
-        qs: {
-          id: id
-        }
-      }, function(err, response, body) {
-        if (err) {
+      request.del("/api/items")
+        .query({id: id})
+        .then(function(res) {
+          AppDispatcher.handleAction({
+            actionType: ItemManageConstants.RECEIVED_REMOVED_ITEM_ID,
+            id: id
+          });
+          
+          resolve();
+        })
+        .catch(function(err) {
           reject(err);
-        } else {
-          // make sure the response status code is 200
-          if (response.statusCode === 200) {
-            
-            AppDispatcher.handleAction({
-              actionType: ItemManageConstants.RECEIVED_REMOVED_ITEM_ID,
-              id: id
-            });
-            
-            resolve();
-            
-          } else {
-            reject(JSON.parse(response.body));
-          }
-        }
-      });
+        });
       
     });
   },
@@ -212,28 +179,20 @@ let ItemManageAction = {
     
     return new Promise(function(resolve, reject) {
       
-      request.get({
-        url: API_URL + "tags"
-      }, function(err, response) {
-        if (err) {
+      request.get("/api/tags")
+        .then(function(res) {
+          let tags = res.body;
+          
+          AppDispatcher.handleAction({
+            actionType: ItemManageConstants.RECEIVED_ALL_TAGS,
+            tags: tags
+          });
+          
+          resolve();
+        })
+        .catch(function(err) {
           reject(err);
-        } else {
-          // make sure the response status code is 200
-          if (response.statusCode === 200) {
-            let tags = JSON.parse(response.body);
-            
-            AppDispatcher.handleAction({
-              actionType: ItemManageConstants.RECEIVED_ALL_TAGS,
-              tags: tags
-            });
-            
-            resolve();
-            
-          } else {
-            reject(JSON.parse(response.body));
-          }
-        }
-      });
+        });
       
     });
   }

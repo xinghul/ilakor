@@ -1,13 +1,12 @@
 "use strict";
 
-import request from "request"
+import request from "superagent-bluebird-promise"
 import Promise from "bluebird"
 
 import AppDispatcher from "dispatcher/AppDispatcher"
 import ItemDisplayConstants from "constants/ItemDisplayConstants"
 
-const LOAD_SIZE = 20
-,     API_URL = `${window.location.protocol}//${window.location.hostname}:${window.location.port}/api/items`;
+const LOAD_SIZE = 20;
 
 let _skip = 0;
 
@@ -26,38 +25,28 @@ let ItemDisplayAction = {
     ,   limit = LOAD_SIZE;
     
     return new Promise(function(resolve, reject, onCancel) {
-      let _request = request.get({
-        url: API_URL,
-        qs: {
-          skip: skip,
+      let _request = request.get("/api/items")
+        .query({
+          skip: skip, 
           limit: limit
-        }
-      }, function(err, response) {
-
-        if (err) {
+        })
+        .then(function(res) {
+          let items = res.body;
+          
+          AppDispatcher.handleAction({
+            actionType: ItemDisplayConstants.RECEIVED_ITEMS,
+            items: items
+          });
+          
+          _skip += items.length;
+          
+          resolve(); 
+        }).catch(function(err) {
           reject(err);
-        } else {
-          // make sure the response status code is 200
-          if (response.statusCode === 200) {
-            let items = JSON.parse(response.body);
-            
-            AppDispatcher.handleAction({
-              actionType: ItemDisplayConstants.RECEIVED_ITEMS,
-              items: items
-            });
-            
-            _skip += items.length;
-            
-            resolve(); 
-                       
-          } else {
-            reject(JSON.parse(response.body));
-          }
-        }
-      });
+        });
       
       onCancel(() => {
-        _request.abort();
+        _request.cancel();
       });
     });
   },

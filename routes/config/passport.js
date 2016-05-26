@@ -48,6 +48,7 @@ module.exports = {
       usernameField: "email",
       passwordField: "password"
     }, function(email, password, done) {
+      console.log(email, password);
 
       process.nextTick(function () {
         
@@ -56,12 +57,12 @@ module.exports = {
           if (err) {
             done(err);
           } else if (!user) {
-            done(null, false, {
-              "emailError": "Email is not registered."
+            done(null, null, {
+              message: "Email is not registered."
             });
           } else if (!user.authenticate(password)) {
-            done(null, false, {
-              "passwordError": "Password is incorrect."
+            done(null, null, {
+              message: "Password is incorrect."
             });
           } else {
             done(null, user);

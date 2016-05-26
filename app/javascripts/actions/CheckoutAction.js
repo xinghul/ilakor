@@ -1,12 +1,10 @@
 "use strict";
 
-import request from "request"
+import request from "superagent-bluebird-promise"
 import Promise from "bluebird"
 import _ from "underscore"
 
 import AppDispatcher from "dispatcher/AppDispatcher"
-
-const API_URL = `${window.location.protocol}//${window.location.hostname}:${window.location.port}/charge`;
 
 let CheckoutAction = {
   
@@ -52,18 +50,15 @@ let CheckoutAction = {
           items: Object.keys(state.items)
         };
         
-        request.post({
-          url: API_URL,
-          form: {
-            charge: JSON.stringify(charge)
-          }
-        }, function(err, response, body) {
-          if (err) {
+        request.post("/charge")
+          .send({charge: JSON.stringify(charge)})
+          .then(function(res) {
+            resolve(res.body);
+          })
+          .catch(function(err) {
             reject(err);
-          } else {
-            resolve(body);
-          }
-        });
+          });
+          
       });
 
     });

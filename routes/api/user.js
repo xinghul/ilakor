@@ -3,6 +3,8 @@
 let mongoose = require("mongoose")
 ,   bluebird = require("bluebird");
 
+let ValidationError = require("../utils/ValidationError");
+
 let User     = mongoose.model("User")
 ,   ObjectId = mongoose.Types.ObjectId;
 
@@ -26,19 +28,13 @@ let UserApi = {
       user.save(function(err, newUser) {
         if (err) {
           if (err.errors) {
-            let errObj = {};
-            
-            errObj["collision"] = true;
-
             if (err.errors["local.username"]) {
-              errObj["usernameError"] = err.errors["local.username"].message;
+              return reject(new ValidationError(err.errors["local.username"].message));
             }
 
             if (err.errors["local.email"]) {
-              errObj["emailError"] = err.errors["local.email"].message;
+              return reject(new ValidationError(err.errors["local.email"].message));
             }
-
-            return reject(errObj);
           }
           
           reject(err);

@@ -74,8 +74,8 @@ router.route("/items")
       next(new CustomError(500, "Internal error"));
     });
   } else {
-    limit = req.query.limit;
-    skip = req.query.skip;
+    limit = req.query.limit || req.params.limit;
+    skip = req.query.skip || req.params.skip;
     
     Item.getAll(skip, limit).then(function(items) {
       res.status(200).json(items);

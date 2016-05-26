@@ -1,4 +1,4 @@
-+function(undefined){
+"use strict";
 
 function CustomError(status, message) {
   Error.call(this);
@@ -10,5 +10,3 @@ function CustomError(status, message) {
 CustomError.prototype = Object.create(Error.prototype);
 
 module.exports = CustomError;
-
-}();

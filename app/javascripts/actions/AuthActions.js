@@ -1,6 +1,6 @@
 "use strict";
 
-import request from "request"
+import request from "superagent-bluebird-promise"
 import ReactCookie from "react-cookie"
 import Promise from "bluebird"
 
@@ -15,35 +15,30 @@ let AuthActions = {
     
     return new Promise(function(resolve, reject) {
       
-      request.post({
-        url: API_URL + "session",
-        form: {
-          "email": user.email,
-          "password": user.password
-        }
-      }, function(err, res) {
-        if (err) {
-          reject(err);
-        } else {
-          if (res.statusCode === 200) {
-            let response = JSON.parse(res.body)
-            ,   newUser  = response.user
-            ,   token    = response.token;
-            
-            // save jwt token into the cookie
-            ReactCookie.save("token", token);
+      request.post("/auth/session")
+        .send({email: user.email, password: user.password})
+        .then(function(res) {
+          let data = res.body
+          ,   newUser = data.user
+          ,   token = data.token;
+          
+          // save jwt token into the cookie
+          ReactCookie.save("token", token);
 
-            AppDispatcher.handleAction({
-              actionType: AuthConstants.RECEIVED_USER,
-              user: newUser
-            });
+          AppDispatcher.handleAction({
+            actionType: AuthConstants.RECEIVED_USER,
+            user: newUser
+          });
 
-            resolve();
+          resolve();
+        })
+        .catch(function(err) {
+          if (err.status === 422) {
+            reject(err);            
           } else {
-            reject(JSON.parse(res.body));
+            resolve();
           }
-        }
-      });
+        });
       
     });
   },
@@ -51,34 +46,32 @@ let AuthActions = {
   userSignUp: function(user) {
     
     return new Promise(function(resolve, reject) {
-      // XXX check if all the fields are non-empty
-      request.post({
-        url: API_URL + "user",
-        form: {
-          user: JSON.stringify({
-            "local.email": user.email,
-            "local.username": user.username,
-            "local.password": user.password
-          })
-        }
-      }, function(err, res) {
-        if (err) {
-          reject(err);
-        } else {
-          if (res.statusCode === 200) {
-            let newUser = JSON.parse(res.body);
-
-            AppDispatcher.handleAction({
-              actionType: AuthConstants.RECEIVED_USER,
-              user: newUser
-            });
-
-            resolve();
-          } else {
-            reject(JSON.parse(res.body));
-          }
-        }
+      
+      let userInfo = JSON.stringify({
+        "local.email": user.email,
+        "local.username": user.username,
+        "local.password": user.password
       });
+      
+      request.post("/auth/user")
+        .send({user: userInfo})
+        .then(function(res) {
+          let newUser = res.body;
+
+          AppDispatcher.handleAction({
+            actionType: AuthConstants.RECEIVED_USER,
+            user: newUser
+          });
+
+          resolve();
+        })
+        .catch(function(err) {
+          if (err.status === 422) {
+            reject(err);            
+          } else {
+            resolve();
+          }
+        });
 
     });
   },
@@ -98,26 +91,20 @@ let AuthActions = {
     
     return new Promise(function(resolve, reject) {
       
-      request.del({
-        url: API_URL + "session"
-      }, function(err, res) {
-        if (err) {
-          reject(err);
-        } else {
-          if (res.statusCode === 200) {
-            ReactCookie.remove("user");
-            
-            AppDispatcher.handleAction({
-              actionType: AuthConstants.RECEIVED_USER,
-              user: {}
-            });
+      request.del("/auth/session")
+        .then(function(res) {
+          ReactCookie.remove("user");
+          
+          AppDispatcher.handleAction({
+            actionType: AuthConstants.RECEIVED_USER,
+            user: {}
+          });
 
-            resolve();
-          } else {
-            reject(res.body);
-          }
-        }
-      });
+          resolve();
+        })
+        .catch(function(err) {
+          reject(err);
+        });
       
     });
   }

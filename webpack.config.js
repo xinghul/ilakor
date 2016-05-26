@@ -12,11 +12,6 @@ let config = {
     path: APP_DIR,
     filename: "bundle.js"
   },
-  node: {
-    fs: "empty",
-    net: "empty",
-    tls: "empty"
-  },
   resolve: {
     root: [
       path.resolve("app/javascripts"),

@@ -33,7 +33,9 @@ export default class AuthApp extends React.Component {
       
       username: "",
       email: "",
-      password: ""
+      password: "",
+      
+      errorMessage: ""
     };
   }
   
@@ -74,10 +76,12 @@ export default class AuthApp extends React.Component {
 
     }).then(function() {
       AuthActions.toggleModal();
-    }).catch(function(err) {
+    }).catch((err) => {
       console.log(err);
-
-      self.setState(err);
+      
+      this.setState({
+        errorMessage: err.body.message
+      });
     });
   };
   
@@ -92,10 +96,12 @@ export default class AuthApp extends React.Component {
 
     }).then(function() {
       AuthActions.toggleModal();
-    }).catch(function(err) {
+    }).catch((err) => {
       console.log(err);
-
-      self.setState(err);
+      
+      this.setState({
+        errorMessage: err.body.message
+      });
     });
   };
   
@@ -171,9 +177,18 @@ export default class AuthApp extends React.Component {
     let authArea;
     let toggleModeMessage;
     let socialLoginArea;
+    let user = this.state.user;
 
-    if (this.state.user && this.state.user._id) {
-      let title = "Hello, " + this.state.user.facebook.nickname;
+    if (user && user._id) {
+      let username = do {
+        if (user.local) {
+          user.local.username
+        } else if (user.facebook) {
+          user.facebook.nickname
+        }
+      }
+      
+      let title = "Hello, " + username;
       
       authArea =
         <SplitButton id="sign-in" title={title} bsStyle="default" pullRight>
