@@ -72,7 +72,7 @@ export default class ItemDisplayApp extends React.Component {
     {
       _addItemPromise.cancel();
     }
-    
+
     let newState = getStateFromStores()
     ,   items = this.state.items;
 
@@ -186,7 +186,7 @@ export default class ItemDisplayApp extends React.Component {
           onClose={this.onItemDetailModalClose}
         />
       <div className={styles.mainContent}>
-          <div className={styles.filterSection}>
+          <div className={styles.filterDisplaySection}>
             <ItemFilterApp />
           </div>
           <div className={styles.itemDisplaySection}>

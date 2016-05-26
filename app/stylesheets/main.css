@@ -70,9 +70,6 @@ a {
   transform: translateX(-100%);
   transition: transform 300ms ease-in-out; }
 
-#mainContent {
-  margin-top: 70px; }
-
 .mainColor {
   color: white;
   background-color: #3B2F25; }
@@ -80,3 +77,6 @@ a {
 .mainColorReverse {
   color: #3B2F25;
   background-color: white; }
+
+#mainContent {
+  margin-top: 70px; }

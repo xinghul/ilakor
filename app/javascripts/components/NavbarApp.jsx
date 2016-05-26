@@ -27,11 +27,11 @@ export default class NarbarApp extends React.Component {
   render() {
 
     return (
-      <Navbar fluid inverse fixedBottom className={styles.navbarApp}>
+      <Navbar fluid inverse fixedTop className={styles.navbarApp}>
         <Navbar.Header>
           <Navbar.Brand>
             <a href="#">
-              <Image alt="Cramford" src="/images/logo.png" />
+              <Image className={styles.brandImg} alt="Cramford" src="/images/logo.png" />
             </a>
           </Navbar.Brand>
         </Navbar.Header>

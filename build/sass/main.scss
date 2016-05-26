@@ -4,10 +4,6 @@ $app-font: "Source Sans Pro", sans-serif, Helvetica Neue;
 @import "base";
 @import "partials";
 
-#mainContent {
-  margin-top: 70px;
-}
-
 .mainColor {
   color: white;
   background-color: #3B2F25;
@@ -16,4 +12,8 @@ $app-font: "Source Sans Pro", sans-serif, Helvetica Neue;
 .mainColorReverse {
   color: #3B2F25;
   background-color: white;
+}
+
+#mainContent {
+  margin-top: 70px;
 }
