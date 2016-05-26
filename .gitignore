@@ -1,5 +1,4 @@
 node_modules/
-app/bower_components
 npm-debug.log
 app/javascripts/bundle.js
 app/stylesheets/bundle.css

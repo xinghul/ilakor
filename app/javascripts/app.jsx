@@ -1,11 +1,13 @@
 "use strict";
 
+// import this first for overwrite reason
+import bootstrapStyles from "bootstrap/dist/css/bootstrap.min.css"
+
 import React from "react"
 import { render } from "react-dom"
 import ReactCSSTransitionGroup from "react-addons-css-transition-group"
 import { Router, Route, IndexRoute, Link, hashHistory } from "react-router"
 import { Form, FormGroup, FormControl, ControlLabel } from "react-bootstrap"
-import createBrowserHistory from 'history/lib/createBrowserHistory'
 
 import ItemDisplayApp from "components/ItemDisplayApp.jsx"
 import ItemManageApp from "components/ItemManageApp.jsx"
