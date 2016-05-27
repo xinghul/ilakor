@@ -1,7 +1,7 @@
 "use strict";
 
 let gulp = require("gulp")
-,   gutil = require("gulp-util")
+,   plumber = require("gulp-plumber")
 ,   sass = require("gulp-sass")
 ,   nodemon = require("gulp-nodemon")
 ,   webpack = require("webpack-stream");
@@ -25,7 +25,7 @@ gulp.task("webpack:watch", function() {
   return gulp
     .src("app/javascripts/app.jsx")
     .pipe(webpack(Object.assign({watch: true}, webpackConfig)))
-    .on("error", gutil.log)
+    .pipe(plumber())
     .pipe(gulp.dest("app/javascripts"));
 });
 

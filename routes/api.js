@@ -4,7 +4,7 @@ let express    = require("express")
 ,   fs         = require("fs")
 ,   multiparty = require("multiparty")
 ,   jwt        = require("jsonwebtoken")
-,   _          = require("underscore");
+,   _          = require("lodash");
 
 let router = express.Router()
 ,   Item   = require("./api/item")

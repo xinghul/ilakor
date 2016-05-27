@@ -5,7 +5,7 @@ import { Button, Glyphicon, Accordion, Panel } from "react-bootstrap"
 
 import styles from "components/ItemDisplayApp/ItemFilterApp.scss"
 
-import ColorFilter from "./ColorFilter.jsx"
+import ColorFilter from "./ColorFilter"
 import ItemDisplayStore from "stores/ItemDisplayStore"
 
 function getStateFromStores() {

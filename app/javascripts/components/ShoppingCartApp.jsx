@@ -1,13 +1,13 @@
 "use strict"
 
 import React from "react"
-import _ from "underscore"
+import _ from "lodash"
 
 import { Glyphicon, OverlayTrigger, Popover, MenuItem } from "react-bootstrap"
 import { Image, Button, SplitButton } from "react-bootstrap"
 import { Grid, Row, Col } from "react-bootstrap"
 
-import CheckoutApp from "components/CheckoutApp.jsx"
+import CheckoutApp from "components/CheckoutApp"
 import ShoppingCartStore from "stores/ShoppingCartStore"
 import ShoppingCartAction from "actions/ShoppingCartAction"
 import ItemUtil from "utils/ItemUtil"

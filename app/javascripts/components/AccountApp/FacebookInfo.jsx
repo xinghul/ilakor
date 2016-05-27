@@ -1,9 +1,9 @@
 "use strict";
 
 import React from "react"
-import _ from "underscore"
+import _ from "lodash"
 
-import FacebookButton from "lib/SocialButton/FacebookButton.jsx"
+import FacebookButton from "lib/SocialButton/FacebookButton"
 
 import AccountAction from "actions/AccountAction"
 

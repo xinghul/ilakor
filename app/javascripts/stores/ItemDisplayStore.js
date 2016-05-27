@@ -1,6 +1,6 @@
 "use strict";
 
-import _ from "underscore"
+import _ from "lodash"
 import invariant from "invariant"
 import { EventEmitter } from "events"
 

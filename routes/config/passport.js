@@ -2,7 +2,7 @@
 "use strict";
 
 let mongoose = require("mongoose")
-,   _        = require("underscore")
+,   _        = require("lodash")
 ,   passport = require("passport");
 
 let FB = require("fb");

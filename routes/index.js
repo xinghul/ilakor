@@ -1,7 +1,7 @@
 "use strict";
 
 let express = require("express")
-,   _       = require("underscore");
+,   _       = require("lodash");
 
 let api     = require("./api")
 ,   auth    = require("./auth")

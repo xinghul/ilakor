@@ -9,14 +9,14 @@ import ReactCSSTransitionGroup from "react-addons-css-transition-group"
 import { Router, Route, IndexRoute, Link, hashHistory } from "react-router"
 import { Form, FormGroup, FormControl, ControlLabel } from "react-bootstrap"
 
-import ItemDisplayApp from "components/ItemDisplayApp.jsx"
-import ItemManageApp from "components/ItemManageApp.jsx"
-import AccountApp from "components/AccountApp.jsx"
-import NavbarApp from "components/NavbarApp.jsx"
-import SocialApp from "components/SocialApp.jsx"
-import CheckoutApp from "components/CheckoutApp.jsx"
+import ItemDisplayApp from "components/ItemDisplayApp"
+import ItemManageApp from "components/ItemManageApp"
+import AccountApp from "components/AccountApp"
+import NavbarApp from "components/NavbarApp"
+import SocialApp from "components/SocialApp"
+import CheckoutApp from "components/CheckoutApp"
 
-import MultiSelectInput from "lib/MultiSelectInput.jsx"
+import MultiSelectInput from "lib/MultiSelectInput"
 
 class App extends React.Component {
     

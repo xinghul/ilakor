@@ -4,8 +4,8 @@ import React from "react"
 import { Grid, Row, Col } from "react-bootstrap"
 
 import AuthStore from "stores/AuthStore"
-import LocalInfo from "./AccountApp/LocalInfo.jsx"
-import FacebookInfo from "./AccountApp/FacebookInfo.jsx"
+import LocalInfo from "./AccountApp/LocalInfo"
+import FacebookInfo from "./AccountApp/FacebookInfo"
 
 function getStateFromStores() {
   return {

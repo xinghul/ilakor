@@ -5,8 +5,8 @@ import { Navbar, Nav, NavItem, Image } from "react-bootstrap"
 
 import styles from "components/NavbarApp.scss"
 
-import AuthApp from "./AuthApp.jsx"
-import ShoppingCartApp from "./ShoppingCartApp.jsx"
+import AuthApp from "./AuthApp"
+import ShoppingCartApp from "./ShoppingCartApp"
 
 export default class NarbarApp extends React.Component {
   

@@ -1,6 +1,6 @@
 "use strict";
 
-import _ from "underscore"
+import _ from "lodash"
 import { EventEmitter } from "events"
 
 import AppDispatcher from "dispatcher/AppDispatcher"

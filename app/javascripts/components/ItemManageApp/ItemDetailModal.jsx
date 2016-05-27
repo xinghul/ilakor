@@ -1,25 +1,29 @@
 "use strict"
 
 import React from "react"
-import { Modal, Button, Tooltip } from "react-bootstrap"
+import _ from "lodash"
+import { Form, Modal, Button, Tooltip } from "react-bootstrap"
 
 import BaseInput from "lib/BaseInput"
 
-export default class BaseModal extends React.Component {
+export default class ItemDetailModal extends React.Component {
   
   constructor(props) {
     super(props);
   }
   
   onApply = () => {
-    let itemInfo = this.props.item
+    let item = this.props.item
     ,   newValue = {};
     
-    for (let key in itemInfo)
+    for (let key in item)
     {
-      newValue[key] = this.refs[key].getValue();
+      if (!_.isEmpty(this.refs[key]))
+      {
+        newValue[key] = this.refs[key].getValue();        
+      }
     }
-    
+
     this.props.onApply(newValue);
   };
   
@@ -31,37 +35,34 @@ export default class BaseModal extends React.Component {
     this.props.onClose();
   };
   
-  createKeyValueForm(itemInfo) {
-    let formItems = [];
+  createKeyValueForm() {
+    let item = this.props.item;
     
-    for (let key in itemInfo)
-    {
-      let isDisabled = false;
-      // mark is as disabled 
-      if (key === "_id" || key === "__v") {
-        isDisabled = true;
-      }
-      
-      formItems.push(
-        <BaseInput 
-          key={key}
-          type="text"
-          label={key}
-          ref={key}
-          disabled={isDisabled}
-          defaultValue={itemInfo[key]}
-        />        
-      );
+    if (_.isEmpty(item)) {
+      return;
     }
 
-    return formItems;
+    return (
+      <Form>
+        <BaseInput 
+          type="text"
+          label="_id"
+          disabled={true}
+          defaultValue={item._id}
+        />
+        <BaseInput 
+          type="text"
+          label="Name"
+          ref="name"
+          defaultValue={item.name}
+        />
+      </Form>
+    );
   }
 
   render() {
     
-    let itemInfo = this.props.item;
-    
-    let keyValueForm = this.createKeyValueForm(itemInfo);
+    let keyValueForm = this.createKeyValueForm();
 
     return (
       <Modal show={this.props.showModal} onHide={this.onClose}>
@@ -81,7 +82,7 @@ export default class BaseModal extends React.Component {
   }
 }
 
-BaseModal.propTypes = { 
+ItemDetailModal.propTypes = { 
   // required props
   showModal: React.PropTypes.bool.isRequired,
   onClose: React.PropTypes.func.isRequired,
@@ -91,7 +92,7 @@ BaseModal.propTypes = {
   item: React.PropTypes.object
 };
 
-BaseModal.defaultProps = {
+ItemDetailModal.defaultProps = {
   onApply: function() {},
   onDelete: function() {},
   

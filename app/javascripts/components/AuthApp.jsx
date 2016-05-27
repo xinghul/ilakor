@@ -1,13 +1,13 @@
 "use strict";
 
 import React from "react"
-import _ from "underscore"
+import _ from "lodash"
 import { Button, Form, SplitButton, MenuItem, Modal } from "react-bootstrap"
 
-import GhostButton from "lib/GhostButton.jsx"
-import EmailInput from "./AuthApp/EmailInput.jsx"
-import UsernameInput from "./AuthApp/UsernameInput.jsx"
-import PasswordInput from "./AuthApp/PasswordInput.jsx"
+import GhostButton from "lib/GhostButton"
+import EmailInput from "./AuthApp/EmailInput"
+import UsernameInput from "./AuthApp/UsernameInput"
+import PasswordInput from "./AuthApp/PasswordInput"
 
 import AuthStore from "stores/AuthStore"
 import AuthActions from "actions/AuthActions"

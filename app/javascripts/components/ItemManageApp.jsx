@@ -1,14 +1,14 @@
 "use strict"
 
-import _ from "underscore"
+import _ from "lodash"
 
 import React from "react"
 import { Grid, Row, Col } from "react-bootstrap"
 import { FormGroup, FormControl, ControlLabel } from "react-bootstrap"
 import { Modal, Table, Label, Glyphicon, Button } from "react-bootstrap"
 
-import BaseInput from "lib/BaseInput.jsx"
-import BaseModal from "lib/BaseModal.jsx"
+import BaseInput from "lib/BaseInput"
+import ItemDetailModal from "./ItemManageApp/ItemDetailModal"
 
 import ItemManageAction from "actions/ItemManageAction"
 import ItemManageStore from "stores/ItemManageStore"
@@ -496,7 +496,7 @@ export default class ItemManageApp extends React.Component {
     let itemListForm = this.createItemListTable();
     
     let itemInfoModal = (
-      <BaseModal 
+      <ItemDetailModal 
         showModal={this.state.showItemInfoModal} 
         item={this.state.selectedItem}
         onClose={this.onItemInfoModalClose}

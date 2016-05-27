@@ -2,7 +2,7 @@
 
 let express  = require("express")
 ,   passport = require("passport")
-,   _        = require("underscore")
+,   _        = require("lodash")
 ,   router   = express.Router();
 
 let User    = require("./api/user")

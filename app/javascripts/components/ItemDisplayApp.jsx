@@ -3,15 +3,15 @@
 import React from "react"
 import Promise from "bluebird"
 
-import BaseGrid from "lib/BaseGrid.jsx"
-import LoadSpinner from "lib/LoadSpinner.jsx"
+import BaseGrid from "lib/BaseGrid"
+import LoadSpinner from "lib/LoadSpinner"
 
 import ItemDisplayStore from "stores/ItemDisplayStore"
 import ItemDisplayAction from "actions/ItemDisplayAction"
 import ShoppingCartAction from "actions/ShoppingCartAction"
-import ItemDetailModal from "./ItemDisplayApp/ItemDetailModal.jsx"
-import ItemFilterApp from "./ItemDisplayApp/ItemFilterApp.jsx"
-import FilterDisplayApp from "./ItemDisplayApp/FilterDisplayApp.jsx"
+import ItemDetailModal from "./ItemDisplayApp/ItemDetailModal"
+import ItemFilterApp from "./ItemDisplayApp/ItemFilterApp"
+import FilterDisplayApp from "./ItemDisplayApp/FilterDisplayApp"
 
 import styles from "components/ItemDisplayApp.scss"
 

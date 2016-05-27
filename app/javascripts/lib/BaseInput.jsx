@@ -1,7 +1,7 @@
 "use strict"
 
 import React from "react"
-import _ from "underscore"
+import _ from "lodash"
 import { FormGroup, InputGroup, FormControl, ControlLabel, Glyphicon } from "react-bootstrap"
 
 export default class BaseInput extends React.Component {
@@ -13,8 +13,16 @@ export default class BaseInput extends React.Component {
   handleChange = (evt) => {
     let newValue = evt.target.value;
 
+    this.setState({
+      value: newValue
+    });
+
     this.props.handleChange(newValue);
   };
+  
+  getValue() {
+    return this.state.value;
+  }
 
   render() {
     

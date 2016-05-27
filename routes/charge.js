@@ -1,7 +1,7 @@
 "use strict";
 
 let express = require("express")
-,   _       = require("underscore")
+,   _       = require("lodash")
 ,   stripe  = require("stripe")("sk_test_jkhA0OtH2wJTqnQYt0hZAbLQ");
 
 let router = express.Router();

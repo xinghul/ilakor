@@ -1,7 +1,7 @@
 "use strict";
 
 import React from "react"
-import _ from "underscore"
+import _ from "lodash"
 import getCardTypes from "credit-card-type"
 import CreditCard from "credit-card"
 import { Image, Button, Glyphicon } from "react-bootstrap"
@@ -12,7 +12,7 @@ import styles from "components/CheckoutApp.scss"
 
 import ItemUtil from "utils/ItemUtil"
 
-import BaseSpinner from "lib/BaseSpinner.jsx"
+import BaseSpinner from "lib/BaseSpinner"
 
 import ShoppingCartStore from "stores/ShoppingCartStore"
 import CheckoutStore from "stores/CheckoutStore"

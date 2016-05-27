@@ -2,7 +2,7 @@
 
 import request from "superagent-bluebird-promise"
 import Promise from "bluebird"
-import _ from "underscore"
+import _ from "lodash"
 
 import AppDispatcher from "dispatcher/AppDispatcher"
 

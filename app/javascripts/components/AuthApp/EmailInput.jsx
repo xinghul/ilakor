@@ -1,7 +1,7 @@
 "use strict";
 
 import React from "react"
-import BaseInput from "lib/BaseInput.jsx"
+import BaseInput from "lib/BaseInput"
 
 function isValidEmail(email) {
   let validEmailReg = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i;

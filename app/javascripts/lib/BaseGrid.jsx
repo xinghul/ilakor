@@ -7,8 +7,8 @@ import { Carousel, CarouselItem } from "react-bootstrap"
 
 import styles from "lib/BaseGrid.scss"
 
-import BaseCarousel from "./BaseCarousel.jsx"
-import BaseItem from "./BaseItem.jsx"
+import BaseCarousel from "./BaseCarousel"
+import BaseItem from "./BaseItem"
 
 export default class BaseGrid extends React.Component {
   
