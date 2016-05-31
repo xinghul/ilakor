@@ -40,16 +40,16 @@ describe("Items", function() {
     let rawData = {
       name: itemName,
       tag: ["TABLE"],
-      weight: 100,
-      feature: {
-        price: 3100, 
-        stock: 1
+      price: {
+        base: 3100
       },
       dimension: {
-        length: 11,
-        width: 12,
-        height: 13
-      }
+        baseWidth: 11,
+        baseHeight: 12,
+        baseDepth: 13,
+        weight: 100
+      },
+      stock: 1
     };
     
     chai.request(server)

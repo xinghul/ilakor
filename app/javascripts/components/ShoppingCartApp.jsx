@@ -83,7 +83,7 @@ function createCartPopoverItem(itemInfo) {
         </div>
         <div style={priceCountStyle}>
           <span style={priceStyle}>
-            {ItemUtil.createPriceJsx(item.feature.price)}
+            {ItemUtil.createPriceJsx(item.price.base)}
           </span>
           <SplitButton 
             onSelect={handleCountSelect.bind(this, item._id)}

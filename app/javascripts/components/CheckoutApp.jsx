@@ -286,8 +286,8 @@ export default class CheckoutApp extends React.Component {
       
       itemPriceJsx.push(
         <div key={key} style={subStyle}>
-          <span style={subLabelStyle}>{item.item.feature.price} x {item.count} {item.item.name}</span>
-          <span style={subPriceStyle}>{ItemUtil.createPriceJsx(item.item.feature.price * item.count)}</span>
+          <span style={subLabelStyle}>{item.item.price.base} x {item.count} {item.item.name}</span>
+          <span style={subPriceStyle}>{ItemUtil.createPriceJsx(item.item.price.base * item.count)}</span>
         </div>
       );
     }

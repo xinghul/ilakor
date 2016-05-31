@@ -31,14 +31,9 @@ export default class ItemManageApp extends React.Component {
       
       // new item info
       name: "",
-      weight: "",
       tag: [],
-      unitNumber: "",
-      unitName: "",
-      unitType: "",
       image: null,
       price: "",
-      stock: "",
       imagePreviewUrl: "",
       
       // items used to initialize the item display table
@@ -72,23 +67,17 @@ export default class ItemManageApp extends React.Component {
    */
   handleSubmit = () => {
     // FIXME: make it unclickable
-    if (_.isEmpty(this.state.name) || _.isEmpty(this.state.weight) || _.isEmpty(this.state.tag)) {
+    if (_.isEmpty(this.state.name) || _.isEmpty(this.state.tag)) {
       return;  
     }
     
     ItemManageAction.addItem({
       name: this.state.name,
-      weight: this.state.weight,
       tag: this.state.tag,
       image: this.state.image,
       
-      unitNumber: this.state.unitNumber,
-      unitName: this.state.unitName,
-      unitType: this.state.unitType,
-      
-      feature: {
-        price: this.state.price,
-        stock: this.state.stock
+      price: {
+        base: this.state.price
       }
       
     }).catch(function(err) {
@@ -107,52 +96,12 @@ export default class ItemManageApp extends React.Component {
   };
   
   /**
-   * Handler for weight input value change.
-   * @param  {String} newValue the new weight value.
-   */
-  handleWeightChange = (newValue) => {
-    this.setState({
-      weight: newValue
-    });
-  };
-  
-  /**
    * Handler for tag input value change.
    * @param  {[String]} newValue the new tag value.
    */
   handleTagChange = (newValue) => {
     this.setState({
       tag: newValue
-    });
-  };
-  
-  /**
-   * Handler for unit number input value change.
-   * @param  {String} newValue the new unit number value.
-   */
-  handleUnitNumberChange = (newValue) => {
-    this.setState({
-      unitNumber: newValue
-    });
-  };
-  
-  /**
-   * Handler for unit name input value change.
-   * @param  {String} newValue the new unit name value.
-   */
-  handleUnitNameChange = (newValue) => {
-    this.setState({
-      unitName: newValue
-    });
-  };
-  
-  /**
-   * Handler for unit name input value change.
-   * @param  {String} newValue the new unit type value.
-   */
-  handleUnitTypeChange = (newValue) => {
-    this.setState({
-      unitType: newValue
     });
   };
   
@@ -192,16 +141,6 @@ export default class ItemManageApp extends React.Component {
   handlePriceChange = (newValue) => {
     this.setState({
       price: newValue
-    });
-  };
-  
-  /**
-   * Handler for stock input value change.
-   * @param  {String} newValue the new stock value.
-   */
-  handleStockChange = (newValue) => {
-    this.setState({
-      stock: newValue
     });
   };
   
@@ -260,11 +199,11 @@ export default class ItemManageApp extends React.Component {
         <tr onClick={this.handleItemClick.bind(this, item)} key={item._id}>
           <td>{index}</td>
           <td>{item.name}</td>
-          <td>{item.weight}</td>
+          <td>{item.price.base}</td>
           <td>{item.tag.join(",")}</td>
-          <td>{item.unitNumber}</td>
-          <td>{item.unitName}</td>
-          <td>{item.unitType}</td>
+          <td>{item.dimension.baseWidth}</td>
+          <td>{item.dimension.baseHeight}</td>
+          <td>{item.dimension.baseDepth}</td>
         </tr>
       );
     }
@@ -275,11 +214,11 @@ export default class ItemManageApp extends React.Component {
           <tr>
             <th>#</th>
             <th>Name</th>
-            <th>Weight</th>
+            <th>Price</th>
             <th>Tag</th>
-            <th>Unit Number</th>
-            <th>Unit Name</th>
-            <th>Unit Type</th>
+            <th>Width</th>
+            <th>Height</th>
+            <th>Depth</th>
           </tr>
         </thead>
         <tbody>
@@ -339,61 +278,6 @@ export default class ItemManageApp extends React.Component {
         handleChange={this.handleTagChange} />
     );
     
-    let weightInput = (
-      <BaseInput
-        type="text"
-        label="Weight"
-        placeholder="Enter weight in pounds"
-        handleChange={this.handleWeightChange} />
-    );
-    
-    let unitNumberInput = (
-      <BaseInput
-        type="text"
-        label="Unit number"
-        placeholder="Enter unit number"
-        handleChange={this.handleUnitNumberChange} />
-    );
-    
-    let unitNameInput = (
-      <BaseInput
-        type="text"
-        label="Unit name"
-        placeholder="Enter unit name"
-        handleChange={this.handleUnitNameChange} />
-    );
-    
-    let unitTypeInput = (
-      <BaseInput
-        type="text"
-        label="Unit type"
-        placeholder="Enter unit type"
-        handleChange={this.handleUnitTypeChange} />
-    );
-    
-    let dimensionInput = (
-      <FormGroup bsSize="small" controlId="demension">
-        <ControlLabel>Demension</ControlLabel>
-        <Row>
-          <Col xs={4}>
-            <FormControl 
-              type="text"
-              placeholder="Length" />
-          </Col>
-          <Col xs={4}>
-            <FormControl 
-              type="text"
-              placeholder="Width" />
-          </Col>
-          <Col xs={4}>
-            <FormControl 
-              type="text"
-              placeholder="Height" />
-          </Col>
-        </Row>
-      </FormGroup>
-    );
-    
     let imagesInput = (
       <FormGroup controlId="image">
         <ControlLabel>Images</ControlLabel>
@@ -412,14 +296,6 @@ export default class ItemManageApp extends React.Component {
         label="Price"
         placeholder="Enter price"
         handleChange={this.handlePriceChange} />
-    );
-    
-    let stockInput = (
-      <BaseInput
-        type="text"
-        label="Stock left"
-        placeholder="Enter stock left"
-        handleChange={this.handleStockChange} />
     );
     
     let submitButton = (
@@ -447,42 +323,12 @@ export default class ItemManageApp extends React.Component {
         </Row>
         <Row>
           <Col xs={12}>
-            {weightInput}
-          </Col>
-        </Row>
-        <Row>
-          <Col xs={12}>
-            {unitNumberInput}
-          </Col>
-        </Row>
-        <Row>
-          <Col xs={12}>
-            {unitNameInput}
-          </Col>
-        </Row>
-        <Row>
-          <Col xs={12}>
-            {unitTypeInput}
-          </Col>
-        </Row>
-        <Row>
-          <Col xs={12}>
-            {dimensionInput}
-          </Col>
-        </Row>
-        <Row>
-          <Col xs={12}>
             {imagesInput}
           </Col>
         </Row>
         <Row>
           <Col xs={12}>
             {priceInput}
-          </Col>
-        </Row>
-        <Row>
-          <Col xs={12}>
-            {stockInput}
           </Col>
         </Row>
         <Row>
