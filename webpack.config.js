@@ -52,7 +52,7 @@ let config = {
     ]
   },
   postcss: function () {
-    return [require("postcss-sorting"), require("autoprefixer")];
+    return [require("postcss-input-range"), require("postcss-sorting"), require("autoprefixer")];
   },
   plugins: [
     new ExtractTextPlugin("../stylesheets/bundle.css", { allChunks: true })

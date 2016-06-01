@@ -1,0 +1,78 @@
+// Base Colors
+$shade-10: #2c3e50 !default;
+
+// Range Slider
+$range-handle-color: $shade-10 !default;
+$range-handle-color-hover: #1abc9c !default;
+$range-handle-size: 20px !default;
+
+$range-track-color: #d7dcdf !default;
+$range-track-height: 10px !default;
+
+$range-label-color: $shade-10 !default;
+$range-label-width: 60px !default;
+
+.rangeSlider {
+  width: 100%;
+  
+  display: flex;
+  flex-direction: row;
+}
+
+.rangeSliderRange {
+  flex: 1;
+  
+  -webkit-appearance: none;
+  height: $range-track-height;
+  border-radius: 5px;
+  background: $range-track-color;
+  outline: none;
+  padding: 0;
+  margin: 0;
+
+  &::range-thumb {
+    appearance: none;
+    width: $range-handle-size;
+    height: $range-handle-size;
+    border-radius: 50%;
+    background: $range-handle-color;
+    cursor: pointer;
+    transition: background .15s ease-in-out;
+
+    &:hover {
+      background: $range-handle-color-hover;
+    }
+  }
+
+  &:active::range-thumb {
+    background: $range-handle-color-hover;
+  }
+}
+
+
+// Range Label
+.rangeSliderValue {
+  width: 60px;
+  top: -10px;
+
+  position: relative;
+  color: #fff;
+  line-height: 20px;
+  text-align: center;
+  border-radius: 3px;
+  background: $range-label-color;
+  padding: 5px 10px;
+  margin-left: 8px;
+
+  &:after {
+    position: absolute;
+    top: 8px;
+    left: -7px;
+    width: 0;
+    height: 0;
+    border-top: 7px solid transparent;
+    border-right: 7px solid $range-label-color;
+    border-bottom: 7px solid transparent;
+    content: '';
+  }
+}

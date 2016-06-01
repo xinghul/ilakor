@@ -16,7 +16,7 @@ import NavbarApp from "components/NavbarApp"
 import SocialApp from "components/SocialApp"
 import CheckoutApp from "components/CheckoutApp"
 
-import MultiSelectInput from "lib/MultiSelectInput"
+import BaseRangeSlider from "lib/BaseRangeSlider"
 
 class App extends React.Component {
     
@@ -47,7 +47,7 @@ class IndexApp extends React.Component {
   
   render() {
     return (
-      <div></div>
+      <BaseRangeSlider />
     );
   }
 };
