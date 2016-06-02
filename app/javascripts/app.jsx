@@ -16,7 +16,7 @@ import NavbarApp from "components/NavbarApp"
 import SocialApp from "components/SocialApp"
 import CheckoutApp from "components/CheckoutApp"
 
-import ImageUploader from "components/ItemManageApp/ImageUploader"
+import MultiSelectInput from "lib/MultiSelectInput"
 
 class App extends React.Component {
     
@@ -46,8 +46,10 @@ class IndexApp extends React.Component {
   }
   
   render() {
+    let options = ["Kitchen", "Bedroom", "Wood", "Brown"];
+    
     return (
-      <ImageUploader />
+      <MultiSelectInput options={options}/>
     );
   }
 };

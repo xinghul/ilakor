@@ -8,6 +8,7 @@ import { FormGroup, FormControl, ControlLabel } from "react-bootstrap"
 import { Modal, Table, Label, Glyphicon, Button } from "react-bootstrap"
 
 import BaseInput from "lib/BaseInput"
+import MultiSelectInput from "lib/MultiSelectInput"
 import ItemDetailModal from "./ItemManageApp/ItemDetailModal"
 import ImageUploader from "./ItemManageApp/ImageUploader"
 
@@ -29,16 +30,6 @@ export default class ItemManageApp extends React.Component {
     this.state = {
       items: ItemManageStore.getItems(),
       tags: ItemManageStore.getTags(),
-      
-      // new item info
-      name: "",
-      tag: [],
-      price: "",
-      
-      // items used to initialize the item display table
-      items: [],
-      // tags used to initialize the tag multiselect
-      tags: [],
       
       showItemInfoModal: false,
       selectedItem: null
@@ -65,52 +56,17 @@ export default class ItemManageApp extends React.Component {
    * Handler when submit button is clicked.
    */
   handleSubmit = () => {
-    // FIXME: make it unclickable
-    if (_.isEmpty(this.state.name) || _.isEmpty(this.state.tag)) {
-      return;  
-    }
-    
     ItemManageAction.addItem({
-      name: this.state.name,
-      tag: this.state.tag,
+      name: this.refs["name"].getValue(),
+      tag: this.refs["tag"].getValue(),
       image: this.refs["image"].getValue(),
       
       price: {
-        base: this.state.price
+        base: this.refs["price"].getValue()
       }
       
     }).catch(function(err) {
       console.log(err);
-    });
-  };
-  
-  /**
-   * Handler for name input value change.
-   * @param  {String} newValue the new name value.
-   */
-  handleNameChange = (newValue) => {
-    this.setState({
-      name: newValue
-    });
-  };
-  
-  /**
-   * Handler for tag input value change.
-   * @param  {[String]} newValue the new tag value.
-   */
-  handleTagChange = (newValue) => {
-    this.setState({
-      tag: newValue
-    });
-  };
-  
-  /**
-   * Handler for price input value change.
-   * @param  {String} newValue the new price value.
-   */
-  handlePriceChange = (newValue) => {
-    this.setState({
-      price: newValue
     });
   };
   
@@ -231,21 +187,21 @@ export default class ItemManageApp extends React.Component {
     let nameInput = (
       <BaseInput
         type="text"
+        ref="name"
         label="Name"
         placeholder="Enter name"
         addonBefore="info-sign"
-        handleChange={this.handleNameChange} />
+      />
     );
     
     let tagOptions = this.createTagOptions();
     
     let tagInput = (
-      <BaseInput
-        type="select" 
-        multiple 
-        label="Tags"
+      <MultiSelectInput
+        ref="tag"
+        placeholder="Select tags"
         options={tagOptions}
-        handleChange={this.handleTagChange} />
+      />
     );
     
     let imagesInput = (
@@ -255,9 +211,10 @@ export default class ItemManageApp extends React.Component {
     let priceInput = (
       <BaseInput
         type="text"
+        ref="price"
         label="Price"
         placeholder="Enter price"
-        handleChange={this.handlePriceChange} />
+      />
     );
     
     let submitButton = (
