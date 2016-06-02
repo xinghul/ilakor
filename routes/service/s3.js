@@ -12,8 +12,8 @@ AWS.config.update({
   endPoint: "s3.amazonaws.com"
 });
 
-let bucketName      = process.env.S3_BUCKET
-,   imageFolderName = process.env.S3_IMAGE_FOLDER
+let BUCKET_NAME = process.env.S3_BUCKET
+,   IMAGE_FOLDER = process.env.S3_IMAGE_FOLDER
 ,   s3 = new AWS.S3({
   apiVersion: "2006-03-01"
 });
@@ -24,7 +24,7 @@ let S3Api = {
    * Uploads a image with given name to S3.
    * 
    * @param  {String} imageName the given image name.
-   * @param  {Object} imageFile the image file.
+   * @param  {Buffer} imageFile the image file buffer.
    * 
    * @return {Promise} the new promise object.
    */
@@ -32,35 +32,20 @@ let S3Api = {
     
     return new Promise(function(resolve, reject) {
       
-      let imagePath = imageFile.path;
+      let imageUrl = IMAGE_FOLDER + '/' + imageName;
       
-      fs.readFile(imagePath, function(err, data) {
-        
+      let params = {
+        Bucket: BUCKET_NAME,
+        Key: imageUrl, 
+        Body: imageFile
+      };
+      
+      s3.upload(params, function(err, data) {
         if (err) {
           reject(err);
         } else {
-          let imageUrl = imageFolderName + '/' + imageName;
-          
-          let params = {
-            Bucket: bucketName,
-            Key: imageUrl, 
-            Body: data
-          };
-          
-          s3.upload(params, function(err, data) {
-            if (err) {
-              reject(err);
-            } else {
-              // delete the tmp file when upload succeeded
-              // use retry approach later
-              fs.unlink(imagePath, function() {
-                resolve(imageUrl);
-              });
-            }
-          });
-          
+          resolve(imageUrl);
         }
-        
       });
       
     });
@@ -77,7 +62,7 @@ let S3Api = {
   removeImage: function(imageUrl) {
     return new Promise(function(resolve, reject) {
       let params = {
-        Bucket: bucketName,
+        Bucket: BUCKET_NAME,
         Key: imageUrl
       };
       

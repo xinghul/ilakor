@@ -1,6 +1,8 @@
 "use strict";
 
 let mongoose = require("mongoose")
+,   fs = require("fs")
+,   path = require("path")
 ,   Promise  = require("bluebird");
 
 let S3 = require("../service/s3");
@@ -10,6 +12,109 @@ let Item     = mongoose.model("Item")
 
 let imageExtensionReg = new RegExp(/.+\.(gif|jpe?g|png)$/i);
 
+/**
+ * Uploads images to s3 and updates the image field.
+ *
+ * @param {Object} item mongoose item object.
+ *
+ * @param {Array} images image names.
+ * 
+ * @return {Promise} the new promise object.
+ */
+function uploadImages(item, images) {
+  
+  return new Promise(function(resolve, reject) {
+    
+    let _id        = item._id
+    ,   promises   = [];
+    
+    for (let index = 0; index < images.length; index++)
+    {
+      let imageName = images[index]
+      ,   matches   = imageName.match(imageExtensionReg);
+      
+      // if it matches
+      if (matches && matches.length == 2) {
+        let imageFile = fs.readFileSync(path.join(__dirname, "../tmp/uploads", imageName));
+
+        let extension = matches[1].toLowerCase()
+        ,   newImageName = _id + '_' + index + '.' + extension;
+
+        promises.push(
+          S3.uploadImage(newImageName, imageFile).then(function(imageUrl) {
+            return {
+              name: newImageName,
+              url: imageUrl
+            };
+          })
+        );
+      }
+    }
+    
+    Promise.all(promises).then(function(images) {
+      // stores the images
+      item.images = images;
+      
+      // save the item with images added
+      item.save(function(err, updatedItem) {
+        if (err) {
+          reject(err);
+        } else {
+          resolve(updatedItem);
+        }
+      });
+    }).catch(function(err) {
+      reject(err);
+    });
+    
+  });
+  
+}
+
+/**
+ * Removes all given images from s3.
+ *
+ * @param {Array} images the images to be removed
+ * 
+ * @return {Promise} the new promise object.
+ */
+function removeImages(images) {
+
+  return new Promise(function(resolve, reject) {
+    
+    let promises = [];
+    
+    for (let image of images)
+    {
+      promises.push(
+        S3.removeImage(image.url)
+      );
+    }
+    
+    Promise.all(promises).then(function() {
+      resolve();
+    }).catch(function(err) {
+      reject(err);
+    });
+    
+  });
+  
+}
+
+/**
+ * Removes local image cache specified by image names.
+ *
+ * @param {Array} images image names.
+ */
+function removeImageCache(images) {
+  for (let index = 0; index < images.length; index++)
+  {
+    let imageName = images[index];
+    
+    fs.unlinkSync(path.join(__dirname, "../tmp/uploads", imageName));
+  }
+}
+
 let ItemApi = {
   
   /**
@@ -18,24 +123,14 @@ let ItemApi = {
    * @param  {Object} rawData the raw data containing the new item info.
    *
    * @return {Object} the promise object.
-   *
-   * rawData schema:
-   * {
-   * 	 name: String,
-   * 	 tag: [String],
-   * 	 image: [String],
-   * 	 weight: Number,
-   * 	 dimension: {
-   * 	 	length: Number,
-   * 		width: Number,
-   * 		height: Number
-   * 	 },
-   * 	 description: { ... }
-   * }
    */
    add: function(rawData) {
      
      return new Promise(function(resolve, reject) {
+       
+       // extract the image field
+       let images = rawData.image;
+       delete rawData.image;
        
        let item = new Item(rawData);
 
@@ -43,7 +138,13 @@ let ItemApi = {
          if (err) {
            reject(err);
          } else {
-           resolve(newItem);
+           uploadImages(item, images).then(function(updatedItem) {
+             removeImageCache(images);
+             
+             resolve(updatedItem);
+           }).catch(function(err) {
+             reject(err);
+           });
          }
        });
        
@@ -62,14 +163,28 @@ let ItemApi = {
      
      return new Promise(function(resolve, reject) {
        
-       Item.remove({_id: ObjectId(id)}, function(err, result) {
+       Item.findById(ObjectId(id), function(err, item) {
          if (err) {
            reject(err);
          } else {
-           resolve(result);
+           let images = item.images;
+           
+           removeImages(images).then(function() {
+             
+             Item.remove({_id: ObjectId(id)}, function(err, result) {
+               if (err) {
+                 reject(err);
+               } else {
+                 resolve(result);
+               }
+             });
+             
+           }).catch(function(err) {
+             reject(err);
+           });
          }
        });
-       
+
      });
      
    },
@@ -151,98 +266,7 @@ let ItemApi = {
        
      });
      
-   },
-   
-   /**
-    * Uploads images to s3 and updates the image field.
-    * 
-    * @return {Promise} the new promise object.
-    */
-   uploadImages: function(item, images) {
-     
-     return new Promise(function(resolve, reject) {
-       
-       let _id        = item._id
-       ,   promises   = [];
-       
-       for (let index = 0; index < images.length; index++)
-       {
-         let imageFile = images[index]
-         ,   matches   = imageFile.originalFilename.match(imageExtensionReg);
-         
-         // if it matches
-         if (matches && matches.length == 2) {
-           let extension = matches[1].toLowerCase()
-           ,   imageName = _id + '_' + index + '.' + extension;
-           
-           promises.push(
-             S3.uploadImage(imageName, imageFile).then(function(imageUrl) {
-               return {
-                 name: imageName,
-                 url: imageUrl
-               };
-             })
-           );
-         }
-       }
-       
-       Promise.all(promises).then(function(images) {
-         // stores the images
-         item.images = images;
-         
-         // save the item with images added
-         item.save(function(err, updatedItem) {
-           if (err) {
-             reject(err);
-           } else {
-             resolve(updatedItem);
-           }
-         });
-       }).catch(function(err) {
-         reject(err);
-       });
-       
-     });
-     
-   },
-   
-   /**
-    * Removes all images associated with item id on S3.
-    *
-    * @param {String} id the item id.
-    * 
-    * @return {Promise} the new promise object.
-    */
-   removeImages: function(id) {
-     
-     return new Promise(function(resolve, reject) {
-       
-       Item.findById(ObjectId(id), function(err, item) {
-         if (err) {
-           reject(err);
-         } else {
-           let images = item.images
-           ,   promises = [];
-           
-           for (let image of images)
-           {
-             promises.push(
-               S3.removeImage(image.url)
-             );
-           }
-           
-           Promise.all(promises).then(function() {
-             resolve();
-           }).catch(function(err) {
-             reject(err);
-           });
-         }
-       });
-       
-     });
-     
    }
-
 };
 
 module.exports = ItemApi;

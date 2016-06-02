@@ -46,68 +46,23 @@ let ItemManageAction = {
     
     return new Promise(function(resolve, reject) {
       
-      let formData = new FormData();
-      
-      for (let image of newItem.image)
-      {
-        formData.append("image", image);
-      }
-      
-      // delete the image property
-      delete newItem.image;
-      
-      formData.append("item", JSON.stringify(newItem));
- 
-      var xhr = new XMLHttpRequest();
-      
-      xhr.open("post", "/api/items", true);
-      
-      xhr.onload = function () {
-        if (this.status == 200) {
-          let newItem = JSON.parse(this.response);
+      request.post("/api/items")
+        .send({item: JSON.stringify(newItem)})
+        .then(function(res) {
+          let itemAdded = res.body;
           
           AppDispatcher.handleAction({
             actionType: ItemManageConstants.RECEIVED_ITEM,
-            item: newItem
+            item: itemAdded
           });
           
           resolve();
-        } else {
-          reject(this.statusText);
-        }
-      };
-      
-      xhr.send(formData);
-        
-      return;
-      
-      // enable this when request support ES6
-      // https://github.com/request/request/issues/1961
-      request.post({
-        url: API_URL,
-        formData: newItem
-      }, function(err, response, body) {
-        if (err) {
+        })
+        .catch(function(err) {
           reject(err);
-        } else {
-          // make sure the response status code is 200
-          if (response.statusCode === 200) {
-            let newItem = JSON.parse(body);
-            
-            AppDispatcher.handleAction({
-              actionType: ItemManageConstants.RECEIVED_ITEM,
-              item: newItem
-            });
-            
-            resolve();
-            
-          } else {
-            reject(JSON.parse(response.body));
-          }
-        }
-      });
+        });
       
-    });    
+    }); 
   },
   
   /**

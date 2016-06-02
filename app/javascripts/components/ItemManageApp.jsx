@@ -9,6 +9,7 @@ import { Modal, Table, Label, Glyphicon, Button } from "react-bootstrap"
 
 import BaseInput from "lib/BaseInput"
 import ItemDetailModal from "./ItemManageApp/ItemDetailModal"
+import ImageUploader from "./ItemManageApp/ImageUploader"
 
 import ItemManageAction from "actions/ItemManageAction"
 import ItemManageStore from "stores/ItemManageStore"
@@ -32,9 +33,7 @@ export default class ItemManageApp extends React.Component {
       // new item info
       name: "",
       tag: [],
-      image: null,
       price: "",
-      imagePreviewUrl: "",
       
       // items used to initialize the item display table
       items: [],
@@ -74,7 +73,7 @@ export default class ItemManageApp extends React.Component {
     ItemManageAction.addItem({
       name: this.state.name,
       tag: this.state.tag,
-      image: this.state.image,
+      image: this.refs["image"].getValue(),
       
       price: {
         base: this.state.price
@@ -103,35 +102,6 @@ export default class ItemManageApp extends React.Component {
     this.setState({
       tag: newValue
     });
-  };
-  
-  /**
-   * Handler for image input value change.
-   * @param  {String} newValue the new image value.
-   */
-  handleImageChange = (evt) => {
-    evt.preventDefault();
-
-    let files  = evt.target.files
-    ,   images = [];
-    
-    for (let index = 0; index < files.length; index++)
-    {
-      let file = files[index]
-      ,   reader = new FileReader();
-      
-      reader.onloadend = () => {
-        images.push(file);
-        
-        if (index === files.length - 1) {
-          this.setState({
-            image: images
-          });
-        }
-      }
-      
-      reader.readAsDataURL(file);
-    }
   };
   
   /**
@@ -279,15 +249,7 @@ export default class ItemManageApp extends React.Component {
     );
     
     let imagesInput = (
-      <FormGroup controlId="image">
-        <ControlLabel>Images</ControlLabel>
-          <FormControl 
-            type="file"
-            multiple
-            placeholder="Select images"
-            onChange={this.handleImageChange} 
-          />
-      </FormGroup>
+      <ImageUploader ref="image"/>
     );
     
     let priceInput = (
@@ -305,7 +267,7 @@ export default class ItemManageApp extends React.Component {
     );
     
     let addItemForm = (
-      <form style={formStyle}>
+      <div style={formStyle}>
         <Row>
           <Col xs={12} style={headerColStyle}>
             <h2><Label>Add new item</Label></h2>
@@ -336,7 +298,7 @@ export default class ItemManageApp extends React.Component {
             {submitButton}
           </Col>
         </Row>
-      </form>
+      </div>
     );
     
     let itemListForm = this.createItemListTable();

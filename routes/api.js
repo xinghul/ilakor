@@ -89,25 +89,25 @@ router.route("/items")
 })
 .post(function(req, res, next) {
   
-  let form = new multiparty.Form();
-  
-  form.parse(req, function(err, fields, files) {
-    
-    let rawData = JSON.parse(fields.item[0])
-    ,   images  = files.image;
-    
-    Item.add(rawData).then(function(newItem) {
-      return Item.uploadImages(newItem, images);
-    }).then(function(updatedItem) {
-      res.status(200).json(updatedItem);
-    }).catch(function(err) {
-      console.log(err.stack);
-      
-      next(new CustomError(500, "Internal error."));
-    });
-  });
-  
-  return;
+  // let form = new multiparty.Form();
+  // 
+  // form.parse(req, function(err, fields, files) {
+  //   
+  //   let rawData = JSON.parse(fields.item[0])
+  //   ,   images  = files.image;
+  //   
+  //   Item.add(rawData).then(function(newItem) {
+  //     return Item.uploadImages(newItem, images);
+  //   }).then(function(updatedItem) {
+  //     res.status(200).json(updatedItem);
+  //   }).catch(function(err) {
+  //     console.log(err.stack);
+  //     
+  //     next(new CustomError(500, "Internal error."));
+  //   });
+  // });
+  // 
+  // return;
   
   // enable this when request support ES6
   let rawData;
@@ -124,8 +124,8 @@ router.route("/items")
     return next(new CustomError(400, "Malformed JSON."));
   }
 
-  Item.add(rawData).then(function(newItem) {
-    res.status(200).json(newItem);
+  Item.add(rawData).then(function(updatedItem) {
+    res.status(200).json(updatedItem);
   }).catch(function(err) {
     console.log(err.stack);
     
@@ -161,9 +161,7 @@ router.route("/items")
   let itemId = req.itemId;
   
   if (_.isString(itemId)) {
-    Item.removeImages(itemId).then(function() {
-      return Item.remove(itemId);
-    }).then(function(result) {
+    Item.remove(itemId).then(function(result) {
       res.status(200).json(result);
     }).catch(function(err) {
       console.log(err.stack);
