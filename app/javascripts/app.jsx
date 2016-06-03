@@ -16,7 +16,7 @@ import NavbarApp from "components/NavbarApp"
 import SocialApp from "components/SocialApp"
 import CheckoutApp from "components/CheckoutApp"
 
-import MultiSelectInput from "lib/MultiSelectInput"
+import SingleRangeSlider from "lib/SingleRangeSlider"
 
 class App extends React.Component {
     
@@ -46,10 +46,19 @@ class IndexApp extends React.Component {
   }
   
   render() {
-    let options = ["Kitchen", "Bedroom", "Wood", "Brown"];
+    let config = {
+      start: 40,
+      connect: "lower",
+      step: 1,
+      tooltips: true,
+      range: {
+        min: 0,
+        max: 100
+      }
+    };
     
     return (
-      <MultiSelectInput options={options}/>
+      <SingleRangeSlider {...config}/>
     );
   }
 };
