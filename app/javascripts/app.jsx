@@ -16,7 +16,7 @@ import NavbarApp from "components/NavbarApp"
 import SocialApp from "components/SocialApp"
 import CheckoutApp from "components/CheckoutApp"
 
-import SingleRangeSlider from "lib/SingleRangeSlider"
+import DimensionRangeInput from "components/ItemManageApp/DimensionRangeInput"
 
 class App extends React.Component {
     
@@ -46,19 +46,9 @@ class IndexApp extends React.Component {
   }
   
   render() {
-    let config = {
-      start: 40,
-      connect: "lower",
-      step: 1,
-      tooltips: true,
-      range: {
-        min: 0,
-        max: 100
-      }
-    };
     
     return (
-      <SingleRangeSlider {...config}/>
+      <DimensionRangeInput />
     );
   }
 };

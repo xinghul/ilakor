@@ -2,6 +2,7 @@
 
 import React from "react"
 import Slider from "nouislider"
+import Mock from "mock-data"
 import _ from "lodash"
 import invariant from "invariant"
 
@@ -9,33 +10,38 @@ import sliderStyles from "nouislider/distribute/nouislider.min.css"
 
 import styles from "lib/SingleRangeSlider.scss"
 
-let _sliderWrapper;
-
 export default class SingleRangeSlider extends React.Component {
   
   constructor(props) {
     super(props);
+    
+    this._sliderId = _.uniqueId("slider");
+    this._sliderWrapper = null;
     
     invariant(props.range.min < props.range.max, `min value ${props.range.min} should be less than max value ${props.range.max}.`);
     invariant(_.inRange(props.start, props.range.min, props.range.max), `start value ${props.start} should be in range of min value ${props.range.min} and max value ${props.range.max}`);
   }
   
   componentDidMount() {
-    _sliderWrapper = document.getElementById("sliderWrapper");
-
-    Slider.create(sliderWrapper, {
+    this._sliderWrapper = document.getElementById(this._sliderId);
+    
+    Slider.create(this._sliderWrapper, {
       ...this.props
     });
   }
   
+  update(config) {
+    this._sliderWrapper.noUiSlider.updateOptions(config);
+  }
+  
   getValue() {
-    return _sliderWrapper.noUiSlider.get();
+    return _.toInteger(this._sliderWrapper.noUiSlider.get());
   }
   
   render() {
     
     return (
-      <div id="sliderWrapper">
+      <div id={this._sliderId}>
       </div>
     );
   }
