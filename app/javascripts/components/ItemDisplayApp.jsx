@@ -186,11 +186,15 @@ export default class ItemDisplayApp extends React.Component {
           onClose={this.onItemDetailModalClose}
         />
       <div className={styles.mainContent}>
-          <div className={styles.filterDisplaySection}>
-            <ItemFilterApp />
-          </div>
+          {/*
+            <div className={styles.filterDisplaySection}>
+              <ItemFilterApp />
+            </div>            
+          */}
           <div className={styles.itemDisplaySection}>
-            <FilterDisplayApp handleRemoveFilter={this.handleRemoveFilter} filters={this.state.filters}/>
+            {/*
+              <FilterDisplayApp handleRemoveFilter={this.handleRemoveFilter} filters={this.state.filters}/>              
+            */}
             <BaseGrid
               items={this.state.items} 
               handleItemClick={this.handleItemClick}

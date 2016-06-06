@@ -6,13 +6,15 @@ import invariant from "invariant"
 import Dropzone from "dropzone"
 import request from "superagent-bluebird-promise"
 
+import { Image } from "react-bootstrap"
+
 import dropzoneStyles from "dropzone/dist/min/dropzone.min.css"
 
 import styles from "components/ItemManageApp/ImageUploader.scss"
 
-let _files = [];
+Dropzone.autoDiscover = false;
 
-Dropzone.options.imageUploaderDropzone = {
+let dropzoneConfig = {
   acceptedFiles: "image/*",
   addRemoveLinks: true,
   init: function() {
@@ -48,10 +50,21 @@ Dropzone.options.imageUploaderDropzone = {
   }
 };
 
+let _files = []
+,   _dropzone;
+
 export default class ImageUploader extends React.Component {
   
   constructor(props) {
     super(props);    
+  }
+  
+  componentDidMount() {
+    _dropzone = new Dropzone("#dropzone", dropzoneConfig);
+  }
+  
+  componentWillUnmount() {
+    _dropzone.destroy();
   }
   
   getValue() {
@@ -62,11 +75,20 @@ export default class ImageUploader extends React.Component {
     
     
     return (
-      <form 
-        action="/upload"
-        className="dropzone"
-        id="image-uploader-dropzone">
-      </form>    
+      <div className={styles.imageUploader}>
+        <form 
+          action="/upload"
+          className="dropzone"
+          id="dropzone"
+        >
+        <div className="dz-message">
+          <Image className={styles.uploadIcon} src="/images/upload-icon.png" />
+          <div>
+            Drop or browse images to attach
+          </div>
+        </div>
+        </form>
+      </div> 
     );
   }
 }
