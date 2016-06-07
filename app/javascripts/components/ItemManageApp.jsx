@@ -127,9 +127,6 @@ export default class ItemManageApp extends React.Component {
           <td>{item.name}</td>
           <td>{item.price.base}</td>
           <td>{item.tag.join(",")}</td>
-          <td>{item.dimension.baseWidth}</td>
-          <td>{item.dimension.baseHeight}</td>
-          <td>{item.dimension.baseDepth}</td>
         </tr>
       );
     }
@@ -142,9 +139,6 @@ export default class ItemManageApp extends React.Component {
             <th>Name</th>
             <th>Price</th>
             <th>Tag</th>
-            <th>Width</th>
-            <th>Height</th>
-            <th>Depth</th>
           </tr>
         </thead>
         <tbody>
@@ -279,10 +273,10 @@ export default class ItemManageApp extends React.Component {
         {itemInfoModal}
         <Grid fluid>
           <Row>
-            <Col xs={3}>
+            <Col xs={5}>
               {addItemForm}
             </Col>
-            <Col xs={9}>
+            <Col xs={7}>
               {itemListForm}
             </Col>
           </Row>

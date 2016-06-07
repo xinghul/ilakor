@@ -36,13 +36,10 @@ export default class BaseCheckbox extends React.Component {
       <div className={styles.baseCheckbox}>
         <input 
           type="checkbox" 
-          className={styles.sw}
-          id="toggle"
+          id="baseCheckbox"
           onClick={this.handleChange}
         />
-        <label htmlFor="toggle">
-          <span>{this.props.label}</span>
-        </label>
+        <label htmlFor="baseCheckbox">{this.props.label}</label>
       </div>
     );
   }

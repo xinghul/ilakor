@@ -1,26 +1,9 @@
-.inputLabel {
-  display: inline-block;
-  
-  font-weight: 600;
-  font-size: 18px;
-}
-
 .customizableCheckbox {
-  display: inline-block;
-  
-  margin-left: 10px;
+  top: 6px;
 }
 
-.inputGroup {
-  display: flex;
-  flex-direction: row;
-  
-  .baseValueInput {
-    width: 100px;
-  }
-
-  .rangeSlider {
-    flex: 1;
-  }
+.rangeSlider {
+  top: 9px;
+  left: -16px;
 }
 

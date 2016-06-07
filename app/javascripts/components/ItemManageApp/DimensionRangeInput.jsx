@@ -4,6 +4,8 @@ import React from "react"
 import _ from "lodash"
 import invariant from "invariant"
 
+import { Form, FormGroup, ControlLabel, Col } from "react-bootstrap"
+
 import BaseInput from "lib/BaseInput"
 import BaseCheckbox from "lib/BaseCheckbox"
 import SingleRangeSlider from "lib/SingleRangeSlider"
@@ -83,28 +85,36 @@ export default class DimensionRangeInput extends React.Component {
   render() {
     
     return (
-      <div>
-        <div>
-          <div className={styles.inputLabel}>{this.props.label}</div>
-          <div className={styles.customizableCheckbox}>
-            <BaseCheckbox label="customizable" handleChange={this.handleCustomizableChange} />
-          </div>
-        </div>
-        <div className={styles.inputGroup}>
-          <div hidden={!this.state.valueCustomizable} className={styles.rangeSlider}>
-            <SingleRangeSlider connect="upper" ref="lowerSlider" />
-          </div>
-          <div className={styles.baseValueInput}>
+      <Form horizontal>
+        <FormGroup controlId="baseValue">
+          <Col componentClass={ControlLabel} md={2} xs={2}>
+            {this.props.label}
+          </Col>
+          <Col md={3} xs={3}>
             <BaseInput
               type="text"
               handleChange={this.handleBaseValueChange}
             />
-          </div>
-          <div hidden={!this.state.valueCustomizable} className={styles.rangeSlider}>
+          </Col>
+          <Col md={3} xs={3} className={styles.customizableCheckbox}>
+            <BaseCheckbox label="customizable" handleChange={this.handleCustomizableChange} />
+          </Col>
+        </FormGroup>
+        <FormGroup hidden={!this.state.valueCustomizable}>
+          <Col componentClass={ControlLabel} md={2} xs={2}>
+            Min value
+          </Col>
+          <Col md={4} xs={4} className={styles.rangeSlider}>
+            <SingleRangeSlider connect="upper" ref="lowerSlider" />
+          </Col>
+          <Col componentClass={ControlLabel} md={2} xs={2}>
+            Max value
+          </Col>
+          <Col md={4} xs={4} className={styles.rangeSlider}>
             <SingleRangeSlider connect="lower" ref="upperSlider" />
-          </div>
-        </div>
-      </div>
+          </Col>
+        </FormGroup>
+      </Form>
     );
     
   }

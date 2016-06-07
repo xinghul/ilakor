@@ -41,7 +41,8 @@ export default class SingleRangeSlider extends React.Component {
   render() {
     
     return (
-      <div id={this._sliderId}>
+      <div className={styles.singleRangeSlider}>
+        <div id={this._sliderId} />
       </div>
     );
   }

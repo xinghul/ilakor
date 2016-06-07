@@ -48,7 +48,7 @@ class IndexApp extends React.Component {
   render() {
     
     return (
-      null
+      <DimensionRangeInput />
     );
   }
 };
