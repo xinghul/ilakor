@@ -1,9 +1,20 @@
-.customizableCheckbox {
-  top: 6px;
+.dimensionRangeInput {
+  margin-bottom: 30px;
+  
+  .customizableCheckbox {
+    top: 6px;
+  }
+  
+  .sliderGroup {
+    margin-top: -15px;
+    
+    .rangeSlider {
+      top: 9px;
+      left: -16px;
+    }  
+    
+  }
+
 }
 
-.rangeSlider {
-  top: 9px;
-  left: -16px;
-}
 

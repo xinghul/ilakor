@@ -5,15 +5,18 @@ import _ from "lodash"
 import React from "react"
 import { Grid, Row, Col } from "react-bootstrap"
 import { FormGroup, FormControl, ControlLabel } from "react-bootstrap"
-import { Modal, Table, Label, Glyphicon, Button } from "react-bootstrap"
+import { Modal, Table, Label, Glyphicon, Button, Well } from "react-bootstrap"
 
 import BaseInput from "lib/BaseInput"
 import MultiSelectInput from "lib/MultiSelectInput"
 import ItemDetailModal from "./ItemManageApp/ItemDetailModal"
 import ImageUploader from "./ItemManageApp/ImageUploader"
+import DimensionRangeInput from "./ItemManageApp/DimensionRangeInput"
 
 import ItemManageAction from "actions/ItemManageAction"
 import ItemManageStore from "stores/ItemManageStore"
+
+import styles from "components/ItemManageApp.scss"
 
 function getStateFromStores() {
   return {
@@ -32,7 +35,8 @@ export default class ItemManageApp extends React.Component {
       tags: ItemManageStore.getTags(),
       
       showItemInfoModal: false,
-      selectedItem: null
+      selectedItem: null,
+      addItemErrorMsg: ""
     };
   }
   
@@ -56,6 +60,55 @@ export default class ItemManageApp extends React.Component {
    * Handler when submit button is clicked.
    */
   handleSubmit = () => {
+    let heightConfig = this.refs["height"].getValue()
+    ,   heightValues;
+    
+    if (!_.isEmpty(heightConfig)) {
+      heightValues = {
+        baseHeight: heightConfig.baseValue,
+        heightCustomizable: heightConfig.valueCustomizable
+      };
+      
+      if (heightValues.heightCustomizable) {
+        heightValues["maxHeight"] = heightConfig.maxValue,
+        heightValues["minHeight"] = heightConfig.minValue
+      }
+    }
+    
+    let widthConfig = this.refs["width"].getValue()
+    ,   widthValues;
+    
+    if (!_.isEmpty(widthConfig)) {
+      widthValues = {
+        baseWidth: widthConfig.baseValue,
+        widthCustomizable: widthConfig.valueCustomizable
+      };
+      
+      if (widthValues.widthCustomizable) {
+        widthValues["maxWidth"] = widthConfig.maxValue,
+        widthValues["minWidth"] = widthConfig.minValue
+      }
+    }
+    
+    let depthConfig = this.refs["depth"].getValue()
+    ,   depthValues;
+    
+    if (!_.isEmpty(depthConfig)) {
+      depthValues = {
+        baseDepth: depthConfig.baseValue,
+        depthCustomizable: depthConfig.valueCustomizable
+      };
+      
+      if (depthValues.depthCustomizable) {
+        depthValues["maxDepth"] = depthConfig.maxValue,
+        depthValues["minDepth"] = depthConfig.minValue
+      }
+    }
+    
+    if (_.isEmpty(heightValues) || _.isEmpty(widthValues) || _.isEmpty(depthValues)) {
+      return;
+    }
+        
     ItemManageAction.addItem({
       name: this.refs["name"].getValue(),
       tag: this.refs["tag"].getValue(),
@@ -63,6 +116,12 @@ export default class ItemManageApp extends React.Component {
       
       price: {
         base: this.refs["price"].getValue()
+      },
+      
+      dimension: {
+        ...heightValues,
+        ...widthValues,
+        ...depthValues
       }
       
     }).catch(function(err) {
@@ -163,20 +222,6 @@ export default class ItemManageApp extends React.Component {
   }
   
   render() {
-    let formStyle = {
-      backgroundColor: "#fff",
-      borderWidth: "1px",
-      borderStyle: "solid",
-      borderColor: "#ddd",
-      borderRadius: "4px 4px 0 0",
-      
-      padding: "15px"
-    };
-    
-    let headerColStyle = {
-      top: "-32px",
-      left: "-10px"
-    };
     
     let nameInput = (
       <BaseInput
@@ -200,7 +245,19 @@ export default class ItemManageApp extends React.Component {
     );
     
     let imagesInput = (
-      <ImageUploader ref="image"/>
+      <ImageUploader ref="image" />
+    );
+    
+    let heightInput = (
+      <DimensionRangeInput label="Height" ref="height" />
+    );
+    
+    let widthInput = (
+      <DimensionRangeInput label="Width" ref="width" />
+    );
+    
+    let depthInput = (
+      <DimensionRangeInput label="Depth" ref="depth" />
     );
     
     let priceInput = (
@@ -219,9 +276,9 @@ export default class ItemManageApp extends React.Component {
     );
     
     let addItemForm = (
-      <div style={formStyle}>
+      <div className={styles.addItemForm}>
         <Row>
-          <Col xs={12} style={headerColStyle}>
+          <Col xs={12} md={12}>
             <h2><Label>Add new item</Label></h2>
           </Col>
         </Row>
@@ -241,8 +298,28 @@ export default class ItemManageApp extends React.Component {
           </Col>
         </Row>
         <Row>
+          <Col xs={12} md={12}>
+            {heightInput}
+          </Col>
+        </Row>
+        <Row>
+          <Col xs={12} md={12}>
+            {widthInput}
+          </Col>
+        </Row>
+        <Row>
+          <Col xs={12} md={12}>
+            {depthInput}
+          </Col>
+        </Row>
+        <Row>
           <Col xs={12}>
             {priceInput}
+          </Col>
+        </Row>
+        <Row hidden={_.isEmpty(this.state.addItemErrorMsg)}>
+          <Col xs={12} md={12}>
+            <Well>{this.state.addItemErrorMsg}</Well>
           </Col>
         </Row>
         <Row>
@@ -265,12 +342,8 @@ export default class ItemManageApp extends React.Component {
         />
     );
     
-    let style = {
-      position: "absolute"
-    };
-    
     return (
-      <div style={style}>
+      <div className={styles.itemManageApp}>
         {itemInfoModal}
         <Grid fluid>
           <Row>

@@ -16,7 +16,7 @@ import NavbarApp from "components/NavbarApp"
 import SocialApp from "components/SocialApp"
 import CheckoutApp from "components/CheckoutApp"
 
-import MultiSelectInput from "lib/MultiSelectInput"
+import BaseInput from "lib/BaseInput"
 
 class App extends React.Component {
     
@@ -48,7 +48,7 @@ class IndexApp extends React.Component {
   render() {
     
     return (
-      null
+      <BaseInput label="Name" type="text" placeholder="Enter name" addonBefore="user" />
     );
   }
 };

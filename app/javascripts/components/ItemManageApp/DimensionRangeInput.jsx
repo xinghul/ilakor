@@ -12,9 +12,10 @@ import SingleRangeSlider from "lib/SingleRangeSlider"
 
 import styles from "components/ItemManageApp/DimensionRangeInput.scss"
 
+const validBaseValueReg = /^\d*[1-9]\d*$/;
+
 function validateBaseValue(baseValue) {
-  let validBaseValueReg = /^\d*[1-9]\d*$/;
-  
+
   if (_.isEmpty(baseValue)) {
     return;
   }
@@ -23,7 +24,7 @@ function validateBaseValue(baseValue) {
     return "success";
   }
   
-  return "warning";
+  return "error";
 }
 
 export default class DimensionRangeInput extends React.Component {
@@ -32,7 +33,8 @@ export default class DimensionRangeInput extends React.Component {
     super(props);
     
     this.state = {
-      baseValue: 100,
+      baseValue: "",
+      validBaseValue: false,
       valueCustomizable: false
     };
   }
@@ -41,8 +43,6 @@ export default class DimensionRangeInput extends React.Component {
     this.setState({
       valueCustomizable: newValue
     });
-    
-    console.log(this.getValue());
   };
   
   handleBaseValueChange = (newValue) => {
@@ -50,7 +50,15 @@ export default class DimensionRangeInput extends React.Component {
       baseValue: newValue
     });
     
-    if (_.toInteger(newValue) > 0) {
+    if (!validBaseValueReg.test(newValue)) {
+      this.setState({
+        validBaseValue: false
+      });
+    } else {
+      this.setState({
+        validBaseValue: true
+      });
+      
       this.updateRangeSliders(_.toInteger(newValue));      
     }
     
@@ -81,6 +89,11 @@ export default class DimensionRangeInput extends React.Component {
   }
   
   getValue() {
+    // return null if base value is not valid
+    if (!this.state.validBaseValue) {
+      return null;
+    }
+    
     let value = {
       baseValue: this.state.baseValue,
       valueCustomizable: this.state.valueCustomizable
@@ -97,24 +110,30 @@ export default class DimensionRangeInput extends React.Component {
   render() {
     
     return (
-      <Form horizontal>
+      <Form horizontal className={styles.dimensionRangeInput}>
         <FormGroup controlId="baseValue">
-          <Col componentClass={ControlLabel} md={2} xs={2}>
+          <Col componentClass={ControlLabel} md={3} xs={3}>
             {this.props.label}
           </Col>
           <Col md={3} xs={3}>
             <BaseInput
               type="text"
+              ref="baseValue"
               validationState={validateBaseValue(this.state.baseValue)}
               value={this.state.baseValue}
               handleChange={this.handleBaseValueChange}
             />
           </Col>
           <Col md={3} xs={3} className={styles.customizableCheckbox}>
-            <BaseCheckbox label="customizable" handleChange={this.handleCustomizableChange} />
+            <BaseCheckbox 
+              disabled={!this.state.validBaseValue} 
+              ref="checkbox" 
+              label="customizable"
+              handleChange={this.handleCustomizableChange} 
+            />
           </Col>
         </FormGroup>
-        <FormGroup hidden={!this.state.valueCustomizable}>
+        <FormGroup className={styles.sliderGroup} hidden={!(this.state.valueCustomizable && this.state.validBaseValue)}>
           <Col componentClass={ControlLabel} md={2} xs={2}>
             Min value
           </Col>
@@ -135,9 +154,11 @@ export default class DimensionRangeInput extends React.Component {
 }
 
 DimensionRangeInput.propTypes = {
-  label: React.PropTypes.string
+  label: React.PropTypes.string,
+  ref: React.PropTypes.string
 };
 
 DimensionRangeInput.defaultProps = {
-  label: "Dimension"
+  label: "Dimension",
+  ref: "dimension"
 };

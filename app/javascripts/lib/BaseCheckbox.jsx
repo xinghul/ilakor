@@ -11,6 +11,8 @@ export default class BaseCheckbox extends React.Component {
   constructor(props) {
     super(props);
     
+    this._id = _.uniqueId("baseCheckbox");
+    
     this.state = {
       checked: false
     };
@@ -35,11 +37,12 @@ export default class BaseCheckbox extends React.Component {
     return (
       <div className={styles.baseCheckbox}>
         <input 
+          {...this.props}
           type="checkbox" 
-          id="baseCheckbox"
+          id={this._id}
           onClick={this.handleChange}
         />
-        <label htmlFor="baseCheckbox">{this.props.label}</label>
+        <label htmlFor={this._id}>{this.props.label}</label>
       </div>
     );
   }
