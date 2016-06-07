@@ -39,13 +39,18 @@ export default class MultiSelectInput extends React.Component {
     });
     
     return (
-      <Select
-        {...this.props}
-        options={options}
-        multi={true}
-        value={this.state.value}
-        onChange={this.handleChange}
-      />
+      <div className={styles.multiSelectInput}>
+        <label>
+          {this.props.label}
+        </label>
+        <Select
+          {...this.props}
+          options={options}
+          multi={true}
+          value={this.state.value}
+          onChange={this.handleChange}
+        />
+      </div>
     );
   }
 }

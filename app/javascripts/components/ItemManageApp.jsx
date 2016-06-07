@@ -193,6 +193,7 @@ export default class ItemManageApp extends React.Component {
     let tagInput = (
       <MultiSelectInput
         ref="tag"
+        label="Tags"
         placeholder="Select tags"
         options={tagOptions}
       />
@@ -225,7 +226,7 @@ export default class ItemManageApp extends React.Component {
           </Col>
         </Row>
         <Row>
-          <Col xs={8}>
+          <Col xs={8} md={8}>
             {nameInput}
           </Col>
         </Row>

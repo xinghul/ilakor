@@ -12,7 +12,19 @@ import SingleRangeSlider from "lib/SingleRangeSlider"
 
 import styles from "components/ItemManageApp/DimensionRangeInput.scss"
 
-const MIN_BASE_VALUE = 20;
+function validateBaseValue(baseValue) {
+  let validBaseValueReg = /^\d*[1-9]\d*$/;
+  
+  if (_.isEmpty(baseValue)) {
+    return;
+  }
+
+  if (validBaseValueReg.test(baseValue)) {
+    return "success";
+  }
+  
+  return "warning";
+}
 
 export default class DimensionRangeInput extends React.Component {
   
@@ -34,13 +46,13 @@ export default class DimensionRangeInput extends React.Component {
   };
   
   handleBaseValueChange = (newValue) => {
-    newValue = Math.max(MIN_BASE_VALUE, _.toInteger(newValue));
-    
     this.setState({
       baseValue: newValue
     });
     
-    this.updateRangeSliders(newValue);
+    if (_.toInteger(newValue) > 0) {
+      this.updateRangeSliders(_.toInteger(newValue));      
+    }
     
   };
   
@@ -93,6 +105,8 @@ export default class DimensionRangeInput extends React.Component {
           <Col md={3} xs={3}>
             <BaseInput
               type="text"
+              validationState={validateBaseValue(this.state.baseValue)}
+              value={this.state.baseValue}
               handleChange={this.handleBaseValueChange}
             />
           </Col>

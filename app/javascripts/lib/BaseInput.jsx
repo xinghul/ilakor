@@ -4,6 +4,8 @@ import React from "react"
 import _ from "lodash"
 import { FormGroup, InputGroup, FormControl, ControlLabel, Glyphicon } from "react-bootstrap"
 
+import styles from "lib/BaseInput.scss"
+
 export default class BaseInput extends React.Component {
   
   constructor(props) {
@@ -28,7 +30,8 @@ export default class BaseInput extends React.Component {
     
     let addonBeforeGlyphicon = null
     ,   controlLabel = null
-    ,   selectOptions = null;
+    ,   selectOptions = null
+    ,   validationState = null;
     
     let newProps = _.clone(this.props);
 
@@ -48,6 +51,12 @@ export default class BaseInput extends React.Component {
       );
       
       delete newProps.label;
+    }
+    
+    if (!_.isEmpty(newProps.validationState)) {
+      validationState = newProps.validationState;
+      
+      delete newProps.validationState;
     }
     
     if (newProps.type === "select") {
@@ -71,7 +80,7 @@ export default class BaseInput extends React.Component {
     }
     
     return (
-      <FormGroup controlId={newProps.key}>
+      <FormGroup className={styles.baseInput} controlId={newProps.key} validationState={validationState}>
         {controlLabel}
         {do {
           if (addonBeforeGlyphicon !== null) {
