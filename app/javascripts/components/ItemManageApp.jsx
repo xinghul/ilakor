@@ -271,24 +271,19 @@ export default class ItemManageApp extends React.Component {
     
     let submitButton = (
       <Button onClick={this.handleSubmit}>
-        Add
+        Add new item
       </Button>
     );
     
     let addItemForm = (
       <div className={styles.addItemForm}>
         <Row>
-          <Col xs={12} md={12}>
-            <h2><Label>Add new item</Label></h2>
-          </Col>
-        </Row>
-        <Row>
-          <Col xs={8} md={8}>
+          <Col xs={12} md={8}>
             {nameInput}
           </Col>
         </Row>
         <Row>
-          <Col xs={12} md={12}>
+          <Col xs={12} md={8}>
             {tagInput}
           </Col>
         </Row>
@@ -298,22 +293,22 @@ export default class ItemManageApp extends React.Component {
           </Col>
         </Row>
         <Row>
-          <Col xs={12} md={12}>
+          <Col xs={12} md={8}>
             {heightInput}
           </Col>
         </Row>
         <Row>
-          <Col xs={12} md={12}>
+          <Col xs={12} md={8}>
             {widthInput}
           </Col>
         </Row>
         <Row>
-          <Col xs={12} md={12}>
+          <Col xs={12} md={8}>
             {depthInput}
           </Col>
         </Row>
         <Row>
-          <Col xs={12} md={12}>
+          <Col xs={12} md={8}>
             {priceInput}
           </Col>
         </Row>
@@ -323,7 +318,7 @@ export default class ItemManageApp extends React.Component {
           </Col>
         </Row>
         <Row>
-          <Col xs={12} md={12}>
+          <Col xs={12} md={8}>
             {submitButton}
           </Col>
         </Row>
@@ -347,10 +342,10 @@ export default class ItemManageApp extends React.Component {
         {itemInfoModal}
         <Grid fluid>
           <Row>
-            <Col xs={6} md={6}>
+            <Col xs={12} md={6}>
               {addItemForm}
             </Col>
-            <Col xs={6} md={6}>
+            <Col md={6}>
               {itemListForm}
             </Col>
           </Row>
