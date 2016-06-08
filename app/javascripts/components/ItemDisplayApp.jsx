@@ -3,12 +3,13 @@
 import React from "react"
 import Promise from "bluebird"
 
-import BaseGrid from "lib/BaseGrid"
 import LoadSpinner from "lib/LoadSpinner"
 
 import ItemDisplayStore from "stores/ItemDisplayStore"
 import ItemDisplayAction from "actions/ItemDisplayAction"
 import ShoppingCartAction from "actions/ShoppingCartAction"
+
+import ItemDisplayGrid from "./ItemDisplayApp/ItemDisplayGrid"
 import ItemDetailModal from "./ItemDisplayApp/ItemDetailModal"
 import ItemFilterApp from "./ItemDisplayApp/ItemFilterApp"
 import FilterDisplayApp from "./ItemDisplayApp/FilterDisplayApp"
@@ -195,7 +196,7 @@ export default class ItemDisplayApp extends React.Component {
             {/*
               <FilterDisplayApp handleRemoveFilter={this.handleRemoveFilter} filters={this.state.filters}/>              
             */}
-            <BaseGrid
+            <ItemDisplayGrid
               items={this.state.items} 
               handleItemClick={this.handleItemClick}
               handleAddToCartClick={this.handleAddToCartClick} />

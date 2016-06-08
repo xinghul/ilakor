@@ -31,7 +31,7 @@ export default class ItemListTable extends React.Component {
         <tr onClick={this.props.handleItemClick.bind(this, item)} key={item._id}>
           <td>{index}</td>
           <td>{item.name}</td>
-          <td>{item.price.base}</td>
+          <td>{item.price}</td>
           <td>{item.tag.join(",")}</td>
         </tr>
       );

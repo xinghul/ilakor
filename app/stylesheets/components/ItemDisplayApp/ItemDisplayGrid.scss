@@ -1,0 +1,10 @@
+.itemDisplayGrid {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  
+  .itemContainer {
+    display: inline-block;
+    margin: 20px;
+  }
+}

@@ -54,7 +54,7 @@ export default class BaseItem extends React.Component {
             Add to cart
           </Button>
         </div>
-        <div className={styles.itemPrice}>{ItemUtil.createPriceJsx(item.price.base)}</div>
+        <div className={styles.itemPrice}>{ItemUtil.createPriceJsx(item.price)}</div>
       </div>      
     );
   }

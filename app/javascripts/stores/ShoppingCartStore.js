@@ -68,7 +68,7 @@ function getTotalPrice(items) {
   
   for (let key of Object.keys(items))
   {
-    totalPrice += items[key].item.price.base * items[key].count;
+    totalPrice += items[key].item.price * items[key].count;
   }
   
   return totalPrice;
