@@ -1,0 +1,21 @@
+.submitButton {
+  position: relative;
+  background-color: rgba(59, 47, 37, 0.8);
+  color: white;
+
+  font-size: 14px;
+  font-weight: 600;
+  
+  .spinner {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    
+    pointer-events: none;
+    
+    background-color: #3B2F25;
+  }
+}
+

@@ -139,7 +139,8 @@ let ItemApi = {
            reject(err);
          } else {
            uploadImages(item, images).then(function(updatedItem) {
-             removeImageCache(images);
+            // we handle this on front end
+            //  removeImageCache(images);
              
              resolve(updatedItem);
            }).catch(function(err) {

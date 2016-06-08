@@ -95,16 +95,28 @@ export default class DimensionRangeInput extends React.Component {
     }
     
     let value = {
-      baseValue: this.state.baseValue,
-      valueCustomizable: this.state.valueCustomizable
+      base: this.state.baseValue,
+      customizable: this.state.valueCustomizable
     };
     
     if (this.state.valueCustomizable) {
-      value["minValue"] = this.refs["lowerSlider"].getValue();
-      value["maxValue"] = this.refs["upperSlider"].getValue();
+      value["min"] = this.refs["lowerSlider"].getValue();
+      value["max"] = this.refs["upperSlider"].getValue();
+      value["pricePerUnit"] = 10;
     }
     
     return value;
+  }
+  
+  clear() {
+    this.refs["baseValue"].clear();
+    this.refs["checkbox"].clear();
+    
+    this.setState({
+      baseValue: "",
+      validBaseValue: false,
+      valueCustomizable: false
+    });
   }
   
   render() {

@@ -10,6 +10,10 @@ export default class BaseInput extends React.Component {
   
   constructor(props) {
     super(props);
+    
+    this.state = {
+      value: this.props.initialValue || ""
+    };
   }
   
   handleChange = (evt) => {
@@ -24,6 +28,12 @@ export default class BaseInput extends React.Component {
   
   getValue() {
     return this.state.value;
+  }
+  
+  clear() {
+    this.setState({
+      value: ""
+    });
   }
 
   render() {
@@ -65,6 +75,7 @@ export default class BaseInput extends React.Component {
           <InputGroup.Addon>{newProps.label}</InputGroup.Addon>
           <FormControl 
             {...newProps}
+            value={this.state.value}
             onChange={this.handleChange}
           >{selectOptions}</FormControl>
         </InputGroup>

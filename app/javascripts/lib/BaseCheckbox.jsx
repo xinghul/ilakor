@@ -32,6 +32,12 @@ export default class BaseCheckbox extends React.Component {
     return this.state.checked;
   }
   
+  clear() {
+    this.setState({
+      checked: false
+    });
+  }
+  
   render() {
     
     return (
@@ -41,6 +47,7 @@ export default class BaseCheckbox extends React.Component {
           type="checkbox" 
           id={this._id}
           onClick={this.handleChange}
+          checked={this.state.checked}
         />
         <label htmlFor={this._id}>{this.props.label}</label>
       </div>

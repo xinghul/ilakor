@@ -29,6 +29,12 @@ export default class MultiSelectInput extends React.Component {
     });
   }
   
+  clear() {
+    this.setState({
+      value: []
+    });
+  }
+  
   render() {
     
     let options = this.props.options.map((option) => {

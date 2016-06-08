@@ -48,13 +48,13 @@ export default class ItemDetailModal extends React.Component {
           type="text"
           label="_id"
           disabled={true}
-          defaultValue={item._id}
+          initialValue={item._id}
         />
         <BaseInput 
           type="text"
           label="Name"
           ref="name"
-          defaultValue={item.name}
+          initialValue={item.name}
         />
       </Form>
     );

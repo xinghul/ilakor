@@ -13,7 +13,7 @@ chai.use(chaiHttp);
 const API_URL = "/api/items";
 
 describe("Items", function() {
-  this.timeout(20000);
+  this.timeout(40000);
   
   let itemCount
   ,   itemId
@@ -40,13 +40,29 @@ describe("Items", function() {
     let rawData = {
       name: itemName,
       tag: ["TABLE"],
-      price: {
-        base: 3100
-      },
+      price: 3100,
       dimension: {
-        baseWidth: 11,
-        baseHeight: 12,
-        baseDepth: 13,
+        width: {
+          base: 60,
+          customizable: true,
+          min: 40,
+          max: 80,
+          pricePerUnit: 10
+        },
+        height: {
+          base: 60,
+          customizable: true,
+          min: 40,
+          max: 80,
+          pricePerUnit: 10
+        },
+        depth: {
+          base: 60,
+          customizable: true,
+          min: 40,
+          max: 80,
+          pricePerUnit: 10
+        },
         weight: 100
       },
       stock: 1

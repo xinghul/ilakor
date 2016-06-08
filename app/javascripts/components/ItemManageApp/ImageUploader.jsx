@@ -71,6 +71,12 @@ export default class ImageUploader extends React.Component {
     return _files;
   }
   
+  clear() {
+    _files = [];
+    
+    _dropzone.removeAllFiles();
+  }
+  
   render() {
     
     
