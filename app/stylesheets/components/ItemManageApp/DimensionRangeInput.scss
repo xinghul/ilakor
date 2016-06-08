@@ -1,20 +1,23 @@
 .dimensionRangeInput {
-  margin-bottom: 30px;
-  
-  .customizableCheckbox {
-    top: 6px;
+
+  .firstRow {
+    display: flex;
+    flex-direction: row;
+    
+    .baseInput {
+      flex: 1;
+    }
+    
+    .checkbox {
+      width: 110px;
+      margin-left: 10px;
+      padding-top: 6px;
+    }
   }
   
   .sliderGroup {
-    margin-top: -15px;
-    
-    .rangeSlider {
-      top: 9px;
-      left: -16px;
-    }  
-    
+    margin-bottom: 40px;
   }
-
 }
 
 

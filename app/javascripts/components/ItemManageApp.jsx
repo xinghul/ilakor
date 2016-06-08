@@ -288,12 +288,12 @@ export default class ItemManageApp extends React.Component {
           </Col>
         </Row>
         <Row>
-          <Col xs={12}>
+          <Col xs={12} md={12}>
             {tagInput}
           </Col>
         </Row>
         <Row>
-          <Col xs={12}>
+          <Col xs={12} md={12}>
             {imagesInput}
           </Col>
         </Row>
@@ -313,7 +313,7 @@ export default class ItemManageApp extends React.Component {
           </Col>
         </Row>
         <Row>
-          <Col xs={12}>
+          <Col xs={12} md={12}>
             {priceInput}
           </Col>
         </Row>
@@ -323,7 +323,7 @@ export default class ItemManageApp extends React.Component {
           </Col>
         </Row>
         <Row>
-          <Col xs={12}>
+          <Col xs={12} md={12}>
             {submitButton}
           </Col>
         </Row>
@@ -347,10 +347,10 @@ export default class ItemManageApp extends React.Component {
         {itemInfoModal}
         <Grid fluid>
           <Row>
-            <Col xs={5}>
+            <Col xs={6} md={6}>
               {addItemForm}
             </Col>
-            <Col xs={7}>
+            <Col xs={6} md={6}>
               {itemListForm}
             </Col>
           </Row>

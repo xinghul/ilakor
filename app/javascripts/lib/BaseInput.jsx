@@ -28,30 +28,10 @@ export default class BaseInput extends React.Component {
 
   render() {
     
-    let addonBeforeGlyphicon = null
-    ,   controlLabel = null
-    ,   selectOptions = null
+    let selectOptions = null
     ,   validationState = null;
     
     let newProps = _.clone(this.props);
-
-    if (!_.isEmpty(newProps.addonBefore)) {
-      addonBeforeGlyphicon = (
-        <InputGroup.Addon>
-          <Glyphicon glyph={newProps.addonBefore} />
-        </InputGroup.Addon>
-      );
-      
-      delete newProps.addonBefore;
-    }
-    
-    if (!_.isEmpty(newProps.label)) {
-      controlLabel = (
-        <ControlLabel>{newProps.label}</ControlLabel>
-      );
-      
-      delete newProps.label;
-    }
     
     if (!_.isEmpty(newProps.validationState)) {
       validationState = newProps.validationState;
@@ -81,23 +61,13 @@ export default class BaseInput extends React.Component {
     
     return (
       <FormGroup className={styles.baseInput} controlId={newProps.key} validationState={validationState}>
-        {controlLabel}
-        {do {
-          if (addonBeforeGlyphicon !== null) {
-            <InputGroup>
-              {addonBeforeGlyphicon}
-              <FormControl 
-                {...newProps}
-                onChange={this.handleChange}
-              >{selectOptions}</FormControl>
-            </InputGroup>
-          } else {
-            <FormControl 
-              {...newProps}
-              onChange={this.handleChange}
-            >{selectOptions}</FormControl>
-          }
-        }}
+        <InputGroup>
+          <InputGroup.Addon>{newProps.label}</InputGroup.Addon>
+          <FormControl 
+            {...newProps}
+            onChange={this.handleChange}
+          >{selectOptions}</FormControl>
+        </InputGroup>
       </FormGroup>
       
     );
@@ -111,12 +81,10 @@ BaseInput.propTypes = {
   
   // most used props
   handleChange: React.PropTypes.func,
-  addonBefore: React.PropTypes.string,
   label: React.PropTypes.string
 };
 
 BaseInput.defaultProps = {
   handleChange: function() {},
-  addonBefore: "",
   label: ""
 };

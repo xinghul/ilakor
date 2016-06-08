@@ -16,13 +16,15 @@ import NavbarApp from "components/NavbarApp"
 import SocialApp from "components/SocialApp"
 import CheckoutApp from "components/CheckoutApp"
 
-import BaseInput from "lib/BaseInput"
+import DimensionRangeInput from "components/ItemManageApp/DimensionRangeInput"
+
+import styles from "app.scss"
 
 class App extends React.Component {
     
   render() {
     return (
-      <div>
+      <div className={styles.app}>
         <NavbarApp />
         <ReactCSSTransitionGroup
           component="div"
@@ -48,7 +50,7 @@ class IndexApp extends React.Component {
   render() {
     
     return (
-      <BaseInput label="Name" type="text" placeholder="Enter name" addonBefore="user" />
+      null
     );
   }
 };

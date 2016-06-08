@@ -6,6 +6,8 @@ import Mock from "mock-data"
 import _ from "lodash"
 import invariant from "invariant"
 
+import { InputGroup } from "react-bootstrap"
+
 import sliderStyles from "nouislider/distribute/nouislider.min.css"
 
 import styles from "lib/SingleRangeSlider.scss"
@@ -42,7 +44,10 @@ export default class SingleRangeSlider extends React.Component {
     
     return (
       <div className={styles.singleRangeSlider}>
-        <div id={this._sliderId} />
+        <InputGroup>
+          <InputGroup.Addon>{this.props.label}</InputGroup.Addon>
+          <div id={this._sliderId} />
+        </InputGroup>
       </div>
     );
   }
@@ -56,7 +61,8 @@ SingleRangeSlider.propTypes = {
     min: React.PropTypes.number,
     max: React.PropTypes.number
   }),
-  start: React.PropTypes.number
+  start: React.PropTypes.number,
+  label: React.PropTypes.string
 };
 
 SingleRangeSlider.defaultProps = {
@@ -66,6 +72,7 @@ SingleRangeSlider.defaultProps = {
     min: 0,
     max: 100
   },
-  start: 40
+  start: 40,
+  label: ""
 };
 
