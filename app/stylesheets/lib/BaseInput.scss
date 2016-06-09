@@ -1,4 +1,8 @@
 .baseInput {
+  label {
+    margin-bottom: 0px;
+  }
+
   input {
     border: 0.5px solid #ccc;
     color: #333;
@@ -6,4 +10,33 @@
     outline: 0;
     box-shadow: none;
   }
+  
+  :global(.input-group) {
+    width: 100%;
+  }
+  
+  .addonContent {
+    width: 114px;
+    text-align: left;
+  }
+  
+  .focusContentContainer {
+    max-height: 0px;
+    overflow: hidden;
+    
+    border: 0.5px solid #ccc;
+    border-top: none;
+    margin-top: -2px;
+    border-radius: 0 0 4px 4px;
+    background-color: rgba(238, 238, 238, 0.5);
+    font-size: 13px;
+    font-style: italic;
+    
+    transition: max-height 300ms linear;
+    
+    .focusContent {
+      padding: 7px 10px 5px 10px;
+    }
+  }
+  
 }

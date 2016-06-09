@@ -34,7 +34,7 @@ export default class EmailInput extends React.Component {
     this.props.handleChange(isValid ? newValue : "");
   };
   
-  createBsStyle() {
+  validateEmail() {
     if (!this.state.isValid) {
       if (this.state.value === "") {
         return null;
@@ -47,20 +47,41 @@ export default class EmailInput extends React.Component {
   }
   
   render() {
-    let bsStyle = this.createBsStyle();
+    let validationState = do {
+      if (this.props.isRegister) {
+        this.validateEmail()
+      } else {
+        null
+      }
+    }
     
+    let autoComplete = do {
+      if (this.props.isRegister) {
+        "off"
+      } else {
+        "email"
+      }
+    }
+
     return (
       <BaseInput
+        {...this.props}
         type="email"
-        placeholder="Email"
-        addonBefore="envelope"
-        bsStyle={bsStyle}
-        autoComplete="none"
+        placeholder="Enter email"
+        label="Email"
+        icon="envelope"
+        validationState={validationState}
+        autoComplete={autoComplete}
         handleChange={this.handleEmailChange} />
     );
   }
 };
 
 EmailInput.propTypes = {
-  handleChange: React.PropTypes.func.isRequired
+  handleChange: React.PropTypes.func.isRequired,
+  isRegister: React.PropTypes.bool
+};
+
+EmailInput.defaultProps = {
+  isRegister: false
 };

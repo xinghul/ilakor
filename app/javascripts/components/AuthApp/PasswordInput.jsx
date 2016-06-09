@@ -1,10 +1,14 @@
 "use strict";
 
 import React from "react"
+import _ from "lodash"
+
 import BaseInput from "lib/BaseInput"
 
+import styles from "components/AuthApp/PasswordInput.scss"
+
 function isValidPassword(password) {
-  let validPasswordReg = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/i;
+  let validPasswordReg = /^[a-zA-Z]\w{3,14}$/;
 
   if (validPasswordReg.test(password)) {
     return true;
@@ -35,7 +39,7 @@ export default class PasswordInput extends React.Component {
     this.props.handleChange(isValid ? newValue : "");
   };
   
-  createBsStyle() {
+  validatePassword() {
     if (!this.state.isValid) {
       if (this.state.value === "") {
         return null;
@@ -48,20 +52,44 @@ export default class PasswordInput extends React.Component {
   }
   
   render() {
-    let bsStyle = this.createBsStyle();
+    let focusText = do {
+      if (this.props.isRegister) {
+        "First character must be a letter, it must contain at least 4 characters and no more than 15 characters and no characters other than letters, numbers and the underscore may be used"
+      } else {
+        ""
+      }
+    }
+    
+    let validationState = do {
+      if (this.props.isRegister) {
+        this.validatePassword()
+      } else {
+        null
+      }
+    }
     
     return (
-      <BaseInput
-        type="password"
-        placeholder="Password"
-        addonBefore="lock"
-        bsStyle={bsStyle}
-        autoComplete="none"
-        handleChange={this.handlePasswordChange} />
+      <div className={styles.passwordInput}>
+        <BaseInput
+          {...this.props}
+          type="password"
+          placeholder="Enter password"
+          label="Password"
+          icon="lock"
+          validationState={validationState}
+          focusText={focusText}
+          autoComplete="off"
+          handleChange={this.handlePasswordChange} />
+      </div>
     );
   }
 };
 
 PasswordInput.propTypes = {
-  handleChange: React.PropTypes.func.isRequired
+  handleChange: React.PropTypes.func.isRequired,
+  isRegister: React.PropTypes.bool
+};
+
+PasswordInput.defaultProps = {
+  isRegister: false
 };

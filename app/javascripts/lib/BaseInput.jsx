@@ -2,7 +2,8 @@
 
 import React from "react"
 import _ from "lodash"
-import { FormGroup, InputGroup, FormControl, ControlLabel, Glyphicon } from "react-bootstrap"
+import { FormGroup, InputGroup, FormControl } from "react-bootstrap"
+import FontAwesome from "react-fontawesome"
 
 import styles from "lib/BaseInput.scss"
 
@@ -12,7 +13,8 @@ export default class BaseInput extends React.Component {
     super(props);
     
     this.state = {
-      value: this.props.initialValue || ""
+      value: this.props.initialValue || "",
+      focused: false
     };
   }
   
@@ -24,6 +26,18 @@ export default class BaseInput extends React.Component {
     });
 
     this.props.handleChange(newValue);
+  };
+  
+  handleOnFocus = () => {
+    this.setState({
+      focused: true
+    });
+  };
+  
+  handleOnBlur = () => {
+    this.setState({
+      focused: false
+    });
   };
   
   getValue() {
@@ -39,7 +53,8 @@ export default class BaseInput extends React.Component {
   render() {
     
     let selectOptions = null
-    ,   validationState = null;
+    ,   validationState = null
+    ,   addonContent = null;
     
     let newProps = _.clone(this.props);
     
@@ -69,16 +84,52 @@ export default class BaseInput extends React.Component {
       delete newProps.type;
     }
     
+    addonContent = do {
+      if (!_.isEmpty(newProps.icon)) {
+        <InputGroup.Addon className={styles.addonContent}>
+          <FontAwesome
+            name={newProps.icon}
+            fixedWidth={true}
+          />
+          &nbsp; 
+          <label>{newProps.label}</label>
+        </InputGroup.Addon>
+      } else {
+        <InputGroup.Addon className={styles.addonContent}>
+          <label>{newProps.label}</label>
+        </InputGroup.Addon>
+      }
+    }
+    
+    let style = {
+      maxHeight: this.state.focused ? "60px" : ""
+    };
+
     return (
-      <FormGroup className={styles.baseInput} controlId={newProps.key} validationState={validationState}>
+      <FormGroup 
+        className={styles.baseInput} 
+        controlId={newProps.key} 
+        validationState={validationState}
+      >
         <InputGroup>
-          <InputGroup.Addon>{newProps.label}</InputGroup.Addon>
+          {addonContent}
           <FormControl 
             {...newProps}
-            value={this.state.value}
+            value={this.props.value ? this.props.value : this.state.value}
             onChange={this.handleChange}
+            onFocus={this.handleOnFocus}
+            onBlur={this.handleOnBlur}
           >{selectOptions}</FormControl>
         </InputGroup>
+        <div 
+          hidden={_.isEmpty(newProps.focusText)} 
+          className={styles.focusContentContainer} 
+          style={style}
+        >
+          <div className={styles.focusContent}>
+            {newProps.focusText}
+          </div>
+        </div>
       </FormGroup>
       
     );

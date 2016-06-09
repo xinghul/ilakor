@@ -5,6 +5,7 @@ import _ from "lodash"
 import { Button, Form, SplitButton, MenuItem, Modal } from "react-bootstrap"
 
 import GhostButton from "lib/GhostButton"
+import SubmitButton from "lib/SubmitButton"
 import EmailInput from "./AuthApp/EmailInput"
 import UsernameInput from "./AuthApp/UsernameInput"
 import PasswordInput from "./AuthApp/PasswordInput"
@@ -35,6 +36,8 @@ export default class AuthApp extends React.Component {
       email: "",
       password: "",
       
+      isLoggingIn: false,
+      isSigningUp: false,
       errorMessage: ""
     };
   }
@@ -66,27 +69,36 @@ export default class AuthApp extends React.Component {
   };
   
   handleLoginClick = () => {
-    let self = this;
     
-    // handle log in
+    this.setState({
+      isLoggingIn: true
+    });
+    
     AuthActions.userLogIn({
 
       email: this.state.email,
       password: this.state.password
 
-    }).then(function() {
-      AuthActions.toggleModal();
+    }).then(() => {
+      this.toggleModal();
     }).catch((err) => {
       console.log(err);
       
       this.setState({
         errorMessage: err.body.message
       });
+    }).finally(() => {
+      this.setState({
+        isLoggingIn: false
+      });
     });
   };
   
   handleSignupClick = () => {
-    let self = this;
+    
+    this.setState({
+      isSigningUp: true
+    });
     
     AuthActions.userSignUp({
 
@@ -94,13 +106,17 @@ export default class AuthApp extends React.Component {
       email: this.state.email,
       password: this.state.password
 
-    }).then(function() {
-      AuthActions.toggleModal();
+    }).then(() => {
+      this.toggleModal();
     }).catch((err) => {
       console.log(err);
       
       this.setState({
         errorMessage: err.body.message
+      });
+    }).finally(() => {
+      this.setState({
+        isSigningUp: false
       });
     });
   };
@@ -142,7 +158,7 @@ export default class AuthApp extends React.Component {
                    
     let socialLoginArea = (
       <div style={buttonWrapperStyle}>
-        <Button className={styles.loginBtn + ' ' + styles.loginBtnFacebook}>
+        <Button disabled={this.state.isLoggingIn} className={styles.loginBtn + ' ' + styles.loginBtnFacebook}>
           <a style={linkStyle} href="/auth/facebook">Login with Facebook</a>
         </Button>
       </div>
@@ -150,9 +166,14 @@ export default class AuthApp extends React.Component {
     
     return (
       <div>
-        <EmailInput handleChange={this.handleEmailChange} />
-        <PasswordInput handleChange={this.handlePasswordChange} />
-        <Button disabled={disabled} block bsStyle="success" onClick={this.handleLoginClick}>Log in</Button>
+        <EmailInput value={this.state.email} disabled={this.state.isLoggingIn} isRegister={false} handleChange={this.handleEmailChange} />
+        <PasswordInput value={this.state.password} disabled={this.state.isLoggingIn} isRegister={false} handleChange={this.handlePasswordChange} />
+        <SubmitButton
+          disabled={disabled}
+          handleSubmit={this.handleLoginClick}
+          isSubmitting={this.state.isLoggingIn}
+          bsStyle="success"
+        >Log in</SubmitButton>
         {socialLoginArea}      
       </div>
     );
@@ -165,18 +186,21 @@ export default class AuthApp extends React.Component {
 
     return (
       <div>
-        <EmailInput handleChange={this.handleEmailChange} />
-        <UsernameInput handleChange={this.handleUsernameChange} />
-        <PasswordInput handleChange={this.handlePasswordChange} />
-        <Button disabled={disabled} block bsStyle="success" onClick={this.handleSignupClick}>Sign up</Button>
+        <EmailInput value={this.state.email} disabled={this.state.isSigningUp} isRegister={true} handleChange={this.handleEmailChange} />
+        <UsernameInput value={this.state.username} disabled={this.state.isSigningUp} isRegister={true} handleChange={this.handleUsernameChange} />
+        <PasswordInput value={this.state.password} disabled={this.state.isSigningUp} isRegister={true} handleChange={this.handlePasswordChange} />
+        <SubmitButton
+          disabled={disabled}
+          handleSubmit={this.handleSignupClick}
+          isSubmitting={this.state.isSigningUp}
+          bsStyle="success"
+        >Sign up</SubmitButton>
       </div>
     );
   }
 
   render() {
     let authArea;
-    let toggleModeMessage;
-    let socialLoginArea;
     let user = this.state.user;
 
     if (user && user._id) {
@@ -198,41 +222,45 @@ export default class AuthApp extends React.Component {
         </SplitButton>
         
     } else {
-      if (this.state.isSignUp) {
-        toggleModeMessage =
-          <span className="pull-left">
-            Already have an account? <a onClick={this.toggleMode}>Log In</a>
-          </span>
-      } else {
-        toggleModeMessage =
-          <span className="pull-left">
-            New here? <a onClick={this.toggleMode}>Sign Up</a>
-          </span>
       
-      }
       
       authArea = 
         <div>
           <GhostButton onClick={this.toggleModal}>Sign in</GhostButton> 
-          
-          <Modal show={this.state.isModalOpen} onHide={this.toggleModal}>
-            <Modal.Header>
-              <Modal.Title>{this.state.isSignUp ? "Sign up" : "Log In"}</Modal.Title>
-            </Modal.Header>
-            <Modal.Body>
-              {this.state.isSignUp ? this.createModalBodySignup()
-                                   : this.createModalBodyLogin()}
-            </Modal.Body>
-            <Modal.Footer>
-              {toggleModeMessage}
-              <Button onClick={this.toggleModal}>Close</Button>
-            </Modal.Footer>
-          </Modal>
         </div>
     }
+    
+    let toggleModeMessage = (
+      <span hidden={this.state.isLoggingIn || this.state.isSigningUp} className="pull-left">
+        {do {
+          if (this.state.isSignUp) {
+            <div>Already have an account? <a onClick={this.toggleMode}>Log In</a></div>
+          } else {
+            <div>New here? <a onClick={this.toggleMode}>Sign Up</a></div>
+          }
+        }}
+      </span>
+    );
+    
+    let authModal = (
+      <Modal show={this.state.isModalOpen} onHide={this.toggleModal}>
+        <Modal.Header>
+          <Modal.Title>{this.state.isSignUp ? "Sign up" : "Log In"}</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          {this.state.isSignUp ? this.createModalBodySignup()
+                               : this.createModalBodyLogin()}
+        </Modal.Body>
+        <Modal.Footer>
+          {toggleModeMessage}
+          <Button onClick={this.toggleModal}>Close</Button>
+        </Modal.Footer>
+      </Modal>
+    );
 
     return (
       <div id="userArea">
+        {authModal}
         {authArea}
       </div>
     );

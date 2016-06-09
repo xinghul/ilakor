@@ -7,8 +7,6 @@ import Promise from "bluebird"
 import AppDispatcher from "dispatcher/AppDispatcher"
 import AuthConstants from "constants/AuthConstants"
 
-const API_URL = `${window.location.hostname}:${window.location.port}/auth/`;
-
 let AuthActions = {
   
   userLogIn: function(user) {
@@ -24,12 +22,12 @@ let AuthActions = {
           
           // save jwt token into the cookie
           ReactCookie.save("token", token);
-
+          
           AppDispatcher.handleAction({
             actionType: AuthConstants.RECEIVED_USER,
             user: newUser
           });
-
+          
           resolve();
         })
         .catch(function(err) {
@@ -91,21 +89,18 @@ let AuthActions = {
     
     return new Promise(function(resolve, reject) {
       
-      request.del("/auth/session")
-        .then(function(res) {
-          ReactCookie.remove("user");
-          
-          AppDispatcher.handleAction({
-            actionType: AuthConstants.RECEIVED_USER,
-            user: {}
-          });
-
-          resolve();
-        })
-        .catch(function(err) {
-          reject(err);
-        });
+      ReactCookie.remove("user");
       
+      AppDispatcher.handleAction({
+        actionType: AuthConstants.RECEIVED_USER,
+        user: {}
+      });
+      
+      request.del("/auth/session").then(() => {}).catch(function(err) {
+        console.log(err);
+      });
+
+      resolve();
     });
   }
 
