@@ -1,3 +1,12 @@
+.errorAlert {
+  max-height: 0px;
+  opacity: 0;
+  margin-bottom: 0px;
+  
+  transition: all 150ms linear;
+  overflow: hidden;
+}
+
 .loginBtn {
   box-sizing: border-box;
   position: relative;

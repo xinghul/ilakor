@@ -2,7 +2,7 @@
 
 import React from "react"
 import _ from "lodash"
-import { Button, Form, SplitButton, MenuItem, Modal } from "react-bootstrap"
+import { Button, Alert, SplitButton, MenuItem, Modal } from "react-bootstrap"
 
 import GhostButton from "lib/GhostButton"
 import SubmitButton from "lib/SubmitButton"
@@ -38,6 +38,7 @@ export default class AuthApp extends React.Component {
       
       isLoggingIn: false,
       isSigningUp: false,
+      showErrorAlert: false,
       errorMessage: ""
     };
   }
@@ -58,12 +59,18 @@ export default class AuthApp extends React.Component {
 
   toggleMode = () => {
     this.setState({
+      showErrorAlert: false,
+      errorMessage: "",
+      
       isSignUp: !this.state.isSignUp
     });
   };
   
   toggleModal = () => {
     this.setState({
+      showErrorAlert: false,
+      errorMessage: "",
+      
       isModalOpen: !this.state.isModalOpen
     });
   };
@@ -85,6 +92,7 @@ export default class AuthApp extends React.Component {
       console.log(err);
       
       this.setState({
+        showErrorAlert: true,
         errorMessage: err.body.message
       });
     }).finally(() => {
@@ -112,6 +120,7 @@ export default class AuthApp extends React.Component {
       console.log(err);
       
       this.setState({
+        showErrorAlert: true,
         errorMessage: err.body.message
       });
     }).finally(() => {
@@ -136,6 +145,12 @@ export default class AuthApp extends React.Component {
   handleUsernameChange = (newValue) => {
     this.setState({
       username: newValue
+    });
+  };
+  
+  handleAlertDismiss = () => {
+    this.setState({
+      showErrorAlert: false
     });
   };
 
@@ -242,12 +257,27 @@ export default class AuthApp extends React.Component {
       </span>
     );
     
+    let alertStyle = {
+      opacity: this.state.showErrorAlert ? "1" : "",
+      maxHeight: this.state.showErrorAlert ? "52px" : "",
+      marginBottom: this.state.showErrorAlert ? "20px" : ""
+    };
+    
+    let errorAlert = (
+      <div style={alertStyle} className={styles.errorAlert}>
+        <Alert bsStyle="danger" onDismiss={this.handleAlertDismiss}>
+          <p>{this.state.errorMessage}</p>
+        </Alert>
+      </div>
+    );
+    
     let authModal = (
       <Modal show={this.state.isModalOpen} onHide={this.toggleModal}>
         <Modal.Header>
           <Modal.Title>{this.state.isSignUp ? "Sign up" : "Log In"}</Modal.Title>
         </Modal.Header>
         <Modal.Body>
+          {errorAlert}
           {this.state.isSignUp ? this.createModalBodySignup()
                                : this.createModalBodyLogin()}
         </Modal.Body>
@@ -257,7 +287,7 @@ export default class AuthApp extends React.Component {
         </Modal.Footer>
       </Modal>
     );
-
+    
     return (
       <div id="userArea">
         {authModal}
