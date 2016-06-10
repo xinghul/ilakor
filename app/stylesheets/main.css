@@ -57,18 +57,26 @@ a {
   transition: all 300ms ease-out; }
 
 .route-enter {
-  transform: translateX(100%); }
+  transform: translateX(100%);
+  -ms-transform: translateX(100%);
+  -webkit-transform: translateX(100%); }
 
 .route-enter.route-enter-active {
   transform: translateX(0%);
-  transition: transform 300ms ease-in-out; }
+  -ms-transform: translateX(0%);
+  -webkit-transform: translateX(0%);
+  transition: all 300ms linear; }
 
 .route-leave {
-  transform: translateX(0%); }
+  transform: translateX(0%);
+  -ms-transform: translateX(0%);
+  -webkit-transform: translateX(0%); }
 
 .route-leave.route-leave-active {
   transform: translateX(-100%);
-  transition: transform 300ms ease-in-out; }
+  -ms-transform: translateX(-100%);
+  -webkit-transform: translateX(-100%);
+  transition: all 300ms linear; }
 
 .mainColor {
   color: white;
