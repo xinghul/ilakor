@@ -3,7 +3,6 @@
 import React from "react"
 import _ from "lodash"
 import getCardTypes from "credit-card-type"
-import CreditCard from "credit-card"
 import { Image, Button, Glyphicon } from "react-bootstrap"
 import { Form, FormGroup, FormControl, ControlLabel } from "react-bootstrap"
 import { Grid, Row, Col } from "react-bootstrap"
@@ -74,12 +73,9 @@ function validateCard(cardNumber, cardType) {
     return;
   }
   
-  let validateResult = CreditCard.validate({
-    cardType: cardType,
-    number: cardNumber
-  });
-  
-  if (validateResult.validCardNumber) {
+  let card = getCardTypes(cardNumber)[0];
+  debugger;
+  if (!_.isEmpty(card) && card.type === cardType) {
     return "success";
   }
   

@@ -7,7 +7,7 @@ let webpack = require("webpack")
 const APP_DIR = path.resolve(__dirname, "app/javascripts/");
 
 let config = {
-  entry: APP_DIR + "/app.jsx",
+  entry: ["babel-polyfill", APP_DIR + "/app.jsx"],
   output: {
     path: APP_DIR,
     filename: "bundle.js"

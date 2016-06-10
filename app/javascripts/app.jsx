@@ -1,5 +1,7 @@
 "use strict";
 
+import "babel-polyfill"
+
 // import this first for overwrite reason
 import bootstrapStyles from "bootstrap/dist/css/bootstrap.min.css"
 
