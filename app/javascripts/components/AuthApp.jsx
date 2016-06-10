@@ -189,6 +189,7 @@ export default class AuthApp extends React.Component {
           isSubmitting={this.state.isLoggingIn}
           bsStyle="success"
         >Log in</SubmitButton>
+        <div className={styles.divider}>or</div>
         {socialLoginArea}      
       </div>
     );
@@ -289,7 +290,7 @@ export default class AuthApp extends React.Component {
     );
     
     return (
-      <div id="userArea">
+      <div className={styles.authApp}>
         {authModal}
         {authArea}
       </div>

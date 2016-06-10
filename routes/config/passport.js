@@ -56,13 +56,9 @@ module.exports = {
         User.findOne({ "local.email": email.toLowerCase() }, function(err, user) {
           if (err) {
             done(err);
-          } else if (!user) {
+          } else if (!user || !user.authenticate(password)) {
             done(null, null, {
-              message: "Email is not registered."
-            });
-          } else if (!user.authenticate(password)) {
-            done(null, null, {
-              message: "Password is incorrect."
+              message: "Your email and password combination is invalid."
             });
           } else {
             done(null, user);

@@ -20,7 +20,7 @@ import CheckoutApp from "components/CheckoutApp"
 
 import DimensionRangeInput from "components/ItemManageApp/DimensionRangeInput"
 
-import styles from "app.scss"
+import styles from "main/app.scss"
 
 class App extends React.Component {
     

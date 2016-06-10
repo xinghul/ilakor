@@ -1,32 +1,33 @@
 
-.route-enter {
+:global(.route-enter) {
   // opacity: 0.01;
   transform: translateX(100%);
-  -ms-transform: translateX(100%);
   -webkit-transform: translateX(100%);
+  -ms-transform: translateX(100%);
 }
 
-.route-enter.route-enter-active {
+:global(.route-enter.route-enter-active) {
   transform: translateX(0%);
-  -ms-transform: translateX(0%);
   -webkit-transform: translateX(0%);
+  -ms-transform: translateX(0%);
 
   transition: all 300ms linear;
 
   // opacity: 1;
 }
 
-.route-leave {
+:global(.route-leave) {
   // opacity: 1;
   transform: translateX(0%);
-  -ms-transform: translateX(0%);
   -webkit-transform: translateX(0%);
+  -ms-transform: translateX(0%);
 }
 
-.route-leave.route-leave-active {
+:global(.route-leave.route-leave-active) {
   transform: translateX(-100%);
-  -ms-transform: translateX(-100%);
   -webkit-transform: translateX(-100%);
+  -ms-transform: translateX(-100%);
+  
   transition: all 300ms linear;
 
   // opacity: 0.01;

@@ -1,0 +1,32 @@
+
+:global(.filter-enter) {
+  opacity: 0.01;
+  transform: scale(0.2);
+  -webkit-transform: scale(0.2);
+  -ms-transform: scale(0.2);
+}
+
+:global(.filter-enter.filter-enter-active) {
+  opacity: 1;
+  transform: scale(1);
+  -webkit-transform: scale(1);
+  -ms-transform: scale(1);
+  
+  transition: all 300ms ease-out;
+}
+
+:global(.filter-leave) {
+  opacity: 1;
+  transform: scale(1);
+  -webkit-transform: scale(1);
+  -ms-transform: scale(1);
+}
+
+:global(.filter-leave.filter-leave-active) {
+  opacity: 0.01;
+  transform: scale(0.2);
+  -webkit-transform: scale(0.2);
+  -ms-transform: scale(0.2);
+
+  transition: all 300ms ease-out;
+}

@@ -120,11 +120,6 @@ app.use(function(err, req, res, next) {
   // because we're not using jade as view engine
   // so render with letiable injection does not work
   res.json(err);
-  
-  // res.render("error", {
-  //   message: err.message,
-  //   error: err
-  // });
 });
 
 //exports for future use

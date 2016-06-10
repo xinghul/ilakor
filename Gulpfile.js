@@ -2,17 +2,10 @@
 
 let gulp = require("gulp")
 ,   plumber = require("gulp-plumber")
-,   sass = require("gulp-sass")
 ,   nodemon = require("gulp-nodemon")
 ,   webpack = require("webpack-stream");
 
 const webpackConfig = require("./webpack.config.js");
-
-gulp.task("sass", function() {
-  return gulp.src("./build/sass/*.scss")
-    .pipe(sass())
-    .pipe(gulp.dest("./app/stylesheets/"));
-});
 
 gulp.task("webpack", function() {
   return gulp
@@ -41,10 +34,10 @@ gulp.task("watch:server", function() {
     });
 })
 
-gulp.task("default", ["sass", "webpack"], function() {
+gulp.task("default", ["webpack"], function() {
   console.log("Build succeeded.");
 });
 
-gulp.task("watch", ["sass", "webpack:watch", "watch:server"], function() {
+gulp.task("watch", ["webpack:watch", "watch:server"], function() {
   console.log("Build succeeded.");
 });
