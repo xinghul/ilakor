@@ -1,11 +1,15 @@
 .dimensionRangeInput {
+  margin-bottom: 15px;
 
   .firstRow {
     display: flex;
     flex-direction: row;
     
+    margin-bottom: 15px;
+    
     .baseInput {
       flex: 1;
+      height: 36px;
     }
     
     .checkbox {
