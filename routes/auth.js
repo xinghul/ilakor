@@ -2,17 +2,16 @@
 
 let express  = require("express")
 ,   passport = require("passport")
+,   crypto   = require("crypto")
 ,   _        = require("lodash")
 ,   router   = express.Router();
 
 let User    = require("./api/user")
 ,   session = require("./api/session");
 
-let CustomError = require("./utils/CustomError");
+let EmailService = require("./service/email");
 
-// router.post("/users", user.create);
-// router.get("/users/:userId", user.get);
-// router.get("/users", user.getAll);
+let CustomError = require("./utils/CustomError");
 
 router.get("/session", session.get);
 router.post("/session", session.create);
@@ -130,7 +129,42 @@ router.route("/user")
     console.log(err.stack);
     
     next(new CustomError(400, "Internal error."));
-  })
+  });
+});
+
+
+/********************************************************
+ *                 Password Reset Routes                *
+ ********************************************************/
+router.post("/forgot", function(req, res, next) {
+  let email = req.body.email
+  ,   token = crypto.randomBytes(24).toString("hex");
+  
+  let query = {email: email}
+  ,   newProps = {
+    resetToken: token,
+    resetExpire: Date.now() + 3600000
+  };
+  
+  User.update(query, newProps)
+    .then(function(user) {
+      if (_.isEmpty(user)) {
+        EmailService.sendUnregistered(email).then(function() {
+          res.status(200).end();
+        });
+      } else {
+        let link = req.protocol + "://" + req.headers.host + "/auth/reset?token=" + token;
+        
+        EmailService.sendResetPassword(email, link).then(function() {
+          res.status(200).end();
+        });
+      }
+    })
+    .catch(function(err) {
+      console.log(err);
+      
+      next(new CustomError(400, "Internal error."));
+    });
 });
 
 /**********************************************************
@@ -141,8 +175,8 @@ router.get("/facebook", passport.authenticate("facebook", {
   authType: "reauthenticate"
 }));
 
-router.get("/facebook/callback", function (req, res, next) {
-  passport.authenticate("facebook", function (err, user) {
+router.get("/facebook/callback", function(req, res, next) {
+  passport.authenticate("facebook", function(err, user) {
     if (err) {
       return res.end(err);      
     }

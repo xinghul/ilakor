@@ -221,8 +221,8 @@ export default class AuthApp extends React.Component {
 
     if (user && user._id) {
       let username = do {
-        if (user.local) {
-          user.local.username
+        if (user.username) {
+          user.username
         } else if (user.facebook) {
           user.facebook.nickname
         }

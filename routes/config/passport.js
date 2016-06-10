@@ -12,9 +12,10 @@ let LocalStrategy    = require("passport-local").Strategy
 ,   TwitterStrategy  = require("passport-twitter").Strategy
 ,   GoogleStrategy   = require("passport-google-oauth").OAuth2Strategy;
 
-let configAuth = require("./auth")
-,   UserUtil   = require("../utils/UserUtil")
-,   User       = mongoose.model("User");
+let configAuth   = require("./auth")
+,   UserUtil     = require("../utils/UserUtil")
+,   EmailService = require("../service/email")
+,   User         = mongoose.model("User");
 
 module.exports = {
   
@@ -53,7 +54,7 @@ module.exports = {
       process.nextTick(function () {
         
         // convert email to lower case
-        User.findOne({ "local.email": email.toLowerCase() }, function(err, user) {
+        User.findOne({ email: email.toLowerCase() }, function(err, user) {
           if (err) {
             done(err);
           } else if (!user || !user.authenticate(password)) {
@@ -78,7 +79,7 @@ module.exports = {
       callbackURL      : configAuth.facebookAuth.callbackURL,
       passReqToCallback: true,
       profileFields    : ["id", "emails", "photos", "name"],
-      scope            : ["email", "user_posts"]
+      scope            : ["email"]
     }, function (req, token, refreshToken, profile, done) {
 
       process.nextTick(function () {
@@ -116,39 +117,24 @@ module.exports = {
               newUser.facebook.fullname = 
                 profile.name.givenName + ' ' + profile.name.familyName;
               newUser.facebook.nickname = profile.name.givenName;
-              newUser.facebook.email    = profile.emails[0].value;
-              newUser.facebook.photo    = profile.photos[0].value;
               
-              // FB.setAccessToken(token);
-              // 
-              // 
-              // FB.api("/" + profile.id + "/feed", function (res) {
-              //   if(!res || res.error) {
-              //    console.log(!res ? 'error occurred' : res.error);
-              //    return;
-              //   }
-              //   
-              //   console.dir(res);
-              // });
-              // 
-              // FB.api("/me/feed", function (res) {
-              //   if(!res || res.error) {
-              //    console.log(!res ? 'error occurred' : res.error);
-              //    return;
-              //   }
-              //   
-              //   console.dir(res);
-              // });
-
+              // create a user with facebook email
+              newUser.email    = profile.emails[0].value;
+              newUser.username = newUser.facebook.nickname;
+              newUser.photo    = profile.photos[0].value;
+              
               // save our user to the database
-              newUser.save(function (err) {
-                if (err) {
-                  throw err;                
-                }
-
-                // if successful, return the new user
+              newUser.save()
+              .then(function() {
+                return EmailService.sendFacebookRegister(newUser.email);
+              })
+              .then(function() {
                 return done(null, newUser);
+              })
+              .catch(function(err) {
+                return done(err);
               });
+                
             }
 
           });
@@ -156,20 +142,24 @@ module.exports = {
           let user = req.user
           ,   newUser = new User();
           
-          if (_.isEmpty(user.local)) {
+          if (_.isEmpty(user.email)) {
             return done(new Error("User needs to log in using email."))
           }
           
-          newUser.local = user.local;
+          // preserve the local username, email and password
+          newUser.username = user.username;
+          newUser.password = user.password;
+          newUser.email    = user.email;
+          
+          // update the photo if not exist
+          newUser.photo = user.photo || profile.photos[0].value;
 
           newUser.facebook.id       = profile.id;
           newUser.facebook.token    = token;
           newUser.facebook.fullname = 
             profile.name.givenName + ' ' + profile.name.familyName;
           newUser.facebook.nickname = profile.name.givenName;
-          newUser.facebook.email    = profile.emails[0].value;
-          newUser.facebook.photo    = profile.photos[0].value;
-
+          
           UserUtil.facebook.remove(profile.id)
           .then(function() {
             return UserUtil.local.remove(user._id);
@@ -222,7 +212,7 @@ module.exports = {
             newUser.twitter.id          = profile.id;
             newUser.twitter.token       = token;
             newUser.twitter.username    = profile.displayName;
-            newUser.twitter.photo       = profile.photos[0].value;
+            newUser.photo       = profile.photos[0].value;
 
             // save our user into the database
             newUser.save(function(err) {
@@ -270,10 +260,10 @@ module.exports = {
             // set all of the relevant information
             newUser.google.id        = profile.id;
             newUser.google.token     = token;
-            newUser.google.email     = profile.emails[0].value; // pull the first email
+            newUser.email     = profile.emails[0].value; // pull the first email
             newUser.google.fullname  = profile.displayName;
             newUser.google.nickname  = profile.name.givenName;
-            newUser.google.photo     = profile._json.picture;
+            newUser.photo     = profile._json.picture;
 
             // save the user
             newUser.save(function(err) {

@@ -46,9 +46,9 @@ let AuthActions = {
     return new Promise(function(resolve, reject) {
       
       let userInfo = JSON.stringify({
-        "local.email": user.email,
-        "local.username": user.username,
-        "local.password": user.password
+        email: user.email,
+        username: user.username,
+        password: user.password
       });
       
       request.post("/auth/user")

@@ -39,7 +39,7 @@ export default class AccountApp extends React.Component {
       <Grid fluid>
         <Row>
           <Col md={6} xs={12}>
-            <LocalInfo info={this.state.user.local} />
+            <LocalInfo info={this.state.user} />
           </Col>
           <Col md={6} xs={12}>
             <FacebookInfo user={this.state.user} />

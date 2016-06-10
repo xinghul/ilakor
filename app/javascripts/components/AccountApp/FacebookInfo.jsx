@@ -23,7 +23,7 @@ export default class FacebookInfo extends React.Component {
   render() {
     let user = this.props.user
     ,   facebookInfo = user.facebook
-    ,   localInfo = user.local
+    ,   localInfo = user
     ,   infoArea;
     
     if (_.isEmpty(facebookInfo)) {
