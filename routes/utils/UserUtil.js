@@ -1,6 +1,7 @@
 "use strict";
 
 let mongoose = require("mongoose")
+,   _        = require("lodash")
 ,   bluebird = require("bluebird");
 
 let User     = mongoose.model("User")

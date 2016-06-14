@@ -13,7 +13,7 @@ export default class BaseSpinner extends React.Component {
   render() {
     
     return (
-      <div className={styles.spinnerWrapper} {...this.props}>
+      <div className={styles.baseSpinner} {...this.props}>
         <div className={styles.spinner}></div>
       </div>
       

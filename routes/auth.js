@@ -96,7 +96,7 @@ router.route("/user")
 .put(function(req, res, next) {
   let userId   = req.userId
   ,   newValue = JSON.parse(req.body.user);
-  
+
   if (!_.isString(userId)) {
     return next(new CustomError(400, "User id is not defined."));
   }
@@ -140,13 +140,12 @@ router.post("/forgot", function(req, res, next) {
   let email = req.body.email
   ,   token = crypto.randomBytes(24).toString("hex");
   
-  let query = {email: email}
-  ,   newProps = {
+  let newProps = {
     resetToken: token,
     resetExpire: Date.now() + 3600000
   };
   
-  User.update(query, newProps)
+  User.updateByEmail(email, newProps)
     .then(function(user) {
       if (_.isEmpty(user)) {
         EmailService.sendUnregistered(email).then(function() {
@@ -178,15 +177,20 @@ router.get("/facebook", passport.authenticate("facebook", {
 router.get("/facebook/callback", function(req, res, next) {
   passport.authenticate("facebook", function(err, user) {
     if (err) {
-      return res.end(err);      
+      console.log(err);
+      return res.end("err");      
     }
     
     req.logIn(user, function (err) {
       if (err) {
         console.log(err);
-        res.end(err);
+        res.end("err");
       } else {
-        res.redirect("/");
+        if (user.registerLocally) {
+          res.redirect("/");          
+        } else {
+          res.redirect("/#/completeLocal");
+        }
       }
     });
   })(req, res, next);

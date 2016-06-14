@@ -160,7 +160,8 @@ export default class AuthApp extends React.Component {
 
   createModalBodyLogin() {
     let disabled = _.isEmpty(this.state.email) ||
-                   _.isEmpty(this.state.password);
+                   _.isEmpty(this.state.password) || 
+                   this.state.isLoggingIn;
     
     let buttonWrapperStyle = {
       textAlign: "center"
@@ -198,7 +199,8 @@ export default class AuthApp extends React.Component {
   createModalBodySignup() {
     let disabled = _.isEmpty(this.state.email) ||
                    _.isEmpty(this.state.username) ||
-                   _.isEmpty(this.state.password);
+                   _.isEmpty(this.state.password) ||
+                   this.state.isSigningUp;
 
     return (
       <div>
@@ -275,7 +277,7 @@ export default class AuthApp extends React.Component {
     let authModal = (
       <Modal show={this.state.isModalOpen} onHide={this.toggleModal}>
         <Modal.Header>
-          <Modal.Title>{this.state.isSignUp ? "Sign up" : "Log In"}</Modal.Title>
+          <Modal.Title className={styles.modalTitle}>{this.state.isSignUp ? "Sign up" : "Log In"}</Modal.Title>
         </Modal.Header>
         <Modal.Body>
           {errorAlert}

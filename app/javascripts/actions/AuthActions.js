@@ -73,6 +73,33 @@ let AuthActions = {
 
     });
   },
+  
+  updateUserInfo: function(id, info) {
+    return new Promise(function(resolve, reject) {
+
+      request.put("/auth/user")
+        .query({id: id})
+        .send({user: JSON.stringify(info)})
+        .then(function(res) {
+          let newUser = res.body;
+
+          AppDispatcher.handleAction({
+            actionType: AuthConstants.RECEIVED_USER,
+            user: newUser
+          });
+
+          resolve();
+        })
+        .catch(function(err) {
+          if (err.status === 422) {
+            reject(err);            
+          } else {
+            resolve();
+          }
+        });
+
+    });
+  },
 
   logInFromCookie: function() {
     let user = ReactCookie.load("user");

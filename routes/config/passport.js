@@ -1,11 +1,8 @@
-+function(undefined) {
 "use strict";
 
 let mongoose = require("mongoose")
 ,   _        = require("lodash")
 ,   passport = require("passport");
-
-let FB = require("fb");
 
 let LocalStrategy    = require("passport-local").Strategy
 ,   FacebookStrategy = require("passport-facebook").Strategy
@@ -15,7 +12,8 @@ let LocalStrategy    = require("passport-local").Strategy
 let configAuth   = require("./auth")
 ,   UserUtil     = require("../utils/UserUtil")
 ,   EmailService = require("../service/email")
-,   User         = mongoose.model("User");
+,   User         = mongoose.model("User")
+,   UserApi      = require("../api/user");
 
 module.exports = {
   
@@ -49,7 +47,6 @@ module.exports = {
       usernameField: "email",
       passwordField: "password"
     }, function(email, password, done) {
-      console.log(email, password);
 
       process.nextTick(function () {
         
@@ -97,6 +94,7 @@ module.exports = {
 
             // if the user is found, then log them in
             if (user) {
+
               user.facebook.token = token;
               
               user.save(function(err) {
@@ -108,30 +106,52 @@ module.exports = {
               });
               
             } else {
-              // if there is no user found with that facebook id, create them
-              let newUser = new User();
 
-              // set all of the facebook information in our user model
-              newUser.facebook.id       = profile.id;
-              newUser.facebook.token    = token;
-              newUser.facebook.fullname = 
-                profile.name.givenName + ' ' + profile.name.familyName;
-              newUser.facebook.nickname = profile.name.givenName;
+              let email = profile.emails[0].value
+              ,   facebookInfo = {
+                id: profile.id,
+                token: token,
+                fullname: profile.name.givenName + ' ' + profile.name.familyName,
+                nickname: profile.name.givenName
+              };
               
-              // create a user with facebook email
-              newUser.email    = profile.emails[0].value;
-              newUser.username = newUser.facebook.nickname;
-              newUser.photo    = profile.photos[0].value;
-              
-              // save our user to the database
-              newUser.save()
-              .then(function() {
-                return EmailService.sendFacebookRegister(newUser.email);
+              UserApi.getByEmail(email)
+              .then(function(user) {
+                
+                if (_.isEmpty(user)) {
+                  let newUser = new User();
+                  
+                  _.assign(newUser, {
+                    email: email,
+                    username: facebookInfo.nickname,
+                    photo: profile.photos[0].value,
+                    facebook: facebookInfo
+                  });
+                                    
+                  return newUser.save().then(() => {
+                    return newUser;
+                  });
+                } else {
+                  
+                  _.assign(user, {
+                    photo: profile.photos[0].value,
+                    facebook: facebookInfo
+                  });
+                  
+                  return user.save().then(() => {
+                    return user;
+                  });
+                }
               })
-              .then(function() {
-                return done(null, newUser);
+              .then((user) => {
+                return EmailService.sendFacebookRegister(email).then(() => {
+                  return user;
+                });
               })
-              .catch(function(err) {
+              .then(function(user) {
+                return done(null, user);
+              })
+              .catch((err) => {
                 return done(err);
               });
                 
@@ -140,41 +160,32 @@ module.exports = {
           });
         } else {
           let user = req.user
-          ,   newUser = new User();
+          ,   facebookInfo = {
+            id: profile.id,
+            token: token,
+            fullname: profile.name.givenName + ' ' + profile.name.familyName,
+            nickname: profile.name.givenName
+          };
           
           if (_.isEmpty(user.email)) {
             return done(new Error("User needs to log in using email."))
           }
           
-          // preserve the local username, email and password
-          newUser.username = user.username;
-          newUser.password = user.password;
-          newUser.email    = user.email;
+          _.assign(user, {
+            photo: profile.photos[0].value,
+            facebook: facebookInfo
+          });
           
-          // update the photo if not exist
-          newUser.photo = user.photo || profile.photos[0].value;
-
-          newUser.facebook.id       = profile.id;
-          newUser.facebook.token    = token;
-          newUser.facebook.fullname = 
-            profile.name.givenName + ' ' + profile.name.familyName;
-          newUser.facebook.nickname = profile.name.givenName;
-          
-          UserUtil.facebook.remove(profile.id)
-          .then(function() {
-            return UserUtil.local.remove(user._id);
+          user.save()
+          .then(() => {
+            done(null, user);
           })
-          .then(newUser.save)
-          .then(function() {
-            done(null, newUser);
-          })
-          .catch(function(err) {
+          .catch((err) => {
             done(err);
           });
           
         }
 
-        
       });
     }));
 
@@ -283,5 +294,3 @@ module.exports = {
     app.use(passport.session());
   }
 };
-
-}();

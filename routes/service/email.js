@@ -2,6 +2,7 @@
 
 let fs         = require("fs")
 ,   path       = require("path")
+,   util       = require("util")
 ,   _          = require("lodash")
 ,   invariant  = require("invariant")
 ,   nodemailer = require("nodemailer")
@@ -25,10 +26,11 @@ let transporter = nodemailer.createTransport(SMTP_CONFIG);
  * @param  {String | Array} to the recipients
  * @param  {String} subject the subject
  * @param  {String} template the filename of the template
+ * @param  {Array} formatParams the params used to populate the template
  * 
  * @return {Promise}
  */
-function sendEmail(to, subject, template) {
+function sendEmail(to, subject, template, formatParams) {
   
   return new Promise(function(resolve, reject) {
     
@@ -43,9 +45,9 @@ function sendEmail(to, subject, template) {
     
     let mailOptions = {
         from: "Cramford <cramfordtest@gmail.com>",
-        to: to,
+        to: "xinghu1989@gmail.com",
         subject: subject,
-        html: html 
+        html: html
     };
     
     // send mail with defined transport object
@@ -67,12 +69,13 @@ let EmailApi = {
    * Sends an email upon user registeration using email.
    * 
    * @param {String} email the email to sent to.
+   * @param {String} username the username.
    * 
    * @return {Promise}
    */
-  sendLocalRegister: function(email) {
+  sendLocalRegister: function(email, username) {
     return new Promise(function(resolve, reject) {
-      sendEmail(email, "Welcome to Cramford", "localRegister.html")
+      sendEmail(email, "Welcome to Cramford", "localRegister.html", [username])
         .then(function() {
           resolve();          
         })

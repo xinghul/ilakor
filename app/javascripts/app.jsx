@@ -17,6 +17,7 @@ import AccountApp from "components/AccountApp"
 import NavbarApp from "components/NavbarApp"
 import SocialApp from "components/SocialApp"
 import CheckoutApp from "components/CheckoutApp"
+import CompleteLocalApp from "components/CompleteLocalApp"
 
 import DimensionRangeInput from "components/ItemManageApp/DimensionRangeInput"
 
@@ -68,6 +69,7 @@ render((
       <Route path="account" component={AccountApp} />
       <Route path="social" component={SocialApp} />
       <Route path="checkout" component={CheckoutApp} />
+      <Route path="completeLocal" component={CompleteLocalApp} />
       <Route path="*" component={IndexApp} />
     </Route>
   </Router>

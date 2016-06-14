@@ -259,9 +259,7 @@ let ItemApi = {
          if (err) {
            reject(err);
          } else {
-           setTimeout(() => {
-             resolve(result);
-           }, 3000);
+           resolve(result);
          }
        });
        
