@@ -13,10 +13,11 @@ export default class FacebookButton extends React.Component {
   }
   
   render() {
-    let newProps = _.clone(this.props);
-    
+
     return (
-      <Button {...newProps} className={styles.facebookButton} />
+      <Button {...this.props} className={styles.loginBtn + ' ' + styles.loginBtnFacebook}>
+        <a href="/auth/facebook">Continue with Facebook</a>
+      </Button>
     );
   }
 }

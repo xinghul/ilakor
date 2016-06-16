@@ -109,16 +109,54 @@ let UserApi = {
 
     return new Promise(function(resolve, reject) {
       
-      User.findOneAndUpdate({email: email}, {$set: newProps}, {new: true}, function(err, updatedUser) {
-        if (err) {
-          reject(err);
+      User.findOne({email: email}).then(function(user) {
+        if (_.isEmpty(user)) {
+          resolve(null);
         } else {
-          resolve(updatedUser);
+          _.assign(user, newProps);
+          
+          user.save().then(function(updatedUser) {
+            resolve(updatedUser);
+          }).catch(function(err) {
+            reject(err);
+          })
         }
+      }).catch(function(err) {
+        reject(err);
       });
       
     });
     
+  },
+  
+  resetPasswordWithToken: function(token, password) {
+    
+    return new Promise(function(resolve, reject) {
+
+      User.findOne({resetToken: token, resetExpire: {$gt: Date.now()}}).then(function(user) {
+
+        if (_.isEmpty(user)) {
+          resolve(null);
+        } else {
+          _.assign(user, {
+            password: password,
+            resetToken: undefined,
+            resetExpire: undefined
+          });
+          
+          console.log("after delete", user);
+          
+          user.save().then(function(updatedUser) {
+            resolve(updatedUser);
+          }).catch(function(err) {
+            reject(err);
+          })
+        }
+      }).catch(function(err) {
+        reject(err);
+      });
+      
+    });
   }
 
 };

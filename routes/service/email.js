@@ -40,12 +40,18 @@ function sendEmail(to, subject, template, formatParams) {
     
     let html = fs.readFileSync(path.join(__dirname, "email/templates", template));
     
+    if (!_.isEmpty(formatParams)) {
+      console.log(html.toString());
+      console.log(formatParams);
+      html = new Buffer(util.format(html.toString(), formatParams));
+    }
+    
     invariant(_.isString(to), `expects 'to' to be string, but get '${typeof to}'`);
     invariant(_.isString(subject), `expects 'subject' to be string, but get '${typeof subject}'`);
     
     let mailOptions = {
-        from: "Cramford <cramfordtest@gmail.com>",
-        to: "xinghu1989@gmail.com",
+        from: "Cromford <cramfordtest@gmail.com>",
+        to: to,
         subject: subject,
         html: html
     };
@@ -75,7 +81,7 @@ let EmailApi = {
    */
   sendLocalRegister: function(email, username) {
     return new Promise(function(resolve, reject) {
-      sendEmail(email, "Welcome to Cramford", "localRegister.html", [username])
+      sendEmail(email, "Welcome to Cromford", "localRegister.html", username)
         .then(function() {
           resolve();          
         })
@@ -94,7 +100,7 @@ let EmailApi = {
    */
   sendFacebookRegister: function(email) {
     return new Promise(function(resolve, reject) {
-      sendEmail(email, "Welcome to Cramford", "facebookRegister.html")
+      sendEmail(email, "Welcome to Cromford", "facebookRegister.html")
         .then(function() {
           resolve();          
         })
@@ -115,7 +121,7 @@ let EmailApi = {
   sendResetPassword: function(email, link) {
     
     return new Promise(function(resolve, reject) {
-      sendEmail(email, "Reset password", "resetPassword.html")
+      sendEmail(email, "Reset password", "resetPassword.html", link)
         .then(function() {
           resolve();          
         })

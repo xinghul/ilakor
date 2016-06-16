@@ -3,9 +3,11 @@
 import React from "react"
 import _ from "lodash"
 import { Button, Alert, SplitButton, MenuItem, Modal } from "react-bootstrap"
+import { hashHistory } from "react-router"
 
 import GhostButton from "lib/GhostButton"
 import SubmitButton from "lib/SubmitButton"
+import FacebookButton from "lib/SocialButton/FacebookButton"
 import EmailInput from "./AuthApp/EmailInput"
 import UsernameInput from "./AuthApp/UsernameInput"
 import PasswordInput from "./AuthApp/PasswordInput"
@@ -73,6 +75,14 @@ export default class AuthApp extends React.Component {
       
       isModalOpen: !this.state.isModalOpen
     });
+  };
+  
+  handleForgotPasswordClick = () => {
+    this.setState({
+      isModalOpen: false
+    });
+    
+    hashHistory.push("/forgotPassword");
   };
   
   handleLoginClick = () => {
@@ -163,23 +173,6 @@ export default class AuthApp extends React.Component {
                    _.isEmpty(this.state.password) || 
                    this.state.isLoggingIn;
     
-    let buttonWrapperStyle = {
-      textAlign: "center"
-    };
-          
-    let linkStyle = {
-      color: "white",
-      fontSize: "14px"
-    };
-                   
-    let socialLoginArea = (
-      <div style={buttonWrapperStyle}>
-        <Button disabled={this.state.isLoggingIn} className={styles.loginBtn + ' ' + styles.loginBtnFacebook}>
-          <a style={linkStyle} href="/auth/facebook">Login with Facebook</a>
-        </Button>
-      </div>
-    );
-    
     return (
       <div>
         <EmailInput value={this.state.email} disabled={this.state.isLoggingIn} isRegister={false} handleChange={this.handleEmailChange} />
@@ -190,8 +183,10 @@ export default class AuthApp extends React.Component {
           isSubmitting={this.state.isLoggingIn}
           bsStyle="success"
         >Log in</SubmitButton>
-        <div className={styles.divider}>or</div>
-        {socialLoginArea}      
+        <div className={styles.forgotPasswordLink}>
+          <a onClick={this.handleForgotPasswordClick}>Forgot password?</a>
+        </div>
+      
       </div>
     );
   }
@@ -274,8 +269,18 @@ export default class AuthApp extends React.Component {
       </div>
     );
     
+    let socialButtonArea = (
+      <div>
+        <div className={styles.divider}>or</div>
+        <div className={styles.socialButtonArea}>
+          <FacebookButton disabled={this.state.isLoggingIn || this.state.isSigningUp} />
+        </div>
+      </div>
+    );
+    
+    
     let authModal = (
-      <Modal show={this.state.isModalOpen} onHide={this.toggleModal}>
+      <Modal className={styles.authAppModal} show={this.state.isModalOpen} onHide={this.toggleModal}>
         <Modal.Header>
           <Modal.Title className={styles.modalTitle}>{this.state.isSignUp ? "Sign up" : "Log In"}</Modal.Title>
         </Modal.Header>
@@ -283,6 +288,7 @@ export default class AuthApp extends React.Component {
           {errorAlert}
           {this.state.isSignUp ? this.createModalBodySignup()
                                : this.createModalBodyLogin()}
+          {socialButtonArea}      
         </Modal.Body>
         <Modal.Footer>
           {toggleModeMessage}

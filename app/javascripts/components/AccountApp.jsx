@@ -7,6 +7,8 @@ import AuthStore from "stores/AuthStore"
 import LocalInfo from "./AccountApp/LocalInfo"
 import FacebookInfo from "./AccountApp/FacebookInfo"
 
+import styles from "components/AccountApp.scss"
+
 function getStateFromStores() {
   return {
     user: AuthStore.getUser()
@@ -36,7 +38,7 @@ export default class AccountApp extends React.Component {
   render() {
     
     return (
-      <Grid fluid>
+      <Grid fluid className={styles.accountApp}>
         <Row>
           <Col md={6} xs={12}>
             <LocalInfo info={this.state.user} />

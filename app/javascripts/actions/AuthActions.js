@@ -100,6 +100,49 @@ let AuthActions = {
 
     });
   },
+  
+  forgotPassword: function(email) {
+    return new Promise(function(resolve, reject) {
+
+      request.post("/auth/forgot")
+        .send({email: email})
+        .then(function(res) {
+          let message = "A reset password link has been sent to you via email.";
+
+          resolve(message);
+        })
+        .catch(function(err) {
+          if (err.status === 422) {
+            reject(err);            
+          } else {
+            resolve();
+          }
+        });
+
+    });
+  },
+  
+  resetPassword: function(token, password) {
+    return new Promise(function(resolve, reject) {
+
+      request.post("/auth/reset")
+        .query({token: token})
+        .send({password: password})
+        .then(function(res) {
+          let message = res.body.message;
+
+          resolve(message);
+        })
+        .catch(function(err) {
+          if (err.status === 422) {
+            reject(err);            
+          } else {
+            resolve();
+          }
+        });
+
+    });
+  },
 
   logInFromCookie: function() {
     let user = ReactCookie.load("user");

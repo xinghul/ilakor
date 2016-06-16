@@ -7,7 +7,7 @@ import AppDispatcher from "../dispatcher/AppDispatcher"
 import ShoppingCartConstants from "../constants/ShoppingCartConstants"
 
 const CHANGE_EVENT = "change"
-,     STORE_NAME   = "Cramford.cart";
+,     STORE_NAME   = "Cromford.cart";
 
 
 function storageMock() {

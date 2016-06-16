@@ -2,9 +2,7 @@
 
 import React from "react"
 import _ from "lodash"
-import { Router } from "react-router"
-
-import BaseInput from "lib/BaseInput"
+import { hashHistory } from "react-router"
 
 import styles from "components/CompleteLocalApp.scss"
 
@@ -43,7 +41,7 @@ export default class CompleteLocalApp extends React.Component {
 
   _onChange = () => {
     let user = AuthStore.getUser();
-    
+
     if (!_.isEmpty(user.email)) {
       this.setState({
         user: user,
@@ -76,8 +74,6 @@ export default class CompleteLocalApp extends React.Component {
   };
   
   handleUpdateClick = () => {
-    console.log(this.state);
-    
     let info = {
       email: this.state.email,
       username: this.state.username,
@@ -90,7 +86,7 @@ export default class CompleteLocalApp extends React.Component {
     
     AuthActions.updateUserInfo(this.state.user._id, info)
       .then(() => {
-        window.location = "http://localhost:8080";
+        hashHistory.push("/");
       })
       .catch((err) => {
         console.log(err);

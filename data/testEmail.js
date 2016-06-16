@@ -16,7 +16,7 @@ var transporter = nodemailer.createTransport(smtpConfig);
 
 // setup e-mail data with unicode symbols
 var mailOptions = {
-    from: 'Cramford', // sender address
+    from: 'Cromford', // sender address
     to: 'xinghu1989@gmail.com', // list of receivers
     subject: 'Password reset', // Subject line
     html: '<b>Hello world 🐴</b>' // html body

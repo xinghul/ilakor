@@ -67,7 +67,7 @@ export default class EmailInput extends React.Component {
       <BaseInput
         {...this.props}
         type="email"
-        placeholder="Enter email"
+        placeholder={this.props.placeholder}
         label="Email"
         icon="envelope"
         validationState={validationState}
@@ -79,9 +79,11 @@ export default class EmailInput extends React.Component {
 
 EmailInput.propTypes = {
   handleChange: React.PropTypes.func.isRequired,
+  placeholder: React.PropTypes.string,
   isRegister: React.PropTypes.bool
 };
 
 EmailInput.defaultProps = {
+  placeholder: "Enter email",
   isRegister: false
 };

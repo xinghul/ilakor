@@ -148,13 +148,13 @@ router.post("/forgot", function(req, res, next) {
   User.updateByEmail(email, newProps)
     .then(function(user) {
       if (_.isEmpty(user)) {
-        EmailService.sendUnregistered(email).then(function() {
+        EmailService.sendUnregistered(email).then(() => {
           res.status(200).end();
         });
       } else {
-        let link = req.protocol + "://" + req.headers.host + "/auth/reset?token=" + token;
+        let link = req.protocol + "://" + req.headers.host + "/#/resetPassword?token=" + token;
         
-        EmailService.sendResetPassword(email, link).then(function() {
+        EmailService.sendResetPassword(email, link).then(() => {
           res.status(200).end();
         });
       }
@@ -165,6 +165,26 @@ router.post("/forgot", function(req, res, next) {
       next(new CustomError(400, "Internal error."));
     });
 });
+
+router.post("/reset", function(req, res, next) {
+  let token = req.query.token
+  ,   password = req.body.password;
+  
+  User.resetPasswordWithToken(token, password)
+    .then(function(user) {
+      if (_.isEmpty(user)) {
+        return next(new CustomError(400, "Password reset token is invalid or has expired."));
+      } else {
+        return res.status(200).json({message: "Password successfully updated."});
+      }
+    })
+    .catch(function(err) {
+      console.log(err);
+      
+      next(new CustomError(400, "Internal error."));
+    });
+});
+
 
 /**********************************************************
 *                     Facebook Routes                     *
