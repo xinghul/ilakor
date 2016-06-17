@@ -10,6 +10,7 @@ import AuthStore from "stores/AuthStore"
 import AuthActions from "actions/AuthActions"
 
 import SubmitButton from "lib/SubmitButton"
+import BlurMask from "lib/BlurMask"
 import EmailInput from "components/AuthApp/EmailInput"
 import UsernameInput from "components/AuthApp/UsernameInput"
 import PasswordInput from "components/AuthApp/PasswordInput"
@@ -106,7 +107,7 @@ export default class CompleteLocalApp extends React.Component {
 
     return (
       <div className={styles.completeLocalApp}>
-        <div className={styles.mask} />
+        <BlurMask />
         <div className={styles.formContent}>
           <label className={styles.formTitle}>Update info</label>
           <EmailInput value={this.state.email} disabled={this.state.isSubmitting} isRegister={true} handleChange={this.handleEmailChange} />

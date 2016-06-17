@@ -2,9 +2,9 @@
 
 import React from "react"
 
-import styles from "lib/LoadSpinner.scss"
+import styles from "components/ItemDisplayApp/LoadItemSpinner.scss"
 
-export default class Loader extends React.Component {
+export default class LoadItemSpinner extends React.Component {
   
   constructor(props) {
     super(props);
@@ -13,15 +13,14 @@ export default class Loader extends React.Component {
   render() {
     
     return (
-      <div {...this.props}>
-        <div className={styles.loader}>
+      <div {...this.props} className={styles.loadItemSpinner}>
+        <div className={styles.spinner}>
           <div className={styles.inner + ' ' + styles.one}></div>
           <div className={styles.inner + ' ' + styles.two}></div>
           <div className={styles.inner + ' ' + styles.three}></div>
         </div>
         <div className={styles.loaderText}>LOADING</div>
       </div>
-      
     );
   }
 }

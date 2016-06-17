@@ -10,8 +10,8 @@ import styles from "components/ForgotPasswordApp.scss"
 import AuthActions from "actions/AuthActions"
 
 import SubmitButton from "lib/SubmitButton"
+import BlurMask from "lib/BlurMask"
 import EmailInput from "components/AuthApp/EmailInput"
-
 
 export default class ForgotPasswordApp extends React.Component {
   
@@ -69,7 +69,7 @@ export default class ForgotPasswordApp extends React.Component {
 
     return (
       <div className={styles.forgotPasswordApp}>
-        <div className={styles.mask} />
+        <BlurMask />
         <div className={styles.formContent}>
           <label className={styles.formTitle}>Forgot password</label>
           <div style={messageStyle} className={styles.successMessage}>

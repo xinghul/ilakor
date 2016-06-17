@@ -191,7 +191,8 @@ router.post("/reset", function(req, res, next) {
 **********************************************************/
 
 router.get("/facebook", passport.authenticate("facebook", {
-  authType: "reauthenticate"
+  authType: "reauthenticate",
+  scope: ["email"]
 }));
 
 router.get("/facebook/callback", function(req, res, next) {

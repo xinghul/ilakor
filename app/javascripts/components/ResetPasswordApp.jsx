@@ -10,6 +10,7 @@ import styles from "components/ResetPasswordApp.scss"
 import AuthActions from "actions/AuthActions"
 
 import SubmitButton from "lib/SubmitButton"
+import BlurMask from "lib/BlurMask"
 import PasswordInput from "components/AuthApp/PasswordInput"
 
 function getQueryString(field) {
@@ -81,7 +82,7 @@ export default class ResetPasswordApp extends React.Component {
 
     return (
       <div className={styles.resetPasswordApp}>
-        <div className={styles.mask} />
+        <BlurMask />
         <div className={styles.formContent}>
           <label className={styles.formTitle}>Reset password</label>
           <div style={messageStyle} className={styles.successMessage}>

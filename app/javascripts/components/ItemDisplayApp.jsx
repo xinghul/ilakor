@@ -3,8 +3,6 @@
 import React from "react"
 import Promise from "bluebird"
 
-import LoadSpinner from "lib/LoadSpinner"
-
 import ItemDisplayStore from "stores/ItemDisplayStore"
 import ItemDisplayAction from "actions/ItemDisplayAction"
 import ShoppingCartAction from "actions/ShoppingCartAction"
@@ -13,6 +11,7 @@ import ItemDisplayGrid from "./ItemDisplayApp/ItemDisplayGrid"
 import ItemDetailModal from "./ItemDisplayApp/ItemDetailModal"
 import ItemFilterApp from "./ItemDisplayApp/ItemFilterApp"
 import FilterDisplayApp from "./ItemDisplayApp/FilterDisplayApp"
+import LoadItemSpinner from "./ItemDisplayApp/LoadItemSpinner"
 
 import styles from "components/ItemDisplayApp.scss"
 
@@ -200,7 +199,7 @@ export default class ItemDisplayApp extends React.Component {
               items={this.state.items} 
               handleItemClick={this.handleItemClick}
               handleAddToCartClick={this.handleAddToCartClick} />
-            <LoadSpinner hidden={!this.state.isLoading} />
+            <LoadItemSpinner hidden={!this.state.isLoading} />
           </div>
         </div>
       </div>
