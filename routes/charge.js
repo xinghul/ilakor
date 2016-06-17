@@ -48,13 +48,15 @@ router.route("/")
     return next(new CustomError(400, "Malformed JSON."));
   }
   
-  let charge = rawData.charge;
+  let chargeInfo = rawData.charge;
   
   stripe.charges.create({
-    source: charge.source,
-    amount: charge.amount,
-    currency: charge.currency
-  }).then(function(charge) {
+    source: chargeInfo.source,
+    amount: chargeInfo.amount,
+    currency: chargeInfo.currency
+  }).then(function(res) {
+    rawData.stripe = res;
+    
     return Charge.add(rawData);
   }).then(function(newCharge) {
     res.status(200).json(newCharge);
@@ -62,7 +64,7 @@ router.route("/")
     console.log(err.stack);
     
     // deal with error
-    next(new CustomError(500, "Internal error."));
+    next(new CustomError(400, err.message));
   });
 })
 /**

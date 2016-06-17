@@ -20,8 +20,6 @@ let ChargeApi = {
     return new Promise(function(resolve, reject) {
       
       let charge = new Charge(rawData);
-      
-      charge.sent = false;
 
       charge.save(function(err, newCharge) {
         if (err) {

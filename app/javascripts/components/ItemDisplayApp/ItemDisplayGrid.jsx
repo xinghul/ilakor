@@ -5,7 +5,7 @@ import ReactCSSTransitionGroup from "react-addons-css-transition-group"
 
 import styles from "components/ItemDisplayApp/ItemDisplayGrid.scss"
 
-import BaseItem from "lib/BaseItem"
+import BaseItem from "./BaseItem"
 
 export default class ItemDisplayGrid extends React.Component {
   

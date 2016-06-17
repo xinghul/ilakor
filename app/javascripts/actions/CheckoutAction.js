@@ -56,7 +56,7 @@ let CheckoutAction = {
             resolve(res.body);
           })
           .catch(function(err) {
-            reject(err);
+            reject(err.body);
           });
           
       });

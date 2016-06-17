@@ -11,6 +11,14 @@ let User     = mongoose.model("User")
 ,   ObjectId = mongoose.Types.ObjectId;
 
 let UserApi = {
+  
+  /**
+   * Gets a user specified by id.
+   * 
+   * @param  {String} userId - the id of the user.
+   *
+   * @return {Object} the promise object.
+   */
   get: function(userId) {
     
     return new Promise(function(resolve, reject) {
@@ -24,6 +32,13 @@ let UserApi = {
     });
   },
   
+  /**
+   * Gets a user specified by email
+   * 
+   * @param  {String} email - the email of the user.
+   *
+   * @return {Object} the promise object.
+   */
   getByEmail: function(email) {
 
     return new Promise(function(resolve, reject) {
@@ -35,6 +50,13 @@ let UserApi = {
     });
   },
   
+  /**
+   * Adds a new user using raw data.
+   * 
+   * @param  {Object} rawData - user info.
+   *
+   * @return {Object} the promise object.
+   */
   add: function(rawData) {
     
     return new Promise(function(resolve, reject) {
@@ -68,8 +90,8 @@ let UserApi = {
   /**
    * Updates user specified by given id with new value.
    * 
-   * @param  {String} id the specified id.
-   * @param  {Object} newProps the new props to set.
+   * @param  {String} id - the specified id.
+   * @param  {Object} newProps - the new props to set.
    *
    * @return {Promise} the new promise object.
    */
@@ -100,8 +122,8 @@ let UserApi = {
   /**
    * Updates user specified by given email with new value.
    * 
-   * @param  {String} email the specified email.
-   * @param  {Object} newProps the new props to set.
+   * @param  {String} email - the specified email.
+   * @param  {Object} newProps - the new props to set.
    *
    * @return {Promise} the new promise object.
    */
@@ -129,6 +151,14 @@ let UserApi = {
     
   },
   
+  /**
+   * Resets a user's password with given token.
+   * 
+   * @param  {String} token - the token used to reset the password.
+   * @param  {Object} password - the new password.
+   *
+   * @return {Promise} the new promise object.
+   */
   resetPasswordWithToken: function(token, password) {
     
     return new Promise(function(resolve, reject) {
@@ -143,8 +173,6 @@ let UserApi = {
             resetToken: undefined,
             resetExpire: undefined
           });
-          
-          console.log("after delete", user);
           
           user.save().then(function(updatedUser) {
             resolve(updatedUser);

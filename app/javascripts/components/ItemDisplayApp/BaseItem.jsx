@@ -3,7 +3,7 @@
 import React from "react"
 import { Thumbnail, Image, Button, Glyphicon } from "react-bootstrap"
 
-import styles from "lib/BaseItem.scss"
+import styles from "components/ItemDisplayApp/BaseItem.scss"
 
 import ItemUtil from "utils/ItemUtil"
 

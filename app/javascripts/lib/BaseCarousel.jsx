@@ -1,69 +1,36 @@
 "use strict"
 
 import React from "react"
-import { Carousel, CarouselItem } from "react-bootstrap"
+import Coverflow from "react-coverflow"
+
+import styles from "lib/BaseCarousel.scss"
 
 export default class BaseCarousel extends React.Component {
   
   constructor(props) {
     super(props);
-    
-    this.state = { 
-      items: props.items
-    };
   }
   
-  createCarousel() {
-    var carouselItems = [];
-    var item;
-    
-    for (var i = 0; i < this.state.items.length; i++)
-    {
-      item = this.state.items[i];
-      
-      carouselItems.push(
-        <CarouselItem key={i}>
-          <img alt="900x500" src={item.src}/>
-          <div className="carousel-caption">
-            <h3>{item.label}</h3>
-            <p>{item.content}</p>
-          </div>
-        </CarouselItem>
-      );
-    }
-    
-    return (
-      <Carousel>
-        {carouselItems}
-      </Carousel>
-    );
-  }
   
   render() {
-    var carousel;
-    var style;
-    
-    carousel = this.createCarousel();
-    
-    style = {
-      height: this.props.height + "px",
-      padding: "20px"
-    };
-    
     return (
-      <div style={style}>
-        {carousel}
-      </div>
+      <Coverflow width="960" height="500"
+        displayQuantityOfSide={2}
+        navigation={false}
+        enableScroll={true}
+      >
+        <img src="images/items/kitchen1.jpg" />
+        <img src="images/items/kitchen2.jpg" />
+        <img src="images/items/kitchen3.jpg" />
+        <img src="images/items/kitchen4.jpg" />
+        <img src="images/items/kitchen5.jpg" />
+      </Coverflow>
     );
   }
 }
 
-BaseCarousel.propTypes = { 
-  items: React.PropTypes.array.isRequired,
-  height: React.PropTypes.number
+BaseCarousel.propTypes = {
 };
 
-BaseCarousel.defaultProps = { 
-  items: [],
-  height: 300
+BaseCarousel.defaultProps = {
 };

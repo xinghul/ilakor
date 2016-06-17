@@ -14,11 +14,6 @@ let TagApi = {
    * @param  {Object} rawData the raw data containing the new tag info.
    *
    * @return {Promise} the new promise object.
-   *
-   * rawData schema:
-   * {
-   * 	 name: String
-   * }
    */
   add: function(rawData) {
     

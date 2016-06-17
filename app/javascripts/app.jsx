@@ -21,7 +21,7 @@ import CompleteLocalApp from "components/CompleteLocalApp"
 import ResetPasswordApp from "components/ResetPasswordApp"
 import ForgotPasswordApp from "components/ForgotPasswordApp"
 
-import DimensionRangeInput from "components/ItemManageApp/DimensionRangeInput"
+// import BaseCarousel from "lib/BaseCarousel"
 
 import styles from "main/app.scss"
 

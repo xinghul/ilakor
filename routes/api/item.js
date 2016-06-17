@@ -15,9 +15,8 @@ let imageExtensionReg = new RegExp(/.+\.(gif|jpe?g|png)$/i);
 /**
  * Uploads images to s3 and updates the image field.
  *
- * @param {Object} item mongoose item object.
- *
- * @param {Array} images image names.
+ * @param {Object} item - mongoose item object.
+ * @param {Array} images - image names.
  * 
  * @return {Promise} the new promise object.
  */

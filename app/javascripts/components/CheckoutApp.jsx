@@ -2,6 +2,7 @@
 
 import React from "react"
 import _ from "lodash"
+import invariant from "invariant"
 import getCardTypes from "credit-card-type"
 import { Image, Button, Glyphicon } from "react-bootstrap"
 import { Form, FormGroup, FormControl, ControlLabel } from "react-bootstrap"
@@ -12,6 +13,8 @@ import styles from "components/CheckoutApp.scss"
 import ItemUtil from "utils/ItemUtil"
 
 import BaseSpinner from "lib/BaseSpinner"
+import SubmitButton from "lib/SubmitButton"
+import AlertMessage from "lib/AlertMessage"
 
 import ShoppingCartStore from "stores/ShoppingCartStore"
 import CheckoutStore from "stores/CheckoutStore"
@@ -20,7 +23,6 @@ import AuthStore from "stores/AuthStore"
 
 function getStateFromStores() {
   return {
-    errorMsg: CheckoutStore.getErrorMsg(),
     items: ShoppingCartStore.getItems(),
     totalPrice: ShoppingCartStore.getTotalPrice()
   };
@@ -74,7 +76,7 @@ function validateCard(cardNumber, cardType) {
   }
   
   let card = getCardTypes(cardNumber)[0];
-  debugger;
+
   if (!_.isEmpty(card) && card.type === cardType) {
     return "success";
   }
@@ -91,10 +93,10 @@ export default class CheckoutApp extends React.Component {
     this.phoneNumberMask = "(___) ___-____";
     
     this.state = {
-      errorMsg: CheckoutStore.getErrorMsg(),
       items: ShoppingCartStore.getItems(),
       totalPrice: ShoppingCartStore.getTotalPrice(),
 
+      errorMessage: "",
       formFilled: false,
       isSubmitting: false,
       checkoutFinish: false,
@@ -150,24 +152,36 @@ export default class CheckoutApp extends React.Component {
   
   handleConfirm = () => {
     console.log("submitting", this.state);
-    let me = this;
     
     this.setState({
       isSubmitting: true
     });
     
     CheckoutAction.checkout(this.state, AuthStore.getUser())
-    .then(function(response) {
+    .then((response) => {
       console.log("successfully put order.");
       
-      me.setState({
+      this.setState({
         checkoutFinish: true
       });
       
       document.body.scrollTop = 0;
     })
-    .catch(function(err) {
+    .catch((err) => {
       console.log(err);
+      
+      let message = err.message;
+      
+      invariant(_.isString(message), `Expect error message to be 'string', but get '${typeof message}'.`);
+      
+      this.setState({
+        errorMessage: message
+      });
+    })
+    .finally(() => {
+      this.setState({
+        isSubmitting: false
+      });
     });
   };
   
@@ -448,7 +462,7 @@ export default class CheckoutApp extends React.Component {
     };
     
     let cardImageSrc = `/images/cards/${this.state.cardType}.png`;
-    
+
     return (
       <div>
         <div className={styles.sectionHeader}>
@@ -536,16 +550,17 @@ export default class CheckoutApp extends React.Component {
             </Col>
           </Row>
         </Form>
-        <Button disabled={!this.state.formFilled || this.state.isSubmitting} 
-          onClick={this.handleConfirm}
-          className={styles.submitButton} bsSize="large" block>
-          <div hidden={!this.state.isSubmitting} className={styles.submitSpinner}>
-            <BaseSpinner />
-          </div>
+        <AlertMessage alertMessage={this.state.errorMessage} alertStyle="danger" />
+        <SubmitButton
+          disabled={!this.state.formFilled || this.state.isSubmitting} 
+          handleSubmit={this.handleConfirm}
+          isSubmitting={this.state.isSubmitting}
+          bsStyle="warning"
+        >
           <Glyphicon glyph="lock" />
           {' '}
           BOOK SECURELY
-        </Button>
+        </SubmitButton>
         <div style={infoStyle}>
           <Glyphicon glyph="lock" />
           {' '}

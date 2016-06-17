@@ -9,6 +9,7 @@ import { Grid, Row, Col } from "react-bootstrap"
 
 import CheckoutApp from "components/CheckoutApp"
 import ShoppingCartStore from "stores/ShoppingCartStore"
+import AuthStore from "stores/AuthStore"
 import ShoppingCartAction from "actions/ShoppingCartAction"
 import ItemUtil from "utils/ItemUtil"
 
@@ -17,7 +18,8 @@ import styles from "components/ShoppingCartApp.scss"
 function getStateFromStores() {
   return {
     items: ShoppingCartStore.getItems(),
-    totalPrice: ShoppingCartStore.getTotalPrice()
+    totalPrice: ShoppingCartStore.getTotalPrice(),
+    user: AuthStore.getUser()
   };
 }
 
@@ -120,10 +122,14 @@ export default class ShoppingCartApp extends React.Component {
   
   componentDidMount() {
     ShoppingCartStore.addChangeListener(this._onChange);
+    
+    AuthStore.addChangeListener(this._onChange);
   }
   
   componentWillUnmount() {
     ShoppingCartStore.removeChangeListener(this._onChange);
+    
+    AuthStore.removeChangeListener(this._onChange);
   }
 
   _onChange = () => {
@@ -134,7 +140,7 @@ export default class ShoppingCartApp extends React.Component {
     let items = this.state.items
     ,   displayItems = []
     ,   totalPrice = this.state.totalPrice
-    ,   checkoutDisabled = _.isEmpty(items);
+    ,   checkoutDisabled = _.isEmpty(items) || _.isEmpty(this.state.user);
     
     for (let key of Object.keys(items))
     {
