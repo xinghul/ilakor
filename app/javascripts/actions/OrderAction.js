@@ -3,23 +3,26 @@
 import request from "superagent-bluebird-promise"
 import Promise from "bluebird"
 import _ from "lodash"
+import invariant from "invariant"
 
 import AppDispatcher from "dispatcher/AppDispatcher"
+import ShoppingCartAction from "actions/ShoppingCartAction"
+import OrderManageConstants from "constants/OrderManageConstants"
 
-let CheckoutAction = {
+let OrderAction = {
   
   /**
-   * Checks out with given state and user.
+   * Adds a new order with state containing order information and user.
    * 
    * @param {Object} state state object containing checkout info.
-   *
    * @param {Object} user user object.
    * 
    * @return {Promise} the promise object.
    */
-  checkout: function(state, user) {
+  addOrder: function(state, user) {
     
     return new Promise(function(resolve, reject) {
+      
       Stripe.card.createToken({
         number: state.cardNumber,
         exp_month: state.expireMonth,
@@ -31,7 +34,7 @@ let CheckoutAction = {
         }
         
         let token = response.id
-        ,   charge = {
+        ,   order = {
           user: _.isEmpty(user) ? "" : user._id,
           address: {
             name: `${state.firstName} ${state.lastName}`,
@@ -50,9 +53,11 @@ let CheckoutAction = {
           items: Object.keys(state.items)
         };
         
-        request.post("/charge")
-          .send({charge: JSON.stringify(charge)})
+        request.post("/api/orders")
+          .send({order: JSON.stringify(order)})
           .then(function(res) {
+            ShoppingCartAction.clearCart();
+            
             resolve(res.body);
           })
           .catch(function(err) {
@@ -62,8 +67,39 @@ let CheckoutAction = {
       });
 
     });
+  },
+  
+  /**
+   * Gets all the orders.
+   * 
+   * @return {Promise} the promise object.
+   */
+  getOrders: function() {
+    
+    return new Promise(function(resolve, reject) {
+      
+      request.get("/api/orders")
+        .then(function(res) {
+          let orders = res.body;
+          
+          invariant(_.isArray(orders), `OrderAction.getOrders() expects an array, but gets '${typeof orders}'.`)
+          
+          AppDispatcher.handleAction({
+            actionType: OrderManageConstants.RECEIVED_ORDERS,
+            orders: orders
+          });
+          
+          resolve();
+        })
+        .catch(function(err) {
+          invariant(_.isString(err.message), `OrderAction.getOrders() expects a string as error message, but gets '${typeof message}'.`)
+          
+          reject(err);
+        });
+
+    });
   }
 
 };
 
-export default CheckoutAction;
+export default OrderAction;

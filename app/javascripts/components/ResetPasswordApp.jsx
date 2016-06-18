@@ -7,7 +7,7 @@ import { Alert } from "react-bootstrap"
 
 import styles from "components/ResetPasswordApp.scss"
 
-import AuthActions from "actions/AuthActions"
+import AuthAction from "actions/AuthAction"
 
 import SubmitButton from "lib/SubmitButton"
 import BlurMask from "lib/BlurMask"
@@ -49,7 +49,7 @@ export default class ResetPasswordApp extends React.Component {
     
     let token = getQueryString("token");
 
-    AuthActions.resetPassword(token, this.state.password)
+    AuthAction.resetPassword(token, this.state.password)
       .then((message) => {
         this.setState({
           message: message

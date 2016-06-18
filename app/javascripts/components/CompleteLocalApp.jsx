@@ -7,7 +7,7 @@ import { hashHistory } from "react-router"
 import styles from "components/CompleteLocalApp.scss"
 
 import AuthStore from "stores/AuthStore"
-import AuthActions from "actions/AuthActions"
+import AuthAction from "actions/AuthAction"
 
 import SubmitButton from "lib/SubmitButton"
 import BlurMask from "lib/BlurMask"
@@ -32,8 +32,6 @@ export default class CompleteLocalApp extends React.Component {
   
   componentDidMount() {
     AuthStore.addChangeListener(this._onChange);
-    
-    AuthActions.logInFromCookie();
   }
 
   componentWillUnmount() {
@@ -85,7 +83,7 @@ export default class CompleteLocalApp extends React.Component {
       isSubmitting: true
     });
     
-    AuthActions.updateUserInfo(this.state.user._id, info)
+    AuthAction.updateUserInfo(this.state.user._id, info)
       .then(() => {
         hashHistory.push("/");
       })

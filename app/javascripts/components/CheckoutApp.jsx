@@ -17,8 +17,7 @@ import SubmitButton from "lib/SubmitButton"
 import AlertMessage from "lib/AlertMessage"
 
 import ShoppingCartStore from "stores/ShoppingCartStore"
-import CheckoutStore from "stores/CheckoutStore"
-import CheckoutAction from "actions/CheckoutAction"
+import OrderAction from "actions/OrderAction"
 import AuthStore from "stores/AuthStore"
 
 function getStateFromStores() {
@@ -123,14 +122,10 @@ export default class CheckoutApp extends React.Component {
   
   componentDidMount() {
     ShoppingCartStore.addChangeListener(this._onChange);
-
-    CheckoutStore.addChangeListener(this._onChange);
   }
 
   componentWillUnmount() {
     ShoppingCartStore.removeChangeListener(this._onChange);
-
-    CheckoutStore.removeChangeListener(this._onChange);
   }
 
   _onChange = () => {
@@ -157,7 +152,7 @@ export default class CheckoutApp extends React.Component {
       isSubmitting: true
     });
     
-    CheckoutAction.checkout(this.state, AuthStore.getUser())
+    OrderAction.addOrder(this.state, AuthStore.getUser())
     .then((response) => {
       console.log("successfully put order.");
       

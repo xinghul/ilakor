@@ -1,13 +1,14 @@
 "use strict";
 
-let express    = require("express")
-,   fs         = require("fs")
-,   multiparty = require("multiparty")
-,   jwt        = require("jsonwebtoken")
-,   _          = require("lodash");
+let express = require("express")
+,   fs      = require("fs")
+,   jwt     = require("jsonwebtoken")
+,   stripe  = require("stripe")("sk_test_jkhA0OtH2wJTqnQYt0hZAbLQ")
+,   _       = require("lodash");
 
 let router = express.Router()
 ,   Item   = require("./api/item")
+,   Order  = require("./api/order")
 ,   Tag    = require("./api/tag");
 
 let CustomError = require("./utils/CustomError");
@@ -89,27 +90,6 @@ router.route("/items")
 })
 .post(function(req, res, next) {
   
-  // let form = new multiparty.Form();
-  // 
-  // form.parse(req, function(err, fields, files) {
-  //   
-  //   let rawData = JSON.parse(fields.item[0])
-  //   ,   images  = files.image;
-  //   
-  //   Item.add(rawData).then(function(newItem) {
-  //     return Item.uploadImages(newItem, images);
-  //   }).then(function(updatedItem) {
-  //     res.status(200).json(updatedItem);
-  //   }).catch(function(err) {
-  //     console.log(err.stack);
-  //     
-  //     next(new CustomError(500, "Internal error."));
-  //   });
-  // });
-  // 
-  // return;
-  
-  // enable this when request support ES6
   let rawData;
   
   if (!req.body.item) {
@@ -171,6 +151,101 @@ router.route("/items")
   } else {
     next(new CustomError(400, "Item id not specified!"));
   }
+});
+
+/********************************************************
+ *                     Order Routes                     *
+ ********************************************************/
+router.route("/orders")
+/**
+ * Global logic for path '/api/feature'.
+ */
+.all(function(req, res, next) {
+
+  let orderId = req.query.id || req.params.id;
+  
+  if (_.isString(orderId)) {
+    req.orderId = orderId;
+  }
+  
+  next();
+})
+/**
+ * Gets a specific item info by id.
+ */
+.get(function(req, res, next) {
+  
+  let orderId = req.orderId;
+  
+  if (_.isString(orderId)) {
+    Order.get(orderId).then(function(order) {
+      res.status(200).json(order);
+    }).catch(function(err) {
+      console.log(err.stack);
+      
+      next(new CustomError(500, "Internal error"));
+    });
+  } else {
+    Order.getAll().then(function(orders) {
+      res.status(200).json(orders);
+    }).catch(function(err) {
+      console.log(err.stack);
+      
+      next(new CustomError(500, "Internal error"));
+    });
+  }
+
+})
+/**
+ * Adds a new tag.
+ */
+.post(function(req, res, next) {
+  
+  let rawData;
+  
+  if (!req.body.order) {
+    return next(new CustomError(400, "order info undefined."));
+  }
+  
+  try {
+    rawData = JSON.parse(req.body.order);
+  } catch (err) {
+    console.log(err.stack);
+    
+    return next(new CustomError(400, "Malformed JSON."));
+  }
+  
+  let chargeInfo = rawData.charge;
+  
+  stripe.charges.create({
+    source: chargeInfo.source,
+    amount: chargeInfo.amount,
+    currency: chargeInfo.currency
+  }).then(function(res) {
+    rawData.stripe = res;
+    
+    return Order.add(rawData);
+  }).then(function(newOrder) {
+    res.status(200).json(newOrder);
+  }).catch(function(err) {
+    console.log(err.stack);
+    
+    // deal with error
+    next(new CustomError(400, err.message));
+  });
+  
+})
+/**
+ * Updates a specific tag by id.
+ */
+.put(function(req, res, next) {
+  
+})
+/**
+ * Deletes a specific tag by id.
+ */
+.delete(function(req, res, next) {
+  
 });
 
 /********************************************************

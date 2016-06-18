@@ -13,7 +13,7 @@ import UsernameInput from "./AuthApp/UsernameInput"
 import PasswordInput from "./AuthApp/PasswordInput"
 
 import AuthStore from "stores/AuthStore"
-import AuthActions from "actions/AuthActions"
+import AuthAction from "actions/AuthAction"
 
 import styles from "components/AuthApp.scss"
 
@@ -48,7 +48,7 @@ export default class AuthApp extends React.Component {
   componentDidMount() {
     AuthStore.addChangeListener(this._onChange);
     
-    AuthActions.logInFromCookie();
+    AuthAction.logInFromCookie();
   }
 
   componentWillUnmount() {
@@ -91,7 +91,7 @@ export default class AuthApp extends React.Component {
       isLoggingIn: true
     });
     
-    AuthActions.userLogIn({
+    AuthAction.userLogIn({
 
       email: this.state.email,
       password: this.state.password
@@ -118,7 +118,7 @@ export default class AuthApp extends React.Component {
       isSigningUp: true
     });
     
-    AuthActions.userSignUp({
+    AuthAction.userSignUp({
 
       username: this.state.username,
       email: this.state.email,
@@ -165,7 +165,7 @@ export default class AuthApp extends React.Component {
   };
 
   handleLogOut() {
-    AuthActions.removeUserFromCookie();
+    AuthAction.removeUserFromCookie();
   }
 
   createModalBodyLogin() {

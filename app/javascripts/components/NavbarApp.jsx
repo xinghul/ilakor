@@ -42,6 +42,9 @@ export default class NarbarApp extends React.Component {
           <NavItem href="#/itemManage">
             CMS
           </NavItem>
+          <NavItem href="#/orderManage">
+            Orders
+          </NavItem>
         </Nav>
         <Nav pullRight id="authModalTrigger">
           <AuthApp />

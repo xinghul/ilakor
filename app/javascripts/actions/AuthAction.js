@@ -7,7 +7,7 @@ import Promise from "bluebird"
 import AppDispatcher from "dispatcher/AppDispatcher"
 import AuthConstants from "constants/AuthConstants"
 
-let AuthActions = {
+let AuthAction = {
   
   userLogIn: function(user) {
     
@@ -176,4 +176,4 @@ let AuthActions = {
 
 };
 
-export default AuthActions;
+export default AuthAction;

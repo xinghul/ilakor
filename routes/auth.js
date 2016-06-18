@@ -6,8 +6,8 @@ let express  = require("express")
 ,   _        = require("lodash")
 ,   router   = express.Router();
 
-let User    = require("./api/user")
-,   session = require("./api/session");
+let User    = require("./auth/user")
+,   session = require("./auth/session");
 
 let EmailService = require("./service/email");
 

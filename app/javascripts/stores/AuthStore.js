@@ -12,7 +12,7 @@ let _user = {};
 
 let AuthStore = _.extend({}, EventEmitter.prototype, {
 
-  updateUser: function(user) {
+  setUser: function(user) {
     _user = user;
   },
 
@@ -26,6 +26,10 @@ let AuthStore = _.extend({}, EventEmitter.prototype, {
 
   addChangeListener: function(callback) {
     this.on(CHANGE_EVENT, callback);
+    
+    // emit change right away
+    // log in from cookie is too fast
+    this.emitChange();
   },
 
   removeChangeListener: function(callback) {
@@ -40,7 +44,7 @@ AuthStore.dispatchToken = AppDispatcher.register(function(payload) {
   switch(action.actionType) {
 
     case AuthConstants.RECEIVED_USER:
-      AuthStore.updateUser(action.user);
+      AuthStore.setUser(action.user);
       AuthStore.emitChange();
       break;
 

@@ -4,20 +4,20 @@ import _ from "lodash"
 import { EventEmitter } from "events"
 
 import AppDispatcher from "dispatcher/AppDispatcher"
-import CheckoutConstants from "constants/CheckoutConstants"
+import OrderManageConstants from "constants/OrderManageConstants"
 
 const CHANGE_EVENT = "change";
 
-let _errorMsg = null;
+let _orders = null;
 
-let CheckoutStore = _.extend({}, EventEmitter.prototype, {
+let OrderManageStore = _.extend({}, EventEmitter.prototype, {
 
-  updateErrorMsg: function(errorMsg) {
-    _errorMsg = errorMsg;
+  setOrders: function(orders) {
+    _orders = orders;
   },
 
-  getErrorMsg: function() {
-    return _errorMsg;
+  getOrders: function() {
+    return _orders;
   },
 
   emitChange: function() {
@@ -34,14 +34,14 @@ let CheckoutStore = _.extend({}, EventEmitter.prototype, {
 
 });
 
-CheckoutStore.dispatchToken = AppDispatcher.register(function(payload) {
+OrderManageStore.dispatchToken = AppDispatcher.register(function(payload) {
   let action = payload.action;
 
   switch(action.actionType) {
 
-    case CheckoutConstants.RECEIVED_ERROR_MESSAGE:
-      CheckoutStore.updateErrorMsg(action.error);
-      CheckoutStore.emitChange();
+    case OrderManageConstants.RECEIVED_ORDERS:
+      OrderManageStore.setOrders(action.orders);
+      OrderManageStore.emitChange();
       break;
 
     default:
@@ -50,4 +50,4 @@ CheckoutStore.dispatchToken = AppDispatcher.register(function(payload) {
 
 });
 
-export default CheckoutStore;
+export default OrderManageStore;

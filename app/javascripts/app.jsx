@@ -13,6 +13,7 @@ import { Form, FormGroup, FormControl, ControlLabel } from "react-bootstrap"
 
 import ItemDisplayApp from "components/ItemDisplayApp"
 import ItemManageApp from "components/ItemManageApp"
+import OrderManageApp from "components/OrderManageApp"
 import AccountApp from "components/AccountApp"
 import NavbarApp from "components/NavbarApp"
 import SocialApp from "components/SocialApp"
@@ -68,6 +69,7 @@ render((
       <IndexRoute component={IndexApp} />
       <Route path="itemDisplay" component={ItemDisplayApp} />
       <Route path="itemManage" component={ItemManageApp} />
+      <Route path="orderManage" component={OrderManageApp} />
       <Route path="account" component={AccountApp} />
       <Route path="social" component={SocialApp} />
       <Route path="checkout" component={CheckoutApp} />

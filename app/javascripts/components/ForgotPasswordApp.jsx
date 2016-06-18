@@ -7,7 +7,7 @@ import { hashHistory } from "react-router"
 
 import styles from "components/ForgotPasswordApp.scss"
 
-import AuthActions from "actions/AuthActions"
+import AuthAction from "actions/AuthAction"
 
 import SubmitButton from "lib/SubmitButton"
 import BlurMask from "lib/BlurMask"
@@ -36,7 +36,7 @@ export default class ForgotPasswordApp extends React.Component {
       isSubmitting: true
     });
     
-    AuthActions.forgotPassword(this.state.email)
+    AuthAction.forgotPassword(this.state.email)
       .then((message) => {
         this.setState({
           message: message

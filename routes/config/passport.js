@@ -13,7 +13,7 @@ let configAuth   = require("./auth")
 ,   UserUtil     = require("../utils/UserUtil")
 ,   EmailService = require("../service/email")
 ,   User         = mongoose.model("User")
-,   UserApi      = require("../api/user");
+,   UserApi      = require("../auth/user");
 
 module.exports = {
   

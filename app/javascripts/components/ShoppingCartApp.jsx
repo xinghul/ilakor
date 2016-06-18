@@ -141,7 +141,7 @@ export default class ShoppingCartApp extends React.Component {
     ,   displayItems = []
     ,   totalPrice = this.state.totalPrice
     ,   checkoutDisabled = _.isEmpty(items) || _.isEmpty(this.state.user);
-    
+
     for (let key of Object.keys(items))
     {
       displayItems.push(createCartPopoverItem(items[key]));

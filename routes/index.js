@@ -8,7 +8,6 @@ let express = require("express")
 
 let api     = require("./api")
 ,   auth    = require("./auth")
-,   charge  = require("./charge")
 ,   router  = express.Router();
 
 /* GET home page. */
@@ -24,8 +23,6 @@ router.get("/", function(req, res, next) {
 router.use("/api", api);
 
 router.use("/auth", auth);
-
-router.use("/charge", charge);
 
 let storage = multer.diskStorage({
   destination: path.resolve(__dirname, "tmp/uploads"),
