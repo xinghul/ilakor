@@ -20,16 +20,13 @@ export default class ItemListTable extends React.Component {
   
   render() {
     let items = this.props.items
-    ,   item
     ,   tableBody = [];
     
-    for (let index = 0; index < items.length; index++)
+    for (let item of items)
     {
-      item = items[index];
-      
       tableBody.push(
         <tr onClick={this.props.handleItemClick.bind(this, item)} key={item._id}>
-          <td>{index}</td>
+          <td>{items.indexOf(item)}</td>
           <td>{item.name}</td>
           <td>{item.price}</td>
           <td>{item.tag.join(",")}</td>

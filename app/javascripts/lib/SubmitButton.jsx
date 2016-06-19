@@ -15,14 +15,14 @@ export default class SubmitButton extends React.Component {
   }
   
   render() {
-    
+    // put {...this.props} behind disabled, so it can't be overriden
     return (
-      <Button disabled={this.props.isSubmitting} 
+      <Button 
+        disabled={this.props.isSubmitting} 
+        {...this.props}
         onClick={this.props.handleSubmit}
         className={styles.submitButton} 
         bsSize="large" 
-        block
-        {...this.props}
       >
         <div hidden={!this.props.isSubmitting} className={styles.spinner}>
           <BaseSpinner />
@@ -31,7 +31,6 @@ export default class SubmitButton extends React.Component {
           {this.props.children}
         </div>
       </Button>
-      
     );
   }
 }

@@ -13,18 +13,19 @@ export default class GhostButton extends React.Component {
   }
   
   render() {
-    let color = this.props.color;
     
-    let newProps = _.clone(this.props);
-    
-    newProps["style"] = {
-      color: color,
-      
-      borderColor: color
+    let style = {
+      color: this.props.color
     };
     
     return (
-      <Button {...newProps} className={styles.ghostButton} />
+      <Button 
+        {...this.props}
+        style={style}
+        className={styles.ghostButton}
+      >
+        {this.props.children}
+      </Button>
     );
   }
 }

@@ -30,8 +30,7 @@ export default class ItemManageApp extends React.Component {
       items: ItemManageStore.getItems(),
       tags: ItemManageStore.getTags(),
       
-      showItemInfoModal: false,
-      selectedItem: null
+      selectedItem: {}
     };
   }
   
@@ -57,49 +56,19 @@ export default class ItemManageApp extends React.Component {
    */
   handleItemClick = (item) => {
     this.setState({
-      showItemInfoModal: true,
       selectedItem: item
     });
-  };
-  
-  onItemInfoModalClose = () => {
-    this.setState({
-      showItemInfoModal: false
-    });
-  };
-  
-  onItemInfoModalApply = (newValue) => {
-    ItemManageAction.updateItem(
-      this.state.selectedItem._id,
-      newValue
-    ).then(() => {
-      this.onItemInfoModalClose();
-    }).catch(function(err) {
-      console.log(err);
-    })
-  };
-  
-  onItemInfoModalDelete = () => {
-    ItemManageAction.removeItem(
-      this.state.selectedItem._id
-    ).then(() => {
-      this.onItemInfoModalClose();
-    }).catch(function(err) {
-      console.log(err);
-    })
-  };
-  
+    
+    this.refs["itemModal"].showModal();
+  };  
   
   render() {
     
     return (
       <div className={styles.itemManageApp}>
         <ItemDetailModal 
-          showModal={this.state.showItemInfoModal} 
           item={this.state.selectedItem}
-          onClose={this.onItemInfoModalClose}
-          onApply={this.onItemInfoModalApply}
-          onDelete={this.onItemInfoModalDelete}
+          ref="itemModal"
         />
         <Grid fluid>
           <Row>

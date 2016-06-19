@@ -2,17 +2,27 @@
 
 import React from "react"
 import _ from "lodash"
-import { Form, Modal, Button, Tooltip } from "react-bootstrap"
+import { Form, Modal, Row, Col } from "react-bootstrap"
 
 import BaseInput from "lib/BaseInput"
+import SubmitButton from "lib/SubmitButton"
+
+import ItemManageAction from "actions/ItemManageAction"
 
 export default class ItemDetailModal extends React.Component {
   
   constructor(props) {
     super(props);
+    
+    this.state = {
+      showModal: false,
+      isApplying: false,
+      isDeleting: false
+    };
   }
   
-  onApply = () => {
+  handleApply = () => {
+    
     let item = this.props.item
     ,   newValue = {};
     
@@ -23,17 +33,54 @@ export default class ItemDetailModal extends React.Component {
         newValue[key] = this.refs[key].getValue();        
       }
     }
-
-    this.props.onApply(newValue);
+    
+    this.setState({
+      isApplying: true
+    });
+    
+    ItemManageAction.updateItem(
+      item._id,
+      newValue
+    ).then(() => {
+      this.onClose();
+    }).catch((err) => {
+      console.log(err);
+    }).finally(() => {
+      this.setState({
+        isApplying: false
+      });
+    });
   };
   
-  onDelete = () => {
-    this.props.onDelete();
+  handleDelete = () => {
+    this.setState({
+      isDeleting: true
+    });
+    
+    ItemManageAction.removeItem(
+      this.props.item._id
+    ).then(() => {
+      this.onClose();
+    }).catch((err) => {
+      console.log(err);
+    }).finally(() => {
+      this.setState({
+        isDeleting: false
+      });
+    });
   };
   
   onClose = () => {
-    this.props.onClose();
+    this.setState({
+      showModal: false
+    });
   };
+  
+  showModal() {
+    this.setState({
+      showModal: true
+    });
+  }
   
   createKeyValueForm() {
     let item = this.props.item;
@@ -62,10 +109,11 @@ export default class ItemDetailModal extends React.Component {
 
   render() {
     
-    let keyValueForm = this.createKeyValueForm();
+    let keyValueForm = this.createKeyValueForm()
+    ,   buttonDisabled = this.state.isApplying || this.state.isDeleting;
 
     return (
-      <Modal show={this.props.showModal} onHide={this.onClose}>
+      <Modal show={this.state.showModal} onHide={this.onClose}>
         <Modal.Header closeButton>
           <Modal.Title>Item info</Modal.Title>
         </Modal.Header>
@@ -73,8 +121,18 @@ export default class ItemDetailModal extends React.Component {
           {keyValueForm}
         </Modal.Body>
         <Modal.Footer>
-          <Button bsStyle="danger" onClick={this.onDelete}>Delete</Button>
-          <Button bsStyle="success" onClick={this.onApply}>Apply</Button>  
+          <SubmitButton 
+            bsStyle="danger" 
+            disabled={buttonDisabled}
+            isSubmitting={this.state.isDeleting}
+            handleSubmit={this.handleDelete}
+          >Delete</SubmitButton>
+          <SubmitButton 
+            bsStyle="success"
+            disabled={buttonDisabled}
+            isSubmitting={this.state.isApplying}
+            handleSubmit={this.handleApply}
+          >Apply</SubmitButton>  
         </Modal.Footer>
       </Modal>
     );
@@ -83,18 +141,8 @@ export default class ItemDetailModal extends React.Component {
 }
 
 ItemDetailModal.propTypes = { 
-  // required props
-  showModal: React.PropTypes.bool.isRequired,
-  onClose: React.PropTypes.func.isRequired,
-  onApply: React.PropTypes.func,
-  onDelete: React.PropTypes.func,
-  
-  item: React.PropTypes.object
+  item: React.PropTypes.object.isRequired
 };
 
 ItemDetailModal.defaultProps = {
-  onApply: function() {},
-  onDelete: function() {},
-  
-  item: {}
 };

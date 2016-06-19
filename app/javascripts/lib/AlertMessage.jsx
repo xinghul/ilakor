@@ -22,6 +22,12 @@ export default class AlertMessage extends React.Component {
     });
   };
   
+  showAlert() {
+    this.setState({
+      showAlert: true
+    });
+  }
+  
   render() {
     
     let showAlert = this.state.showAlert && 
@@ -34,7 +40,7 @@ export default class AlertMessage extends React.Component {
     
     return (
       <div style={alertStyle} className={styles.alertMessage}>
-        <Alert bsStyle={this.props.alertStyle}>
+        <Alert bsStyle={this.props.alertStyle} onDismiss={this.handleAlertDismiss}>
           <p>{this.props.alertMessage}</p>
         </Alert>
       </div>

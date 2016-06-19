@@ -8,7 +8,7 @@ import OrderManageConstants from "constants/OrderManageConstants"
 
 const CHANGE_EVENT = "change";
 
-let _orders = null;
+let _orders = [];
 
 let OrderManageStore = _.extend({}, EventEmitter.prototype, {
 

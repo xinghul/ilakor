@@ -140,6 +140,8 @@ export default class CheckoutApp extends React.Component {
       _.isEmpty(this.state.cardNumber) || _.isEmpty(this.state.cardType) || _.isEmpty(this.state.cvc)
     );
     
+    debugger;
+    
     this.setState({
       formFilled: formFilled
     });
@@ -172,6 +174,8 @@ export default class CheckoutApp extends React.Component {
       this.setState({
         errorMessage: message
       });
+      
+      this.refs["alertMessage"].showAlert();
     })
     .finally(() => {
       this.setState({
@@ -181,6 +185,7 @@ export default class CheckoutApp extends React.Component {
   };
   
   handleValueChange = (key, evt) => {
+    debugger;
     let value = evt.target.value;
     
     this.setState({
@@ -545,11 +550,12 @@ export default class CheckoutApp extends React.Component {
             </Col>
           </Row>
         </Form>
-        <AlertMessage alertMessage={this.state.errorMessage} alertStyle="danger" />
+        <AlertMessage ref="alertMessage" alertMessage={this.state.errorMessage} alertStyle="danger" />
         <SubmitButton
           disabled={!this.state.formFilled || this.state.isSubmitting} 
           handleSubmit={this.handleConfirm}
           isSubmitting={this.state.isSubmitting}
+          block
           bsStyle="warning"
         >
           <Glyphicon glyph="lock" />

@@ -58,7 +58,10 @@ let OrderApi = {
     
     return new Promise(function(resolve, reject) {
       
-      Order.find({})
+      Order
+        .find({})
+        .populate("user items")
+        .exec()
         .then(resolve)
         .catch(reject);
         

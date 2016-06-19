@@ -83,14 +83,14 @@ export default class ItemDisplayApp extends React.Component {
       isItemsAdded: false
     });
     
-    _addItemPromise = Promise.resolve();
+    _addItemPromise = Promise.resolve(null);
     
     for (let item of newItems)
     {
       _addItemPromise = _addItemPromise.delay(200).then(() => {
         return new Promise((resolve, reject) => {
           items.push(item);
-
+    
           this.setState({
             items: items
           });
