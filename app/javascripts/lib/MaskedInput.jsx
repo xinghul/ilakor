@@ -2,12 +2,15 @@
 
 import React from "react"
 import _ from "lodash"
-import { FormGroup, InputGroup, FormControl } from "react-bootstrap"
+
+import { FormGroup, InputGroup } from "react-bootstrap"
 import FontAwesome from "react-fontawesome"
 
-import styles from "lib/BaseInput.scss"
+import InputMask from "react-input-mask"
 
-export default class BaseInput extends React.Component {
+import styles from "lib/MaskedInput.scss"
+
+export default class MaskedInput extends React.Component {
   
   constructor(props) {
     super(props);
@@ -53,8 +56,7 @@ export default class BaseInput extends React.Component {
 
   render() {
     
-    let selectOptions = null
-    ,   validationState = null
+    let validationState = null
     ,   addonContent = null;
     
     let newProps = _.clone(this.props);
@@ -63,26 +65,6 @@ export default class BaseInput extends React.Component {
       validationState = newProps.validationState;
       
       delete newProps.validationState;
-    }
-    
-    if (newProps.type === "select") {
-      selectOptions = [];
-      
-      for (let optionValue of newProps.options)
-      {
-        selectOptions.push(
-          <option key={optionValue} value={optionValue}>{optionValue}</option>
-        );
-      }
-      
-      delete newProps.options;
-    }
-    
-    // special case for 'select' and 'textarea'
-    if (newProps.type === "select" || newProps.type === "textarea") {
-      newProps.componentClass = newProps.type;
-      
-      delete newProps.type;
     }
     
     addonContent = do {
@@ -108,19 +90,21 @@ export default class BaseInput extends React.Component {
 
     return (
       <FormGroup 
-        className={styles.baseInput} 
+        className={styles.maskedInput} 
         controlId={newProps.key} 
         validationState={validationState}
       >
         <InputGroup>
           {addonContent}
-          <FormControl 
+          <InputMask 
             {...newProps}
+            maskChar={this.props.maskChar}
+            className="form-control"
             value={this.props.value ? this.props.value : this.state.value}
             onChange={this.handleChange}
             onFocus={this.handleOnFocus}
             onBlur={this.handleOnBlur}
-          >{selectOptions}</FormControl>
+          />
         </InputGroup>
         <div 
           hidden={_.isEmpty(newProps.focusText)} 
@@ -138,16 +122,19 @@ export default class BaseInput extends React.Component {
   }
 }
 
-BaseInput.propTypes = { 
+MaskedInput.propTypes = { 
   // required props
-  type: React.PropTypes.string.isRequired,
+  mask: React.PropTypes.string.isRequired,
   
-  // most used props
+  maskChar: React.PropTypes.string,
+  type: React.PropTypes.string,
   handleChange: React.PropTypes.func,
   label: React.PropTypes.string
 };
 
-BaseInput.defaultProps = {
+MaskedInput.defaultProps = {
+  maskChar: " ",
+  type: "text",
   handleChange: function() {},
   label: ""
 };

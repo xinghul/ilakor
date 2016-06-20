@@ -22,7 +22,8 @@ import CompleteLocalApp from "components/CompleteLocalApp"
 import ResetPasswordApp from "components/ResetPasswordApp"
 import ForgotPasswordApp from "components/ForgotPasswordApp"
 
-// import BaseCarousel from "lib/BaseCarousel"
+import CreditCardInput from "components/CheckoutApp/CreditCardInput"
+import BaseInput from "lib/BaseInput"
 
 import styles from "main/app.scss"
 
@@ -56,7 +57,10 @@ class IndexApp extends React.Component {
   render() {
     
     return (
-      null
+      <div>
+        <CreditCardInput />
+        <BaseInput type="text" label="Card number" icon="credit-card-alt"/>
+      </div>
     );
   }
 };
