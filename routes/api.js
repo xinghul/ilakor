@@ -158,7 +158,7 @@ router.route("/items")
  ********************************************************/
 router.route("/orders")
 /**
- * Global logic for path '/api/feature'.
+ * Global logic for path '/api/orders'.
  */
 .all(function(req, res, next) {
 
@@ -171,7 +171,7 @@ router.route("/orders")
   next();
 })
 /**
- * Gets a specific item info by id.
+ * Gets orders or a specific order by id.
  */
 .get(function(req, res, next) {
   
@@ -197,7 +197,7 @@ router.route("/orders")
 
 })
 /**
- * Adds a new tag.
+ * Adds a new order.
  */
 .post(function(req, res, next) {
   
@@ -236,13 +236,34 @@ router.route("/orders")
   
 })
 /**
- * Updates a specific tag by id.
+ * Updates a specific order by id.
  */
 .put(function(req, res, next) {
+  let orderId = req.orderId
+  ,   newValue;
   
+  try {
+    newValue = JSON.parse(req.body.order) 
+  } catch (err) {
+    console.log(err.stack);
+    
+    return next(new CustomError(400, "Malformed JSON."));
+  }
+  
+  if (_.isString(orderId) && _.isObject(newValue)) {
+    Order.update(orderId, newValue).then(function(order) {
+      res.status(200).json(order);
+    }).catch(function(err) {
+      console.log(err.stack);
+      
+      next(new CustomError(500, "Internal error."));
+    });
+  } else {
+    next(new CustomError(400, "Order id not specified!"));
+  }
 })
 /**
- * Deletes a specific tag by id.
+ * Deletes a specific order by id.
  */
 .delete(function(req, res, next) {
   

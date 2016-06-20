@@ -140,8 +140,6 @@ export default class CheckoutApp extends React.Component {
       _.isEmpty(this.state.cardNumber) || _.isEmpty(this.state.cardType) || _.isEmpty(this.state.cvc)
     );
     
-    debugger;
-    
     this.setState({
       formFilled: formFilled
     });
@@ -185,7 +183,6 @@ export default class CheckoutApp extends React.Component {
   };
   
   handleValueChange = (key, evt) => {
-    debugger;
     let value = evt.target.value;
     
     this.setState({

@@ -182,6 +182,7 @@ export default class AuthApp extends React.Component {
           handleSubmit={this.handleLoginClick}
           isSubmitting={this.state.isLoggingIn}
           bsStyle="success"
+          block
         >Log in</SubmitButton>
         <div className={styles.forgotPasswordLink}>
           <a onClick={this.handleForgotPasswordClick}>Forgot password?</a>
@@ -207,6 +208,7 @@ export default class AuthApp extends React.Component {
           handleSubmit={this.handleSignupClick}
           isSubmitting={this.state.isSigningUp}
           bsStyle="success"
+          block
         >Sign up</SubmitButton>
       </div>
     );

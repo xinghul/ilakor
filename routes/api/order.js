@@ -67,6 +67,28 @@ let OrderApi = {
         
     });
     
+  },
+  
+  /**
+   * Updates order specified by given id with new value.
+   * 
+   * @param  {String} id the specified id.
+   *
+   * @return {Promise} the new promise object.
+   */
+  update: function(id, newValue) {
+
+    return new Promise(function(resolve, reject) {
+      
+      Order
+        .findOneAndUpdate({_id: ObjectId(id)}, {$set: newValue}, {new: true})
+        .populate("user items")
+        .exec()
+        .then(resolve)
+        .catch(reject);
+              
+    });
+    
   }
 
 };

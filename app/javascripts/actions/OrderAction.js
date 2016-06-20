@@ -98,6 +98,38 @@ let OrderAction = {
         });
 
     });
+  },
+  
+  /**
+   * Updates an order with new values.
+   *
+   * @param  {String} id the id for this order.
+   * @param  {Object} newValue an object containing new order info.
+   *
+   * @return {Promise} the promise object.
+   */
+  updateOrder: function(id, newValue) {
+    
+    return new Promise(function(resolve, reject) {
+      
+      request.put("/api/orders")
+        .query({id: id})
+        .send({order: JSON.stringify(newValue)})
+        .then(function(res) {
+          let newOrder = res.body;
+          
+          AppDispatcher.handleAction({
+            actionType: OrderManageConstants.RECEIVED_UPDATED_ORDER,
+            order: newOrder
+          });
+          
+          resolve();
+        })
+        .catch(function(err) {
+          reject(err);
+        });
+      
+    });
   }
 
 };

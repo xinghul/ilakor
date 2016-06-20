@@ -19,6 +19,20 @@ let OrderManageStore = _.extend({}, EventEmitter.prototype, {
   getOrders: function() {
     return _orders;
   },
+  
+  updateOrder: function(newOrder) {
+    let id = newOrder._id;
+    
+    for (let order of _orders)
+    {
+      if (order._id === id)
+      {
+        _orders[_orders.indexOf(order)] = newOrder;
+        
+        break;
+      }
+    }
+  },
 
   emitChange: function() {
     this.emit(CHANGE_EVENT);
@@ -41,6 +55,11 @@ OrderManageStore.dispatchToken = AppDispatcher.register(function(payload) {
 
     case OrderManageConstants.RECEIVED_ORDERS:
       OrderManageStore.setOrders(action.orders);
+      OrderManageStore.emitChange();
+      break;
+      
+    case OrderManageConstants.RECEIVED_UPDATED_ORDER:
+      OrderManageStore.updateOrder(action.order);
       OrderManageStore.emitChange();
       break;
 

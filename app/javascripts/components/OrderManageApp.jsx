@@ -28,7 +28,7 @@ export default class OrderManageApp extends React.Component {
     this.state = {
       orders: OrderManageStore.getOrders(),
       
-      selectedOrder: {}
+      selectedOrderIndex: 0
     };
   }
   
@@ -46,9 +46,10 @@ export default class OrderManageApp extends React.Component {
     this.setState(getStateFromStores());
   };
   
-  handleOrderClick = (order) => {
+  handleOrderClick = (index) => {
+    console.log(index);
     this.setState({
-      selectedOrder: order
+      selectedOrderIndex: index
     });
     
     this.refs["orderModal"].showModal();
@@ -63,7 +64,7 @@ export default class OrderManageApp extends React.Component {
     for (let order of orders)
     {
       tableBody.push(
-        <tr onClick={this.handleOrderClick.bind(this, order)} key={order._id}>
+        <tr onClick={this.handleOrderClick.bind(this, orders.indexOf(order))} key={order._id}>
           <td>{orders.indexOf(order)}</td>
           <td>{order._id}</td>
           <td>{order.charge.amount}</td>
@@ -97,11 +98,16 @@ export default class OrderManageApp extends React.Component {
     
     let ordersTable = this.createOrdersTable(this.state.orders);
     
+    let selectedOrder = {};
+    if (!_.isEmpty(this.state.orders)) {
+      selectedOrder = this.state.orders[this.state.selectedOrderIndex];
+    }
+    
     return (
       <div className={styles.orderManageApp}>
         <OrderDetailModal 
           ref="orderModal"
-          order={this.state.selectedOrder} 
+          order={selectedOrder} 
         />
         <Grid fluid>
           <GridSection>

@@ -1,0 +1,10 @@
+.orderDetailSection {
+  
+  .actionButtons {
+    text-align: right;
+    
+    :global(.btn+.btn) {
+      margin-left: 5px;
+    }
+  }  
+}

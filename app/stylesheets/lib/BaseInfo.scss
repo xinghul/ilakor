@@ -1,0 +1,19 @@
+.baseInfo {
+  overflow: hidden;
+  white-space: nowrap;
+  border-bottom: 1px solid #ccc;
+
+  .addonContent {
+    width: 114px;
+    text-align: left;
+    display: inline-block;
+  }
+
+  label {
+    margin-left: 10px;
+  }
+    
+  p {
+    display: inline-block;
+  }
+}
