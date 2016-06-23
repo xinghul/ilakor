@@ -4,6 +4,8 @@ let mongoose = require("mongoose")
 ,   _        = require("lodash")
 ,   passport = require("passport");
 
+mongoose.promise = require("bluebird");
+
 let LocalStrategy    = require("passport-local").Strategy
 ,   FacebookStrategy = require("passport-facebook").Strategy
 ,   TwitterStrategy  = require("passport-twitter").Strategy

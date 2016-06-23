@@ -12,9 +12,13 @@ import styles from "components/CheckoutApp.scss"
 
 import ItemUtil from "utils/ItemUtil"
 
-import BaseSpinner from "lib/BaseSpinner"
+import GridSection from "lib/GridSection"
+import BaseInput from "lib/BaseInput"
 import SubmitButton from "lib/SubmitButton"
 import AlertMessage from "lib/AlertMessage"
+import CreditCardInput from "./CheckoutApp/CreditCardInput"
+import PhoneNumberInput from "./CheckoutApp/PhoneNumberInput"
+import EmailInput from "./AuthApp/EmailInput"
 
 import ShoppingCartStore from "stores/ShoppingCartStore"
 import OrderAction from "actions/OrderAction"
@@ -27,69 +31,10 @@ function getStateFromStores() {
   };
 }
 
-function validateZip(zip) {
-  let validZipReg = /^\d{5}$/;
-  
-  if (_.isEmpty(zip)) {
-    return;
-  }
-  
-  if (zip.length < 5) {
-    return "warning";
-  } else if (validZipReg.test(zip)) {
-    return "success";
-  }
-  
-  return "error";
-}
-
-function validatePhoneNumber(phoneNumber) {
-  if (_.isEmpty(phoneNumber)) {
-    return;
-  }
-  
-  if (phoneNumber.length < 14) {
-    return "warning";
-  } else {
-    return "success";
-  }
-}
-
-function validateEmail(email) {
-  let validEmailReg = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i;
-  
-  if (_.isEmpty(email)) {
-    return;
-  }
-
-  if (validEmailReg.test(email)) {
-    return "success";
-  }
-  
-  return "warning";
-}
-
-function validateCard(cardNumber, cardType) {
-  if (_.isEmpty(cardNumber)) {
-    return;
-  }
-  
-  let card = getCardTypes(cardNumber)[0];
-
-  if (!_.isEmpty(card) && card.type === cardType) {
-    return "success";
-  }
-  
-  return "error";
-}
-
 export default class CheckoutApp extends React.Component {
   
   constructor(props) {
     super(props);
-    
-    this.phoneNumberPattern = new RegExp(/^\d{0,10}$/);
-    this.phoneNumberMask = "(___) ___-____";
     
     this.state = {
       items: ShoppingCartStore.getItems(),
@@ -98,25 +43,7 @@ export default class CheckoutApp extends React.Component {
       errorMessage: "",
       formFilled: false,
       isSubmitting: false,
-      checkoutFinish: false,
-      
-      // shipping
-      firstName: "",
-      lastName: "",
-      street: "",
-      city: "",
-      state: "",
-      zip: "",
-      phoneNumber: "",
-      email: "",
-      
-      // payment
-      nameOnCard: "",
-      cardNumber: "",
-      cardType: "visa",
-      expireMonth: "1",
-      expireYear: "2016",
-      cvc: ""
+      checkoutFinish: false
     };
   }
   
@@ -127,32 +54,52 @@ export default class CheckoutApp extends React.Component {
   componentWillUnmount() {
     ShoppingCartStore.removeChangeListener(this._onChange);
   }
+  
+  _alertMessage = null;
 
   _onChange = () => {
     this.setState(getStateFromStores());
   };
   
   checkFormFilled= () => {
-    let formFilled = !(
-      _.isEmpty(this.state.firstName) || _.isEmpty(this.state.lastName) || _.isEmpty(this.state.street) || 
-      _.isEmpty(this.state.city) || _.isEmpty(this.state.state) || _.isEmpty(this.state.zip) || 
-      _.isEmpty(this.state.phoneNumber) || _.isEmpty(this.state.email) || _.isEmpty(this.state.nameOnCard) || 
-      _.isEmpty(this.state.cardNumber) || _.isEmpty(this.state.cardType) || _.isEmpty(this.state.cvc)
-    );
+    let formFilled = true
+    ,   refValues = this.getRefValues();
+    
+    for (let value of _.values(refValues))
+    {
+      if (_.isEmpty(value)) {
+        formFilled = false;
+        
+        break;
+      }
+    }
     
     this.setState({
       formFilled: formFilled
     });
   };
   
+  getRefValues() {
+    let refValues = {};
+    
+    _.forEach(this.refs, function(inputElement, key) {
+      refValues[key] = inputElement.getValue();
+    });
+    
+    return refValues;
+  }
+  
   handleConfirm = () => {
-    console.log("submitting", this.state);
+    let refValues = this.getRefValues();
+    refValues.items = this.state.items;
+    refValues.totalPrice = this.state.totalPrice;
+    console.log(refValues);
     
     this.setState({
       isSubmitting: true
     });
     
-    OrderAction.addOrder(this.state, AuthStore.getUser())
+    OrderAction.addOrder(refValues, AuthStore.getUser())
     .then((response) => {
       console.log("successfully put order.");
       
@@ -173,7 +120,7 @@ export default class CheckoutApp extends React.Component {
         errorMessage: message
       });
       
-      this.refs["alertMessage"].showAlert();
+      this._alertMessage.showAlert();
     })
     .finally(() => {
       this.setState({
@@ -182,82 +129,10 @@ export default class CheckoutApp extends React.Component {
     });
   };
   
-  handleValueChange = (key, evt) => {
-    let value = evt.target.value;
-    
-    this.setState({
-      [key]: value
-    });
-    
+  handleValueChange = () => {
     setTimeout(() => {
       this.checkFormFilled();
     });
-  };
-  
-  handleCardNumberChange = (evt) => {
-    let value = evt.target.value;
-
-    let card = getCardTypes(value)[0]
-    ,   cardType = "visa";
-    
-    if (!_.isEmpty(card)) {
-      cardType = card.type;
-    }
-    
-    this.setState({
-      cardNumber: value,
-      cardType: cardType
-    });
-    
-    setTimeout(() => {
-      this.checkFormFilled();
-    });
-  };
-  
-  handlePhoneNumberChange = (evt) => {
-    let maskedValue = evt.target.value
-    ,   numericValue = maskedValue.replace(/\D/g, '');
-
-    if (this.phoneNumberPattern.test(numericValue)) {
-      
-      let numbers = [...numericValue.toString()]
-      ,   mask = this.phoneNumberMask;
-      for (let number of numbers)
-      {
-        mask = mask.replace('_', number);
-      }
-      
-      let dashIndex = mask.indexOf('_');
-      dashIndex = do {
-        if (dashIndex === -1) {
-          0
-        } else {
-          dashIndex
-        }
-      }
-      
-      // handle case (___) ___-____, (xxx) ___-____ and (xxx) xxx-____
-      if (dashIndex === 1) {
-        dashIndex -= 1;
-      }
-      else if (dashIndex === 6) {
-        dashIndex -= 2;
-      } else if (dashIndex === 10) {
-        dashIndex -= 1;
-      }
-      
-      if (numbers.length < 10) {
-        mask = mask.slice(0, dashIndex);        
-      }
-      
-      this.setState({
-        phoneNumber: mask
-      });
-      
-      setTimeout(() => {
-        this.checkFormFilled();
-      });
-    }
   };
   
   createSummary() {
@@ -336,12 +211,7 @@ export default class CheckoutApp extends React.Component {
   }
   
   createShipping() {
-    let labelStyle = {
-      color: "rgba(149, 149, 149, 0.7)",
-      
-      fontWeight: "normal"
-    };
-        
+
     return (
       <div>
         <div className={styles.sectionHeader}>
@@ -349,96 +219,37 @@ export default class CheckoutApp extends React.Component {
         </div>
         <Form>
           <Row>
-            <Col xs={6} md={5}>
-              <FormGroup bsSize="small" controlId="firstName">
-                <ControlLabel style={labelStyle}>First Name</ControlLabel>
-                <FormControl value={this.state.firstName} 
-                  autoComplete="given-name"
-                  onChange={this.handleValueChange.bind(this, "firstName")} type="text" />
-              </FormGroup>
+            <Col xs={6} md={6}>
+              <BaseInput ref="firstName" label="First Name" autoComplete="given-name" shrink={true} handleChange={this.handleValueChange} />
             </Col>
-            <Col xs={6} md={5}>
-              <FormGroup bsSize="small" controlId="lastName">
-                <ControlLabel style={labelStyle}>Last Name</ControlLabel>
-                <FormControl value={this.state.lastName} 
-                  autoComplete="family-name"
-                  onChange={this.handleValueChange.bind(this, "lastName")} type="text" />
-              </FormGroup>
+            <Col xs={6} md={6}>
+              <BaseInput ref="lastName" label="Last Name" autoComplete="family-name" shrink={true} handleChange={this.handleValueChange} />
             </Col>
           </Row>
-        </Form>
-        <Form>
-          <FormGroup bsSize="small" controlId="street">
-            <ControlLabel style={labelStyle}>Street</ControlLabel>
-            <FormControl
-              autoComplete="address-line1"
-              value={this.state.street} 
-              onChange={this.handleValueChange.bind(this, "street")} type="text" />
-          </FormGroup>
-        </Form>
-        <Form>
+          <BaseInput ref="street" label="Street" autoComplete="address-line1" shrink={true} handleChange={this.handleValueChange} />
           <Row>
             <Col xs={5} md={5}>
-              <FormGroup bsSize="small" controlId="city">
-                <ControlLabel style={labelStyle}>City</ControlLabel>
-                <FormControl value={this.state.city} 
-                  autoComplete="address-level2"
-                  onChange={this.handleValueChange.bind(this, "city")} type="text" />
-              </FormGroup>
+              <BaseInput ref="city" label="City" autoComplete="address-level2" shrink={true} handleChange={this.handleValueChange} />
             </Col>
             <Col xs={3} md={3}>
-              <FormGroup bsSize="small" controlId="state">
-                <ControlLabel style={labelStyle}>State</ControlLabel>
-                <FormControl value={this.state.state} 
-                  autoComplete="address-level1"
-                  onChange={this.handleValueChange.bind(this, "state")} type="text" />
-              </FormGroup>
+              <BaseInput ref="state" label="State" autoComplete="address-level1" shrink={true} handleChange={this.handleValueChange} />
             </Col>
             <Col xs={4} md={4}>
-              <FormGroup bsSize="small" 
-                validationState={validateZip(this.state.zip)} controlId="zip">
-                <ControlLabel style={labelStyle}>Zip</ControlLabel>
-                <FormControl value={this.state.zip} 
-                  autoComplete="postal-code"
-                  onChange={this.handleValueChange.bind(this, "zip")} type="text" />
-              </FormGroup>
+              <BaseInput ref="zip" label="Zip" autoComplete="postal-code" shrink={true} handleChange={this.handleValueChange} />
             </Col>
           </Row>
         </Form>
         <Form>
-          <Row>
-            <Col xs={12} md={4}>
-              <FormGroup bsSize="small" 
-                validationState={validatePhoneNumber(this.state.phoneNumber)} 
-                controlId="phoneNumber">
-                <ControlLabel style={labelStyle}>Phone</ControlLabel>
-                <FormControl value={this.state.phoneNumber} 
-                  autoComplete="tel"
-                  onChange={this.handlePhoneNumberChange} type="text" />
-              </FormGroup>
-            </Col>
-            <Col xs={12} md={6}>
-              <FormGroup bsSize="small" 
-                validationState={validateEmail(this.state.email)}
-                controlId="email">
-                <ControlLabel style={labelStyle}>Email</ControlLabel>
-                <FormControl value={this.state.email} 
-                  autoComplete="email"
-                  onChange={this.handleValueChange.bind(this, "email")} type="text" />
-              </FormGroup>
-            </Col>
-          </Row>
+          <PhoneNumberInput ref="phoneNumber" handleChange={this.handleValueChange} />
+        </Form>
+        <Form>
+          <EmailInput ref="email" isRegister={false} shrink={true} handleChange={this.handleValueChange} />
         </Form>
       </div>
     );
   }
   
   createPayment() {
-    let labelStyle = {
-      color: "rgba(149, 149, 149, 0.7)",
-      
-      fontWeight: "normal"
-    };
     
     let infoStyle = {
       color: "rgba(149, 149, 149, 0.7)",
@@ -447,107 +258,65 @@ export default class CheckoutApp extends React.Component {
       fontSize: "13px"
     };
     
-    let cartStyle = {
-      position: "relative"
-    };
+    let monthOptions = [];
     
-    let cardImageStyle = {
-      position: "absolute",
-      height: "33px",
-      right: "5px",
-      top: "18px"    
-    };
+    monthOptions.push(
+      <option value="1" key="1">January</option>,
+      <option value="2" key="2">February</option>,
+      <option value="3" key="3">March</option>,
+      <option value="4" key="4">April</option>,
+      <option value="5" key="5">May</option>,
+      <option value="6" key="6">June</option>,
+      <option value="7" key="7">July</option>,
+      <option value="8" key="8">August</option>,
+      <option value="9" key="9">September</option>,
+      <option value="10" key="10">October</option>,
+      <option value="11" key="11">November</option>,
+      <option value="12" key="12">December</option>
+    );
     
-    let cardImageSrc = `/images/cards/${this.state.cardType}.png`;
-
+    let yearOptions = [];
+    
+    yearOptions.push(
+      <option value="2016" key="2016">2016</option>,
+      <option value="2017" key="2017">2017</option>,
+      <option value="2018" key="2018">2018</option>,
+      <option value="2019" key="2019">2019</option>,
+      <option value="2020" key="2020">2020</option>,
+      <option value="2021" key="2021">2021</option>,
+      <option value="2022" key="2022">2022</option>,
+      <option value="2023" key="2023">2023</option>,
+      <option value="2024" key="2024">2024</option>
+    );
+    
     return (
       <div>
         <div className={styles.sectionHeader}>
           Payment information
         </div>
         <Form>
-          <FormGroup bsSize="small" controlId="nameOnCard">
-            <ControlLabel style={labelStyle}>Name on Card</ControlLabel>
-            <FormControl
-              type="text"
-              autoComplete="cc-name"
-              value={this.state.nameOnCard}
-              onChange={this.handleValueChange.bind(this, "nameOnCard")}
-            />
-          </FormGroup>
-        </Form>
-        <Form>
-          <FormGroup style={cartStyle} bsSize="small" 
-            validationState={validateCard(this.state.cardNumber, this.state.cardType)} 
-            controlId="cardNumber">
-            <ControlLabel style={labelStyle}>Card Number</ControlLabel>
-            <FormControl
-              type="text"
-              autoComplete="cc-number"
-              value={this.state.cardNumber}
-              onChange={this.handleCardNumberChange}
-            />
-            <Image style={cardImageStyle} 
-              src={cardImageSrc} />
-          </FormGroup>
-        </Form>
-        <Form>
-          <FormGroup bsSize="small" controlId="expire">
-            <ControlLabel style={labelStyle}>Expires on</ControlLabel>
-            <Row>
-              <Col xs={6} md={4}>
-                <FormControl value={this.state.expireMonth} 
-                  onChange={this.handleValueChange.bind(this, "expireMonth")}
-                  componentClass="select" placeholder="Month">
-                  <option value="1">January</option>
-                  <option value="2">February</option>
-                  <option value="3">March</option>
-                  <option value="4">April</option>
-                  <option value="5">May</option>
-                  <option value="6">June</option>
-                  <option value="7">July</option>
-                  <option value="8">August</option>
-                  <option value="9">September</option>
-                  <option value="10">October</option>
-                  <option value="11">November</option>
-                  <option value="12">December</option>
-                </FormControl>
-              </Col>
-              <Col xs={6} md={4}>
-                <FormControl value={this.state.expireYear}
-                  onChange={this.handleValueChange.bind(this, "expireYear")}
-                  componentClass="select" placeholder="Year">
-                  <option value="2016">2016</option>
-                  <option value="2017">2017</option>
-                  <option value="2018">2018</option>
-                  <option value="2019">2019</option>
-                  <option value="2020">2020</option>
-                  <option value="2021">2021</option>
-                  <option value="2022">2022</option>
-                  <option value="2023">2023</option>
-                  <option value="2024">2024</option>
-                </FormControl>
-              </Col>
-            </Row>
-          </FormGroup>
-        </Form>
-        <Form>
+          <BaseInput ref="nameOnCard" label="Name on Card" autoComplete="cc-name" icon="user" handleChange={this.handleValueChange} />
+          <CreditCardInput ref="cardNumber" handleChange={this.handleValueChange} />
+          <Row>
+            <Col xs={6} md={6}>
+              <BaseInput ref="expireMonth" initialValue="1" type="select" label="Month" options={monthOptions} shrink={true} handleChange={this.handleValueChange} />
+            </Col>
+            <Col xs={6} md={6}>
+              <BaseInput ref="expireYear" initialValue="2016" placeholder="Select year" type="select" label="Year" options={yearOptions} shrink={true} handleChange={this.handleValueChange} />
+            </Col>
+          </Row>
           <Row>
             <Col xs={6} md={4}>
-              <FormGroup bsSize="small" controlId="cvc">
-                <ControlLabel style={labelStyle}>CVC</ControlLabel>
-                <FormControl value={this.state.cvc} 
-                  autoComplete="cc-csc"
-                  onChange={this.handleValueChange.bind(this, "cvc")} 
-                  type="text" />
-              </FormGroup>
+              <BaseInput ref="cvc" label="CVC" autoComplete="cc-csc" shrink={true} handleChange={this.handleValueChange} />
             </Col>
             <Col xs={6} md={4}>
               <span className={styles.cvcHelper}><a>What is CVC?</a></span>
             </Col>
           </Row>
         </Form>
-        <AlertMessage ref="alertMessage" alertMessage={this.state.errorMessage} alertStyle="danger" />
+        <AlertMessage alertMessage={this.state.errorMessage} alertStyle="danger" ref={(component) => {
+          this._alertMessage = component;
+        }}/>
         <SubmitButton
           disabled={!this.state.formFilled || this.state.isSubmitting} 
           handleSubmit={this.handleConfirm}

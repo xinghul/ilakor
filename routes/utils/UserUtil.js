@@ -7,6 +7,8 @@ let mongoose = require("mongoose")
 let User     = mongoose.model("User")
 ,   ObjectId = mongoose.Types.ObjectId;
 
+mongoose.promise = require("bluebird");
+
 let LocalUtil = {
   /**
    * Removes a user by id.

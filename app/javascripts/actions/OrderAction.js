@@ -12,22 +12,22 @@ import OrderManageConstants from "constants/OrderManageConstants"
 let OrderAction = {
   
   /**
-   * Adds a new order with state containing order information and user.
+   * Adds a new order with values containing order information and user.
    * 
-   * @param {Object} state state object containing checkout info.
+   * @param {Object} values values object containing checkout info.
    * @param {Object} user user object.
    * 
    * @return {Promise} the promise object.
    */
-  addOrder: function(state, user) {
+  addOrder: function(values, user) {
     
     return new Promise(function(resolve, reject) {
       
       Stripe.card.createToken({
-        number: state.cardNumber,
-        exp_month: state.expireMonth,
-        exp_year: state.expireYear,
-        cvc: state.cvc
+        number: values.cardNumber,
+        exp_month: values.expireMonth,
+        exp_year: values.expireYear,
+        cvc: values.cvc
       }, function(status, response) {
         if (response.error) {
           return reject(response.error);
@@ -35,22 +35,22 @@ let OrderAction = {
         
         let token = response.id
         ,   order = {
-          user: _.isEmpty(user) ? "" : user._id,
+          user: user._id,
           address: {
-            name: `${state.firstName} ${state.lastName}`,
-            phone: state.phoneNumber,
-            email: state.email,
-            street: state.street,
-            city: state.city,
-            state: state.state,
-            zip: state.zip
+            name: `${values.firstName} ${values.lastName}`,
+            phone: values.phoneNumber,
+            email: values.email,
+            street: values.street,
+            city: values.city,
+            state: values.state,
+            zip: values.zip
           },
           charge: {
-            amount: state.totalPrice,
+            amount: values.totalPrice,
             currency: "usd",
             source: token
           },
-          items: Object.keys(state.items)
+          items: Object.keys(values.items)
         };
         
         request.post("/api/orders")

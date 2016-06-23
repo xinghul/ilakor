@@ -3,6 +3,8 @@
 let mongoose = require("mongoose")
 ,   Promise  = require("bluebird");
 
+mongoose.promise = require("bluebird");
+
 let Tag      = mongoose.model("Tag")
 ,   ObjectId = mongoose.Types.ObjectId;
 

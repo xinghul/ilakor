@@ -4,6 +4,8 @@ let mongoose = require("mongoose")
 ,   _        = require("lodash")
 ,   bluebird = require("bluebird");
 
+mongoose.promise = require("bluebird");
+
 let EmailService    = require("../service/email")
 ,   ValidationError = require("../utils/ValidationError");
 

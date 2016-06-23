@@ -46,6 +46,10 @@ export default class EmailInput extends React.Component {
     return "success";
   }
   
+  getValue() {
+    return this.state.value;
+  }
+  
   render() {
     let validationState = do {
       if (this.props.isRegister) {
@@ -78,12 +82,13 @@ export default class EmailInput extends React.Component {
 };
 
 EmailInput.propTypes = {
-  handleChange: React.PropTypes.func.isRequired,
+  handleChange: React.PropTypes.func,
   placeholder: React.PropTypes.string,
   isRegister: React.PropTypes.bool
 };
 
 EmailInput.defaultProps = {
+  handleChange: function() {},
   placeholder: "Enter email",
   isRegister: false
 };

@@ -5,6 +5,8 @@ let mongoose = require("mongoose")
 ,   path = require("path")
 ,   Promise  = require("bluebird");
 
+mongoose.promise = require("bluebird");
+
 let S3 = require("../service/s3");
 
 let Item     = mongoose.model("Item")

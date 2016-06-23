@@ -55,7 +55,8 @@ export default class BaseInput extends React.Component {
     
     let selectOptions = null
     ,   validationState = null
-    ,   addonContent = null;
+    ,   addonClassname
+    ,   addonContent;
     
     let newProps = _.clone(this.props);
     
@@ -66,14 +67,7 @@ export default class BaseInput extends React.Component {
     }
     
     if (newProps.type === "select") {
-      selectOptions = [];
-      
-      for (let optionValue of newProps.options)
-      {
-        selectOptions.push(
-          <option key={optionValue} value={optionValue}>{optionValue}</option>
-        );
-      }
+      selectOptions = newProps.options;
       
       delete newProps.options;
     }
@@ -85,9 +79,17 @@ export default class BaseInput extends React.Component {
       delete newProps.type;
     }
     
+    addonClassname = do {
+      if (this.props.shrink) {
+        styles.addonContentShrink
+      } else {
+        styles.addonContent
+      }
+    }
+
     addonContent = do {
       if (!_.isEmpty(newProps.icon)) {
-        <InputGroup.Addon className={styles.addonContent}>
+        <InputGroup.Addon className={addonClassname}>
           <FontAwesome
             name={newProps.icon}
             fixedWidth={true}
@@ -96,7 +98,7 @@ export default class BaseInput extends React.Component {
           <label>{newProps.label}</label>
         </InputGroup.Addon>
       } else {
-        <InputGroup.Addon className={styles.addonContent}>
+        <InputGroup.Addon className={addonClassname}>
           <label>{newProps.label}</label>
         </InputGroup.Addon>
       }
@@ -139,15 +141,13 @@ export default class BaseInput extends React.Component {
 }
 
 BaseInput.propTypes = { 
-  // required props
-  type: React.PropTypes.string.isRequired,
-  
-  // most used props
+  type: React.PropTypes.string,
   handleChange: React.PropTypes.func,
   label: React.PropTypes.string
 };
 
 BaseInput.defaultProps = {
+  type: "text",
   handleChange: function() {},
   label: ""
 };

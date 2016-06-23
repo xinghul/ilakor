@@ -2,7 +2,7 @@
 
 import React from "react"
 import _ from "lodash"
-import { Button, Alert, SplitButton, MenuItem, Modal } from "react-bootstrap"
+import { Form, Button, Alert, SplitButton, MenuItem, Modal } from "react-bootstrap"
 import { hashHistory } from "react-router"
 
 import GhostButton from "lib/GhostButton"
@@ -175,8 +175,10 @@ export default class AuthApp extends React.Component {
     
     return (
       <div>
-        <EmailInput value={this.state.email} disabled={this.state.isLoggingIn} isRegister={false} handleChange={this.handleEmailChange} />
-        <PasswordInput value={this.state.password} disabled={this.state.isLoggingIn} isRegister={false} handleChange={this.handlePasswordChange} />
+        <Form>
+          <EmailInput value={this.state.email} disabled={this.state.isLoggingIn} isRegister={false} handleChange={this.handleEmailChange} />
+          <PasswordInput value={this.state.password} disabled={this.state.isLoggingIn} isRegister={false} handleChange={this.handlePasswordChange} />
+        </Form>
         <SubmitButton
           disabled={disabled}
           handleSubmit={this.handleLoginClick}
@@ -200,9 +202,11 @@ export default class AuthApp extends React.Component {
 
     return (
       <div>
-        <EmailInput value={this.state.email} disabled={this.state.isSigningUp} isRegister={true} handleChange={this.handleEmailChange} />
-        <UsernameInput value={this.state.username} disabled={this.state.isSigningUp} isRegister={true} handleChange={this.handleUsernameChange} />
-        <PasswordInput value={this.state.password} disabled={this.state.isSigningUp} isRegister={true} handleChange={this.handlePasswordChange} />
+        <Form>
+          <EmailInput value={this.state.email} disabled={this.state.isSigningUp} isRegister={true} handleChange={this.handleEmailChange} />
+          <UsernameInput value={this.state.username} disabled={this.state.isSigningUp} isRegister={true} handleChange={this.handleUsernameChange} />
+          <PasswordInput value={this.state.password} disabled={this.state.isSigningUp} isRegister={true} handleChange={this.handlePasswordChange} />
+        </Form>
         <SubmitButton
           disabled={disabled}
           handleSubmit={this.handleSignupClick}

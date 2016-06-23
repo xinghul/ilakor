@@ -4,6 +4,8 @@ let mongoose = require("mongoose")
 ,   passport = require("passport")
 ,   jwt      = require("jsonwebtoken");
 
+mongoose.promise = require("bluebird");
+
 let CustomError = require("../utils/CustomError")
 ,   ValidationError = require("../utils/ValidationError");
 

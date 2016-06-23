@@ -4,6 +4,8 @@ let mongoose  = require("mongoose")
 ,   invariant = require("invariant")
 ,   Promise   = require("bluebird");
 
+mongoose.promise = require("bluebird");
+
 let Order    = mongoose.model("Order")
 ,   ObjectId = mongoose.Types.ObjectId;
 

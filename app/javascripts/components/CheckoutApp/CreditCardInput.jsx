@@ -115,7 +115,7 @@ export default class CreditCardInput extends React.Component {
   
   
   getValue() {
-    return this.state.value;
+    return _.replace(this.state.value, /\s/g, '');
   }
   
   clear() {
@@ -132,6 +132,7 @@ export default class CreditCardInput extends React.Component {
       <div className={styles.creditCardInput}>
         <MaskedInput
           ref="maskedInput"
+          autoComplete="cc-number"
           mask={getCardMask(this.state.value)}
           validationState={validateCard(this.state.value)} 
           label="Card number"
