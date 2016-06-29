@@ -1,0 +1,8 @@
+{
+  "source": "./app/javascripts/",
+  "destination": "./doc",
+  "includes": ["\\.(js|jsx)$"],
+  "plugins": [
+    { "name": "esdoc-es7-plugin" }
+  ]
+}

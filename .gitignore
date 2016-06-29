@@ -1,4 +1,5 @@
 node_modules/
+doc/
 npm-debug.log
 app/javascripts/bundle.js
 app/stylesheets/bundle.css
