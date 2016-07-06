@@ -14,9 +14,19 @@ export default class BaseSpinner extends React.Component {
     
     return (
       <div className={styles.baseSpinner} {...this.props}>
+        <div className={styles.spinnerText}>{this.props.text}</div>
         <div className={styles.spinner}></div>
       </div>
       
     );
   }
 }
+
+BaseSpinner.propTypes = {
+  text: React.PropTypes.string
+};
+
+BaseSpinner.defaultProps = {
+  text: ""
+};
+

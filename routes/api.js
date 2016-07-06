@@ -216,14 +216,14 @@ router.route("/orders")
   }
   
   let chargeInfo = rawData.charge;
-  
+
   stripe.charges.create({
     source: chargeInfo.source,
     amount: chargeInfo.amount,
     currency: chargeInfo.currency
   }).then(function(res) {
     rawData.stripe = res;
-    
+
     return Order.add(rawData);
   }).then(function(newOrder) {
     res.status(200).json(newOrder);

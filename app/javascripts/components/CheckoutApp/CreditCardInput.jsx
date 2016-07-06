@@ -105,12 +105,12 @@ export default class CreditCardInput extends React.Component {
     };
   }
   
-  handleChange = (newValue) => {    
+  handleChange = (newValue, name) => {    
     this.setState({
       value: newValue
     });
     
-    this.props.handleChange(newValue);
+    this.props.handleChange(newValue, name);
   };
   
   
@@ -131,6 +131,7 @@ export default class CreditCardInput extends React.Component {
     return (
       <div className={styles.creditCardInput}>
         <MaskedInput
+          {...this.props}
           ref="maskedInput"
           autoComplete="cc-number"
           mask={getCardMask(this.state.value)}

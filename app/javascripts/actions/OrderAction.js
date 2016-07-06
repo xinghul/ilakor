@@ -12,59 +12,48 @@ import OrderManageConstants from "constants/OrderManageConstants"
 let OrderAction = {
   
   /**
-   * Adds a new order with values containing order information and user.
+   * Adds a new order with payment info and shipping/billing address.
    * 
-   * @param {Object} values values object containing checkout info.
-   * @param {Object} user user object.
+   * @param {Object} paymentInfo object containing payment info.
+   * @param {Object} addressInfo object containing address info.
+   * @param {Object} orderInfo object containing the ordered items, total price and user.
    * 
    * @return {Promise} the promise object.
    */
-  addOrder: function(values, user) {
+  addOrder: function(paymentInfo, addressInfo, orderInfo) {
     
     return new Promise(function(resolve, reject) {
+
+      let totalPrice = orderInfo.totalPrice
+      ,   items = orderInfo.items
+      ,   user = orderInfo.user;
       
-      Stripe.card.createToken({
-        number: values.cardNumber,
-        exp_month: values.expireMonth,
-        exp_year: values.expireYear,
-        cvc: values.cvc
-      }, function(status, response) {
-        if (response.error) {
-          return reject(response.error);
-        }
-        
-        let token = response.id
-        ,   order = {
-          user: user._id,
-          address: {
-            name: `${values.firstName} ${values.lastName}`,
-            phone: values.phoneNumber,
-            email: values.email,
-            street: values.street,
-            city: values.city,
-            state: values.state,
-            zip: values.zip
-          },
-          charge: {
-            amount: values.totalPrice,
-            currency: "usd",
-            source: token
-          },
-          items: Object.keys(values.items)
-        };
-        
-        request.post("/api/orders")
-          .send({order: JSON.stringify(order)})
-          .then(function(res) {
-            ShoppingCartAction.clearCart();
-            
-            resolve(res.body);
-          })
-          .catch(function(err) {
-            reject(err.body);
-          });
+      invariant(_.isNumber(totalPrice), `OrderAction.addOrder() expects a number as totalPrice.`);
+      invariant(!_.isEmpty(items), `OrderAction.addOrder() expects non-empty items.`);
+      invariant(!_.isEmpty(user), `OrderAction.addOrder() expects a non-empty user.`);
+      
+      let order = {
+        user: user._id,
+        charge: {
+          amount: totalPrice,
+          currency: "usd",
+          source: paymentInfo.id
+        },
+        payment: paymentInfo,
+        address: addressInfo,
+        items: Object.keys(items)
+      };
+      
+      request.post("/api/orders")
+        .send({ order: JSON.stringify(order) })
+        .then(function(res) {
+          ShoppingCartAction.clearCart();
           
-      });
+          resolve(res.body);
+        })
+        .catch(function(err) {
+          reject(err.body);
+        });
 
     });
   },

@@ -84,6 +84,7 @@ export default class OrderDetailSection extends React.Component {
     return (
       <GridSection title="Order information" className={styles.orderDetailSection}>
         <BaseInfo label="Id" text={order._id} />
+        <BaseInfo label="Created" icon="clock-o" text={order.created} />
         <BaseInfo label="Amount" icon="shopping-cart" text={order.stripe.amount.toString()} />
         <BaseInfo label="Paid" icon="money" text={order.stripe.captured ? "Yes" : "No"} />
         <BaseInfo label="Sent" icon="mail-forward" text={order.sent ? "Yes" : "No"} />

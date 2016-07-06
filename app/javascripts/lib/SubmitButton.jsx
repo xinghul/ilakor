@@ -26,7 +26,7 @@ export default class SubmitButton extends React.Component {
         bsSize="large" 
       >
         <div hidden={!this.props.isSubmitting} className={styles.spinner}>
-          <BaseSpinner />
+          <BaseSpinner text={this.props.submitText} />
         </div>
         <div hidden={this.props.isSubmitting}>
           {this.props.children}
@@ -38,10 +38,12 @@ export default class SubmitButton extends React.Component {
 
 SubmitButton.propTypes = {
   isSubmitting: React.PropTypes.bool,
+  submitText: React.PropTypes.string,
   handleSubmit: React.PropTypes.func
 };
 
 SubmitButton.defaultProps = {
   isSubmitting: false,
+  submitText: "",
   handleSubmit: function() {}
 };

@@ -25,10 +25,9 @@ export default class AddressDetailSection extends React.Component {
     
     return (
       <GridSection title="Shipping information" className={styles.addressDetailSection}>
-        <BaseInfo label="Name" icon="user" text={address.name} />
-        <BaseInfo label="Phone" icon="mobile" text={address.phone} />
-        <BaseInfo label="Street" icon="home" text={address.street} />
-        <BaseInfo label="City" icon="map-marker" text={`${address.city}, ${address.state} ${address.zip}`} />
+        <BaseInfo label="Name" icon="user" text={address.shipping_name} />
+        <BaseInfo label="Street" icon="home" text={address.shipping_address_line1} />
+        <BaseInfo label="City" icon="map-marker" text={`${address.shipping_address_city}, ${address.shipping_address_state} ${address.shipping_address_zip}`} />
       </GridSection>
     );
   }

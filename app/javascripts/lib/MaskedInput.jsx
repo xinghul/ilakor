@@ -22,13 +22,14 @@ export default class MaskedInput extends React.Component {
   }
   
   handleChange = (evt) => {
-    let newValue = evt.target.value;
+    let newValue = evt.target.value
+    ,   name = evt.target.name;
 
     this.setState({
       value: newValue
     });
 
-    this.props.handleChange(newValue);
+    this.props.handleChange(newValue, name);
   };
   
   handleOnFocus = () => {
