@@ -56,7 +56,7 @@ export default class CheckoutApp extends React.Component {
   };
   
   handlePayment = (paymentInfo, addressInfo) => {
-    
+
     this.setState({
       isSubmitting: true
     });
