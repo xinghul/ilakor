@@ -1,28 +1,36 @@
 "use strict"
 
 import React from "react"
-import _ from "lodash"
 import { Button } from "react-bootstrap"
 
 import styles from "lib/GhostButton.scss"
 
 export default class GhostButton extends React.Component {
   
+  /**
+   * @inheritdoc
+   */
   constructor(props) {
     super(props);
   }
   
+  /**
+   * @inheritdoc
+   */
   render() {
     
-    let style = {
-      color: this.props.color
-    };
+    let className = [ styles.ghostButton ];
+    
+    if (this.props.inverse) {
+      className.push(styles.inverse);
+    } else {
+      className.push(styles.normal);
+    }
     
     return (
       <Button 
         {...this.props}
-        style={style}
-        className={styles.ghostButton}
+        className={className.join(' ')}
       >
         {this.props.children}
       </Button>
@@ -31,9 +39,9 @@ export default class GhostButton extends React.Component {
 }
 
 GhostButton.propTypes = {
-  color: React.PropTypes.string
+  inverse: React.PropTypes.bool
 };
 
 GhostButton.defaultProps = {
-  color: "white"
+  inverse: false
 };

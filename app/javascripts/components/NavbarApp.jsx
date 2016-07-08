@@ -34,24 +34,27 @@ export default class NarbarApp extends React.Component {
               <Image className={styles.brandImg} alt="Cromford" src="/images/logo.png" />
             </a>
           </Navbar.Brand>
+          <Navbar.Toggle />
         </Navbar.Header>
-        <Nav>
-          <NavItem href="#/itemDisplay">
-            Furnitures
-          </NavItem>
-          <NavItem href="#/itemManage">
-            CMS
-          </NavItem>
-          <NavItem href="#/orderManage">
-            Orders
-          </NavItem>
-        </Nav>
-        <Nav pullRight id="authModalTrigger">
-          <AuthApp />
-        </Nav>
-        <Nav pullRight>
-          <ShoppingCartApp />
-        </Nav>
+        <Navbar.Collapse>
+          <Nav>
+            <NavItem href="#/itemDisplay">
+              Furnitures
+            </NavItem>
+            <NavItem href="#/itemManage">
+              CMS
+            </NavItem>
+            <NavItem href="#/orderManage">
+              Orders
+            </NavItem>
+          </Nav>
+          <Nav pullRight id="authModalTrigger">
+            <AuthApp />
+          </Nav>
+          <Nav pullRight>
+            <ShoppingCartApp />
+          </Nav>
+        </Navbar.Collapse>
       </Navbar>
     );
     
