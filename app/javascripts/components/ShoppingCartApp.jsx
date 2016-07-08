@@ -64,7 +64,7 @@ function _onClearCart() {
 function _createCartItem(itemInfo) {
   let count = itemInfo.count
   ,   item = itemInfo.item
-  ,   imageUrl = "http://d2nl38chx1zeob.cloudfront.net/" + item.images[0].name;
+  ,   imageUrl = "http://d16knxx0wtupz9.cloudfront.net/" + item.images[0].name;
   
   // popover is appended to dom on the fly, css modules doesn't work
   let itemStyle = {

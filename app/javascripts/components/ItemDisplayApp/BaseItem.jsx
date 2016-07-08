@@ -32,7 +32,7 @@ export default class BaseItem extends React.Component {
   
   createImageJsx() {
     let item     = this.props.item
-    ,   imageUrl = "http://d2nl38chx1zeob.cloudfront.net/" + item.images[0].name;
+    ,   imageUrl = "http://d16knxx0wtupz9.cloudfront.net/" + item.images[0].name;
     
     return (
       <Image className={styles.itemImage} src={imageUrl} onLoad={this.handleImageLoaded} />
