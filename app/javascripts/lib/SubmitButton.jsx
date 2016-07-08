@@ -17,7 +17,7 @@ export default class SubmitButton extends React.Component {
 
     // put {...this.props} behind disabled, so it can't be overriden
     return (
-      <GhostButton 
+      <GhostButton
         disabled={this.props.isSubmitting} 
         {...this.props}
         onClick={this.props.handleSubmit}
