@@ -1,13 +1,26 @@
 .draftEditor {
-  padding: 10px;
+  margin-bottom: 15px;
   border: 0.5px solid #ccc;
   border-radius: 4px;
+  
+  .label {
+    padding: 6px 12px;
+    
+    background-color: #eee;
+    color: #555;
+    border-bottom: 0.5px solid #ccc;
+
+    font-size: 14px;
+    font-weight: 700;
+    line-height: 22px;
+  }
   
   .editorControl {
     background-color: red;
   }
   
   .editorArea {
+    margin: 10px;
     padding: 6px 12px;
 
     border: 0.5px solid #ccc;

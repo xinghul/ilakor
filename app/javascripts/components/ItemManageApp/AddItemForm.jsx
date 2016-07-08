@@ -9,6 +9,7 @@ import { Row, Col } from "react-bootstrap"
 import BaseInput from "lib/BaseInput"
 import MultiSelectInput from "lib/MultiSelectInput"
 import SubmitButton from "lib/SubmitButton"
+import DraftEditor from "lib/DraftEditor"
 
 import ImageUploader from "./ImageUploader"
 import DimensionRangeInput from "./DimensionRangeInput"
@@ -49,10 +50,12 @@ export default class AddItemForm extends React.Component {
     ,   price = this.refs["price"].getValue()
     ,   heightValues = this.refs["height"].getValue()
     ,   widthValues = this.refs["width"].getValue()
-    ,   depthValues = this.refs["depth"].getValue();
+    ,   depthValues = this.refs["depth"].getValue()
+    ,   description = this.refs["description"].getHtml();
 
-    if (_.isEmpty(name) || _.isEmpty(tag) || _.isEmpty(image) || _.isEmpty(price) ||
-        _.isEmpty(heightValues) || _.isEmpty(widthValues) || _.isEmpty(depthValues)) {
+    if (_.isEmpty(name) || _.isEmpty(tag) || _.isEmpty(image) || 
+        _.isEmpty(price) || _.isEmpty(heightValues) || _.isEmpty(widthValues) || 
+        _.isEmpty(depthValues) || _.isEmpty(description)) {
       return;
     }
     
@@ -73,14 +76,17 @@ export default class AddItemForm extends React.Component {
         depth: {
           ...depthValues
         }
-      }
+      },
+      
+      description: description
       
     };
-    
     
     this.setState({
       isSubmitting: true
     });
+    
+    console.log(itemConfig);
     
     ItemManageAction.addItem(itemConfig)
       .catch(function(err) {
@@ -103,6 +109,7 @@ export default class AddItemForm extends React.Component {
     this.refs["height"].clear();
     this.refs["width"].clear();
     this.refs["depth"].clear();
+    this.refs["description"].clear();
   }
   
   render() {
@@ -149,6 +156,10 @@ export default class AddItemForm extends React.Component {
       />
     );
     
+    let descriptionEditor = (
+      <DraftEditor ref="description" label="Description" />
+    );
+    
     let submitButton = (
       <SubmitButton
         handleSubmit={this.handleSubmit}
@@ -191,6 +202,11 @@ export default class AddItemForm extends React.Component {
         <Row>
           <Col xs={12} md={8}>
             {priceInput}
+          </Col>
+        </Row>
+        <Row>
+          <Col xs={12} md={12}>
+            {descriptionEditor}
           </Col>
         </Row>
         <Row>

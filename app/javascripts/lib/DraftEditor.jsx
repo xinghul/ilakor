@@ -1,6 +1,7 @@
 "use strict"
 
 import React from "react"
+import _ from "lodash"
 import { Editor, EditorState, RichUtils } from "draft-js"
 import { stateToHTML } from "draft-js-export-html"
 
@@ -51,12 +52,19 @@ export default class DraftEditor extends React.Component {
     return stateToHTML(this.state.editorState.getCurrentContent());
   };
   
+  clear() {
+    this.setState({
+      editorState: EditorState.createEmpty()
+    });
+  }
+  
   render() {
     
     const { editorState } = this.state;
     
     return (
       <div className={styles.draftEditor}>
+        <div hidden={_.isEmpty(this.props.label)} className={styles.label}>{this.props.label}</div>
         <BlockTypeControl onToggle={this._toggleBlockType} editorState={editorState} />
         <InlineStyleControl onToggle={this._toggleInlineStyle} editorState={editorState} />
         <div className={styles.editorArea} onClick={this._focusEditor}>
@@ -71,3 +79,11 @@ export default class DraftEditor extends React.Component {
     );
   }
 }
+
+DraftEditor.propTypes = {
+  label: React.PropTypes.string
+};
+
+DraftEditor.defaultProps = {
+  label: ""
+};
