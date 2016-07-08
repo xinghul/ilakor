@@ -13,7 +13,6 @@ import DraftEditor from "lib/DraftEditor"
 import GridSection from "lib/GridSection"
 
 import ImageUploader from "./ImageUploader"
-import DimensionRangeInput from "./DimensionRangeInput"
 
 import ItemManageAction from "actions/ItemManageAction"
 
@@ -49,14 +48,10 @@ export default class AddItemForm extends React.Component {
     ,   tag = this.refs["tag"].getValue()
     ,   image = this.refs["image"].getValue()
     ,   price = this.refs["price"].getValue()
-    ,   heightValues = this.refs["height"].getValue()
-    ,   widthValues = this.refs["width"].getValue()
-    ,   depthValues = this.refs["depth"].getValue()
     ,   description = this.refs["description"].getHtml();
 
     if (_.isEmpty(name) || _.isEmpty(tag) || _.isEmpty(image) || 
-        _.isEmpty(price) || _.isEmpty(heightValues) || _.isEmpty(widthValues) || 
-        _.isEmpty(depthValues) || _.isEmpty(description)) {
+        _.isEmpty(price) || _.isEmpty(description)) {
       return;
     }
     
@@ -66,18 +61,6 @@ export default class AddItemForm extends React.Component {
       image: image,
       
       price: price,
-      
-      dimension: {
-        height: {
-          ...heightValues
-        },
-        width: {
-          ...widthValues
-        },
-        depth: {
-          ...depthValues
-        }
-      },
       
       description: description
       
@@ -107,9 +90,6 @@ export default class AddItemForm extends React.Component {
     this.refs["tag"].clear();
     this.refs["image"].clear();
     this.refs["price"].clear();
-    this.refs["height"].clear();
-    this.refs["width"].clear();
-    this.refs["depth"].clear();
     this.refs["description"].clear();
   }
   
@@ -134,18 +114,6 @@ export default class AddItemForm extends React.Component {
     
     let imagesInput = (
       <ImageUploader ref="image" />
-    );
-    
-    let heightInput = (
-      <DimensionRangeInput label="Height" ref="height" />
-    );
-    
-    let widthInput = (
-      <DimensionRangeInput label="Width" ref="width" />
-    );
-    
-    let depthInput = (
-      <DimensionRangeInput label="Depth" ref="depth" />
     );
     
     let priceInput = (
@@ -184,21 +152,6 @@ export default class AddItemForm extends React.Component {
         <Row>
           <Col xs={12} md={12}>
             {imagesInput}
-          </Col>
-        </Row>
-        <Row>
-          <Col xs={12} md={8}>
-            {heightInput}
-          </Col>
-        </Row>
-        <Row>
-          <Col xs={12} md={8}>
-            {widthInput}
-          </Col>
-        </Row>
-        <Row>
-          <Col xs={12} md={8}>
-            {depthInput}
           </Col>
         </Row>
         <Row>
