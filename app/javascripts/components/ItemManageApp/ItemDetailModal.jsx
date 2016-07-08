@@ -2,7 +2,7 @@
 
 import React from "react"
 import _ from "lodash"
-import { Form, Modal, Row, Col } from "react-bootstrap"
+import { Form, Modal } from "react-bootstrap"
 
 import BaseInput from "lib/BaseInput"
 import SubmitButton from "lib/SubmitButton"
@@ -122,13 +122,13 @@ export default class ItemDetailModal extends React.Component {
         </Modal.Body>
         <Modal.Footer>
           <SubmitButton 
-            bsStyle="danger" 
+            theme="danger" 
             disabled={buttonDisabled}
             isSubmitting={this.state.isDeleting}
             handleSubmit={this.handleDelete}
           >Delete</SubmitButton>
           <SubmitButton 
-            bsStyle="success"
+            theme="black"
             disabled={buttonDisabled}
             isSubmitting={this.state.isApplying}
             handleSubmit={this.handleApply}
@@ -142,7 +142,4 @@ export default class ItemDetailModal extends React.Component {
 
 ItemDetailModal.propTypes = { 
   item: React.PropTypes.object.isRequired
-};
-
-ItemDetailModal.defaultProps = {
 };

@@ -96,7 +96,7 @@ export default class ResetPasswordApp extends React.Component {
               disabled={disabled}
               handleSubmit={this.handleSubmitClick}
               isSubmitting={this.state.isSubmitting}
-              bsStyle="success"
+              theme="success"
             >Submit</SubmitButton>
           </div>
         </div>

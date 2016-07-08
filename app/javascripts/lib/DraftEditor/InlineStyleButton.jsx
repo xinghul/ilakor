@@ -35,11 +35,17 @@ export default class InlineStyleButton extends React.Component {
    */
   render() {
     
+    let theme = "black";
+    
+    if (this.props.active) {
+      theme = "gold";
+    }
+    
     return (
       <FontAwesomeButton 
         icon={this.props.icon} 
         onMouseDown={this.onToggle}
-        inverse={this.props.active}
+        theme={theme}
       />
     );
   }

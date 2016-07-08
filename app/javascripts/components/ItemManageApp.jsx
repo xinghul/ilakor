@@ -3,7 +3,7 @@
 import _ from "lodash"
 
 import React from "react"
-import { Grid, Row, Col } from "react-bootstrap"
+import { Row, Col } from "react-bootstrap"
 
 import ItemDetailModal from "./ItemManageApp/ItemDetailModal"
 import ItemListTable from "./ItemManageApp/ItemListTable"
@@ -70,21 +70,19 @@ export default class ItemManageApp extends React.Component {
           item={this.state.selectedItem}
           ref="itemModal"
         />
-        <Grid fluid>
-          <Row>
-            <Col xs={12} md={6}>
-              <AddItemForm 
-                tags={this.state.tags} 
-              />
-            </Col>
-            <Col md={6}>
-              <ItemListTable 
-                items={this.state.items} 
-                handleItemClick={this.handleItemClick}
-              />
-            </Col>
-          </Row>
-        </Grid>
+        <Row>
+          <Col xs={12} md={6}>
+            <AddItemForm 
+              tags={this.state.tags} 
+            />
+          </Col>
+          <Col xs={12} md={6}>
+            <ItemListTable 
+              items={this.state.items} 
+              handleItemClick={this.handleItemClick}
+            />
+          </Col>
+        </Row>
       </div>
     )
   }

@@ -5,11 +5,24 @@ body {
 }
 
 body {
-  font: 14px $app-font;
   background: #eaeaea url("/images/base.png");
-  -webkit-font-smoothing: antialiased;
-  -moz-font-smoothing: antialiased;
-  -ms-font-smoothing: antialiased;
-  -o-font-smoothing: antialiased;
+
+  font: 14px "Source Sans Pro", Helvetica Neue, sans-serif;
   font-smoothing: antialiased;
+  color: #333;
+}
+
+a {
+  cursor: pointer;
+}
+
+:global(.btn) {
+  
+  border: 1px solid;
+
+  &:focus, &:active {
+    outline: none !important;
+    
+    border: 1px solid;
+  }
 }

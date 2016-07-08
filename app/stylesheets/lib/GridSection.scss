@@ -1,7 +1,7 @@
 .gridSection {
   position: relative;
   padding: 20px;
-  margin-top: 30px;
+  margin: 15px;
   
   background: white;
   
@@ -10,18 +10,17 @@
   border: 1px solid rgba(0,0,0,.15);
   
   .gridTitle {
-    position: absolute;
-    left: 10px;
-    top: -16px;
-    padding: 5px;
+    position: relative;
+    margin: -20px -20px 20px -20px;
+    padding: 10px;
     
-    background: white;
-    font-size: 20px;
+    background-color: rgb(59, 47, 37);
+    border-bottom: .5px solid #ccc;
+    border-radius: 4px 4px 0 0;
+    
     font-weight: 600;
-    color: #999;
-    
-    overflow: hidden;
-    white-space: nowrap;
+    font-size: 20px;
+    color: white;
   }
   
   &:before, &:after {

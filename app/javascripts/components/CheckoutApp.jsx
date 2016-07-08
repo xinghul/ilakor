@@ -168,7 +168,7 @@ export default class CheckoutApp extends React.Component {
             disabled={this.state.isSubmitting} 
             isSubmitting={this.state.isSubmitting}
             block
-            bsStyle="warning"
+            theme="gold"
           >
             <Glyphicon glyph="lock" />
             {' '}

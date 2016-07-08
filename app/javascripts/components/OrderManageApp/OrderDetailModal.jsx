@@ -4,7 +4,7 @@ import React from "react"
 import _ from "lodash"
 import invariant from "invariant"
 
-import { Modal, Grid, Row, Col } from "react-bootstrap"
+import { Modal, Row, Col } from "react-bootstrap"
 
 import SubmitButton from "lib/SubmitButton"
 import GhostButton from "lib/GhostButton"
@@ -66,7 +66,7 @@ export default class OrderDetailModal extends React.Component {
           </div>
         </Modal.Body>
         <Modal.Footer>
-          <GhostButton inverse onClick={this.onClose}>Close</GhostButton>  
+          <GhostButton theme="black" onClick={this.onClose}>Close</GhostButton>  
         </Modal.Footer>
       </Modal>
     );

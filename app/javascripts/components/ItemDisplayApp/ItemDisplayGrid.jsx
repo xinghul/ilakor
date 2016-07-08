@@ -40,7 +40,7 @@ export default class ItemDisplayGrid extends React.Component {
     
     return (
       <div className={styles.itemDisplayGrid}>
-        <ReactCSSTransitionGroup transitionName="item" 
+        <ReactCSSTransitionGroup transitionName="item"
           transitionEnterTimeout={300} 
           transitionLeaveTimeout={300}>
           {itemsJsx}          

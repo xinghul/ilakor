@@ -1,7 +1,9 @@
 "use strict"
 
 import React from "react"
-import { Thumbnail, Image, Button, Glyphicon } from "react-bootstrap"
+import { Thumbnail, Image, Glyphicon } from "react-bootstrap"
+
+import GhostButton from "lib/GhostButton"
 
 import styles from "components/ItemDisplayApp/BaseItem.scss"
 
@@ -49,10 +51,10 @@ export default class BaseItem extends React.Component {
       <div style={bannerStyle} className={styles.baseBanner}>
         <div className={styles.itemName}>{item.name}</div>
         <div className={styles.cartIcon} onClick={this.handleAddToCartClick}>
-          <Button bsStyle="warning" bsSize="xsmall">
+          <GhostButton theme="warning" bsSize="xsmall">
             <Glyphicon glyph="shopping-cart" />
             Add to cart
-          </Button>
+          </GhostButton>
         </div>
         <div className={styles.itemPrice}>{ItemUtil.createPriceJsx(item.price)}</div>
       </div>      

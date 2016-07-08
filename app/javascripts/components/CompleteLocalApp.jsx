@@ -115,7 +115,7 @@ export default class CompleteLocalApp extends React.Component {
             disabled={disabled}
             handleSubmit={this.handleUpdateClick}
             isSubmitting={this.state.isSubmitting}
-            bsStyle="success"
+            theme="success"
           >Update</SubmitButton>
         </div>
       </div>

@@ -22,7 +22,7 @@ import CompleteLocalApp from "components/CompleteLocalApp"
 import ResetPasswordApp from "components/ResetPasswordApp"
 import ForgotPasswordApp from "components/ForgotPasswordApp"
 
-import DraftEditor from "lib/DraftEditor"
+import GhostButton from "lib/GhostButton"
 
 import styles from "main/app.scss"
 
@@ -34,6 +34,7 @@ class App extends React.Component {
         <NavbarApp />
         <ReactCSSTransitionGroup
           component="div"
+          className={styles.appContent}
           transitionName="route"
           transitionEnterTimeout={300}
           transitionLeaveTimeout={300}
@@ -57,7 +58,6 @@ class IndexApp extends React.Component {
     
     return (
       <div>
-        <DraftEditor />
       </div>
     );
   }

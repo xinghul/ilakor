@@ -21,11 +21,10 @@ export default class GhostButton extends React.Component {
     
     let className = [ styles.ghostButton ];
     
-    if (this.props.inverse) {
-      className.push(styles.inverse);
-    } else {
-      className.push(styles.normal);
-    }
+    // push in additional className 
+    className.push(this.props.className);
+    
+    className.push(styles[this.props.theme]);
     
     return (
       <Button 
@@ -39,9 +38,9 @@ export default class GhostButton extends React.Component {
 }
 
 GhostButton.propTypes = {
-  inverse: React.PropTypes.bool
+  theme: React.PropTypes.oneOf(["white", "grey", "black", "gold", "success", "warning", "danger"])
 };
 
 GhostButton.defaultProps = {
-  inverse: false
+  theme: "white"
 };

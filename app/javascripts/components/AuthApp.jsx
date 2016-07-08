@@ -2,12 +2,12 @@
 
 import React from "react"
 import _ from "lodash"
-import { Form, Button, Alert, SplitButton, MenuItem, Modal } from "react-bootstrap"
+import { Form, Alert, SplitButton, MenuItem, Modal } from "react-bootstrap"
 import { hashHistory } from "react-router"
 
 import GhostButton from "lib/GhostButton"
 import SubmitButton from "lib/SubmitButton"
-import FacebookButton from "lib/SocialButton/FacebookButton"
+import SocialButton from "lib/SocialButton"
 import EmailInput from "./AuthApp/EmailInput"
 import UsernameInput from "./AuthApp/UsernameInput"
 import PasswordInput from "./AuthApp/PasswordInput"
@@ -180,10 +180,10 @@ export default class AuthApp extends React.Component {
           <PasswordInput value={this.state.password} disabled={this.state.isLoggingIn} isRegister={false} handleChange={this.handlePasswordChange} />
         </Form>
         <SubmitButton
+          theme="success"
           disabled={disabled}
           handleSubmit={this.handleLoginClick}
           isSubmitting={this.state.isLoggingIn}
-          bsStyle="success"
           block
         >Log in</SubmitButton>
         <div className={styles.forgotPasswordLink}>
@@ -208,10 +208,10 @@ export default class AuthApp extends React.Component {
           <PasswordInput value={this.state.password} disabled={this.state.isSigningUp} isRegister={true} handleChange={this.handlePasswordChange} />
         </Form>
         <SubmitButton
+          theme="success"
           disabled={disabled}
           handleSubmit={this.handleSignupClick}
           isSubmitting={this.state.isSigningUp}
-          bsStyle="success"
           block
         >Sign up</SubmitButton>
       </div>
@@ -234,7 +234,7 @@ export default class AuthApp extends React.Component {
       let title = "Hello, " + username;
       
       authArea =
-        <SplitButton id="sign-in" title={title} bsStyle="default" pullRight>
+        <SplitButton id="sign-in" title={title} pullRight>
           <MenuItem href="#/account">My Account</MenuItem>
           <MenuItem divider />
           <MenuItem onSelect={this.handleLogOut}>Log out</MenuItem>
@@ -279,7 +279,10 @@ export default class AuthApp extends React.Component {
       <div>
         <div className={styles.divider}>or</div>
         <div className={styles.socialButtonArea}>
-          <FacebookButton disabled={this.state.isLoggingIn || this.state.isSigningUp} />
+          <SocialButton 
+            type="facebook"
+            disabled={this.state.isLoggingIn || this.state.isSigningUp}
+         />
         </div>
       </div>
     );
@@ -298,7 +301,7 @@ export default class AuthApp extends React.Component {
         </Modal.Body>
         <Modal.Footer>
           {toggleModeMessage}
-          <Button onClick={this.toggleModal}>Close</Button>
+          <GhostButton theme="black" onClick={this.toggleModal}>Close</GhostButton>
         </Modal.Footer>
       </Modal>
     );

@@ -1,7 +1,9 @@
 "use strict"
 
 import React from "react"
-import { Modal, Button } from "react-bootstrap"
+import { Modal } from "react-bootstrap"
+
+import GhostButton from "lib/GhostButton"
 
 import styles from "components/ItemDisplayApp/ItemDetailModal.scss"
 
@@ -37,7 +39,7 @@ export default class ItemDetailModal extends React.Component {
           {itemDetailJsx}
         </Modal.Body>
         <Modal.Footer>
-          <Button bsStyle="warning">Add to cart</Button>  
+          <GhostButton theme="gold">Add to cart</GhostButton>  
         </Modal.Footer>
       </Modal>
     );

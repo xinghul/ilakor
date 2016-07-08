@@ -1,26 +1,91 @@
 .ghostButton {
   font-weight: 700;
   
-  transition: all .1s ease-out;
-  
-  border-width: .5px;
+  transition: all .1s ease-out; 
 }
 
-.normal {
-  color: black;
-  background-color: rgba(255, 255, 255, 0.2);
-  
-  &:hover {
-    background-color: rgba(255, 255, 255, 0.7);
-  }
-}
-
-.inverse {
+.white {
   color: white;
-  background-color: rgba(59, 47, 37, 1);
+  border-color: white !important;
+  background-color: transparent !important; 
   
   &:hover {
     color: black;
-    background-color: rgba(59, 47, 37, 0.8);
+    background-color: white !important;
   }
+}
+
+.grey {
+  color: black;
+  border-color: #ccc !important;
+  background-color: transparent !important;
+  
+  &:hover {
+    color: black;
+    background-color: #eee;
+  }  
+}
+
+.black {
+  color: black;
+  border-color: black !important;
+  background-color: transparent !important;
+  
+  &:hover {
+    color: white;
+    background-color: black !important;
+  }  
+}
+
+.gold {
+  color: white;
+  border-color: #eea236 !important;
+  background-color: #f0ad4e !important;
+  
+  &:hover {
+    color: white;
+    background-color: #eea236 !important;
+  }  
+}
+
+.success {
+  background-color: white !important;
+
+  color: rgba(76, 174, 76, 1);
+  border-color: rgba(76, 174, 76, 1) !important;
+  
+  &:hover {
+    background-color: rgba(76, 174, 76, 1) !important;
+    
+    color: white;
+    border-color: rgba(76, 174, 76, 1) !important;
+  }  
+}
+
+.warning {
+  background-color: white !important;
+
+  color: rgba(238, 162, 54, 1);
+  border-color: rgba(238, 162, 54, 1) !important;
+  
+  &:hover {
+    background-color: rgba(238, 162, 54, 1) !important;
+    
+    color: white;
+    border-color: rgba(238, 162, 54, 1) !important;
+  } 
+}
+
+.danger {
+  background-color: white !important;
+  
+  color: rgba(217, 83, 79, 1);
+  border-color: rgba(217, 83, 79, 1) !important;
+
+  &:hover {
+    background-color: rgba(217, 83, 79, 1) !important;
+    
+    color: white;
+    border-color: rgba(217, 83, 79, 1) !important;
+  } 
 }

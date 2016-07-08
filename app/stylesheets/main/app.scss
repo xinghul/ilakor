@@ -1,9 +1,14 @@
-$app-font: "Source Sans Pro", sans-serif, Helvetica Neue;
-
 @import "mixins";
 @import "base";
 @import "transitions";
 
 .app {
-  margin-top: 70px;
+  
+  .appContent {
+    position: absolute;
+    left: 0;
+    top: 51px;
+    width: 100%;
+    height: 100%;
+  }
 }

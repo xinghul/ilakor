@@ -3,7 +3,7 @@
 import React from "react"
 import _ from "lodash"
 
-import FacebookButton from "lib/SocialButton/FacebookButton"
+import SocialButton from "lib/SocialButton"
 
 import AccountAction from "actions/AccountAction"
 
@@ -33,7 +33,7 @@ export default class FacebookInfo extends React.Component {
         ); 
       } else {
         infoArea = (
-          <FacebookButton href="/auth/facebook">Connect Facebook</FacebookButton>
+          <SocialButton type="facebook" leadingText="Connect"/>
         );        
       }
     } else {

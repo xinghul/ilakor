@@ -4,7 +4,7 @@ import React from "react"
 import _ from "lodash"
 import invariant from "invariant"
 
-import { Grid, Table } from "react-bootstrap"
+import { Table } from "react-bootstrap"
 
 import OrderManageStore from "stores/OrderManageStore"
 import OrderAction from "actions/OrderAction"
@@ -109,11 +109,9 @@ export default class OrderManageApp extends React.Component {
           ref="orderModal"
           order={selectedOrder} 
         />
-        <Grid fluid>
-          <GridSection>
-            {ordersTable}
-          </GridSection>
-        </Grid>
+        <GridSection title="Orders">
+          {ordersTable}
+        </GridSection>
       </div>
     );
   }

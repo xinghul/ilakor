@@ -10,6 +10,7 @@ import BaseInput from "lib/BaseInput"
 import MultiSelectInput from "lib/MultiSelectInput"
 import SubmitButton from "lib/SubmitButton"
 import DraftEditor from "lib/DraftEditor"
+import GridSection from "lib/GridSection"
 
 import ImageUploader from "./ImageUploader"
 import DimensionRangeInput from "./DimensionRangeInput"
@@ -162,13 +163,14 @@ export default class AddItemForm extends React.Component {
     
     let submitButton = (
       <SubmitButton
+        theme="black"
         handleSubmit={this.handleSubmit}
         isSubmitting={this.state.isSubmitting}
       >Add new item</SubmitButton>
     );
     
     return (
-      <div className={styles.addItemForm}>
+      <GridSection title="Add new item" className={styles.addItemForm}>
         <Row>
           <Col xs={12} md={8}>
             {nameInput}
@@ -214,7 +216,7 @@ export default class AddItemForm extends React.Component {
             {submitButton}
           </Col>
         </Row>
-      </div>
+      </GridSection>
     );
   }
 }

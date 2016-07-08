@@ -3,22 +3,29 @@
 import React from "react"
 import _ from "lodash"
 import invariant from "invariant"
-
 import { Table } from "react-bootstrap"
+
+import GridSection from "lib/GridSection"
 
 import styles from "components/ItemManageApp/ItemListTable.scss"
 
 export default class ItemListTable extends React.Component {
   
+  /**
+   * @inheritdoc
+   */
   constructor(props) {
     super(props);    
   }
   
-  componentDidMount() {
-  }
-  
-  
-  render() {
+  /**
+   * @private
+   * Renders the item list table.
+   *
+   * @return {JSX} the jsx created.
+   */
+  _renderItemListTable() {
+    
     let items = this.props.items
     ,   tableBody = [];
     
@@ -49,6 +56,19 @@ export default class ItemListTable extends React.Component {
         </tbody>
       </Table>
     );
+  }
+    
+  /**
+   * @inheritdoc
+   */
+  render() {
+    let itemListTable = this._renderItemListTable();
+    
+    return (
+      <GridSection title="Items" className={styles.itemListTable}>
+        {itemListTable}
+      </GridSection>
+    )
   }
 }
 

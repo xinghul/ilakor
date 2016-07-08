@@ -34,7 +34,7 @@ export default class NarbarApp extends React.Component {
               <Image className={styles.brandImg} alt="Cromford" src="/images/logo.png" />
             </a>
           </Navbar.Brand>
-          <Navbar.Toggle />
+          <Navbar.Toggle className={styles.toggle} />
         </Navbar.Header>
         <Navbar.Collapse>
           <Nav>
@@ -42,7 +42,7 @@ export default class NarbarApp extends React.Component {
               Furnitures
             </NavItem>
             <NavItem href="#/itemManage">
-              CMS
+              Items
             </NavItem>
             <NavItem href="#/orderManage">
               Orders

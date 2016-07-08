@@ -36,17 +36,23 @@ export default class BlockTypeButton extends React.Component {
    */
   render() {
     
+    let theme = "black";
+    
+    if (this.props.active) {
+      theme = "gold";
+    }
+    
     let buttonContent = do {
       if (_.isEmpty(this.props.type.label)) {
         <FontAwesomeButton 
           icon={this.props.type.icon} 
           onMouseDown={this.onToggle}
-          inverse={this.props.active}
+          theme={theme}
         />
       } else {
         <GhostButton 
+          theme={theme}
           onMouseDown={this.onToggle}
-          inverse={this.props.active}
         >{this.props.type.label}</GhostButton>
       }
     }

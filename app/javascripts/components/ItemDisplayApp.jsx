@@ -48,15 +48,15 @@ export default class ItemDisplayApp extends React.Component {
   componentDidMount() {
     ItemDisplayStore.addChangeListener(this._onChange);
     
-    window.addEventListener("scroll", this.checkScrollToBottom);
+    window.addEventListener("scroll", this._checkReachBottom);
     
-    this.checkScrollToBottom();
+    this._checkReachBottom(true);
   }
   
   componentWillUnmount() {
     ItemDisplayStore.removeChangeListener(this._onChange);
     
-    window.removeEventListener("scroll", this.checkScrollToBottom); 
+    window.removeEventListener("scroll", this._checkReachBottom); 
 
     if (_getItemPromise && _getItemPromise.isCancellable()) {
       _getItemPromise.cancel();
@@ -163,7 +163,7 @@ export default class ItemDisplayApp extends React.Component {
     });
   };
   
-  checkScrollToBottom = () => {
+  _checkReachBottom = (forceLoad) => {
     let scrollTop = 
       document.documentElement && document.documentElement.scrollTop || 
       document.body.scrollTop;
@@ -172,7 +172,7 @@ export default class ItemDisplayApp extends React.Component {
       document.documentElement && document.documentElement.scrollHeight || 
       document.body.scrollHeight; 
     
-    if ((scrollTop + window.innerHeight) >= scrollHeight) {
+    if (forceLoad || (scrollTop + window.innerHeight) >= scrollHeight) {
       this.doInfiniteLoad();
     }
   };
