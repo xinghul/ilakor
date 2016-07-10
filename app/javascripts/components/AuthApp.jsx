@@ -213,7 +213,12 @@ export default class AuthApp extends React.Component {
           {this.renderSocialContent()}      
         </Modal.Body>
         <Modal.Footer>
+<<<<<<< HEAD
           <GhostButton theme="black" onClick={this._toggleModal}>Close</GhostButton>
+=======
+          {toggleModeMessage}
+          <GhostButton theme="black" onClick={this.toggleModal}>Close</GhostButton>
+>>>>>>> minor ghost button style change
         </Modal.Footer>
       </Modal>
     );
