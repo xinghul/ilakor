@@ -20,6 +20,11 @@ export default class SocialButton extends React.Component {
    * Handler for the button click.
    */
   _onClick = () => {
+    // @TODO: support other logins 
+    if (this.props.type !== "facebook") {
+      return;
+    }
+    
     window.location.href = `/auth/${this.props.type}`;
   };
   
@@ -28,7 +33,12 @@ export default class SocialButton extends React.Component {
    */
   render() {
     
-    let type = this.props.type;
+    let type = this.props.type
+    ,   content = _.capitalize(type);
+    
+    if (content === "Googleplus") {
+      content = "Google+";
+    }
     
     return (
       <div className={styles.socialButton}>
@@ -40,7 +50,7 @@ export default class SocialButton extends React.Component {
             onClick={this._onClick}
           >
             <span className={styles.icon + ` zocial-${type}`}></span>
-            <span className={styles.label}>{this.props.leadingText + ' ' + _.capitalize(type)}</span>
+            <span className={styles.label}>{this.props.leadingText + ' ' + content}</span>
           </GhostButton>
           <div className={styles.cover}>
             <div className={styles.innie + ` zocial-${type}`}></div>

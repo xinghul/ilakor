@@ -2,8 +2,14 @@
 
 import React from "react"
 import _ from "lodash"
+import invariant from "invariant"
+import ReactCSSTransitionGroup from "react-addons-css-transition-group"
 import { Form, Alert, SplitButton, MenuItem, Modal } from "react-bootstrap"
 import { hashHistory } from "react-router"
+
+import LoginApp from "./AuthApp/LoginApp"
+import SignupApp from "./AuthApp/SignupApp"
+import ForgotPasswordApp from "./AuthApp/ForgotPasswordApp"
 
 import GhostButton from "lib/GhostButton"
 import SubmitButton from "lib/SubmitButton"
@@ -32,16 +38,7 @@ export default class AuthApp extends React.Component {
       user: AuthStore.getUser(),
       
       isModalOpen: false,
-      isSignUp: false,
-      
-      username: "",
-      email: "",
-      password: "",
-      
-      isLoggingIn: false,
-      isSigningUp: false,
-      showErrorAlert: false,
-      errorMessage: ""
+      step: 1
     };
   }
   
@@ -59,166 +56,22 @@ export default class AuthApp extends React.Component {
     this.setState(getStateFromStores());
   };
 
-  toggleMode = () => {
+  _toggleModal = () => {
     this.setState({
-      showErrorAlert: false,
-      errorMessage: "",
-      
-      isSignUp: !this.state.isSignUp
+      isModalOpen: !this.state.isModalOpen,
+      step: 1
     });
   };
   
-  toggleModal = () => {
-    this.setState({
-      showErrorAlert: false,
-      errorMessage: "",
-      
-      isModalOpen: !this.state.isModalOpen
-    });
-  };
-  
-  handleForgotPasswordClick = () => {
-    this.setState({
-      isModalOpen: false
-    });
-    
-    hashHistory.push("/forgotPassword");
-  };
-  
-  handleLoginClick = () => {
+  _setStep = (step) => {
+    invariant(_.isInteger(step) && _.inRange(step, 1, 4), `_setStep(step) expects 'step' to be integer from 1 to 3, but got '${step}'.`);
     
     this.setState({
-      isLoggingIn: true
-    });
-    
-    AuthAction.userLogIn({
-
-      email: this.state.email,
-      password: this.state.password
-
-    }).then(() => {
-      this.toggleModal();
-    }).catch((err) => {
-      console.log(err);
-      
-      this.setState({
-        showErrorAlert: true,
-        errorMessage: err.body.message
-      });
-    }).finally(() => {
-      this.setState({
-        isLoggingIn: false
-      });
+      step: step
     });
   };
   
-  handleSignupClick = () => {
-    
-    this.setState({
-      isSigningUp: true
-    });
-    
-    AuthAction.userSignUp({
-
-      username: this.state.username,
-      email: this.state.email,
-      password: this.state.password
-
-    }).then(() => {
-      this.toggleModal();
-    }).catch((err) => {
-      console.log(err);
-      
-      this.setState({
-        showErrorAlert: true,
-        errorMessage: err.body.message
-      });
-    }).finally(() => {
-      this.setState({
-        isSigningUp: false
-      });
-    });
-  };
-  
-  handleEmailChange = (newValue) => {
-    this.setState({
-      email: newValue
-    });
-  };
-  
-  handlePasswordChange = (newValue) => {
-    this.setState({
-      password: newValue
-    });
-  };
-  
-  handleUsernameChange = (newValue) => {
-    this.setState({
-      username: newValue
-    });
-  };
-  
-  handleAlertDismiss = () => {
-    this.setState({
-      showErrorAlert: false
-    });
-  };
-
-  handleLogOut() {
-    AuthAction.removeUserFromCookie();
-  }
-
-  createModalBodyLogin() {
-    let disabled = _.isEmpty(this.state.email) ||
-                   _.isEmpty(this.state.password) || 
-                   this.state.isLoggingIn;
-    
-    return (
-      <div>
-        <Form>
-          <EmailInput value={this.state.email} disabled={this.state.isLoggingIn} isRegister={false} handleChange={this.handleEmailChange} />
-          <PasswordInput value={this.state.password} disabled={this.state.isLoggingIn} isRegister={false} handleChange={this.handlePasswordChange} />
-        </Form>
-        <SubmitButton
-          theme="success"
-          disabled={disabled}
-          handleSubmit={this.handleLoginClick}
-          isSubmitting={this.state.isLoggingIn}
-          block
-        >Log in</SubmitButton>
-        <div className={styles.forgotPasswordLink}>
-          <a onClick={this.handleForgotPasswordClick}>Forgot password?</a>
-        </div>
-      
-      </div>
-    );
-  }
-  
-  createModalBodySignup() {
-    let disabled = _.isEmpty(this.state.email) ||
-                   _.isEmpty(this.state.username) ||
-                   _.isEmpty(this.state.password) ||
-                   this.state.isSigningUp;
-
-    return (
-      <div>
-        <Form>
-          <EmailInput value={this.state.email} disabled={this.state.isSigningUp} isRegister={true} handleChange={this.handleEmailChange} />
-          <UsernameInput value={this.state.username} disabled={this.state.isSigningUp} isRegister={true} handleChange={this.handleUsernameChange} />
-          <PasswordInput value={this.state.password} disabled={this.state.isSigningUp} isRegister={true} handleChange={this.handlePasswordChange} />
-        </Form>
-        <SubmitButton
-          theme="success"
-          disabled={disabled}
-          handleSubmit={this.handleSignupClick}
-          isSubmitting={this.state.isSigningUp}
-          block
-        >Sign up</SubmitButton>
-      </div>
-    );
-  }
-
-  render() {
+  renderAuthArea() {
     let authArea;
     let user = this.state.user;
 
@@ -245,63 +98,71 @@ export default class AuthApp extends React.Component {
       
       authArea = 
         <div>
-          <GhostButton onClick={this.toggleModal}>Sign in</GhostButton> 
+          <GhostButton onClick={this._toggleModal}>Sign in</GhostButton> 
         </div>
     }
     
-    let toggleModeMessage = (
-      <span hidden={this.state.isLoggingIn || this.state.isSigningUp} className="pull-left">
-        {do {
-          if (this.state.isSignUp) {
-            <div>Already have an account? <a onClick={this.toggleMode}>Log In</a></div>
-          } else {
-            <div>New here? <a onClick={this.toggleMode}>Sign Up</a></div>
-          }
-        }}
-      </span>
+    return authArea;
+  }
+  
+  renderLocalContent() {
+    let localContent = do {
+      if (this.state.step === 1) {
+        <LoginApp key="loginApp" toggleModal={this._toggleModal} setStep={this._setStep} />
+      } else if (this.state.step === 2) {
+        <SignupApp key="signupApp" toggleModal={this._toggleModal} setStep={this._setStep} />
+      } else if (this.state.step === 3) {
+        <ForgotPasswordApp key="forgotPasswordApp" toggleModal={this._toggleModal} setStep={this._setStep} />
+      }
+    }
+    
+    return (
+      <ReactCSSTransitionGroup transitionName="auth" 
+        transitionEnterTimeout={300} 
+        transitionLeaveTimeout={300}
+        className={styles.localContent}
+      >
+        {localContent}
+      </ReactCSSTransitionGroup>
     );
-    
-    let alertStyle = {
-      opacity: this.state.showErrorAlert ? "1" : "",
-      maxHeight: this.state.showErrorAlert ? "52px" : "",
-      marginBottom: this.state.showErrorAlert ? "20px" : ""
-    };
-    
-    let errorAlert = (
-      <div style={alertStyle} className={styles.errorAlert}>
-        <Alert bsStyle="danger" onDismiss={this.handleAlertDismiss}>
-          <p>{this.state.errorMessage}</p>
-        </Alert>
+  }
+  
+  renderSocialContent() {
+    return (
+      <div className={styles.socialContent}>
+        <SocialButton 
+          type="facebook"
+        />
+        <SocialButton 
+         type="googleplus"
+        />
+        <SocialButton 
+         type="twitter"
+        />
+        <SocialButton 
+         type="linkedin"
+        />
       </div>
     );
+  }
     
-    let socialButtonArea = (
-      <div>
-        <div className={styles.divider}>or</div>
-        <div className={styles.socialButtonArea}>
-          <SocialButton 
-            type="facebook"
-            disabled={this.state.isLoggingIn || this.state.isSigningUp}
-         />
-        </div>
-      </div>
-    );
-    
-    
+  handleLogOut() {
+    AuthAction.removeUserFromCookie();
+  }
+
+  render() {
+        
     let authModal = (
-      <Modal className={styles.authAppModal} show={this.state.isModalOpen} onHide={this.toggleModal}>
-        <Modal.Header>
-          <Modal.Title className={styles.modalTitle}>{this.state.isSignUp ? "Sign up" : "Log In"}</Modal.Title>
-        </Modal.Header>
+      <Modal className={styles.authAppModal} show={this.state.isModalOpen} onHide={this._toggleModal}>
         <Modal.Body>
-          {errorAlert}
-          {this.state.isSignUp ? this.createModalBodySignup()
-                               : this.createModalBodyLogin()}
-          {socialButtonArea}      
+          {this.renderLocalContent()}
+          <div className={styles.divider}>
+            <div className={styles.dividerContent}>or</div>
+          </div>
+          {this.renderSocialContent()}      
         </Modal.Body>
         <Modal.Footer>
-          {toggleModeMessage}
-          <GhostButton theme="black" onClick={this.toggleModal}>Close</GhostButton>
+          <GhostButton theme="black" onClick={this._toggleModal}>Close</GhostButton>
         </Modal.Footer>
       </Modal>
     );
@@ -309,7 +170,7 @@ export default class AuthApp extends React.Component {
     return (
       <div className={styles.authApp}>
         {authModal}
-        {authArea}
+        {this.renderAuthArea()}
       </div>
     );
   }

@@ -106,7 +106,7 @@ export default class BaseInput extends React.Component {
     }
     
     let style = {
-      maxHeight: this.state.focused ? "60px" : ""
+      maxHeight: this.state.focused ? "90px" : ""
     };
 
     return (

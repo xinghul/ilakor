@@ -72,8 +72,8 @@ export default class EmailInput extends React.Component {
         {...this.props}
         type="email"
         placeholder={this.props.placeholder}
-        label="Email"
         icon="envelope"
+        shrink={true}
         validationState={validationState}
         autoComplete={autoComplete}
         handleChange={this.handleEmailChange} />

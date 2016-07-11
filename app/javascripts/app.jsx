@@ -20,7 +20,6 @@ import SocialApp from "components/SocialApp"
 import CheckoutApp from "components/CheckoutApp"
 import CompleteLocalApp from "components/CompleteLocalApp"
 import ResetPasswordApp from "components/ResetPasswordApp"
-import ForgotPasswordApp from "components/ForgotPasswordApp"
 
 import GhostButton from "lib/GhostButton"
 
@@ -77,7 +76,6 @@ render((
       <Route path="checkout" component={CheckoutApp} />
       <Route path="completeLocal" component={CompleteLocalApp} />
       <Route path="resetPassword" component={ResetPasswordApp} />
-      <Route path="forgotPassword" component={ForgotPasswordApp} />
       <Route path="*" component={IndexApp} />
     </Route>
   </Router>

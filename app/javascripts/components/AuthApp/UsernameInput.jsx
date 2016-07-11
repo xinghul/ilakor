@@ -70,8 +70,8 @@ export default class UsernameInput extends React.Component {
         {...this.props}
         type="text"
         placeholder="Enter username"
-        label="Username"
         icon="user"
+        shrink={true}
         focusText={focusText}
         validationState={validationState}
         autoComplete="off"

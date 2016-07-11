@@ -1,0 +1,34 @@
+
+:global(.auth-enter) {
+  // opacity: 0.01;
+  transform: translateX(100%);
+  -webkit-transform: translateX(100%);
+  -ms-transform: translateX(100%);
+}
+
+:global(.auth-enter.auth-enter-active) {
+  transform: translateX(0%);
+  -webkit-transform: translateX(0%);
+  -ms-transform: translateX(0%);
+
+  transition: all 200ms ease-out;
+
+  // opacity: 1;
+}
+
+:global(.auth-leave) {
+  // opacity: 1;
+  transform: translateX(0%);
+  -webkit-transform: translateX(0%);
+  -ms-transform: translateX(0%);
+}
+
+:global(.auth-leave.auth-leave-active) {
+  transform: translateX(-100%);
+  -webkit-transform: translateX(-100%);
+  -ms-transform: translateX(-100%);
+  
+  transition: all 200ms ease-out;
+
+  // opacity: 0.01;
+}

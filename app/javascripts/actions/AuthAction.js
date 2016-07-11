@@ -31,11 +31,7 @@ let AuthAction = {
           resolve();
         })
         .catch(function(err) {
-          if (err.status === 422) {
-            reject(err);            
-          } else {
-            resolve();
-          }
+          reject(err.body);
         });
       
     });
@@ -64,11 +60,7 @@ let AuthAction = {
           resolve();
         })
         .catch(function(err) {
-          if (err.status === 422) {
-            reject(err);            
-          } else {
-            resolve();
-          }
+          reject(err.body);
         });
 
     });

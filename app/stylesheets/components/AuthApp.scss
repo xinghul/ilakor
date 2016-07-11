@@ -3,60 +3,50 @@
 }
 
 .authAppModal {
-  .modalTitle {
-    font-size: 20px;
-    font-weight: 700;
-  }
-
-  .errorAlert {
-    max-height: 0px;
-    opacity: 0;
-    margin-bottom: 0px;
-    
-    transition: all 150ms linear;
-    overflow: hidden;
+  
+  :global(.modal-body) {
+    height: 350px;
   }
   
-  .forgotPasswordLink {
-    width: 100%;
+  .localContent {
+    position: absolute;
+    padding-top: 30px;
+    
+    height: 100%;
+    width: 52%;
+    
+    overflow: hidden;   
+  }
+  
+  .socialContent {
+    position: absolute;
+    padding: 15px 0;
+
+    right: 0;
+
+    height: 100%;
+    width: 40%;
+    
     text-align: center;
-    margin-top: 10px;
   }
 
   .divider {
-    margin: 10px 0px;
-    overflow: hidden;
-    text-align: center;
-    font-weight: bold;
-    font-size: 14px;
+    position: absolute;
+    width: 1px;
+    left: 58%;
+    height: 290px;
+    background-color: #e5e5e5;
     
-    &:before {
-      margin-right: 10px;
-      background: rgba(0,0,0,0.2);
-      box-shadow: 0 1px 0 rgba(255,255,255,0.5);
-      content: "";
-      display: inline-block;
-      height: 1px;
-      position: relative;
-      vertical-align: middle;
-      width: 47%;
+    .dividerContent {
+      position: absolute;
+      top: 48%;
+      left: -7px;    
+
+      background-color: white;
+      
+      font-size: 16px;
+      line-height: 21px;
     }
-    
-    &:after {
-      margin-left: 10px;
-      background: rgba(0,0,0,0.2);
-      box-shadow: 0 1px 0 rgba(255,255,255,0.5);
-      content: "";
-      display: inline-block;
-      height: 1px;
-      position: relative;
-      vertical-align: middle;
-      width: 47%;
-    }
-  }
-  
-  .socialButtonArea {
-    text-align: center;
   }
 }
 

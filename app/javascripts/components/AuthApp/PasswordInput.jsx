@@ -74,8 +74,8 @@ export default class PasswordInput extends React.Component {
           {...this.props}
           type="password"
           placeholder="Enter password"
-          label="Password"
           icon="lock"
+          shrink={true}
           validationState={validationState}
           focusText={focusText}
           autoComplete="off"
