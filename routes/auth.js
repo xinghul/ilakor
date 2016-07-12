@@ -196,7 +196,7 @@ router.get("/facebook", passport.authenticate("facebook", {
 }));
 
 router.get("/facebook/callback", function(req, res, next) {
-  passport.authenticate("facebook", function(err, user) {
+  passport.authenticate("facebook", { session: true }, function(err, user) {
     if (err) {
       console.log(err);
       return res.end("err");      

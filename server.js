@@ -60,7 +60,7 @@ app.use(cookieParser());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(session({
-  secret: "Levi Lu_Cramford",
+  secret: "Levi Lu_Cromford",
   resave: true,
   saveUninitialized: true,
   store: new MongoStore({

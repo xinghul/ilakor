@@ -23,6 +23,13 @@ import AuthAction from "actions/AuthAction"
 
 import styles from "components/AuthApp.scss"
 
+/**
+ * @private 
+ *
+ * Get new state from subscribed stores.
+ *
+ * @return {Object} the new state. 
+ */
 function getStateFromStores() {
   return {
     user: AuthStore.getUser()
@@ -31,6 +38,9 @@ function getStateFromStores() {
 
 export default class AuthApp extends React.Component {
   
+  /**
+   * @inheritdoc
+   */
   constructor(props) {
     super(props);
     
@@ -42,20 +52,45 @@ export default class AuthApp extends React.Component {
     };
   }
   
+  /**
+   * @inheritdoc
+   */
   componentDidMount() {
     AuthStore.addChangeListener(this._onChange);
     
     AuthAction.logInFromCookie();
   }
 
+  /**
+   * @inheritdoc
+   */
   componentWillUnmount() {
     AuthStore.removeChangeListener(this._onChange);
   }
 
+  /**
+   * @private
+   *
+   * Handler for when subscribed stores emit 'change' event.
+   */
   _onChange = () => {
     this.setState(getStateFromStores());
   };
+  
+  /**
+   * @private
+   *
+   * Handler for logging out.
+   */
+  _onLogout() {
+    AuthAction.removeUserFromCookie();
+  }
 
+  /**
+   * @private
+   *
+   * Toggles the modal's open/close state.
+   */
   _toggleModal = () => {
     this.setState({
       isModalOpen: !this.state.isModalOpen,
@@ -63,6 +98,14 @@ export default class AuthApp extends React.Component {
     });
   };
   
+  /**
+   * @private
+   *
+   * Sets the step for the auth modal local content.
+   * 1. Login, 2. Signup, 3. Forgot password.
+   * 
+   * @param  {Number} step the step to set.
+   */
   _setStep = (step) => {
     invariant(_.isInteger(step) && _.inRange(step, 1, 4), `_setStep(step) expects 'step' to be integer from 1 to 3, but got '${step}'.`);
     
@@ -71,26 +114,24 @@ export default class AuthApp extends React.Component {
     });
   };
   
+  /**
+   * Renders the auth button/label area in navbar.
+   *
+   * @return {JSX} the jsx created.
+   */
   renderAuthArea() {
     let authArea;
     let user = this.state.user;
 
     if (user && user._id) {
-      let username = do {
-        if (user.username) {
-          user.username
-        } else if (user.facebook) {
-          user.facebook.nickname
-        }
-      }
-      
-      let title = "Hello, " + username;
+
+      let title = "Hello, " + user.username;
       
       authArea =
         <SplitButton id="sign-in" title={title} pullRight>
           <MenuItem href="#/account">My Account</MenuItem>
           <MenuItem divider />
-          <MenuItem onSelect={this.handleLogOut}>Log out</MenuItem>
+          <MenuItem onSelect={this._onLogout}>Log out</MenuItem>
         </SplitButton>
         
     } else {
@@ -105,6 +146,11 @@ export default class AuthApp extends React.Component {
     return authArea;
   }
   
+  /**
+   * Renders the local auth area.
+   *
+   * @return {JSX} the jsx created.
+   */
   renderLocalContent() {
     let localContent = do {
       if (this.state.step === 1) {
@@ -127,6 +173,11 @@ export default class AuthApp extends React.Component {
     );
   }
   
+  /**
+   * Renders the social auth area.
+   *
+   * @return {JSX} the jsx created.
+   */
   renderSocialContent() {
     return (
       <div className={styles.socialContent}>
@@ -146,10 +197,10 @@ export default class AuthApp extends React.Component {
     );
   }
     
-  handleLogOut() {
-    AuthAction.removeUserFromCookie();
-  }
-
+    
+  /**
+   * @inheritdoc
+   */
   render() {
         
     let authModal = (
