@@ -3,9 +3,17 @@
 import React from "react"
 
 export default {
+  
+  /**
+   * Creates the jsx for price span.
+   * 
+   * @param {String} price the price.
+   * 
+   * @return {JSX} 
+   */
   createPriceJsx: function(price) {
     let style = {
-      color: "#E5615E",
+      color: "#a94442",
       
       fontWeight: "600"
     };

@@ -4,6 +4,10 @@ body {
   padding: 0;
 }
 
+*::-webkit-scrollbar { 
+  display: none; 
+}
+
 body {
   background: #eaeaea url("/images/base.png");
 
@@ -24,5 +28,13 @@ a {
     outline: none !important;
     
     border: 1px solid;
+  }
+}
+
+:global(.popover) {
+  max-width: 404px;
+  
+  :global(.popover-content) {
+    width: 400px;
   }
 }

@@ -47,7 +47,7 @@ export default class OrderManageApp extends React.Component {
   };
   
   handleOrderClick = (index) => {
-    console.log(index);
+
     this.setState({
       selectedOrderIndex: index
     });
@@ -68,7 +68,7 @@ export default class OrderManageApp extends React.Component {
           <td>{orders.indexOf(order)}</td>
           <td>{order._id}</td>
           <td>{order.charge.amount}</td>
-          <td>{order.user.email}</td>
+          <td>{order.payment.email}</td>
           <td>{order.items.length}</td>
           <td>{order.sent ? "Yes" : "No"}</td>
         </tr>
