@@ -21,7 +21,7 @@ import CheckoutApp from "components/CheckoutApp"
 import CompleteLocalApp from "components/CompleteLocalApp"
 import ResetPasswordApp from "components/ResetPasswordApp"
 
-import BaseCarousel from "lib/BaseCarousel"
+import SingleRangeSlider from "lib/SingleRangeSlider"
 
 import styles from "main/app.scss"
 
@@ -56,7 +56,7 @@ class IndexApp extends React.Component {
   render() {
     
     return (
-      <BaseCarousel />
+      <SingleRangeSlider label="Height" />
     );
   }
 };
