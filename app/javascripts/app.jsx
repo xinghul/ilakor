@@ -20,7 +20,7 @@ import SocialApp from "components/SocialApp"
 import CheckoutApp from "components/CheckoutApp"
 import CompleteLocalApp from "components/CompleteLocalApp"
 
-import GhostButton from "lib/GhostButton"
+import BaseCarousel from "lib/BaseCarousel"
 
 import styles from "main/app.scss"
 
@@ -55,8 +55,7 @@ class IndexApp extends React.Component {
   render() {
     
     return (
-      <div>
-      </div>
+      <BaseCarousel />
     );
   }
 };
