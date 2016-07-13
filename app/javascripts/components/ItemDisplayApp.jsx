@@ -15,7 +15,7 @@ import LoadItemSpinner from "./ItemDisplayApp/LoadItemSpinner"
 
 import styles from "components/ItemDisplayApp.scss"
 
-Promise.config({cancellation: true});
+Promise.config({ cancellation: true });
 
 function getStateFromStores() {
   return {
@@ -24,6 +24,8 @@ function getStateFromStores() {
     hasMoreItems: ItemDisplayStore.hasMoreItems()
   };
 }
+
+const ITEM_DISPLAY_APP_ID = "itemDisplayApp";
 
 let _getItemPromise = null
 ,   _addItemPromise = null;
@@ -50,7 +52,9 @@ export default class ItemDisplayApp extends React.Component {
     
     window.addEventListener("scroll", this._checkReachBottom);
     
-    this._checkReachBottom(true);
+    this._gridContainer = document.getElementById(ITEM_DISPLAY_APP_ID);
+    
+    this._checkReachBottom();
   }
   
   componentWillUnmount() {
@@ -129,9 +133,7 @@ export default class ItemDisplayApp extends React.Component {
   handleAddToCartClick = (item) => {
     ShoppingCartAction
     .addToCart(item)
-    .finally(function() {
-      console.log("added to cart", item);
-    });
+    .finally(() => {});
   };
   
   doInfiniteLoad = () => {
@@ -163,29 +165,26 @@ export default class ItemDisplayApp extends React.Component {
     });
   };
   
-  _checkReachBottom = (forceLoad) => {
-    let scrollTop = 
-      document.documentElement && document.documentElement.scrollTop || 
-      document.body.scrollTop;
+  _checkReachBottom = () => {
+
+    let scrollTop = this._gridContainer.scrollTop;
     
-    let scrollHeight = 
-      document.documentElement && document.documentElement.scrollHeight || 
-      document.body.scrollHeight; 
-    
-    if (forceLoad || (scrollTop + window.innerHeight) >= scrollHeight) {
+    let scrollHeight = this._gridContainer.scrollHeight; 
+
+    if ((scrollTop + window.innerHeight) >= scrollHeight) {
       this.doInfiniteLoad();
     }
   };
   
   render() {
     return (
-      <div className={styles.itemDisplayApp}>
+      <div className={styles.itemDisplayApp} id={ITEM_DISPLAY_APP_ID}>
         <ItemDetailModal 
           showModal={this.state.showItemDetailModal} 
           item={this.state.selectedItem}
           onClose={this.onItemDetailModalClose}
         />
-      <div className={styles.mainContent}>
+        <div className={styles.mainContent}>
           {/*
             <div className={styles.filterDisplaySection}>
               <ItemFilterApp />

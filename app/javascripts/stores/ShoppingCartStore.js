@@ -144,8 +144,6 @@ let ShoppingCartStore = _.extend({}, EventEmitter.prototype, {
   },
    
   emitChange: function() {
-    console.log("Item store: ", _items);
-    
     this.setTotalPrice(getTotalPrice(_items));
     
     this.emit(CHANGE_EVENT);
