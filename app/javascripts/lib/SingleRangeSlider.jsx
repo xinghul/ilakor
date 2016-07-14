@@ -5,8 +5,6 @@ import Slider from "nouislider"
 import _ from "lodash"
 import invariant from "invariant"
 
-import { InputGroup } from "react-bootstrap"
-
 import sliderStyles from "nouislider/distribute/nouislider.min.css"
 
 import styles from "lib/SingleRangeSlider.scss"
@@ -62,10 +60,10 @@ export default class SingleRangeSlider extends React.Component {
     
     return (
       <div className={styles.singleRangeSlider}>
-        <InputGroup>
-          <InputGroup.Addon><label>{this.props.label}</label></InputGroup.Addon>
+        <label className={styles.sliderLabel}>{this.props.label}</label>
+        <div className={styles.sliderWrapper}>
           <div id={this._sliderId} />
-        </InputGroup>
+        </div>
       </div>
     );
   }

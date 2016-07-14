@@ -127,13 +127,13 @@ $linkedin: #4875b4;
   .cover{
     z-index: 95;
     .innie {
-      background-color: #67E2FE;
+      background-color: $gris;
     }
     .spine {
-      background: #20C7F3;
+      background: $twitter;
     }
     .outie {
-      background-color: $gris;
+      background-color: $twitter;
     }
   }
   
@@ -158,13 +158,13 @@ $linkedin: #4875b4;
   .cover{
     z-index: 85;
     .innie {
-      background-color: $facebook;
+      background-color: $gris;
     }
     .spine {
       background: $facebook;
     }
     .outie{
-      background-color: $gris;
+      background-color: $facebook;
     }
   }
   .icon{
@@ -187,13 +187,13 @@ $linkedin: #4875b4;
   .cover{
     z-index: 75;
     .innie {
-      background-color: $google;
+      background-color: $gris;
     }
     .spine {
       background: $google;
     }
     .outie{
-      background-color: $gris;
+      background-color: $google;
     }
   }
   .icon{
@@ -216,13 +216,13 @@ $linkedin: #4875b4;
   .cover{
     z-index: 65;
     .innie {
-      background-color: $linkedin;
+      background-color: $gris;
     }
     .spine {
       background: $linkedin;
     }
     .outie{
-      background-color: $gris;
+      background-color: $linkedin;
     }
   }
   .icon{

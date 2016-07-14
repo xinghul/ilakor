@@ -7,9 +7,13 @@
   }
   [type="checkbox"]:not(:checked) + label,
   [type="checkbox"]:checked + label {
-    font-weight: normal;
     position: relative;
+    margin-bottom: 0;
     padding-left: 22px;
+    
+    font-weight: normal;
+    line-height: 20px;
+
     cursor: pointer;
   }
 
@@ -33,7 +37,7 @@
     font-size: 18px;
     line-height: 0.8;
     color: #3B2F25;
-    transition: all .1s linear;
+    transition: all .08s ease-in;
   }
   /* checked mark aspect changes */
   [type="checkbox"]:not(:checked) + label:after {

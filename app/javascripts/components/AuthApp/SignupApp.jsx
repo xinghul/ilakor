@@ -113,7 +113,7 @@ export default class SignupApp extends React.Component {
         errorMessage: message
       });
       
-      this.refs["alert"].showAlert();
+      this.refs["alert"].show();
     }).finally(() => {
       this.setState({
         isSubmitting: false

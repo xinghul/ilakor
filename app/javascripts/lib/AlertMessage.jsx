@@ -8,26 +8,39 @@ import styles from "lib/AlertMessage.scss"
 
 export default class AlertMessage extends React.Component {
   
+  /**
+   * @inheritdoc
+   */
   constructor(props) {
     super(props);
     
     this.state = {
-      showAlert: true
+      showAlert: !this.props.hiddenInitially
     };
   }
   
-  handleAlertDismiss = () => {
+  /**
+   * @private
+   * Handler for when the Alert emits 'ondismiss' event.
+   */
+  _onDismiss = () => {
     this.setState({
       showAlert: false
     });
   };
   
-  showAlert() {
+  /**
+   * Shows the alert message.
+   */
+  show() {
     this.setState({
       showAlert: true
     });
   }
   
+  /**
+   * @inheritdoc
+   */
   render() {
     
     let showAlert = this.state.showAlert && 
@@ -40,7 +53,7 @@ export default class AlertMessage extends React.Component {
     
     return (
       <div style={alertStyle} className={styles.alertMessage}>
-        <Alert bsStyle={this.props.alertStyle} onDismiss={this.handleAlertDismiss}>
+        <Alert bsStyle={this.props.alertStyle} onDismiss={this._onDismiss}>
           <p>{this.props.alertMessage}</p>
         </Alert>
       </div>
@@ -50,10 +63,12 @@ export default class AlertMessage extends React.Component {
 
 AlertMessage.propTypes = {
   alertMessage: React.PropTypes.string,
-  alertStyle: React.PropTypes.oneOf(["success", "warning", "danger", "info"])
+  alertStyle: React.PropTypes.oneOf(["success", "warning", "danger", "info"]),
+  hiddenInitially: React.PropTypes.bool
 };
 
 AlertMessage.defaultProps = {
   alertMessage: "",
-  alertStyle: "info"
+  alertStyle: "info",
+  hiddenInitially: false
 };

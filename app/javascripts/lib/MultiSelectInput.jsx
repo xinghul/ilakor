@@ -9,6 +9,9 @@ import reactSelectStyles from "react-select/dist/react-select.min.css"
 
 export default class MultiSelectInput extends React.Component {
   
+  /**
+   * @inheritdoc
+   */
   constructor(props) {
     super(props);
     
@@ -17,24 +20,43 @@ export default class MultiSelectInput extends React.Component {
     };
   }
   
-  handleChange = (newValue) => {
+  /**
+   * @private
+   * Handler for when the select input emits 'change' event.
+   * 
+   * @param  {Object[]} newValue new select value.
+   */
+  _onChange = (newValue) => {
     this.setState({
       value: newValue
     });
+    
+    this.props.onChange(newValue);
   };
   
+  /**
+   * Returns the selected value as String[].
+   * 
+   * @return {String[]}
+   */
   getValue() {
     return this.state.value.map(function(option) {
       return option.value;
     });
   }
   
+  /**
+   * Reset the multi select input state.
+   */
   clear() {
     this.setState({
       value: []
     });
   }
   
+  /**
+   * @inheritdoc
+   */
   render() {
     
     let options = this.props.options.map((option) => {
@@ -54,7 +76,7 @@ export default class MultiSelectInput extends React.Component {
           options={options}
           multi={true}
           value={this.state.value}
-          onChange={this.handleChange}
+          onChange={this._onChange}
         />
       </div>
     );
@@ -62,9 +84,11 @@ export default class MultiSelectInput extends React.Component {
 }
 
 MultiSelectInput.propTypes = {
-  options: React.PropTypes.array
+  options: React.PropTypes.array,
+  onChange: React.PropTypes.func
 };
 
 MultiSelectInput.defaultProps = {
-  options: []
+  options: [],
+  onChange: function() {}
 };

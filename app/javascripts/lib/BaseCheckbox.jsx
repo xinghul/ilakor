@@ -8,6 +8,9 @@ import styles from "lib/BaseCheckbox.scss"
 
 export default class BaseCheckbox extends React.Component {
   
+  /**
+   * @inheritdoc
+   */
   constructor(props) {
     super(props);
     
@@ -18,26 +21,43 @@ export default class BaseCheckbox extends React.Component {
     };
   }
   
-  handleChange = (evt) => {
+  /**
+   * @private
+   * Handler for when checkbox is clicked.
+   * 
+   * @param  {Object} evt the click event object.
+   */
+  _onClick = (evt) => {
     let newValue = evt.target.checked;
 
     this.setState({
       checked: newValue
     });
     
-    this.props.handleChange(newValue);
+    this.props.onClick(newValue);
   };
   
+  /**
+   * Returns the checked state of the checkbox.
+   * 
+   * @return {Boolean}
+   */
   getValue() {
     return this.state.checked;
   }
   
+  /**
+   * Resets the checkbox state.
+   */
   clear() {
     this.setState({
       checked: false
     });
   }
   
+  /**
+   * @inheritdoc
+   */
   render() {
     
     return (
@@ -46,7 +66,7 @@ export default class BaseCheckbox extends React.Component {
           {...this.props}
           type="checkbox" 
           id={this._id}
-          onClick={this.handleChange}
+          onClick={this._onClick}
           checked={this.state.checked}
         />
         <label htmlFor={this._id}>{this.props.label}</label>
@@ -57,10 +77,11 @@ export default class BaseCheckbox extends React.Component {
 
 BaseCheckbox.propTypes = {
   label: React.PropTypes.string,
-  handleChange: React.PropTypes.func
+  onClick: React.PropTypes.func
 }
+
 BaseCheckbox.defaultProps = {
   label: "Checkbox",
-  handleChange: function() {}
+  onClick: function() {}
 };
 

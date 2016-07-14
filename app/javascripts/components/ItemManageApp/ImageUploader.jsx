@@ -55,37 +55,56 @@ let _files = []
 
 export default class ImageUploader extends React.Component {
   
+  /**
+   * @inheritdoc
+   */
   constructor(props) {
-    super(props);    
+    super(props);  
+    
+    this._dropzoneId = _.uniqueId("dropzone");
   }
   
+  /**
+   * @inheritdoc
+   */
   componentDidMount() {
-    _dropzone = new Dropzone("#dropzone", dropzoneConfig);
+    _dropzone = new Dropzone(`#${this._dropzoneId}`, dropzoneConfig);
   }
   
+  /**
+   * @inheritdoc
+   */
   componentWillUnmount() {
     _dropzone.destroy();
   }
   
+  /**
+   * Returns the uploaded files.
+   */
   getValue() {
     return _files;
   }
   
+  /**
+   * Resets the image uploader state.
+   */
   clear() {
     _files = [];
     
     _dropzone.removeAllFiles();
   }
-  
+
+  /**
+   * @inheritdoc
+   */
   render() {
-    
-    
+
     return (
       <div className={styles.imageUploader}>
         <form 
           action="/upload"
           className="dropzone"
-          id="dropzone"
+          id={this._dropzoneId}
         >
         <div className="dz-message">
           <Image className={styles.uploadIcon} src="/images/upload-icon.png" />

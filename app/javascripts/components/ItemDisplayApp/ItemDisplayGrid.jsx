@@ -22,7 +22,7 @@ export default class ItemDisplayGrid extends React.Component {
         <BaseItem 
           item={item} 
           handleItemClick={this.props.handleItemClick}
-          handleAddToCartClick={this.props.handleAddToCartClick} />
+        />
       </div>
     );
     
@@ -53,12 +53,10 @@ export default class ItemDisplayGrid extends React.Component {
 
 ItemDisplayGrid.propTypes = { 
   items: React.PropTypes.array,
-  handleItemClick: React.PropTypes.func,
-  handleAddToCartClick: React.PropTypes.func
+  handleItemClick: React.PropTypes.func
 };
 
 ItemDisplayGrid.defaultProps = { 
   items: [],
-  handleItemClick: function() {},
-  handleAddToCartClick: function() {}
+  handleItemClick: function() {}
 };

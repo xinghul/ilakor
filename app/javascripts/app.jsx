@@ -54,9 +54,13 @@ class IndexApp extends React.Component {
   }
   
   render() {
+    let style = {
+      margin: "40px"
+    };
     
     return (
-      <SingleRangeSlider label="Height" />
+      <div style={style}>
+      </div>
     );
   }
 };

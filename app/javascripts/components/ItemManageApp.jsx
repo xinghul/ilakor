@@ -23,6 +23,9 @@ function getStateFromStores() {
 
 export default class ItemManageApp extends React.Component {
   
+  /**
+   * @inheritdoc
+   */
   constructor(props) {
     super(props);
     
@@ -34,6 +37,9 @@ export default class ItemManageApp extends React.Component {
     };
   }
   
+  /**
+   * @inheritdoc
+   */
   componentDidMount() {
     ItemManageStore.addChangeListener(this._onChange);
     
@@ -42,19 +48,28 @@ export default class ItemManageApp extends React.Component {
     ItemManageAction.getAllTags();
   }
   
+  /**
+   * @inheritdoc
+   */
   componentWillUnmount() {
     ItemManageStore.removeChangeListener(this._onChange);
   }
   
+  /**
+   * @private
+   * Handler for when subscribed stores emit 'change' event.
+   */
   _onChange = () => {
     this.setState(getStateFromStores());
   };
   
   /**
+   * @private
    * Handler for item in the table being clicked.
+   * 
    * @param  {Object} item the clicked item.
    */
-  handleItemClick = (item) => {
+  _onItemClick = (item) => {
     this.setState({
       selectedItem: item
     });
@@ -62,6 +77,9 @@ export default class ItemManageApp extends React.Component {
     this.refs["itemModal"].showModal();
   };  
   
+  /**
+   * @inheritdoc
+   */
   render() {
     
     return (
@@ -79,7 +97,7 @@ export default class ItemManageApp extends React.Component {
           <Col xs={12} md={6}>
             <ItemListTable 
               items={this.state.items} 
-              handleItemClick={this.handleItemClick}
+              handleItemClick={this._onItemClick}
             />
           </Col>
         </Row>

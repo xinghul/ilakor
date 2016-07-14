@@ -4,7 +4,7 @@ import React from "react"
 import _ from "lodash"
 import invariant from "invariant"
 import ReactCSSTransitionGroup from "react-addons-css-transition-group"
-import { Form, Alert, SplitButton, MenuItem, Modal } from "react-bootstrap"
+import { SplitButton, MenuItem, Modal } from "react-bootstrap"
 import { hashHistory } from "react-router"
 
 import LoginApp from "./AuthApp/LoginApp"

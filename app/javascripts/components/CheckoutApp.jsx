@@ -88,7 +88,7 @@ export default class CheckoutApp extends React.Component {
         errorMessage: message
       });
       
-      this._alertMessage.showAlert();
+      this._alertMessage.show();
     })
     .finally(() => {
       this.setState({
