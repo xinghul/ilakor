@@ -11,6 +11,7 @@ import MultiSelectInput from "lib/MultiSelectInput"
 import SubmitButton from "lib/SubmitButton"
 import DraftEditor from "lib/DraftEditor"
 import GridSection from "lib/GridSection"
+import AlertMessage from "lib/AlertMessage"
 
 import ImageUploader from "./ImageUploader"
 
@@ -18,6 +19,11 @@ import ItemManageAction from "actions/ItemManageAction"
 
 import styles from "components/ItemManageApp/AddItemForm.scss"
 
+/**
+ * Creates the options for tag multiselect.
+ * 
+ * @param  {Object[]} tags the tags config.
+ */
 function createTagOptions(tags) {
   
   invariant(_.isArray(tags), `createTagOptions() expects 'tags' as 'array', but get '${typeof tags}'.`);
@@ -26,6 +32,8 @@ function createTagOptions(tags) {
   
   for (let tag of tags)
   {
+    invariant(_.isString(tag.name), `createTagOptions() expects each tag.name as 'string', but gets '${typeof tag.name}'.`);
+    
     tagOptions.push(tag.name);
   }
   
@@ -35,6 +43,9 @@ function createTagOptions(tags) {
 
 export default class AddItemForm extends React.Component {
   
+  /**
+   * @inheritdoc
+   */
   constructor(props) {
     super(props);
     
@@ -43,7 +54,11 @@ export default class AddItemForm extends React.Component {
     };
   }
   
-  handleSubmit = () => {
+  /**
+   * @private
+   * Handler for when the submit button is clicked.
+   */
+  _handleSubmit = () => {
     let name = this.refs["name"].getValue()
     ,   tag = this.refs["tag"].getValue()
     ,   image = this.refs["image"].getValue()
@@ -52,6 +67,8 @@ export default class AddItemForm extends React.Component {
 
     if (_.isEmpty(name) || _.isEmpty(tag) || _.isEmpty(image) || 
         _.isEmpty(price) || _.isEmpty(description)) {
+      this.refs["alert"].show();
+      
       return;
     }
     
@@ -66,18 +83,18 @@ export default class AddItemForm extends React.Component {
       
     };
     
+    console.log(itemConfig)
+    
     this.setState({
       isSubmitting: true
     });
-    
-    console.log(itemConfig);
     
     ItemManageAction.addItem(itemConfig)
       .catch(function(err) {
         console.log(err);
       })
       .finally(() => {
-        this.clearForm();
+        this._clearForm();
         
         this.setState({
           isSubmitting: false
@@ -85,7 +102,11 @@ export default class AddItemForm extends React.Component {
       });
   };
   
-  clearForm() {
+  /**
+   * @private
+   * Clears the form after submit.
+   */
+  _clearForm() {
     this.refs["name"].clear();
     this.refs["tag"].clear();
     this.refs["image"].clear();
@@ -93,6 +114,9 @@ export default class AddItemForm extends React.Component {
     this.refs["description"].clear();
   }
   
+  /**
+   * @inheritdoc
+   */
   render() {
     let nameInput = (
       <BaseInput
@@ -132,8 +156,9 @@ export default class AddItemForm extends React.Component {
     let submitButton = (
       <SubmitButton
         theme="black"
-        handleSubmit={this.handleSubmit}
+        handleSubmit={this._handleSubmit}
         isSubmitting={this.state.isSubmitting}
+        block
       >Add new item</SubmitButton>
     );
     
@@ -164,8 +189,14 @@ export default class AddItemForm extends React.Component {
             {descriptionEditor}
           </Col>
         </Row>
+        <AlertMessage
+          ref="alert"
+          alertMessage="Empty and/or invalid fields in the form."
+          alertStyle="danger"
+          hiddenInitially={true}
+        />
         <Row>
-          <Col xs={12} md={8}>
+          <Col xs={12} md={12}>
             {submitButton}
           </Col>
         </Row>

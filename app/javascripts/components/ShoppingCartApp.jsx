@@ -55,6 +55,15 @@ function _onClearCart() {
 
 /**
  * @private
+ *
+ * Handler for when the checkout button is clicked.
+ */
+function _onCheckoutClick() {
+  hashHistory.push("/checkout");
+};
+
+/**
+ * @private
  * Creates the JSX for the cart item.
  * 
  * @param  {String} itemInfo  the info for the item.
@@ -185,15 +194,6 @@ export default class ShoppingCartApp extends React.Component {
   };
   
   /**
-   * @private
-   *
-   * Handler for when the checkout button is clicked.
-   */
-  _onCheckoutClick = () => {
-    hashHistory.push("/checkout");
-  };
-  
-  /**
    * Creates the JSX for the cart popover.
    * 
    * @return {JSX}
@@ -241,7 +241,7 @@ export default class ShoppingCartApp extends React.Component {
         <div style={priceStyle}>Total: {ItemUtil.createPriceJsx(totalPrice)}</div>
         <div style={buttonGroupStyle}>
           <GhostButton style={clearCartButtonStyle} theme="black" onClick={_onClearCart}>Clear cart</GhostButton>
-          <GhostButton disabled={notLoggedIn} theme="warning" onClick={this._onCheckoutClick}>Checkout</GhostButton>
+          <GhostButton disabled={notLoggedIn} theme="warning" onClick={_onCheckoutClick}>Checkout</GhostButton>
         </div>
         <div style={notLoggedInInfoStyle}><b>Log in</b> before you can checkout.</div>
       </Popover>

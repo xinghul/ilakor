@@ -20,7 +20,7 @@ import SocialApp from "components/SocialApp"
 import CheckoutApp from "components/CheckoutApp"
 import CompleteLocalApp from "components/CompleteLocalApp"
 
-import BaseCarousel from "lib/BaseCarousel"
+import SingleRangeSlider from "lib/SingleRangeSlider"
 
 import styles from "main/app.scss"
 
@@ -53,9 +53,13 @@ class IndexApp extends React.Component {
   }
   
   render() {
+    let style = {
+      margin: "40px"
+    };
     
     return (
-      <BaseCarousel />
+      <div style={style}>
+      </div>
     );
   }
 };

@@ -3,7 +3,6 @@
 import React from "react"
 import _ from "lodash"
 import invariant from "invariant"
-import { Form } from "react-bootstrap"
 
 import EmailInput from "./EmailInput"
 

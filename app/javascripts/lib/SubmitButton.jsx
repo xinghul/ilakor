@@ -9,10 +9,16 @@ import styles from "lib/SubmitButton.scss"
 
 export default class SubmitButton extends React.Component {
   
+  /**
+   * @inheritdoc
+   */
   constructor(props) {
     super(props);
   }
   
+  /**
+   * @inheritdoc
+   */
   render() {
 
     // put {...this.props} behind disabled, so it can't be overriden

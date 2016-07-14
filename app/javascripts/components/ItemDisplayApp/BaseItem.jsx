@@ -1,7 +1,7 @@
 "use strict"
 
 import React from "react"
-import { Thumbnail, Image, Glyphicon } from "react-bootstrap"
+import { Image, Glyphicon } from "react-bootstrap"
 
 import GhostButton from "lib/GhostButton"
 
@@ -11,6 +11,9 @@ import ItemUtil from "utils/ItemUtil"
 
 export default class BaseItem extends React.Component {
   
+  /**
+   * @inheritdoc
+   */
   constructor(props) {
     super(props);
     
@@ -20,7 +23,11 @@ export default class BaseItem extends React.Component {
     };
   }
   
-  handleImageLoaded = () => {
+  /**
+   * @private
+   * Handler for when the image is loaded.
+   */
+  _onImageLoad = () => {
     if (this.state.imageLoaded) {
       return;
     }
@@ -30,12 +37,32 @@ export default class BaseItem extends React.Component {
     });
   };
   
+  /**
+   * @private
+   * Handler for when mouse enters the item div.
+   */
+  _onMouseEnter = () => {
+    this.setState({
+      bannerBottom: "0px"
+    });
+  };
+  
+  /**
+   * @private
+   * Handler for when mouse leaves the item div.
+   */
+  _onMouseLeave = () => {
+    this.setState({
+      bannerBottom: "-80px"
+    });
+  };
+  
   createImageJsx() {
     let item     = this.props.item
     ,   imageUrl = "http://d16knxx0wtupz9.cloudfront.net/" + item.images[0].name;
     
     return (
-      <Image className={styles.itemImage} src={imageUrl} onLoad={this.handleImageLoaded} />
+      <Image className={styles.itemImage} src={imageUrl} onLoad={this._onImageLoad} />
     );
   }
   
@@ -50,12 +77,6 @@ export default class BaseItem extends React.Component {
     return (
       <div style={bannerStyle} className={styles.baseBanner}>
         <div className={styles.itemName}>{item.name}</div>
-        <div className={styles.cartIcon} onClick={this.handleAddToCartClick}>
-          <GhostButton theme="warning" bsSize="xsmall">
-            <Glyphicon glyph="shopping-cart" />
-            Add to cart
-          </GhostButton>
-        </div>
         <div className={styles.itemPrice}>{ItemUtil.createPriceJsx(item.price)}</div>
       </div>      
     );
@@ -73,26 +94,6 @@ export default class BaseItem extends React.Component {
       
     );
   }
-  
-  handleMouseEnter = () => {
-    this.setState({
-      bannerBottom: "0px"
-    });
-  };
-  
-  handleMouseLeave = () => {
-    this.setState({
-      bannerBottom: "-80px"
-    });
-  };
-  
-  handleAddToCartClick = (evt) => {
-    evt.preventDefault();
-    
-    evt.stopPropagation();
-    
-    this.props.handleAddToCartClick(this.props.item);
-  };
   
   handleItemClick = () => {
     this.props.handleItemClick(this.props.item);
@@ -112,8 +113,8 @@ export default class BaseItem extends React.Component {
     
     return (
       <div className={styles.baseItem} 
-        onMouseEnter={this.handleMouseEnter}
-        onMouseLeave={this.handleMouseLeave}
+        onMouseEnter={this._onMouseEnter}
+        onMouseLeave={this._onMouseLeave}
         onClick={this.handleItemClick}>
         {itemJsx}
         {bannerJsx}
@@ -126,12 +127,10 @@ export default class BaseItem extends React.Component {
 
 BaseItem.propTypes = { 
   item: React.PropTypes.object.isRequired,
-  handleItemClick: React.PropTypes.func,
-  handleAddToCartClick: React.PropTypes.func
+  handleItemClick: React.PropTypes.func
 };
 
 BaseItem.defaultProps = { 
   item: {},
-  handleItemClick: function() {},
-  handleAddToCartClick: function() {}
+  handleItemClick: function() {}
 };

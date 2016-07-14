@@ -5,45 +5,45 @@
 }
 
 .white {
-  color: white;
+  color: white !important;
   border-color: white !important;
   background-color: transparent !important; 
   
   &:hover {
-    color: black;
+    color: black !important;
     background-color: white !important;
   }
 }
 
 .grey {
-  color: black;
+  color: black !important;
   border-color: #ccc !important;
   background-color: transparent !important;
   
   &:hover {
-    color: black;
-    background-color: #eee;
+    color: black !important;
+    background-color: #eee !important;
   }  
 }
 
 .black {
-  color: black;
+  color: black !important;
   border-color: black !important;
   background-color: transparent !important;
   
   &:hover {
-    color: white;
+    color: white !important;
     background-color: black !important;
   }  
 }
 
 .gold {
-  color: white;
+  color: white !important;
   border-color: #eea236 !important;
   background-color: #f0ad4e !important;
   
   &:hover {
-    color: white;
+    color: white !important;
     background-color: #eea236 !important;
   }  
 }
@@ -57,7 +57,7 @@
   &:hover {
     background-color: rgba(76, 174, 76, 1) !important;
     
-    color: white;
+    color: white !important;
     border-color: rgba(76, 174, 76, 1) !important;
   }  
 }
@@ -71,7 +71,7 @@
   &:hover {
     background-color: rgba(238, 162, 54, 1) !important;
     
-    color: white;
+    color: white !important;
     border-color: rgba(238, 162, 54, 1) !important;
   } 
 }
@@ -85,7 +85,7 @@
   &:hover {
     background-color: rgba(217, 83, 79, 1) !important;
     
-    color: white;
+    color: white !important;
     border-color: rgba(217, 83, 79, 1) !important;
   } 
 }

@@ -130,12 +130,6 @@ export default class ItemDisplayApp extends React.Component {
     });
   };
   
-  handleAddToCartClick = (item) => {
-    ShoppingCartAction
-    .addToCart(item)
-    .finally(() => {});
-  };
-  
   doInfiniteLoad = () => {
     // do nothing when it's already in the loading process
     // or when there's no more items 
@@ -197,7 +191,7 @@ export default class ItemDisplayApp extends React.Component {
             <ItemDisplayGrid
               items={this.state.items} 
               handleItemClick={this.handleItemClick}
-              handleAddToCartClick={this.handleAddToCartClick} />
+            />
             <LoadItemSpinner hidden={!this.state.isLoading} />
           </div>
         </div>

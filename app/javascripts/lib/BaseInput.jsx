@@ -9,6 +9,9 @@ import styles from "lib/BaseInput.scss"
 
 export default class BaseInput extends React.Component {
   
+  /**
+   * @inheritdoc
+   */
   constructor(props) {
     super(props);
     
@@ -18,40 +21,65 @@ export default class BaseInput extends React.Component {
     };
   }
   
-  handleChange = (evt) => {
+  /**
+   * @private
+   * Handler for when the input emits the 'change' event.
+   * 
+   * @param  {Object} evt the 'change' event object.
+   */
+  _onChange = (evt) => {
     let newValue = evt.target.value
     ,   name = evt.target.name;
-
+    
     this.setState({
       value: newValue
     });
-
+    
     this.props.handleChange(newValue, name);
   };
   
-  handleOnFocus = () => {
+  /**
+   * @private
+   * Handler for when the input emits the 'onfocus' event.
+   */
+  _onFocus = () => {
     this.setState({
       focused: true
     });
   };
   
-  handleOnBlur = () => {
+  /**
+   * @private
+   * Handler for when the input emits the 'onblur' event.
+   */
+  _onBlur = () => {
     this.setState({
       focused: false
     });
   };
   
+  /**
+   * Returns the input value.
+   * 
+   * @return {String}
+   */
   getValue() {
     return this.state.value;
   }
   
+  /**
+   * Resets the base input state.
+   */
   clear() {
     this.setState({
       value: this.props.initialValue || "",
       focused: false
     });
   }
-
+  
+  /**
+   * @inheritdoc
+   */
   render() {
     
     let selectOptions = null
@@ -105,13 +133,22 @@ export default class BaseInput extends React.Component {
       }
     }
     
+    let className = [ styles.baseInput ];
+    
+    if (!_.isEmpty(newProps.className)) {
+      // push in additional className 
+      className.push(newProps.className);
+      
+      delete newProps.className;      
+    }
+    
     let style = {
       maxHeight: this.state.focused ? "90px" : ""
     };
 
     return (
       <FormGroup 
-        className={styles.baseInput} 
+        className={className} 
         controlId={newProps.key} 
         validationState={validationState}
       >
@@ -120,9 +157,9 @@ export default class BaseInput extends React.Component {
           <FormControl 
             {...newProps}
             value={this.props.value ? this.props.value : this.state.value}
-            onChange={this.handleChange}
-            onFocus={this.handleOnFocus}
-            onBlur={this.handleOnBlur}
+            onChange={this._onChange}
+            onFocus={this._onFocus}
+            onBlur={this._onBlur}
           >{selectOptions}</FormControl>
         </InputGroup>
         <div 
