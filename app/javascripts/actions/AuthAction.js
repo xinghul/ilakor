@@ -9,6 +9,34 @@ import AuthConstants from "constants/AuthConstants"
 
 let AuthAction = {
   
+  showModal: function() {
+    
+    return new Promise((resolve, reject) => {
+      
+      AppDispatcher.handleAction({
+        actionType: AuthConstants.SET_MODAL_OPEN,
+        isModalOpen: true
+      });
+      
+      setTimeout(resolve, 300);
+    });
+    
+  },
+  
+  hideModal: function() {
+    
+    return new Promise((resolve, reject) => {
+      
+      AppDispatcher.handleAction({
+        actionType: AuthConstants.SET_MODAL_OPEN,
+        isModalOpen: false
+      });
+      
+      setTimeout(resolve, 300);
+    });
+    
+  },
+  
   userLogIn: function(user) {
     
     return new Promise(function(resolve, reject) {

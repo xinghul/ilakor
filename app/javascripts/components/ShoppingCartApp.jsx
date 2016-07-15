@@ -8,10 +8,13 @@ import { Glyphicon, OverlayTrigger, Popover, MenuItem } from "react-bootstrap"
 import { Image, SplitButton } from "react-bootstrap"
 
 import CheckoutApp from "components/CheckoutApp"
+import ItemUtil from "utils/ItemUtil"
+
 import ShoppingCartStore from "stores/ShoppingCartStore"
 import AuthStore from "stores/AuthStore"
+
 import ShoppingCartAction from "actions/ShoppingCartAction"
-import ItemUtil from "utils/ItemUtil"
+import AuthAction from "actions/AuthAction"
 
 import GhostButton from "lib/GhostButton"
 
@@ -194,6 +197,14 @@ export default class ShoppingCartApp extends React.Component {
   };
   
   /**
+   * @private
+   * Handler for when the login link is clicked.
+   */
+  _onLoginClick = () => {
+    AuthAction.showModal();
+  };
+  
+  /**
    * Creates the JSX for the cart popover.
    * 
    * @return {JSX}
@@ -243,7 +254,7 @@ export default class ShoppingCartApp extends React.Component {
           <GhostButton style={clearCartButtonStyle} theme="black" onClick={_onClearCart}>Clear cart</GhostButton>
           <GhostButton disabled={notLoggedIn} theme="warning" onClick={_onCheckoutClick}>Checkout</GhostButton>
         </div>
-        <div style={notLoggedInInfoStyle}><b>Log in</b> before you can checkout.</div>
+        <div style={notLoggedInInfoStyle}><a onClick={this._onLoginClick}>Log in</a> before you can checkout.</div>
       </Popover>
     );
   }

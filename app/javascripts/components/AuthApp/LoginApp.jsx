@@ -99,7 +99,7 @@ export default class LoginApp extends React.Component {
       password: this.state.password
 
     }).then(() => {
-      this.props.toggleModal();
+      AuthAction.hideModal();
     }).catch((err) => {
       console.log(err);
       
@@ -156,6 +156,5 @@ export default class LoginApp extends React.Component {
 }
 
 LoginApp.propTypes = {
-  toggleModal: React.PropTypes.func.isRequired,
   setStep: React.PropTypes.func.isRequired
 };
