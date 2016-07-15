@@ -1,0 +1,16 @@
+.icon {
+  display: table !important;
+  opacity: 1;
+  
+  transition: opacity 150ms ease-out;
+  
+  &:hover {
+    opacity: 1 !important;
+  }
+  
+  &::before {
+    display: table-cell;
+    
+    vertical-align: middle;
+  }
+}

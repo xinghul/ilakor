@@ -3,7 +3,7 @@
 import React from "react"
 import _ from "lodash"
 
-import FontAwesomeButton from "lib/FontAwesomeButton"
+import IconButton from "lib/IconButton"
 
 import styles from "lib/DraftEditor/InlineStyleButton.scss"
 
@@ -18,7 +18,7 @@ export default class InlineStyleButton extends React.Component {
   
   /**
    * @private
-   * Event handler for FontAwesomeButton's 'onMouseDown' event.
+   * Event handler for IconButton's 'onMouseDown' event.
    * 
    * @param  {Object} evt the emitted event.
    */
@@ -42,7 +42,7 @@ export default class InlineStyleButton extends React.Component {
     }
     
     return (
-      <FontAwesomeButton 
+      <IconButton 
         icon={this.props.icon} 
         onMouseDown={this.onToggle}
         theme={theme}
