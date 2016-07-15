@@ -4,8 +4,7 @@ import React from "react"
 import _ from "lodash"
 import invariant from "invariant"
 import ReactCSSTransitionGroup from "react-addons-css-transition-group"
-import { SplitButton, MenuItem, Modal } from "react-bootstrap"
-import { hashHistory } from "react-router"
+import { Modal } from "react-bootstrap"
 
 import LoginApp from "./AuthApp/LoginApp"
 import SignupApp from "./AuthApp/SignupApp"
@@ -32,7 +31,7 @@ import styles from "components/AuthApp.scss"
  */
 function getStateFromStores() {
   return {
-    user: AuthStore.getUser()
+    isModalOpen: AuthStore.getIsModalOpen()
   };
 }
 
@@ -45,9 +44,8 @@ export default class AuthApp extends React.Component {
     super(props);
     
     this.state = {
-      user: AuthStore.getUser(),
+      isModalOpen: AuthStore.getIsModalOpen(),
       
-      isModalOpen: false,
       step: 1
     };
   }
@@ -57,8 +55,6 @@ export default class AuthApp extends React.Component {
    */
   componentDidMount() {
     AuthStore.addChangeListener(this._onChange);
-    
-    AuthAction.logInFromCookie();
   }
 
   /**
@@ -79,25 +75,18 @@ export default class AuthApp extends React.Component {
   
   /**
    * @private
-   *
-   * Handler for logging out.
+   * 
+   * Hides the auth modal.
    */
-  _onLogout() {
-    AuthAction.removeUserFromCookie();
-  }
-
-  /**
-   * @private
-   *
-   * Toggles the modal's open/close state.
-   */
-  _toggleModal = () => {
-    this.setState({
-      isModalOpen: !this.state.isModalOpen,
-      step: 1
+  _hideModal = () => {
+    AuthAction.hideModal().then(() => {
+      // reset the step
+      this.setState({
+        step: 1
+      });
     });
   };
-  
+
   /**
    * @private
    *
@@ -115,38 +104,6 @@ export default class AuthApp extends React.Component {
   };
   
   /**
-   * Renders the auth button/label area in navbar.
-   *
-   * @return {JSX} the jsx created.
-   */
-  renderAuthArea() {
-    let authArea;
-    let user = this.state.user;
-
-    if (user && user._id) {
-
-      let title = "Hello, " + user.username;
-      
-      authArea =
-        <SplitButton id="sign-in" title={title} pullRight>
-          <MenuItem href="#/account">My Account</MenuItem>
-          <MenuItem divider />
-          <MenuItem onSelect={this._onLogout}>Log out</MenuItem>
-        </SplitButton>
-        
-    } else {
-      
-      
-      authArea = 
-        <div>
-          <GhostButton onClick={this._toggleModal}>Sign in</GhostButton> 
-        </div>
-    }
-    
-    return authArea;
-  }
-  
-  /**
    * Renders the local auth area.
    *
    * @return {JSX} the jsx created.
@@ -154,11 +111,11 @@ export default class AuthApp extends React.Component {
   renderLocalContent() {
     let localContent = do {
       if (this.state.step === 1) {
-        <LoginApp key="loginApp" toggleModal={this._toggleModal} setStep={this._setStep} />
+        <LoginApp key="loginApp" setStep={this._setStep} />
       } else if (this.state.step === 2) {
-        <SignupApp key="signupApp" toggleModal={this._toggleModal} setStep={this._setStep} />
+        <SignupApp key="signupApp" setStep={this._setStep} />
       } else if (this.state.step === 3) {
-        <ForgotPasswordApp key="forgotPasswordApp" toggleModal={this._toggleModal} setStep={this._setStep} />
+        <ForgotPasswordApp key="forgotPasswordApp" setStep={this._setStep} />
       }
     }
     
@@ -203,8 +160,8 @@ export default class AuthApp extends React.Component {
    */
   render() {
         
-    let authModal = (
-      <Modal className={styles.authAppModal} show={this.state.isModalOpen} onHide={this._toggleModal}>
+    return (
+      <Modal className={styles.authApp} show={this.state.isModalOpen} onHide={this._hideModal}>
         <Modal.Body>
           {this.renderLocalContent()}
           <div className={styles.divider}>
@@ -213,16 +170,9 @@ export default class AuthApp extends React.Component {
           {this.renderSocialContent()}      
         </Modal.Body>
         <Modal.Footer>
-          <GhostButton theme="black" onClick={this._toggleModal}>Close</GhostButton>
+          <GhostButton theme="black" onClick={this._hideModal}>Close</GhostButton>
         </Modal.Footer>
       </Modal>
-    );
-    
-    return (
-      <div className={styles.authApp}>
-        {authModal}
-        {this.renderAuthArea()}
-      </div>
     );
   }
 }

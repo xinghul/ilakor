@@ -1,6 +1,7 @@
 "use strict";
 
 import _ from "lodash"
+import invariant from "invariant"
 import { EventEmitter } from "events"
 
 import AppDispatcher from "dispatcher/AppDispatcher"
@@ -8,22 +9,62 @@ import AuthConstants from "constants/AuthConstants"
 
 const CHANGE_EVENT = "change";
 
-let _user = {};
+let _user = {}
+,   _isModalOpen = false;
 
 let AuthStore = _.extend({}, EventEmitter.prototype, {
 
+  /**
+   * Sets the user.
+   * 
+   * @param  {Object} user the new user value.
+   */
   setUser: function(user) {
+    invariant(_.isObject(user), `AuthStore.setUser() expects an object as 'user', but gets '${typeof user}'.`);
+    
     _user = user;
   },
 
+  /**
+   * Returns the user.
+   * @return {Object} 
+   */
   getUser: function() {
     return _user;
   },
+  
+  /**
+   * Sets the isModalOpen flag.
+   * 
+   * @param  {Boolean} isModalOpen the new value.
+   */
+  setIsModalOpen: function(isModalOpen) {
+    invariant(_.isBoolean(isModalOpen), `AuthStore.setIsModalOpen() expects a boolean as 'isModalOpen', but gets '${typeof isModalOpen}'.`);
 
+    _isModalOpen = isModalOpen;
+  },
+  
+  /**
+   * Returns the isModalOpen flag
+   * 
+   * @return {Boolean}
+   */
+  getIsModalOpen: function() {
+    return _isModalOpen;
+  },
+  
+  /**
+   * Emits 'change' event.
+   */
   emitChange: function() {
     this.emit(CHANGE_EVENT);
   },
 
+  /**
+   * Subscribes a callback to the 'change' event.
+   * 
+   * @param  {Function} callback the callback to add.
+   */
   addChangeListener: function(callback) {
     this.on(CHANGE_EVENT, callback);
     
@@ -32,6 +73,11 @@ let AuthStore = _.extend({}, EventEmitter.prototype, {
     this.emitChange();
   },
 
+  /**
+   * Unsubscribes a callback from the 'change' event.
+   * 
+   * @param  {Function} callback the callback to remove.
+   */
   removeChangeListener: function(callback) {
     this.removeListener(CHANGE_EVENT, callback);
   }
@@ -45,6 +91,11 @@ AuthStore.dispatchToken = AppDispatcher.register(function(payload) {
 
     case AuthConstants.RECEIVED_USER:
       AuthStore.setUser(action.user);
+      AuthStore.emitChange();
+      break;
+      
+    case AuthConstants.SET_MODAL_OPEN:
+      AuthStore.setIsModalOpen(action.isModalOpen);
       AuthStore.emitChange();
       break;
 

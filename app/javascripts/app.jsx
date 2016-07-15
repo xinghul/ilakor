@@ -11,11 +11,13 @@ import ReactCSSTransitionGroup from "react-addons-css-transition-group"
 import { Router, Route, IndexRoute, Link, hashHistory } from "react-router"
 import { Form, FormGroup, FormControl, ControlLabel } from "react-bootstrap"
 
+import NavbarApp from "components/NavbarApp"
+import AuthApp from "components/AuthApp"
+
 import ItemDisplayApp from "components/ItemDisplayApp"
 import ItemManageApp from "components/ItemManageApp"
 import OrderManageApp from "components/OrderManageApp"
 import AccountApp from "components/AccountApp"
-import NavbarApp from "components/NavbarApp"
 import SocialApp from "components/SocialApp"
 import CheckoutApp from "components/CheckoutApp"
 import CompleteLocalApp from "components/CompleteLocalApp"
@@ -30,6 +32,7 @@ class App extends React.Component {
     return (
       <div className={styles.app}>
         <NavbarApp />
+        <AuthApp />
         <ReactCSSTransitionGroup
           component="div"
           className={styles.appContent}

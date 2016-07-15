@@ -27,7 +27,9 @@ export default class AccountApp extends React.Component {
   constructor(props) {
     super(props);
     
-    this.state = getStateFromStores();
+    this.state = {
+      user: AuthStore.getUser()
+    };
   }
   
   /**
