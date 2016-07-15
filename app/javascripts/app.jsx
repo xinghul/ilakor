@@ -20,7 +20,7 @@ import SocialApp from "components/SocialApp"
 import CheckoutApp from "components/CheckoutApp"
 import CompleteLocalApp from "components/CompleteLocalApp"
 
-import SingleRangeSlider from "lib/SingleRangeSlider"
+import SidePanel from "lib/SidePanel"
 
 import styles from "main/app.scss"
 
@@ -54,12 +54,19 @@ class IndexApp extends React.Component {
   
   render() {
     let style = {
-      margin: "40px"
+      display: "flex",
+      flexDirection: "row",
+      height: "100%"
+    };
+    
+    let contentStyle = {
+      height: "100%",
+      flex: "1",
+      backgroundColor: "grey"
     };
     
     return (
-      <div style={style}>
-      </div>
+      null
     );
   }
 };

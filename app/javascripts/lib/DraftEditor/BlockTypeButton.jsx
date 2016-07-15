@@ -4,7 +4,7 @@ import React from "react"
 import _ from "lodash"
 
 import GhostButton from "lib/GhostButton"
-import FontAwesomeButton from "lib/FontAwesomeButton"
+import IconButton from "lib/IconButton"
 
 import styles from "lib/DraftEditor/BlockTypeButton.scss"
 
@@ -19,7 +19,7 @@ export default class BlockTypeButton extends React.Component {
   
   /**
    * @private
-   * Event handler for FontAwesomeButton's 'onMouseDown' event.
+   * Event handler for IconButton's 'onMouseDown' event.
    * 
    * @param  {Object} evt the emitted event.
    */
@@ -44,7 +44,7 @@ export default class BlockTypeButton extends React.Component {
     
     let buttonContent = do {
       if (_.isEmpty(this.props.type.label)) {
-        <FontAwesomeButton 
+        <IconButton 
           icon={this.props.type.icon} 
           onMouseDown={this.onToggle}
           theme={theme}

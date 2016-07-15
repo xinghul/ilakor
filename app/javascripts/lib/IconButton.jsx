@@ -5,9 +5,9 @@ import FontAwesome from "react-fontawesome"
 
 import GhostButton from "lib/GhostButton"
 
-import styles from "lib/FontAwesomeButton.scss"
+import styles from "lib/IconButton.scss"
 
-export default class FontAwesomeButton extends React.Component {
+export default class IconButton extends React.Component {
   
   constructor(props) {
     super(props);
@@ -27,14 +27,14 @@ export default class FontAwesomeButton extends React.Component {
   }
 }
 
-FontAwesomeButton.propTypes = {
+IconButton.propTypes = {
   icon: React.PropTypes.string,
   inverse: React.PropTypes.bool,
   onClick: React.PropTypes.func,
   onMouseDown: React.PropTypes.func
 };
 
-FontAwesomeButton.defaultProps = {
+IconButton.defaultProps = {
   icon: "circle",
   inverse: false,
   onClick: function() {},
