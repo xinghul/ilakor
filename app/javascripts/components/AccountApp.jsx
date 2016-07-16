@@ -3,6 +3,7 @@
 import React from "react"
 import _ from "lodash"
 import invariant from "invariant"
+import { hashHistory } from "react-router"
 
 import AuthStore from "stores/AuthStore"
 
@@ -58,9 +59,9 @@ export default class AccountApp extends React.Component {
    * @inheritdoc
    */
   render() {
-    
+      
     return (
-      <div></div>
+      <div>Hello</div>
     );
     
   }
