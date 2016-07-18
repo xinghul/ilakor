@@ -139,9 +139,8 @@ export default class SignupApp extends React.Component {
         </Form>
         <AlertMessage 
           ref="alert"
-          alertMessage={this.state.errorMessage} 
           alertStyle="danger" 
-        />
+        >{this.state.errorMessage}</AlertMessage>
         <SubmitButton
           theme="success"
           disabled={disabled}

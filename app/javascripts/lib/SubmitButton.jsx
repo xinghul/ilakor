@@ -2,7 +2,7 @@
 
 import React from "react"
 
-import BaseSpinner from "lib/BaseSpinner"
+import LoadSpinner from "lib/LoadSpinner"
 import GhostButton from "lib/GhostButton"
 
 import styles from "lib/SubmitButton.scss"
@@ -31,7 +31,7 @@ export default class SubmitButton extends React.Component {
         bsSize="large" 
       >
         <div hidden={!this.props.isSubmitting} className={styles.spinner}>
-          <BaseSpinner text={this.props.submitText} />
+          <LoadSpinner text={this.props.submitText} />
         </div>
         <div hidden={this.props.isSubmitting}>
           {this.props.children}

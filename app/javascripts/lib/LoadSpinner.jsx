@@ -3,22 +3,33 @@
 import React from "react"
 import _ from "lodash"
 
-import styles from "lib/BaseSpinner.scss"
+import styles from "lib/LoadSpinner.scss"
 
-export default class BaseSpinner extends React.Component {
+export default class LoadSpinner extends React.Component {
   
+  /**
+   * @inheritdoc
+   */
   constructor(props) {
     super(props);
   }
   
+  /**
+   * @inheritdoc
+   */
   render() {
+    
+    let classNames = [ styles.loadSpinner ];
+    
+    // push in additional className 
+    classNames.push(this.props.className);
     
     let style = {
       display: _.isEmpty(this.props.text) ? "none" : "inline-block"
     };
     
     return (
-      <div className={styles.baseSpinner} {...this.props}>
+      <div className={classNames.join(' ')}>
         <div style={style} className={styles.spinnerText}>{this.props.text}</div>
         <div className={styles.spinner}></div>
       </div>
@@ -27,11 +38,11 @@ export default class BaseSpinner extends React.Component {
   }
 }
 
-BaseSpinner.propTypes = {
+LoadSpinner.propTypes = {
   text: React.PropTypes.string
 };
 
-BaseSpinner.defaultProps = {
+LoadSpinner.defaultProps = {
   text: ""
 };
 

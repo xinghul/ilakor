@@ -238,10 +238,9 @@ export default class AddItemForm extends React.Component {
         </Row>
         <AlertMessage
           ref="alert"
-          alertMessage="Empty and/or invalid fields in the form."
           alertStyle="danger"
           hiddenInitially={true}
-        />
+        >Empty and/or invalid fields in the form.</AlertMessage>
         <Row>
           <Col xs={12} md={12}>
             {submitButton}

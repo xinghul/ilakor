@@ -62,13 +62,21 @@ export default class SidePanel extends React.Component {
    */
   render() {
     
+    let classNames = [ styles.sidePanel ];
+    
+    if (this.props.align === "middle") {
+      classNames.push(styles.alignMiddle);
+    } else if (this.props.align === "top") {
+      classNames.push(styles.alignTop);
+    }
+    
     let style = {
       position: this.props.position,
       left: this.state.collapsed ? "-190px" : ""
     };
     
     return (
-      <div style={style} className={styles.sidePanel}>
+      <div style={style} className={classNames.join(' ')}>
         {this.createCollapseButtonJsx()}
         <div className={styles.panelContent}>
           {this.props.children}
@@ -80,10 +88,12 @@ export default class SidePanel extends React.Component {
 
 SidePanel.propTypes = {
   position: React.PropTypes.oneOf(["absolute", "fixed", "relative"]),
+  align: React.PropTypes.oneOf(["middle", "top"]),
   collapsible: React.PropTypes.bool
 };
 
 SidePanel.defaultProps = {
   position: "relative",
+  align: "middle",
   collapsible: false
 };

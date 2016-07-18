@@ -19,17 +19,17 @@ export default class GhostButton extends React.Component {
    */
   render() {
     
-    let className = [ styles.ghostButton ];
+    let classNames = [ styles.ghostButton ];
     
     // push in additional className 
-    className.push(this.props.className);
+    classNames.push(this.props.className);
     
-    className.push(styles[this.props.theme]);
+    classNames.push(styles[this.props.theme]);
     
     return (
       <Button 
         {...this.props}
-        className={className.join(' ')}
+        className={classNames.join(' ')}
       >
         {this.props.children}
       </Button>

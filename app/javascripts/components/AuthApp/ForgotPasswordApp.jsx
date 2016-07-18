@@ -80,9 +80,8 @@ export default class ForgotPasswordApp extends React.Component {
       <div className={styles.forgotPasswordApp}>
         <AlertMessage 
           ref="alert"
-          alertMessage={this.state.message} 
           alertStyle="success" 
-        />
+        >{this.state.message}</AlertMessage>
         <div hidden={!_.isEmpty(this.state.message)}>
           <EmailInput
             value={this.state.email} 

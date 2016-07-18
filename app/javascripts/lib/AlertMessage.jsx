@@ -43,8 +43,13 @@ export default class AlertMessage extends React.Component {
    */
   render() {
     
+    let classNames = [ styles.alertMessage ];
+    
+    // push in additional className 
+    classNames.push(this.props.className);
+    
     let showAlert = this.state.showAlert && 
-                    !_.isEmpty(this.props.alertMessage);
+                    !_.isEmpty(this.props.children);
                     
     let alertStyle = {
       opacity: showAlert ? "1" : "",
@@ -52,9 +57,9 @@ export default class AlertMessage extends React.Component {
     };
     
     return (
-      <div style={alertStyle} className={styles.alertMessage}>
+      <div style={alertStyle} className={classNames.join(' ')}>
         <Alert bsStyle={this.props.alertStyle} onDismiss={this._onDismiss}>
-          <p>{this.props.alertMessage}</p>
+          {this.props.children}
         </Alert>
       </div>
     );
@@ -62,13 +67,11 @@ export default class AlertMessage extends React.Component {
 }
 
 AlertMessage.propTypes = {
-  alertMessage: React.PropTypes.string,
   alertStyle: React.PropTypes.oneOf(["success", "warning", "danger", "info"]),
   hiddenInitially: React.PropTypes.bool
 };
 
 AlertMessage.defaultProps = {
-  alertMessage: "",
   alertStyle: "info",
   hiddenInitially: false
 };
