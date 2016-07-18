@@ -49,8 +49,6 @@ export default class CheckoutApp extends React.Component {
     ShoppingCartStore.removeChangeListener(this._onChange);
   }
   
-  _alertMessage = null;
-
   _onChange = () => {
     this.setState(getStateFromStores());
   };
@@ -88,7 +86,7 @@ export default class CheckoutApp extends React.Component {
         errorMessage: message
       });
       
-      this._alertMessage.show();
+      this.refs["alert"].show();
     })
     .finally(() => {
       this.setState({
@@ -156,9 +154,9 @@ export default class CheckoutApp extends React.Component {
     return (
       <div>
         {this.createSummary()}
-        <AlertMessage alertMessage={this.state.errorMessage} alertStyle="danger" ref={(component) => {
-          this._alertMessage = component;
-        }}/>
+        <AlertMessage ref="alert" alertStyle="danger">
+          {this.state.errorMessage}
+        </AlertMessage>
         <PaymentApp
           amount={this.state.totalPrice}
           handlePayment={this.handlePayment}

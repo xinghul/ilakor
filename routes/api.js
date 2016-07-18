@@ -162,10 +162,16 @@ router.route("/orders")
  */
 .all(function(req, res, next) {
 
-  let orderId = req.query.id || req.params.id;
+  let orderId = req.query.id || req.params.id
+  ,   userId = req.query.user;
   
   if (_.isString(orderId)) {
     req.orderId = orderId;
+  }
+  
+  // used when getting orders for specific user
+  if (_.isString(userId)) {
+    req.userId = userId;
   }
   
   next();
@@ -175,9 +181,11 @@ router.route("/orders")
  */
 .get(function(req, res, next) {
   
-  let orderId = req.orderId;
+  let orderId = req.orderId
+  ,   userId = req.userId;
   
   if (_.isString(orderId)) {
+    
     Order.get(orderId).then(function(order) {
       res.status(200).json(order);
     }).catch(function(err) {
@@ -185,7 +193,19 @@ router.route("/orders")
       
       next(new CustomError(500, "Internal error"));
     });
+    
+  } else if (_.isString(userId)) {
+    
+    Order.getAllByUserId(userId).then(function(orders) {
+      res.status(200).json(orders);
+    }).catch(function(err) {
+      console.log(err.stack);
+      
+      next(new CustomError(500, "Internal error"));
+    });
+    
   } else {
+    
     Order.getAll().then(function(orders) {
       res.status(200).json(orders);
     }).catch(function(err) {
@@ -193,6 +213,7 @@ router.route("/orders")
       
       next(new CustomError(500, "Internal error"));
     });
+    
   }
 
 })

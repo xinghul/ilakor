@@ -82,9 +82,8 @@ export default class ResetPasswordApp extends React.Component {
         <div className={styles.formContent}>
           <label className={styles.formTitle}>Reset password</label>
           <AlertMessage 
-            alertMessage={this.state.message} 
             alertStyle="success" 
-          />
+          >{this.state.message}</AlertMessage>
           <div hidden={showSuccessMessage}>
             <PasswordInput value={this.state.password} disabled={this.state.isSubmitting} isRegister={true} handleChange={this.handlePasswordChange} />
             <SubmitButton
