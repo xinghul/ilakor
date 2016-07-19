@@ -2,6 +2,8 @@
 
 import request from "superagent-bluebird-promise"
 import Promise from "bluebird"
+import _ from "lodash"
+import invariant from "invariant"
 
 import AppDispatcher from "dispatcher/AppDispatcher"
 import ItemManageConstants from "constants/ItemManageConstants"
@@ -15,11 +17,19 @@ let ItemManageAction = {
    */
   getItems: function() {
     
+    // mark as loading
+    AppDispatcher.handleAction({
+      actionType: ItemManageConstants.SETS_IS_LOADING,
+      isLoading: true
+    });
+    
     return new Promise(function(resolve, reject) {
       
       request.get("/api/items")
-        .then(function(res) {
+        .then((res) => {
           let items = res.body;
+          
+          invariant(_.isArray(items), `getItems() expects response.body to be 'array', but gets '${typeof items}'.`);
           
           AppDispatcher.handleAction({
             actionType: ItemManageConstants.RECEIVED_ITEMS_RESET,
@@ -28,8 +38,20 @@ let ItemManageAction = {
           
           resolve();
         })
-        .catch(function(err) {
-          reject(err);
+        .catch((err) => {
+          let message = err.message;
+          
+          invariant(_.isString(message), `getItems() expects error.message to be 'string', but gets '${typeof message}'.`);
+          
+          reject(message);
+        })
+        .finally(() => {
+          
+          AppDispatcher.handleAction({
+            actionType: ItemManageConstants.SETS_IS_LOADING,
+            isLoading: false
+          });
+          
         });
       
     });
