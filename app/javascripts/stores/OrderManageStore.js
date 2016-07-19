@@ -8,7 +8,8 @@ import OrderManageConstants from "constants/OrderManageConstants"
 
 const CHANGE_EVENT = "change";
 
-let _orders = [];
+let _orders = []
+,   _isLoading = false;
 
 let OrderManageStore = _.extend({}, EventEmitter.prototype, {
 
@@ -37,6 +38,24 @@ let OrderManageStore = _.extend({}, EventEmitter.prototype, {
   emitChange: function() {
     this.emit(CHANGE_EVENT);
   },
+  
+  /**
+   * Sets the isLoading flag.
+   * 
+   * @param  {Boolean} isLoading the new isLoading value.
+   */
+  setIsLoading: function(isLoading) {
+    _isLoading = isLoading;
+  },
+
+  /**
+   * Returns the isLoading flag.
+   * 
+   * @return {Boolean}
+   */
+  getIsLoading: function() {
+    return _isLoading;
+  },
 
   addChangeListener: function(callback) {
     this.on(CHANGE_EVENT, callback);
@@ -60,6 +79,11 @@ OrderManageStore.dispatchToken = AppDispatcher.register(function(payload) {
       
     case OrderManageConstants.RECEIVED_UPDATED_ORDER:
       OrderManageStore.updateOrder(action.order);
+      OrderManageStore.emitChange();
+      break;
+      
+    case OrderManageConstants.SETS_IS_LOADING:
+      OrderManageStore.setIsLoading(action.isLoading);
       OrderManageStore.emitChange();
       break;
 

@@ -6,8 +6,22 @@ import invariant from "invariant"
 import { Table } from "react-bootstrap"
 
 import GridSection from "lib/GridSection"
+import LoadSpinner from "lib/LoadSpinner"
+
+import ItemManageStore from "stores/ItemManageStore"
 
 import styles from "components/ItemManageApp/ItemListTable.scss"
+
+/**
+ * Gets the new state from subscribed stores.
+ * 
+ * @return {Object}
+ */
+function getStateFromStores() {
+  return {
+    isLoading: ItemManageStore.getIsLoading()
+  };
+}
 
 export default class ItemListTable extends React.Component {
   
@@ -15,8 +29,32 @@ export default class ItemListTable extends React.Component {
    * @inheritdoc
    */
   constructor(props) {
-    super(props);    
+    super(props);
+    
+    this.state = getStateFromStores();
   }
+  
+  /**
+   * @inheritdoc
+   */
+  componentDidMount() {
+    ItemManageStore.addChangeListener(this._onChange);
+  }
+  
+  /**
+   * @inheritdoc
+   */
+  componentWillUnmount() {
+    ItemManageStore.removeChangeListener(this._onChange);
+  }
+  
+  /**
+   * @private
+   * Handler for when subscribed stores emit 'change' event.
+   */
+  _onChange = () => {
+    this.setState(getStateFromStores());
+  };
   
   /**
    * @private
@@ -62,11 +100,16 @@ export default class ItemListTable extends React.Component {
    * @inheritdoc
    */
   render() {
-    let itemListTable = this._renderItemListTable();
     
     return (
       <GridSection title="Items" className={styles.itemListTable}>
-        {itemListTable}
+        {do {
+          if (this.state.isLoading) {
+            <LoadSpinner className={styles.loadSpinner} />;
+          } else {
+            this._renderItemListTable();
+          }
+        }}
       </GridSection>
     )
   }

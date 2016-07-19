@@ -10,7 +10,8 @@ const CHANGE_EVENT = "change";
 
 // items and tags in this store
 let _items = []
-,   _tags  = [];
+,   _tags  = []
+,   _isLoading = false;
 
 let ItemManageStore = _.extend({}, EventEmitter.prototype, {
   
@@ -59,6 +60,24 @@ let ItemManageStore = _.extend({}, EventEmitter.prototype, {
   getTags: function() {
     return _tags;
   },
+  
+  /**
+   * Sets the isLoading flag.
+   * 
+   * @param  {Boolean} isLoading the new isLoading value.
+   */
+  setIsLoading: function(isLoading) {
+    _isLoading = isLoading;
+  },
+
+  /**
+   * Returns the isLoading flag.
+   * 
+   * @return {Boolean}
+   */
+  getIsLoading: function() {
+    return _isLoading;
+  },
 
   emitChange: function() {
     this.emit(CHANGE_EVENT);
@@ -100,6 +119,11 @@ ItemManageStore.dispatchToken = AppDispatcher.register(function(payload) {
       
     case ItemManageConstants.RECEIVED_ALL_TAGS:
       ItemManageStore.setTags(action.tags);
+      ItemManageStore.emitChange();
+      break;
+      
+    case ItemManageConstants.SETS_IS_LOADING:
+      ItemManageStore.setIsLoading(action.isLoading);
       ItemManageStore.emitChange();
       break;
 

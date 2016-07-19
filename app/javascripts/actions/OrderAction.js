@@ -65,13 +65,19 @@ let OrderAction = {
    */
   getOrders: function() {
     
+    // mark as loading
+    AppDispatcher.handleAction({
+      actionType: OrderManageConstants.SETS_IS_LOADING,
+      isLoading: true
+    });
+    
     return new Promise(function(resolve, reject) {
       
       request.get("/api/orders")
         .then(function(res) {
           let orders = res.body;
           
-          invariant(_.isArray(orders), `OrderAction.getOrders() expects an array, but gets '${typeof orders}'.`)
+          invariant(_.isArray(orders), `getOrders() expects response.body to be an array, but gets '${typeof orders}'.`)
           
           AppDispatcher.handleAction({
             actionType: OrderManageConstants.RECEIVED_ORDERS,
@@ -80,10 +86,20 @@ let OrderAction = {
           
           resolve();
         })
-        .catch(function(err) {
-          invariant(_.isString(err.message), `OrderAction.getOrders() expects a string as error message, but gets '${typeof message}'.`)
+        .catch((err) => {
+          let message = err.message;
           
-          reject(err);
+          invariant(_.isString(message), `getOrders() expects error.message to be 'string', but gets '${typeof message}'.`);
+          
+          reject(message);
+        })
+        .finally(() => {
+          
+          AppDispatcher.handleAction({
+            actionType: OrderManageConstants.SETS_IS_LOADING,
+            isLoading: false
+          });
+          
         });
 
     });

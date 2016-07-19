@@ -8,5 +8,7 @@ export default keyMirror({
   RECEIVED_REMOVED_ITEM_ID: null,
   RECEIVED_UPDATED_ITEM: null,
   
-  RECEIVED_ALL_TAGS: null
+  RECEIVED_ALL_TAGS: null,
+  
+  SETS_IS_LOADING: null
 });
