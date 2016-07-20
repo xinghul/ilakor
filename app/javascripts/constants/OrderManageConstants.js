@@ -1,10 +1,10 @@
 "use strict";
 
-import keyMirror from "fbjs/lib/keyMirror";
+import FluxConstant from "flux-constant"
 
-export default keyMirror({
-  RECEIVED_ORDERS: null,
-  RECEIVED_UPDATED_ORDER: null,
+export default FluxConstant.set([
+  "RECEIVED_ORDERS",
+  "RECEIVED_UPDATED_ORDER",
   
-  SETS_IS_LOADING: null
-});
+  "SETS_IS_LOADING"
+]);

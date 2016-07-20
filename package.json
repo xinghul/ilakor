@@ -31,6 +31,7 @@
     "fb": "1.1.1",
     "fbjs": "0.8.3",
     "flux": "2.1.1",
+    "flux-constant": "1.1.2",
     "gulp": "3.9.1",
     "history": "3.0.0",
     "imagemin": "5.2.2",

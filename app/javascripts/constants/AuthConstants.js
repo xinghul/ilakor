@@ -1,8 +1,8 @@
 "use strict";
 
-import keyMirror from "fbjs/lib/keyMirror";
+import FluxConstant from "flux-constant"
 
-export default keyMirror({
-  RECEIVED_USER: null,
-  SET_MODAL_OPEN: null
-});
+export default FluxConstant.set([
+  "RECEIVED_USER",
+  "SET_MODAL_OPEN"
+]);

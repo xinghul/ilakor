@@ -1,11 +1,11 @@
 "use strict";
 
-import keyMirror from "fbjs/lib/keyMirror";
+import FluxConstant from "flux-constant"
 
-export default keyMirror({
-  ADD_TO_CART: null,
-  REMOVE_FROM_CART: null,
+export default FluxConstant.set([
+  "ADD_TO_CART",
+  "REMOVE_FROM_CART",
   
-  SET_ITEM_COUNT: null,
-  CLEAR_CART: null
-});
+  "SET_ITEM_COUNT",
+  "CLEAR_CART"
+]);

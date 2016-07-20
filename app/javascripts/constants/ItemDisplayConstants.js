@@ -1,13 +1,13 @@
 "use strict";
 
-import keyMirror from "fbjs/lib/keyMirror";
+import FluxConstant from "flux-constant"
 
-export default keyMirror({
-  RECEIVED_ITEMS: null,
-  CLEAR_ITEMS: null,
+export default FluxConstant.set([
+  "RECEIVED_ITEMS",
+  "CLEAR_ITEMS",
   
-  NO_MORE_ITEMS: null,
+  "NO_MORE_ITEMS",
   
-  ADD_FILTER: null,
-  REMOVE_FILTER: null
-});
+  "ADD_FILTER",
+  "REMOVE_FILTER"
+]);
