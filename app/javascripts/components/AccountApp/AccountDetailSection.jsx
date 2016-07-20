@@ -19,6 +19,34 @@ export default class AccountDetailSection extends React.Component {
   }
   
   /**
+   * @private
+   * Renders the account detail section.
+   * 
+   * @return {JSX}
+   */
+  _renderAccountDetailSection() {
+    return (
+      <GridSection title="Account detail">
+        <BaseInfo label="User" icon="user" text={user.username} />
+        <BaseInfo label="Email" icon="envelope" text={user.email} />
+      </GridSection>
+    );
+  }
+  
+  /**
+   * @private
+   * Renders the account detail section.
+   * 
+   * @return {JSX}
+   */
+  _renderSocialAccountsSection() {
+    return (
+      <GridSection title="Social accounts">
+      </GridSection>
+    );
+  }
+  
+  /**
    * @inheritdoc
    */
   render() {
@@ -26,10 +54,10 @@ export default class AccountDetailSection extends React.Component {
     let user = this.props.user;
     
     return (
-      <GridSection title="Account detail" className={styles.accountDetailSection}>
-        <BaseInfo label="User" icon="user" text={user.username} />
-        <BaseInfo label="Email" icon="envelope" text={user.email} />
-      </GridSection>
+      <div className={styles.accountDetailSection}>
+        {this._renderAccountDetailSection()}
+        {this._renderSocialAccountsSection()}
+      </div>
     );
   }
 }

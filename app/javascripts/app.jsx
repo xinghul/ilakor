@@ -9,7 +9,6 @@ import React from "react"
 import { render } from "react-dom"
 import ReactCSSTransitionGroup from "react-addons-css-transition-group"
 import { Router, Route, IndexRoute, Link, hashHistory } from "react-router"
-import { Form, FormGroup, FormControl, ControlLabel } from "react-bootstrap"
 
 import NavbarApp from "components/NavbarApp"
 import AuthApp from "components/AuthApp"

@@ -78,14 +78,24 @@ module.exports = {
       callbackURL      : configAuth.facebookAuth.callbackURL,
       passReqToCallback: true,
       profileFields    : ["id", "emails", "photos", "name"]
-    }, function (req, token, refreshToken, profile, done) {
+    }, (req, token, refreshToken, profile, done) => {
+      
+      // get the values
+      let email = profile.emails[0].value
+      ,   photo = profile.photos[0].value
+      ,   facebookInfo = {
+        id: profile.id,
+        token: token,
+        fullname: profile.name.givenName + ' ' + profile.name.familyName,
+        nickname: profile.name.givenName
+      };
 
-      process.nextTick(function () {
+      process.nextTick(() => {
         // check if the user has logged in
         if (!req.user) {
           
           // find the user in the database based on their facebook id
-          User.findOne({ "facebook.id" : profile.id }, function (err, user) {
+          User.findOne({ "facebook.id" : facebookInfo.id }, (err, user) => {
 
             // if there is an error, stop everything and return that
             // ie an error connecting to the database
@@ -107,17 +117,9 @@ module.exports = {
               });
               
             } else {
-
-              let email = profile.emails[0].value
-              ,   facebookInfo = {
-                id: profile.id,
-                token: token,
-                fullname: profile.name.givenName + ' ' + profile.name.familyName,
-                nickname: profile.name.givenName
-              };
               
               UserApi.getByEmail(email)
-              .then(function(user) {
+              .then((user) => {
                 
                 if (_.isEmpty(user)) {
                   let newUser = new User();
@@ -125,7 +127,7 @@ module.exports = {
                   _.assign(newUser, {
                     email: email,
                     username: facebookInfo.nickname,
-                    photo: profile.photos[0].value,
+                    photo: photo,
                     facebook: facebookInfo
                   });
                                     
@@ -135,7 +137,7 @@ module.exports = {
                 } else {
                   
                   _.assign(user, {
-                    photo: profile.photos[0].value,
+                    photo: photo,
                     facebook: facebookInfo
                   });
                   
@@ -149,7 +151,7 @@ module.exports = {
                   return user;
                 });
               })
-              .then(function(user) {
+              .then((user) => {
                 return done(null, user);
               })
               .catch((err) => {
@@ -160,20 +162,14 @@ module.exports = {
 
           });
         } else {
-          let user = req.user
-          ,   facebookInfo = {
-            id: profile.id,
-            token: token,
-            fullname: profile.name.givenName + ' ' + profile.name.familyName,
-            nickname: profile.name.givenName
-          };
+          let user = req.user;
           
           if (_.isEmpty(user.email)) {
             return done(new Error("User needs to log in using email."))
           }
           
           _.assign(user, {
-            photo: profile.photos[0].value,
+            photo: photo,
             facebook: facebookInfo
           });
           

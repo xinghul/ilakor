@@ -23,9 +23,17 @@ let ItemManageAction = {
       isLoading: true
     });
     
+    let sampleQuery = {
+      price: {
+        "$gt": 3100,
+        "$lt": "3400"
+      }
+    };
+    
     return new Promise(function(resolve, reject) {
       
       request.get("/api/items")
+        // .query({query: sampleQuery})
         .then((res) => {
           let items = res.body;
           

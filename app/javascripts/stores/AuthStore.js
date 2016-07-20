@@ -20,7 +20,7 @@ let AuthStore = _.extend({}, EventEmitter.prototype, {
    * @param  {Object} user the new user value.
    */
   setUser: function(user) {
-    invariant(_.isObject(user), `AuthStore.setUser() expects an object as 'user', but gets '${typeof user}'.`);
+    invariant(_.isObject(user), `setUser(user) expects an object as 'user', but gets '${typeof user}'.`);
     
     _user = user;
   },
@@ -39,7 +39,9 @@ let AuthStore = _.extend({}, EventEmitter.prototype, {
    * @param  {Boolean} isModalOpen the new value.
    */
   setIsModalOpen: function(isModalOpen) {
-    invariant(_.isBoolean(isModalOpen), `AuthStore.setIsModalOpen() expects a boolean as 'isModalOpen', but gets '${typeof isModalOpen}'.`);
+    invariant(_.isBoolean(isModalOpen), `setIsModalOpen(isModalOpen) expects a boolean as 'isModalOpen', but gets '${typeof isModalOpen}'.`);
+    
+    invariant(_isModalOpen !== isModalOpen, `setIsModalOpen(isModalOpen) can't be called with same value.`);
 
     _isModalOpen = isModalOpen;
   },
@@ -54,7 +56,7 @@ let AuthStore = _.extend({}, EventEmitter.prototype, {
   },
   
   /**
-   * Emits 'change' event.
+   * Emits the 'change' event.
    */
   emitChange: function() {
     this.emit(CHANGE_EVENT);
@@ -69,7 +71,9 @@ let AuthStore = _.extend({}, EventEmitter.prototype, {
     this.on(CHANGE_EVENT, callback);
     
     // emit change right away
-    // log in from cookie is too fast
+    // sometimes log in from cookie happens before the apps register to the AuthStore 
+    // therefore they will not receive the 'change' events from logging in from cookie
+    // and result in an empty user
     this.emitChange();
   },
 

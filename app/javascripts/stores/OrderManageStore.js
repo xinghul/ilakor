@@ -1,6 +1,7 @@
 "use strict";
 
 import _ from "lodash"
+import invariant from "invariant"
 import { EventEmitter } from "events"
 
 import AppDispatcher from "dispatcher/AppDispatcher"
@@ -12,16 +13,35 @@ let _orders = []
 ,   _isLoading = false;
 
 let OrderManageStore = _.extend({}, EventEmitter.prototype, {
-
-  setOrders: function(orders) {
-    _orders = orders;
+  
+  /**
+   * Sets the orders.
+   * 
+   * @param  {Array} newOrders the new orders.
+   */
+  setOrders: function(newOrders) {
+    invariant(_.isArray(newOrders), `setOrders(newOrders) expects an 'array' as 'newOrders', but gets '${typeof newOrders}'.`);
+    
+    _orders = newOrders;
   },
 
+  /**
+   * Returns the orders.
+   *
+   * @return {Array}
+   */
   getOrders: function() {
     return _orders;
   },
   
+  /**
+   * Updates a specific order with new config.
+   * 
+   * @param  {Object} newOrder the new order config.
+   */
   updateOrder: function(newOrder) {
+    invariant(_.isObject(newOrder), `updateOrder(newOrder) expects an 'object' as 'newOrder', but gets '${typeof newOrder}'.`);
+    
     let id = newOrder._id;
     
     for (let order of _orders)
@@ -34,10 +54,6 @@ let OrderManageStore = _.extend({}, EventEmitter.prototype, {
       }
     }
   },
-
-  emitChange: function() {
-    this.emit(CHANGE_EVENT);
-  },
   
   /**
    * Sets the isLoading flag.
@@ -45,6 +61,10 @@ let OrderManageStore = _.extend({}, EventEmitter.prototype, {
    * @param  {Boolean} isLoading the new isLoading value.
    */
   setIsLoading: function(isLoading) {
+    invariant(_.isBoolean(isLoading), `setIsLoading(isLoading) expects a 'boolean' as 'isLoading', but gets '${typeof isLoading}'.`);
+    
+    invariant(_isLoading !== isLoading, `setIsLoading(isLoading) can't be called with same value.`);
+    
     _isLoading = isLoading;
   },
 
@@ -55,12 +75,29 @@ let OrderManageStore = _.extend({}, EventEmitter.prototype, {
    */
   getIsLoading: function() {
     return _isLoading;
+  },  
+  
+  /**
+   * Emits the 'change' event.
+   */
+  emitChange: function() {
+    this.emit(CHANGE_EVENT);
   },
 
+  /**
+   * Subscribes a callback to the 'change' event.
+   * 
+   * @param  {Function} callback the callback to add.
+   */
   addChangeListener: function(callback) {
     this.on(CHANGE_EVENT, callback);
   },
 
+  /**
+   * Unsubscribes a callback from the 'change' event.
+   * 
+   * @param  {Function} callback the callback to remove.
+   */
   removeChangeListener: function(callback) {
     this.removeListener(CHANGE_EVENT, callback);
   }
