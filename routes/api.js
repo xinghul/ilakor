@@ -64,7 +64,8 @@ router.route("/items")
   
   let itemId = req.itemId
   ,   limit
-  ,   skip;
+  ,   skip
+  ,   query;
   
   if (_.isString(itemId)) {
     Item.get(itemId).then(function(item) {
@@ -77,8 +78,9 @@ router.route("/items")
   } else {
     limit = req.query.limit || req.params.limit;
     skip = req.query.skip || req.params.skip;
+    query = req.query.query || req.params.query;
     
-    Item.getAll(skip, limit).then(function(items) {
+    Item.getAll(skip, limit, query).then(function(items) {
       res.status(200).json(items);
     }).catch(function(err) {
       console.log(err.stack);

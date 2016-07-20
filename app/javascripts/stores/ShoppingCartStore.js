@@ -1,15 +1,20 @@
 "use strict";
 
 import _ from "lodash"
+import invariant from "invariant"
 import { EventEmitter } from "events"
 
-import AppDispatcher from "../dispatcher/AppDispatcher"
-import ShoppingCartConstants from "../constants/ShoppingCartConstants"
+import AppDispatcher from "dispatcher/AppDispatcher"
+import ShoppingCartConstants from "constants/ShoppingCartConstants"
 
 const CHANGE_EVENT = "change"
 ,     STORE_NAME   = "Cromford.cart";
 
-
+/**
+ * Returns the mock storage.
+ * 
+ * @return {Object} the mock storage object.
+ */
 function storageMock() {
   let storage = {};
 
@@ -26,6 +31,13 @@ function storageMock() {
   };
 }
 
+/**
+ * Checks if the storage type is available on current browser.
+ * 
+ * @param  {String} type the storage type.
+ *
+ * @return {Boolean}
+ */
 function storageAvailable(type) {
 	try {
 		let storage = window[type]
@@ -41,10 +53,12 @@ function storageAvailable(type) {
 	}
 }
 
-if (!storageAvailable('localStorage')) {
-  window['localStorage'] = storageMock();
+// use mock localStorage if it's not available.
+if (!storageAvailable("localStorage")) {
+  window["localStorage"] = storageMock();
 }
 
+// the shopping cart storage apis.
 let _cartStore = {
   get: function() {
     if (!_.isEmpty(localStorage.getItem(STORE_NAME))) {
@@ -54,8 +68,8 @@ let _cartStore = {
     return {};
   },
   
-  save: function(items) {
-    localStorage.setItem(STORE_NAME, JSON.stringify(items));
+  save: function(itemMap) {
+    localStorage.setItem(STORE_NAME, JSON.stringify(itemMap));
   },
   
   clear: function() {
@@ -63,96 +77,153 @@ let _cartStore = {
   }
 };
 
-function getTotalPrice(items) {
+/**
+ * Returns the total price for itemMap in the cart.
+ * 
+ * @param  {Object} itemMap the itemMap in the cart.
+ * 
+ * @return {Number}
+ */
+function getTotalPrice(itemMap) {
+  invariant(_.isObject(itemMap), `getTotalPrice(itemMap) expects an 'object' as 'itemMap', but gets '${typeof itemMap}'.`);
+  
   let totalPrice = 0;
   
-  for (let key of Object.keys(items))
+  for (let key of Object.keys(itemMap))
   {
-    totalPrice += items[key].item.price * items[key].count;
+    totalPrice += itemMap[key].item.price * itemMap[key].count;
   }
   
   return totalPrice;
 }
 
-// initialize the items from local storage
-let _items = _cartStore.get()
-,   _totlePrice = getTotalPrice(_items);
+// initialize the itemMap from local storage
+let _itemMap = _cartStore.get()
+,   _totalPrice = getTotalPrice(_itemMap);
 
 let ShoppingCartStore = _.extend({}, EventEmitter.prototype, {
   
+  /**
+   * Adds an item to cart.
+   * 
+   * @param  {Object} item the new item.
+   */
   addToCart: function(item) {
-    if (_items[item._id]) {
-      _items[item._id].count++;
+    invariant(_.isObject(item), `addToCart(item) expects an 'object' as 'item', but gets '${typeof item}'.`);
+    
+    if (_itemMap[item._id]) {
+      _itemMap[item._id].count++;
     } else {
-      _items[item._id] = {
+      _itemMap[item._id] = {
         count: 1,
         item: item
       }
     }
     
-    _cartStore.save(_items);
+    _cartStore.save(_itemMap);
   },
   
+  /**
+   * Removes one specific item from store.
+   * 
+   * @param  {String} id the id for that item.
+   */
   removeFromCart: function(id) {
-    if (_items[id]) {
-      _items[id].count--;
-      
-      if (_items[id].count === 0) {
-        delete _items[id];
-      }
-    } else {
-      throw new Error("Item specified by id " + id + " does not exists in store.");
+    invariant(_.isString(id), `removeFromCart(id) expects a 'string' as 'id', but gets '${typeof id}'.`);
+    invariant(!_.isEmpty(_itemMap[id]), `Item specified by id ${id} does not exist in store.`);
+    
+    _itemMap[id].count--;
+    
+    if (_itemMap[id].count === 0) {
+      delete _itemMap[id];
     }
     
-    _cartStore.save(_items);
+    _cartStore.save(_itemMap);
   },
   
+  /**
+   * Sets the count for specific item.
+   * 
+   * @param  {String} id    the id for the item.
+   * @param  {Number} count the new count.
+   */
   setItemCount: function(id, count) {
-    if (count < 0 || count > 9) {
-      throw new Error("Specified count is invalid: " + count);
-    }
-    
-    if (!_items[id]) {
-      throw new Error("Item specified by id " + id + " does not exists in store.");
-    }
+    invariant(_.isString(id), `setItemCount(id, count) expects 'id' to be a 'string', but gets '${typeof id}'.`);
+    invariant(_.inRange(count, 0, 10), `setItemCount(id, count) expects 'count' in range of 0 to 9, but gets '${count}'.`);    
+    invariant(!_.isEmpty(_itemMap[id]), `Item specified by id ${id} does not exist in store.`);
     
     if (count === 0) {
-      delete _items[id];
+      delete _itemMap[id];
     } else {
-      _items[id].count = count;      
+      _itemMap[id].count = count;      
     }
     
-    _cartStore.save(_items);
+    _cartStore.save(_itemMap);
   },
   
+  /**
+   * Clears the cart.
+   */
   clearCart: function() {
-    _items = {};
+    _itemMap = {};
     
-    _cartStore.save(_items);
+    _cartStore.save(_itemMap);
   },
   
+  /**
+   * Returns the itemMap.
+   * 
+   * @return {Object}
+   */
   getItems: function() {
-    return _items;
+    return _itemMap;
   },
   
+  /**
+   * Returns the total price.
+   * 
+   * @return {Number}
+   */
   getTotalPrice: function() {
-    return _totlePrice;
+    return _totalPrice;
   },
   
-  setTotalPrice: function(totlePrice) {
-    _totlePrice = totlePrice;
+  /**
+   * Sets the total price.
+   * 
+   * @param  {Number} totalPrice the new total price.
+   */
+  setTotalPrice: function(totalPrice) {
+    invariant(_.isNumber(totalPrice), `setTotalPrice(totalPrice) expects a 'number' as 'totalPrice', but gets '${typeof totalPrice}'.`);
+    
+    _totalPrice = totalPrice;
   },
-   
+
+  /**
+   * Emits the 'change' event.
+   */
   emitChange: function() {
-    this.setTotalPrice(getTotalPrice(_items));
+    // all cart operations changes the total price
+    // it's more efficient to sets the total price here
+    this.setTotalPrice(getTotalPrice(_itemMap));
     
     this.emit(CHANGE_EVENT);
   },
 
+  /**
+   * Subscribes a callback to the 'change' event.
+   * 
+   * @param  {Function} callback the callback to add.
+   */
   addChangeListener: function(callback) {
     this.on(CHANGE_EVENT, callback);
   },
 
+  /**
+   * Unsubscribes a callback from the 'change' event.
+   * 
+   * @param  {Function} callback the callback to remove.
+   */
   removeChangeListener: function(callback) {
     this.removeListener(CHANGE_EVENT, callback);
   }

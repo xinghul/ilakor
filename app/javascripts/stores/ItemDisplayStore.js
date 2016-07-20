@@ -20,7 +20,14 @@ let _items = []
 
 let ItemDisplayStore = _.extend({}, EventEmitter.prototype, {
   
+  /**
+   * Adds new items to the item list.
+   * 
+   * @param  {Array} newItems the new items.
+   */
   addItems: function(newItems) {
+    invariant(_.isArray(newItems), `addItems(newItems) expects an 'array' as 'newItems', but gets '${typeof newItems}'.`);
+    
     if (newItems.length === 0) {
       _hasMoreItems = false;
       
@@ -30,14 +37,27 @@ let ItemDisplayStore = _.extend({}, EventEmitter.prototype, {
     _items = _items.concat(newItems);
   },
   
+  /**
+   * Returns the items.
+   * 
+   * @return {Array}
+   */
   getItems: function() {
     return _items;
   },
   
+  /**
+   * Clears the items.
+   */
   clearItems: function() {
     _items = [];
   },
   
+  /**
+   * Returns a flag indicates if there's more items on server.
+   * 
+   * @return {Boolean}
+   */
   hasMoreItems: function() {
     return _hasMoreItems;
   },
@@ -59,14 +79,27 @@ let ItemDisplayStore = _.extend({}, EventEmitter.prototype, {
     return _filters;
   },
   
+  /**
+   * Emits the 'change' event.
+   */
   emitChange: function() {
     this.emit(CHANGE_EVENT);
   },
 
+  /**
+   * Subscribes a callback to the 'change' event.
+   * 
+   * @param  {Function} callback the callback to add.
+   */
   addChangeListener: function(callback) {
     this.on(CHANGE_EVENT, callback);
   },
 
+  /**
+   * Unsubscribes a callback from the 'change' event.
+   * 
+   * @param  {Function} callback the callback to remove.
+   */
   removeChangeListener: function(callback) {
     this.removeListener(CHANGE_EVENT, callback);
   }

@@ -20,7 +20,7 @@ let imageExtensionReg = new RegExp(/.+\.(gif|jpe?g|png)$/i);
  * @param {Object} item - mongoose item object.
  * @param {Array} images - image names.
  * 
- * @return {Promise} the new promise object.
+ * @return {Promise}
  */
 function uploadImages(item, images) {
   
@@ -77,7 +77,7 @@ function uploadImages(item, images) {
  *
  * @param {Array} images the images to be removed
  * 
- * @return {Promise} the new promise object.
+ * @return {Promise}
  */
 function removeImages(images) {
 
@@ -105,7 +105,7 @@ function removeImages(images) {
 /**
  * Removes local image cache specified by image names.
  *
- * @param {Array} images image names.
+ * @param {Array}
  */
 function removeImageCache(images) {
   for (let index = 0; index < images.length; index++)
@@ -123,7 +123,7 @@ let ItemApi = {
    * 
    * @param  {Object} rawData the raw data containing the new item info.
    *
-   * @return {Object} the promise object.
+   * @return {Promise}
    */
    add: function(rawData) {
      
@@ -159,7 +159,7 @@ let ItemApi = {
     * 
     * @param  {String} id the specified id.
     *
-    * @return {Promise} the new promise object.
+    * @return {Promise}
     */
    remove: function(id) {
      
@@ -196,7 +196,7 @@ let ItemApi = {
     * 
     * @param  {String} id the specified id.
     *
-    * @return {Promise} the new promise object.
+    * @return {Promise}
     */
    update: function(id, newValue) {
 
@@ -219,7 +219,7 @@ let ItemApi = {
     * 
     * @param  {String} id the specified id.
     *
-    * @return {Promise} the new promise object.
+    * @return {Promise}
     */
    get: function(id) {
      
@@ -242,27 +242,30 @@ let ItemApi = {
     *
     * @param {Number} skip the number of records to skip.
     * @param {Number} limit the limit of items to return.
+    * @param {Object} query the query for getting items.
     * 
-    * @return {Promise} the new promise object.
+    * @return {Promise}
     */
-   getAll: function(skip, limit) {
+   getAll: function(skip, limit, query) {
+     
      skip = skip || 0;
      // make it 100 for item manage app
      limit = limit || 100;
      
+     query = query || {};
+     
      return new Promise(function(resolve, reject) {
        
-       Item
-       .find({})
-       .skip(skip)
-       .limit(limit)
-       .exec(function(err, result) {
-         if (err) {
-           reject(err);
-         } else {
-           resolve(result);
-         }
-       });
+       Item.find(query)
+         .skip(skip)
+         .limit(limit)
+         .exec((err, result) => {
+           if (err) {
+             reject(err);
+           } else {
+             resolve(result);
+           }
+         });
        
      });
      
