@@ -62,19 +62,35 @@ let ItemDisplayStore = _.extend({}, EventEmitter.prototype, {
     return _hasMoreItems;
   },
   
+  /**
+   * Adds a new filter.
+   * 
+   * @param  {Object} newFilter the new filter config.
+   */
   addFilter: function(newFilter) {
-    invariant(!_filters.hasOwnProperty(newFilter.type), `${filterType} is already applied!`);
-    invariant(!_.isEmpty(newFilter.value), "filter value can not be null!");
+    invariant(_.isObject(newFilter), `addFilter(newFilter) expects an 'object' as 'newFilter', but gets '${typeof newFilter}'.`);
+    invariant(!_filters.hasOwnProperty(newFilter.type), `Filter type '${filterType}' is already applied!`);
+    invariant(!_.isEmpty(newFilter.value), "filter value can not be empty!");
     
     _filters[newFilter.type] = newFilter.value;
   },
   
+  /**
+   * Removes a specific filter.
+   * 
+   * @param  {String} filterType the specific filte type to remove.
+   */
   removeFilter: function(filterType) {
-    invariant(_filters.hasOwnProperty(filterType), `${filterType} is not applied!`);
+    invariant(_filters.hasOwnProperty(filterType), `Filter type '${filterType}' is not applied!`);
     
     delete _filters[filterType];
   },
   
+  /**
+   * Returns the applied filters.
+   * 
+   * @return {Object}
+   */
   getFilters: function() {
     return _filters;
   },

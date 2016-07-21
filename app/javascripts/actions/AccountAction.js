@@ -28,7 +28,7 @@ let AccountActions = {
       isLoading: true
     });
     
-    return new Promise(function(resolve, reject) {
+    return new Promise((resolve, reject) => {
       
       request.get("/api/orders")
         .query({ user: userId })
@@ -43,13 +43,15 @@ let AccountActions = {
           });
       
           resolve();
-        }).catch((err) => {
+        })
+        .catch((err) => {
           let message = err.message;
           
           invariant(_.isString(message), `getOrders(userId) expects error.message to be 'string', but gets '${typeof message}'.`);
           
           reject(message);
-        }).finally(() => {
+        })
+        .finally(() => {
           
           AppDispatcher.handleAction({
             actionType: AccountConstants.SETS_IS_LOADING,

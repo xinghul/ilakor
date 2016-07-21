@@ -94,7 +94,7 @@ export default class SignupApp extends React.Component {
       isSubmitting: true
     });
     
-    AuthAction.userSignUp({
+    AuthAction.signUp({
 
       username: this.state.username,
       email: this.state.email,
@@ -102,13 +102,8 @@ export default class SignupApp extends React.Component {
 
     }).then(() => {
       AuthAction.hideModal();
-    }).catch((err) => {
-      console.log(err);
-      
-      let message = err.message;
-      
-      invariant(_.isString(message), `Expect error message to be 'string', but get '${typeof message}'.`);
-      
+    }).catch((message) => {
+
       this.setState({
         errorMessage: message
       });

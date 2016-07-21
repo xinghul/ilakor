@@ -87,8 +87,8 @@ export default class CompleteLocalApp extends React.Component {
       .then(() => {
         hashHistory.push("/");
       })
-      .catch((err) => {
-        console.log(err);
+      .catch((message) => {
+        console.log(message);
       })
       .finally(() => {
         this.setState({
@@ -108,7 +108,7 @@ export default class CompleteLocalApp extends React.Component {
         <BlurMask />
         <div className={styles.formContent}>
           <label className={styles.formTitle}>Update info</label>
-          <EmailInput value={this.state.email} disabled={this.state.isSubmitting} isRegister={true} handleChange={this.handleEmailChange} />
+          <EmailInput value={this.state.email} disabled={true} isRegister={true} handleChange={this.handleEmailChange} />
           <UsernameInput value={this.state.username} disabled={this.state.isSubmitting} isRegister={true} handleChange={this.handleUsernameChange} />
           <PasswordInput value={this.state.password} disabled={this.state.isSubmitting} isRegister={true} handleChange={this.handlePasswordChange} />
           <SubmitButton

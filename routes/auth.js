@@ -11,7 +11,8 @@ let User    = require("./auth/user")
 
 let EmailService = require("./service/email");
 
-let CustomError = require("./utils/CustomError");
+let BadRequest    = require("./utils/BadRequest")
+,   InternalError = require("./utils/InternalError");
 
 router.get("/session", session.get);
 router.post("/session", session.create);
@@ -41,7 +42,7 @@ router.route("/user")
   let userId = req.userId;
   
   if (!_.isString(userId)) {
-    return next(new CustomError(400, "User id is not defined."));
+    return next(new BadRequest("User id is not defined."));
   }
 
   User.get(userId).then(function(user) {
@@ -49,7 +50,7 @@ router.route("/user")
   }).catch(function(err) {
     console.log(err.stack);
     
-    next(new CustomError(500, "Internal error."));
+    next(new InternalError());
   });
 
 })
@@ -60,7 +61,7 @@ router.route("/user")
   let rawData;
   
   if (!req.body.user) {
-    return next(new CustomError(400, "User info undefined."));
+    return next(new BadRequest("User info undefined."));
   }
   
   try {
@@ -68,7 +69,7 @@ router.route("/user")
   } catch (err) {
     console.log(err.stack);
     
-    return next(new CustomError(400, "Malformed JSON."));
+    return next(new BadRequest("Malformed JSON."));
   }
   
   User.add(rawData).then(function(newUser) {
@@ -85,7 +86,7 @@ router.route("/user")
     } else {
       console.log(err.stack);
       
-      next(new CustomError(500, "Internal error."));      
+      next(new InternalError());      
     }
   });
   
@@ -98,11 +99,11 @@ router.route("/user")
   ,   newValue = JSON.parse(req.body.user);
 
   if (!_.isString(userId)) {
-    return next(new CustomError(400, "User id is not defined."));
+    return next(new BadRequest("User id is not defined."));
   }
   
   if (!_.isObject(newValue)) {
-    return next(new CustomError(400, "New user info not specified!"));
+    return next(new BadRequest("New user info not specified!"));
   }
   
   User.update(userId, newValue).then(function(user) {
@@ -110,7 +111,7 @@ router.route("/user")
   }).catch(function(err) {
     console.log(err.stack);
     
-    next(new CustomError(500, "Internal error."));
+    next(new InternalError());
   });
 })
 /**
@@ -120,7 +121,7 @@ router.route("/user")
   let userId = req.userId;
   
   if (!_.isString(userId)) {
-    return next(new CustomError(400, "User id is not defined."));
+    return next(new BadRequest("User id is not defined."));
   }
   
   User.remove(id).then(function(removedUser) {
@@ -128,7 +129,7 @@ router.route("/user")
   }).catch(function(err) {
     console.log(err.stack);
     
-    next(new CustomError(400, "Internal error."));
+    next(new InternalError());
   });
 });
 
@@ -160,9 +161,9 @@ router.post("/forgot", function(req, res, next) {
       }
     })
     .catch(function(err) {
-      console.log(err);
+      console.log(err.stack);
       
-      next(new CustomError(400, "Internal error."));
+      next(new InternalError());
     });
 });
 
@@ -173,15 +174,15 @@ router.post("/reset", function(req, res, next) {
   User.resetPasswordWithToken(token, password)
     .then(function(user) {
       if (_.isEmpty(user)) {
-        return next(new CustomError(400, "Password reset token is invalid or has expired."));
+        return next(new BadRequest("Password reset token is invalid or has expired."));
       } else {
-        return res.status(200).json({message: "Password successfully updated."});
+        return res.status(200).end();
       }
     })
     .catch(function(err) {
-      console.log(err);
+      console.log(err.stack);
       
-      next(new CustomError(400, "Internal error."));
+      next(new InternalError());
     });
 });
 
@@ -199,14 +200,17 @@ router.get("/facebook/callback", function(req, res, next) {
   passport.authenticate("facebook", { session: true }, function(err, user) {
     if (err) {
       console.log(err);
-      return res.end("err");      
+      return next(new InternalError());
     }
     
-    req.logIn(user, function (err) {
+    req.logIn(user, (err) => {
       if (err) {
         console.log(err);
-        res.end("err");
+        return next(new InternalError());
       } else {
+        // sometimes facebook login lost cookie
+        res.cookie("user", JSON.stringify(req.user));
+        
         if (user.registerLocally) {
           res.redirect("/");          
         } else {

@@ -1,9 +1,9 @@
 "use strict";
 
 import request from "superagent-bluebird-promise"
-import Promise from "bluebird"
 import _ from "lodash"
 import invariant from "invariant"
+import Promise from "bluebird"
 
 import AppDispatcher from "dispatcher/AppDispatcher"
 import ItemManageConstants from "constants/ItemManageConstants"
@@ -13,7 +13,7 @@ let ItemManageAction = {
   /**
    * Gets all items.
    *
-   * @return {Promise} the promise object.
+   * @return {Promise}
    */
   getItems: function() {
     
@@ -30,7 +30,7 @@ let ItemManageAction = {
       }
     };
     
-    return new Promise(function(resolve, reject) {
+    return new Promise((resolve, reject) => {
       
       request.get("/api/items")
         // .query({query: sampleQuery})
@@ -70,16 +70,20 @@ let ItemManageAction = {
    * 
    * @param  {Object} newItem an object containing item info.
    *
-   * @return {Promise} the promise object.
+   * @return {Promise}
    */
   addItem: function(newItem) {
     
-    return new Promise(function(resolve, reject) {
+    invariant(_.isObject(newItem), `addItem(newItem) expects 'newItem' to be 'object', but gets '${typeof newItem}'.`);
+    
+    return new Promise((resolve, reject) => {
       
       request.post("/api/items")
-        .send({item: JSON.stringify(newItem)})
-        .then(function(res) {
+        .send({ item: JSON.stringify(newItem) })
+        .then((res) => {
           let itemAdded = res.body;
+          
+          invariant(_.isObject(itemAdded), `addItem(newItem) expects response.body to be 'object', but gets '${typeof itemAdded}'.`);
           
           AppDispatcher.handleAction({
             actionType: ItemManageConstants.RECEIVED_ITEM,
@@ -88,8 +92,12 @@ let ItemManageAction = {
           
           resolve();
         })
-        .catch(function(err) {
-          reject(err);
+        .catch((err) => {
+          let message = err.message;
+          
+          invariant(_.isString(message), `addItem(newItem) expects error.message to be 'string', but gets '${typeof message}'.`);
+          
+          reject(message);
         });
       
     }); 
@@ -105,13 +113,18 @@ let ItemManageAction = {
    */
   updateItem: function(id, newValue) {
     
-    return new Promise(function(resolve, reject) {
+    invariant(_.isString(id), `updateItem(id, newValue) expects 'id' to be 'string', but gets '${typeof id}'.`);
+    invariant(_.isObject(newValue), `updateItem(id, newValue) expects 'newValue' to be 'object', but gets '${typeof newValue}'.`);
+    
+    return new Promise((resolve, reject) => {
       
       request.put("/api/items")
-        .query({id: id})
-        .send({item: JSON.stringify(newValue)})
-        .then(function(res) {
+        .query({ id: id })
+        .send({ item: JSON.stringify(newValue) })
+        .then((res) => {
           let newItem = res.body;
+          
+          invariant(_.isObject(newItem), `updateItem(id, newValue) expects response.body to be 'object', but gets '${typeof newItem}'.`);
           
           AppDispatcher.handleAction({
             actionType: ItemManageConstants.RECEIVED_UPDATED_ITEM,
@@ -120,8 +133,12 @@ let ItemManageAction = {
           
           resolve();
         })
-        .catch(function(err) {
-          reject(err);
+        .catch((err) => {
+          let message = err.message;
+          
+          invariant(_.isString(message), `addItem(newItem) expects error.message to be 'string', but gets '${typeof message}'.`);
+          
+          reject(message);
         });
       
     });
@@ -132,15 +149,18 @@ let ItemManageAction = {
    *
    * @param  {String} id the id for this item.
    *
-   * @return {Promise} the promise object.
+   * @return {Promise}
    */
   removeItem: function(id) {
     
-    return new Promise(function(resolve, reject) {
+    invariant(_.isString(id), `removeItem(id) expects 'id' to be 'string', but gets '${typeof id}'.`);
+    
+    return new Promise((resolve, reject) => {
       
       request.del("/api/items")
-        .query({id: id})
-        .then(function(res) {
+        .query({ id: id })
+        .then((res) => {
+          
           AppDispatcher.handleAction({
             actionType: ItemManageConstants.RECEIVED_REMOVED_ITEM_ID,
             id: id
@@ -148,8 +168,12 @@ let ItemManageAction = {
           
           resolve();
         })
-        .catch(function(err) {
-          reject(err);
+        .catch((err) => {
+          let message = err.message;
+          
+          invariant(_.isString(message), `removeItem(id) expects error.message to be 'string', but gets '${typeof message}'.`);
+          
+          reject(message);
         });
       
     });
@@ -158,15 +182,17 @@ let ItemManageAction = {
   /**
    * Gets all tags.
    *
-   * @return {Promise} the promise object.
+   * @return {Promise}
    */
   getAllTags: function() {
     
-    return new Promise(function(resolve, reject) {
+    return new Promise((resolve, reject) => {
       
       request.get("/api/tags")
-        .then(function(res) {
+        .then((res) => {
           let tags = res.body;
+          
+          invariant(_.isArray(tags), `getAllTags() expects response.body to be 'array', but gets '${typeof tags}'.`);
           
           AppDispatcher.handleAction({
             actionType: ItemManageConstants.RECEIVED_ALL_TAGS,
@@ -175,8 +201,12 @@ let ItemManageAction = {
           
           resolve();
         })
-        .catch(function(err) {
-          reject(err);
+        .catch((err) => {
+          let message = err.message;
+          
+          invariant(_.isString(message), `addItem(newItem) expects error.message to be 'string', but gets '${typeof message}'.`);
+          
+          reject(message);
         });
       
     });

@@ -66,7 +66,7 @@ export default class CheckoutApp extends React.Component {
     };
     
     OrderAction.addOrder(paymentInfo, addressInfo, orderInfo)
-    .then((response) => {
+    .then((res) => {
       this.setState({
         checkoutFinish: true
       });
@@ -75,13 +75,7 @@ export default class CheckoutApp extends React.Component {
         hashHistory.push("/");
       }, 3000);
     })
-    .catch((err) => {
-      console.log(err);
-      
-      let message = err.message;
-      
-      invariant(_.isString(message), `Expect error message to be 'string', but get '${typeof message}'.`);
-      
+    .catch((message) => {      
       this.setState({
         errorMessage: message
       });

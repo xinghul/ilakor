@@ -1,5 +1,7 @@
 "use strict";
 
+let _ = require("lodash");
+
 function CustomError(status, message) {
   Error.call(this);
   

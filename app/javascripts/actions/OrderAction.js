@@ -1,9 +1,9 @@
 "use strict";
 
 import request from "superagent-bluebird-promise"
-import Promise from "bluebird"
 import _ from "lodash"
 import invariant from "invariant"
+import Promise from "bluebird"
 
 import AppDispatcher from "dispatcher/AppDispatcher"
 import ShoppingCartAction from "actions/ShoppingCartAction"
@@ -22,15 +22,19 @@ let OrderAction = {
    */
   addOrder: function(paymentInfo, addressInfo, orderInfo) {
     
-    return new Promise(function(resolve, reject) {
+    invariant(_.isObject(paymentInfo), `addOrder(paymentInfo, addressInfo, orderInfo) expects 'paymentInfo' as 'object', but gets '${typeof paymentInfo}'.`);
+    invariant(_.isObject(addressInfo), `addOrder(paymentInfo, addressInfo, orderInfo) expects 'addressInfo' as 'object', but gets '${typeof addressInfo}'.`);
+    invariant(_.isObject(orderInfo), `addOrder(paymentInfo, addressInfo, orderInfo) expects 'orderInfo' as 'object', but gets '${typeof orderInfo}'.`);
+    
+    return new Promise((resolve, reject) => {
 
       let totalPrice = orderInfo.totalPrice
       ,   items = orderInfo.items
       ,   user = orderInfo.user;
       
-      invariant(_.isNumber(totalPrice), `OrderAction.addOrder() expects a number as totalPrice.`);
-      invariant(!_.isEmpty(items), `OrderAction.addOrder() expects non-empty items.`);
-      invariant(!_.isEmpty(user), `OrderAction.addOrder() expects a non-empty user.`);
+      invariant(_.isNumber(totalPrice), `addOrder(paymentInfo, addressInfo, orderInfo) expects a number as totalPrice.`);
+      invariant(!_.isEmpty(items), `addOrder(paymentInfo, addressInfo, orderInfo) expects non-empty items.`);
+      invariant(!_.isEmpty(user), `addOrder(paymentInfo, addressInfo, orderInfo) expects a non-empty user.`);
       
       let order = {
         user: user._id,
@@ -46,13 +50,17 @@ let OrderAction = {
       
       request.post("/api/orders")
         .send({ order: JSON.stringify(order) })
-        .then(function(res) {
+        .then((res) => {
           ShoppingCartAction.clearCart();
           
-          resolve(res.body);
+          resolve();
         })
-        .catch(function(err) {
-          reject(err.body);
+        .catch((err) => {
+          let message = err.message;
+          
+          invariant(_.isString(message), `addOrder(paymentInfo, addressInfo, orderInfo) expects error.message to be 'string', but gets '${typeof message}'.`);
+          
+          reject(message);
         });
 
     });
@@ -71,10 +79,10 @@ let OrderAction = {
       isLoading: true
     });
     
-    return new Promise(function(resolve, reject) {
+    return new Promise((resolve, reject) => {
       
       request.get("/api/orders")
-        .then(function(res) {
+        .then((res) => {
           let orders = res.body;
           
           invariant(_.isArray(orders), `getOrders() expects response.body to be an array, but gets '${typeof orders}'.`)
@@ -115,13 +123,18 @@ let OrderAction = {
    */
   updateOrder: function(id, newValue) {
     
-    return new Promise(function(resolve, reject) {
+    invariant(_.isString(id), `updateOrder(id, newValue) expects 'id' to be 'string', but gets '${typeof id}'.`);
+    invariant(_.isObject(newValue), `updateOrder(id, newValue) expects 'newValue' to be 'object', but gets '${typeof newValue}'.`);
+    
+    return new Promise((resolve, reject) => {
       
       request.put("/api/orders")
-        .query({id: id})
-        .send({order: JSON.stringify(newValue)})
-        .then(function(res) {
+        .query({ id: id })
+        .send({ order: JSON.stringify(newValue) })
+        .then((res) => {
           let newOrder = res.body;
+          
+          invariant(_.isObject(newOrder), `updateOrder(id, newValue) expects response.body to be 'object', but gets '${typeof newOrder}'.`);
           
           AppDispatcher.handleAction({
             actionType: OrderManageConstants.RECEIVED_UPDATED_ORDER,
@@ -130,8 +143,12 @@ let OrderAction = {
           
           resolve();
         })
-        .catch(function(err) {
-          reject(err);
+        .catch((err) => {
+          let message = err.message;
+          
+          invariant(_.isString(message), `getOrders() expects error.message to be 'string', but gets '${typeof message}'.`);
+          
+          reject(message);
         });
       
     });
