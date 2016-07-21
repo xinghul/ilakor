@@ -93,19 +93,14 @@ export default class LoginApp extends React.Component {
       isSubmitting: true
     });
     
-    AuthAction.userLogIn({
+    AuthAction.logIn({
 
       email: this.state.email,
       password: this.state.password
 
     }).then(() => {
       AuthAction.hideModal();
-    }).catch((err) => {
-      console.log(err);
-      
-      let message = err.message;
-      
-      invariant(_.isString(message), `Expect error message to be 'string', but get '${typeof message}'.`);
+    }).catch((message) => {
       
       this.setState({
         errorMessage: message

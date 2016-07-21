@@ -11,7 +11,8 @@ let router = express.Router()
 ,   Order  = require("./api/order")
 ,   Tag    = require("./api/tag");
 
-let CustomError = require("./utils/CustomError");
+let BadRequest    = require("./utils/BadRequest")
+,   InternalError = require("./utils/InternalError");
 
 /********************************************************
  *                     Authentication                   *
@@ -73,7 +74,7 @@ router.route("/items")
     }).catch(function(err) {
       console.log(err.stack);
       
-      next(new CustomError(500, "Internal error"));
+      next(new InternalError());
     });
   } else {
     limit = req.query.limit || req.params.limit;
@@ -85,7 +86,7 @@ router.route("/items")
     }).catch(function(err) {
       console.log(err.stack);
       
-      next(new CustomError(500, "Internal error"));
+      next(new InternalError());
     });
   }
 
@@ -95,7 +96,7 @@ router.route("/items")
   let rawData;
   
   if (!req.body.item) {
-    return next(new CustomError(400, "Item info undefined."));
+    return next(new BadRequest("Item info is undefined."));
   }
   
   try {
@@ -103,7 +104,7 @@ router.route("/items")
   } catch (err) {
     console.log(err.stack);
     
-    return next(new CustomError(400, "Malformed JSON."));
+    return next(new BadRequest("Malformed JSON."));
   }
 
   Item.add(rawData).then(function(updatedItem) {
@@ -111,7 +112,7 @@ router.route("/items")
   }).catch(function(err) {
     console.log(err.stack);
     
-    next(new CustomError(500, "Internal error."));
+    next(new InternalError());
   });
   
 })
@@ -124,7 +125,7 @@ router.route("/items")
   } catch (err) {
     console.log(err.stack);
     
-    return next(new CustomError(400, "Malformed JSON."));
+    return next(new BadRequest("Malformed JSON."));
   }
   
   if (_.isString(itemId) && _.isObject(newValue)) {
@@ -133,10 +134,10 @@ router.route("/items")
     }).catch(function(err) {
       console.log(err.stack);
       
-      next(new CustomError(500, "Internal error."));
+      next(new InternalError());
     });
   } else {
-    next(new CustomError(400, "Item id not specified!"));
+    next(new BadRequest("Item id not specified!"));
   }
 })
 .delete(function(req, res, next) {
@@ -148,10 +149,10 @@ router.route("/items")
     }).catch(function(err) {
       console.log(err.stack);
       
-      next(new CustomError(500, "Internal error."));
+      next(new InternalError());
     });
   } else {
-    next(new CustomError(400, "Item id not specified!"));
+    next(new BadRequest("Item id not specified!"));
   }
 });
 
@@ -193,7 +194,7 @@ router.route("/orders")
     }).catch(function(err) {
       console.log(err.stack);
       
-      next(new CustomError(500, "Internal error"));
+      next(new InternalError());
     });
     
   } else if (_.isString(userId)) {
@@ -203,7 +204,7 @@ router.route("/orders")
     }).catch(function(err) {
       console.log(err.stack);
       
-      next(new CustomError(500, "Internal error"));
+      next(new InternalError());
     });
     
   } else {
@@ -213,7 +214,7 @@ router.route("/orders")
     }).catch(function(err) {
       console.log(err.stack);
       
-      next(new CustomError(500, "Internal error"));
+      next(new InternalError());
     });
     
   }
@@ -227,7 +228,7 @@ router.route("/orders")
   let rawData;
   
   if (!req.body.order) {
-    return next(new CustomError(400, "order info undefined."));
+    return next(new BadRequest("order info is undefined."));
   }
   
   try {
@@ -235,7 +236,7 @@ router.route("/orders")
   } catch (err) {
     console.log(err.stack);
     
-    return next(new CustomError(400, "Malformed JSON."));
+    return next(new BadRequest("Malformed JSON."));
   }
   
   let chargeInfo = rawData.charge;
@@ -253,8 +254,8 @@ router.route("/orders")
   }).catch(function(err) {
     console.log(err.stack);
     
-    // deal with error
-    next(new CustomError(400, err.message));
+    // propagate the stripe error message to frontend
+    next(new BadRequest(err.message));
   });
   
 })
@@ -270,7 +271,7 @@ router.route("/orders")
   } catch (err) {
     console.log(err.stack);
     
-    return next(new CustomError(400, "Malformed JSON."));
+    return next(new BadRequest("Malformed JSON."));
   }
   
   if (_.isString(orderId) && _.isObject(newValue)) {
@@ -279,10 +280,10 @@ router.route("/orders")
     }).catch(function(err) {
       console.log(err.stack);
       
-      next(new CustomError(500, "Internal error."));
+      next(new InternalError());
     });
   } else {
-    next(new CustomError(400, "Order id not specified!"));
+    next(new BadRequest("Order id not specified!"));
   }
 })
 /**
@@ -372,7 +373,7 @@ router.route("/tags")
       }).catch(function(err) {
         console.log(err.stack);
         
-        next(new CustomError(500, "Internal error"));
+        next(new InternalError());
       });
     } else {
       Tag.getAll().then(function(tags) {
@@ -380,7 +381,7 @@ router.route("/tags")
       }).catch(function(err) {
         console.log(err.stack);
         
-        next(new CustomError(500, "Internal error"));
+        next(new InternalError());
       });
     }
 
@@ -393,7 +394,7 @@ router.route("/tags")
     let rawData;
     
     if (!req.body.tag) {
-      return next(new CustomError(400, "Tag info undefined."));
+      return next(new BadRequest("Tag info undefined."));
     }
     
     try {
@@ -401,7 +402,7 @@ router.route("/tags")
     } catch (err) {
       console.log(err.stack);
       
-      return next(new CustomError(400, "Malformed JSON."));
+      return next(new BadRequest("Malformed JSON."));
     }
 
     Tag.add(rawData).then(function(newTag) {
@@ -409,7 +410,7 @@ router.route("/tags")
     }).catch(function(err) {
       console.log(err.stack);
       
-      next(new CustomError(500, "Internal error."));
+      next(new InternalError());
     });
     
   })
@@ -425,7 +426,7 @@ router.route("/tags")
     } catch (err) {
       console.log(err.stack);
       
-      return next(new CustomError(400, "Malformed JSON."));
+      return next(new BadRequest("Malformed JSON."));
     }
     
     if (_.isString(tagId) && _.isObject(newValue)) {
@@ -434,10 +435,10 @@ router.route("/tags")
       }).catch(function(err) {
         console.log(err.stack);
         
-        next(new CustomError(500, "Internal error."));
+        next(new InternalError());
       });
     } else {
-      next(new CustomError(400, "Tag id not specified!"));
+      next(new BadRequest("Tag id not specified!"));
     }
   })
   /**
@@ -452,10 +453,10 @@ router.route("/tags")
       }).catch(function(err) {
         console.log(err.stack);
         
-        next(new CustomError(500, "Internal error."));
+        next(new InternalError());
       });
     } else {
-      next(new CustomError(400, "Tag id not specified!"));
+      next(new BadRequest("Tag id not specified!"));
     }
   });
 

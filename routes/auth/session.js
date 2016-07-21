@@ -6,7 +6,7 @@ let mongoose = require("mongoose")
 
 mongoose.promise = require("bluebird");
 
-let CustomError = require("../utils/CustomError")
+let InternalError = require("../utils/InternalError")
 ,   ValidationError = require("../utils/ValidationError");
 
 let SessionApi = {
@@ -38,7 +38,7 @@ let SessionApi = {
       });
     }
     
-    return next(new CustomError(401, "You're not logged in."));
+    return next(new ValidationError("You're not logged in."));
   },
   
   /**
@@ -56,7 +56,7 @@ let SessionApi = {
       return res.sendStatus(200);
     }
     
-    return next(new CustomError(400, "You're not logged in."));
+    return next(new ValidationError("You're not logged in."));
   },
   
   /**
@@ -80,16 +80,16 @@ let SessionApi = {
   create: function(req, res, next) {
     let token;
     
-    passport.authenticate("local", function(err, user, validationError) {
+    passport.authenticate("local", (err, user, validationError) => {
       if (err) {
-        return next(err);
+        return next(new InternalError());
       } else if (validationError) {
         return next(new ValidationError(validationError.message));
       }
 
-      req.logIn(user, function (err) {
+      req.logIn(user, (err) => {
         if (err) {
-          return next(err);
+          return next(new InternalError());
         }
         
         token = jwt.sign(user, process.env.JWT_SECRET, {

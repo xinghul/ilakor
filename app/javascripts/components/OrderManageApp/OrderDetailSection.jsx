@@ -37,10 +37,10 @@ export default class OrderDetailSection extends React.Component {
     
     OrderAction.updateOrder(
       order._id,
-      {sent: true}
+      { sent: true }
     ).then(() => {
       
-    }).catch((err) => {
+    }).catch((message) => {
       
     }).finally(() => {
       this.setState({

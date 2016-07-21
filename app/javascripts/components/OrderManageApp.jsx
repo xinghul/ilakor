@@ -40,7 +40,9 @@ export default class OrderManageApp extends React.Component {
       orders: OrderManageStore.getOrders(),
       isLoading: OrderManageStore.getIsLoading(),
       
-      selectedOrder: {}
+      // use selected order index instead of selected order
+      // so order detail modal will be updated once a change is made
+      selectedOrderIndex: 0
     };
   }
   
@@ -72,12 +74,12 @@ export default class OrderManageApp extends React.Component {
    * @private
    * Handler for when a order in the table is clicked.
    * 
-   * @param  {Object} order the selected order.
+   * @param  {Number} selectedOrderIndex the selected order index.
    */
-  _onOrderClick = (order) => {
+  _onOrderClick = (selectedOrderIndex) => {
 
     this.setState({
-      selectedOrder: order
+      selectedOrderIndex: selectedOrderIndex
     });
     
     this.refs["orderModal"].showModal();
@@ -97,7 +99,7 @@ export default class OrderManageApp extends React.Component {
     for (let order of orders)
     {
       tableBody.push(
-        <tr onClick={this._onOrderClick.bind(this, order)} key={order._id}>
+        <tr onClick={this._onOrderClick.bind(this, orders.indexOf(order))} key={order._id}>
           <td>{orders.indexOf(order)}</td>
           <td>{order._id}</td>
           <td>{order.charge.amount}</td>
@@ -132,11 +134,13 @@ export default class OrderManageApp extends React.Component {
    */
   render() {
     
+    let selectedOrder = this.state.orders[this.state.selectedOrderIndex] || {};
+    
     return (
       <div className={styles.orderManageApp}>
         <OrderDetailModal 
           ref="orderModal"
-          order={this.state.selectedOrder} 
+          order={selectedOrder} 
         />
         <GridSection title="Orders">
           {do {
