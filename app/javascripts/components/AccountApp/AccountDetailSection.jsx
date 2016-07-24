@@ -25,6 +25,8 @@ export default class AccountDetailSection extends React.Component {
    * @return {JSX}
    */
   _renderAccountDetailSection() {
+    let user = this.props.user;
+    
     return (
       <GridSection title="Account detail">
         <BaseInfo label="User" icon="user" text={user.username} />
@@ -40,6 +42,8 @@ export default class AccountDetailSection extends React.Component {
    * @return {JSX}
    */
   _renderSocialAccountsSection() {
+    let user = this.props.user;
+    
     return (
       <GridSection title="Social accounts">
       </GridSection>
@@ -50,8 +54,6 @@ export default class AccountDetailSection extends React.Component {
    * @inheritdoc
    */
   render() {
-    
-    let user = this.props.user;
     
     return (
       <div className={styles.accountDetailSection}>
