@@ -19,6 +19,11 @@ export default class Icon extends React.Component {
    */
   render() {
     
+    let classNames = [ styles.icon ];
+    
+    // push in additional className 
+    classNames.push(this.props.className);
+    
     let style = {
       opacity: this.props.hoverable ? "0.6" : "",
       cursor: this.props.hoverable ? "pointer" : "",
@@ -28,7 +33,7 @@ export default class Icon extends React.Component {
     
     return (
       <FontAwesome
-        className={styles.icon}
+        className={classNames.join(' ')}
         style={style}
         name={this.props.name}
       />

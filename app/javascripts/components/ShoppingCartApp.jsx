@@ -268,7 +268,8 @@ export default class ShoppingCartApp extends React.Component {
     return (
       <div className={styles.shoppingCart}>
         <OverlayTrigger 
-          trigger="focus" 
+          trigger="click"
+          rootClose 
           placement="bottom" 
           overlay={popover}>
           <GhostButton className={styles.cartButton} theme="gold">
