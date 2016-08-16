@@ -4,7 +4,7 @@ import React from "react"
 import _ from "lodash"
 import { Form, Modal } from "react-bootstrap"
 
-import BaseInput from "lib/BaseInput"
+import Input from "lib/Input"
 import SubmitButton from "lib/SubmitButton"
 
 import ItemManageAction from "actions/ItemManageAction"
@@ -91,14 +91,12 @@ export default class ItemDetailModal extends React.Component {
 
     return (
       <Form>
-        <BaseInput 
-          type="text"
+        <Input 
           label="_id"
           disabled={true}
           initialValue={item._id}
         />
-        <BaseInput 
-          type="text"
+        <Input 
           label="Name"
           ref="name"
           initialValue={item.name}

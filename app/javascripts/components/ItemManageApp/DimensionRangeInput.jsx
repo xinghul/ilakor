@@ -6,7 +6,7 @@ import invariant from "invariant"
 
 import { Form, FormGroup, InputGroup, ControlLabel, Row, Col } from "react-bootstrap"
 
-import BaseInput from "lib/BaseInput"
+import Input from "lib/Input"
 import Checkbox from "lib/Checkbox"
 import SingleRangeSlider from "lib/SingleRangeSlider"
 
@@ -199,13 +199,12 @@ export default class DimensionRangeInput extends React.Component {
       <div className={styles.dimensionRangeInput}>
         <div className={styles.firstRow}>
           <div className={styles.baseInput}>
-            <BaseInput
-              type="text"
+            <Input
               label={this.props.label}
               ref="baseValue"
               validationState={validateInputValue(this.state.baseValue)}
               value={this.state.baseValue}
-              handleChange={this._onBaseValueChange}
+              onChange={this._onBaseValueChange}
             />
           </div>
           <div className={styles.checkbox}>
@@ -230,14 +229,14 @@ export default class DimensionRangeInput extends React.Component {
               <SingleRangeSlider label="Max" connect="lower" ref="upperSlider" />
             </Col>
           </Row>
-          <BaseInput
+          <Input
             className={styles.pricePerUnitInput}
             type="text"
             label="Price per unit"
             ref="pricePerUnit"
             validationState={validateInputValue(this.state.pricePerUnit)}
             value={this.state.pricePerUnit}
-            handleChange={this._onPricePerUnitChange}
+            onChange={this._onPricePerUnitChange}
           />
         </FormGroup>
       </div>

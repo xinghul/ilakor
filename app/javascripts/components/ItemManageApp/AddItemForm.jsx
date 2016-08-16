@@ -6,7 +6,7 @@ import invariant from "invariant"
 
 import { Row, Col } from "react-bootstrap"
 
-import BaseInput from "lib/BaseInput"
+import Input from "lib/Input"
 import MultiSelectInput from "lib/MultiSelectInput"
 import SubmitButton from "lib/SubmitButton"
 import DraftEditor from "lib/DraftEditor"
@@ -139,8 +139,7 @@ export default class AddItemForm extends React.Component {
    */
   render() {
     let nameInput = (
-      <BaseInput
-        type="text"
+      <Input
         ref="name"
         label="Name"
         placeholder="Enter name"
@@ -173,8 +172,7 @@ export default class AddItemForm extends React.Component {
     );
     
     let priceInput = (
-      <BaseInput
-        type="text"
+      <Input
         ref="price"
         label="Price"
         placeholder="Enter price"
