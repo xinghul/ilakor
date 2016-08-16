@@ -4,9 +4,9 @@ import React from "react"
 import _ from "lodash"
 import invariant from "invariant"
 
-import styles from "lib/BaseCheckbox.scss"
+import styles from "lib/Checkbox.scss"
 
-export default class BaseCheckbox extends React.Component {
+export default class Checkbox extends React.Component {
   
   /**
    * @inheritdoc
@@ -27,14 +27,14 @@ export default class BaseCheckbox extends React.Component {
    * 
    * @param  {Object} evt the click event object.
    */
-  _onClick = (evt) => {
+  _onCheckboxChange = (evt) => {
     let newValue = evt.target.checked;
 
     this.setState({
       checked: newValue
     });
     
-    this.props.onClick(newValue);
+    this.props.onChange(newValue);
   };
   
   /**
@@ -61,12 +61,12 @@ export default class BaseCheckbox extends React.Component {
   render() {
     
     return (
-      <div className={styles.baseCheckbox}>
+      <div className={styles.checkbox}>
         <input 
           {...this.props}
           type="checkbox" 
           id={this._id}
-          onClick={this._onClick}
+          onChange={this._onCheckboxChange}
           checked={this.state.checked}
         />
         <label htmlFor={this._id}>{this.props.label}</label>
@@ -75,13 +75,13 @@ export default class BaseCheckbox extends React.Component {
   }
 }
 
-BaseCheckbox.propTypes = {
+Checkbox.propTypes = {
   label: React.PropTypes.string,
-  onClick: React.PropTypes.func
+  onChange: React.PropTypes.func
 }
 
-BaseCheckbox.defaultProps = {
+Checkbox.defaultProps = {
   label: "Checkbox",
-  onClick: function() {}
+  onChange: function() {}
 };
 

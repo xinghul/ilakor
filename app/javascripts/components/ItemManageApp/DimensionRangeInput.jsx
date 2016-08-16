@@ -7,7 +7,7 @@ import invariant from "invariant"
 import { Form, FormGroup, InputGroup, ControlLabel, Row, Col } from "react-bootstrap"
 
 import BaseInput from "lib/BaseInput"
-import BaseCheckbox from "lib/BaseCheckbox"
+import Checkbox from "lib/Checkbox"
 import SingleRangeSlider from "lib/SingleRangeSlider"
 
 import styles from "components/ItemManageApp/DimensionRangeInput.scss"
@@ -209,11 +209,11 @@ export default class DimensionRangeInput extends React.Component {
             />
           </div>
           <div className={styles.checkbox}>
-            <BaseCheckbox 
+            <Checkbox 
               disabled={!this.state.validBaseValue} 
               ref="checkbox" 
               label="customizable"
-              onClick={this._onCustomizableChange} 
+              onChange={this._onCustomizableChange} 
             />
           </div>
         </div>
