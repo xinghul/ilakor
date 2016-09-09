@@ -59,21 +59,23 @@ export default class MultiSelectInput extends React.Component {
    */
   render() {
     
-    let options = this.props.options.map((option) => {
+    const { label, options, placeholder } = this.props;
+    
+    let selectOptions = options.map((option) => {
       return {
         value: option,
         label: _.capitalize(option)
       };
     });
-    
+
     return (
       <div className={styles.multiSelectInput}>
         <label>
-          {this.props.label}
+          {label}
         </label>
         <Select
-          {...this.props}
-          options={options}
+          placeholder={placeholder}
+          options={selectOptions}
           multi={true}
           value={this.state.value}
           onChange={this._onChange}
@@ -85,10 +87,16 @@ export default class MultiSelectInput extends React.Component {
 
 MultiSelectInput.propTypes = {
   options: React.PropTypes.array,
+
+  label: React.PropTypes.string,
+  placeholder: React.PropTypes.string,
   onChange: React.PropTypes.func
 };
 
 MultiSelectInput.defaultProps = {
   options: [],
-  onChange: function() {}
+
+  label: "",
+  placeholder: "",
+  onChange: () => {}
 };

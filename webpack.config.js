@@ -51,6 +51,7 @@ let config = {
       }
     ]
   },
+  devtool: 'source-map',
   postcss: function () {
     return [require("postcss-input-range"), require("postcss-sorting"), require("autoprefixer")];
   },
