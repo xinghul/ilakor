@@ -3,7 +3,7 @@
 import React from "react"
 import _ from "lodash"
 
-import BaseInput from "lib/BaseInput"
+import Input from "lib/Input"
 
 import styles from "components/AuthApp/PasswordInput.scss"
 
@@ -28,7 +28,7 @@ export default class PasswordInput extends React.Component {
     };
   }
   
-  handlePasswordChange = (newValue) => {
+  _onPasswordChange = (newValue) => {
     let isValid = isValidPassword(newValue);
 
     this.setState({
@@ -70,7 +70,7 @@ export default class PasswordInput extends React.Component {
     
     return (
       <div className={styles.passwordInput}>
-        <BaseInput
+        <Input
           {...this.props}
           type="password"
           placeholder="Enter password"
@@ -79,7 +79,7 @@ export default class PasswordInput extends React.Component {
           validationState={validationState}
           focusText={focusText}
           autoComplete="off"
-          handleChange={this.handlePasswordChange} />
+          onChange={this._onPasswordChange} />
       </div>
     );
   }

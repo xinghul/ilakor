@@ -1,7 +1,7 @@
 "use strict";
 
 import React from "react"
-import BaseInput from "lib/BaseInput"
+import Input from "lib/Input"
 
 function isValidEmail(email) {
   let validEmailReg = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i;
@@ -23,7 +23,7 @@ export default class EmailInput extends React.Component {
     };
   }
   
-  handleEmailChange = (newValue) => {
+  _onEmailChange = (newValue) => {
     let isValid = isValidEmail(newValue);
     
     this.setState({
@@ -68,7 +68,7 @@ export default class EmailInput extends React.Component {
     }
 
     return (
-      <BaseInput
+      <Input
         {...this.props}
         type="email"
         placeholder={this.props.placeholder}
@@ -76,7 +76,7 @@ export default class EmailInput extends React.Component {
         shrink={true}
         validationState={validationState}
         autoComplete={autoComplete}
-        handleChange={this.handleEmailChange} />
+        onChange={this._onEmailChange} />
     );
   }
 };

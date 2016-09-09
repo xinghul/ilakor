@@ -1,13 +1,47 @@
 "use strict"
 
-import React from "react"
+import React, { PropTypes } from "react"
 import _ from "lodash"
 import { FormGroup, InputGroup, FormControl } from "react-bootstrap"
 import FontAwesome from "react-fontawesome"
 
-import styles from "lib/BaseInput.scss"
+import styles from "lib/Input.scss"
 
-export default class BaseInput extends React.Component {
+const propTypes = { 
+  type: PropTypes.string,
+
+  onChange: PropTypes.func,
+  
+  initialValue: PropTypes.string,
+  placeholder: PropTypes.string,
+  icon: PropTypes.string,
+  label: PropTypes.string,
+  validationState: PropTypes.string,
+  autoComplete: PropTypes.string,
+  focusText: PropTypes.string,
+  
+  shrink: PropTypes.bool,
+  disabled: PropTypes.bool
+};
+
+const defaultProps = {
+  type: "text",
+  
+  onChange: function() {},
+
+  initialValue: "",
+  placeholder: "",
+  icon: "",
+  label: "",
+  validationState: null,
+  autoComplete: "",
+  focusText: "",
+  
+  shrink: false,
+  disabled: false
+};
+
+export default class Input extends React.Component {
   
   /**
    * @inheritdoc
@@ -16,7 +50,7 @@ export default class BaseInput extends React.Component {
     super(props);
     
     this.state = {
-      value: this.props.initialValue || "",
+      value: this.props.initialValue,
       focused: false
     };
   }
@@ -35,7 +69,7 @@ export default class BaseInput extends React.Component {
       value: newValue
     });
     
-    this.props.handleChange(newValue, name);
+    this.props.onChange(newValue, name);
   };
   
   /**
@@ -72,7 +106,7 @@ export default class BaseInput extends React.Component {
    */
   clear() {
     this.setState({
-      value: this.props.initialValue || "",
+      value: this.props.initialValue,
       focused: false
     });
   }
@@ -82,93 +116,69 @@ export default class BaseInput extends React.Component {
    */
   render() {
     
-    let selectOptions = null
-    ,   validationState = null
-    ,   addonClassname
-    ,   addonContent;
+    let addonClassname
+    ,   addonContent
+    ,   classNames = [ styles.input ]
+    ,   focusTextStyle = { maxHeight: this.state.focused ? "90px" : "" };
     
-    let newProps = _.clone(this.props);
-    
-    if (!_.isEmpty(newProps.validationState)) {
-      validationState = newProps.validationState;
-      
-      delete newProps.validationState;
-    }
-    
-    if (newProps.type === "select") {
-      selectOptions = newProps.options;
-      
-      delete newProps.options;
-    }
-    
-    // special case for 'select' and 'textarea'
-    if (newProps.type === "select" || newProps.type === "textarea") {
-      newProps.componentClass = newProps.type;
-      
-      delete newProps.type;
-    }
+    const { type, placeholder, icon, label, validationState, autoComplete, focusText, className,
+            shrink, disabled } = this.props;
     
     addonClassname = do {
-      if (this.props.shrink) {
-        styles.addonContentShrink
+      if (shrink) {
+        styles.addonContentShrink;
       } else {
-        styles.addonContent
+        styles.addonContent;
       }
     }
 
     addonContent = do {
-      if (!_.isEmpty(newProps.icon)) {
+      if (!_.isEmpty(icon)) {
         <InputGroup.Addon className={addonClassname}>
           <FontAwesome
-            name={newProps.icon}
+            name={icon}
             fixedWidth={true}
           />
           &nbsp; 
-          <label>{newProps.label}</label>
+          <label>{label}</label>
         </InputGroup.Addon>
       } else {
         <InputGroup.Addon className={addonClassname}>
-          <label>{newProps.label}</label>
+          <label>{label}</label>
         </InputGroup.Addon>
       }
     }
-    
-    let className = [ styles.baseInput ];
-    
-    if (!_.isEmpty(newProps.className)) {
+
+    if (!_.isEmpty(className)) {
       // push in additional className 
-      className.push(newProps.className);
-      
-      delete newProps.className;      
+      classNames.push(className);
     }
     
-    let style = {
-      maxHeight: this.state.focused ? "90px" : ""
-    };
-
     return (
       <FormGroup 
-        className={className} 
-        controlId={newProps.key} 
+        className={classNames.join(' ')} 
         validationState={validationState}
       >
         <InputGroup>
           {addonContent}
           <FormControl 
-            {...newProps}
+            type={type}
             value={this.props.value ? this.props.value : this.state.value}
             onChange={this._onChange}
             onFocus={this._onFocus}
             onBlur={this._onBlur}
-          >{selectOptions}</FormControl>
+            placeholder={this.props.placeholder}
+            autoComplete={autoComplete}
+            disabled={disabled}
+          />
         </InputGroup>
         <div 
-          hidden={_.isEmpty(newProps.focusText)} 
+          hidden={_.isEmpty(focusText)} 
           className={styles.focusContentContainer} 
-          style={style}
+          style={focusTextStyle}
         >
           <div className={styles.focusContent}>
-            {newProps.focusText}
+            {focusText}
           </div>
         </div>
       </FormGroup>
@@ -178,14 +188,5 @@ export default class BaseInput extends React.Component {
   }
 }
 
-BaseInput.propTypes = { 
-  type: React.PropTypes.string,
-  handleChange: React.PropTypes.func,
-  label: React.PropTypes.string
-};
-
-BaseInput.defaultProps = {
-  type: "text",
-  handleChange: function() {},
-  label: ""
-};
+Input.propTypes = propTypes;
+Input.defaultProps = defaultProps;

@@ -1,0 +1,29 @@
+.dataTable {
+  
+  font-family: Helvetica;
+  font-size: 12px;
+  line-height: 2.5;
+  
+  :global(.public_fixedDataTableCell_cellContent) {
+    padding: 0 7px;
+    white-space: nowrap;
+  }
+  
+  :global(.public_fixedDataTable_header .public_fixedDataTableCell_cellContent) {
+    background-image: none;
+    background-color: #fafafa;
+    
+    font-family: HelveticaNeue;
+    font-size: 13px;
+    font-weight: normal;
+    
+    cursor: pointer;
+    
+    transition: background-color 100ms ease-out;
+    
+    &:hover {
+      background-color: #ededed;
+    }
+  }
+  
+}

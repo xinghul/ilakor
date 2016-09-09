@@ -1,7 +1,7 @@
 "use strict";
 
 import React from "react"
-import BaseInput from "lib/BaseInput"
+import Input from "lib/Input"
 
 function isValidUsername(username) {
   let validUsernameReg = /^[a-zA-Z0-9]+([_\s\-]?[a-zA-Z0-9])*$/;
@@ -24,7 +24,7 @@ export default class UsernameInput extends React.Component {
     };
   }
   
-  handleUsernameChange = (newValue) => {
+  _onUsernameChange = (newValue) => {
     let isValid = isValidUsername(newValue);
 
     this.setState({
@@ -66,7 +66,7 @@ export default class UsernameInput extends React.Component {
     }
     
     return (
-      <BaseInput
+      <Input
         {...this.props}
         type="text"
         placeholder="Enter username"
@@ -75,7 +75,7 @@ export default class UsernameInput extends React.Component {
         focusText={focusText}
         validationState={validationState}
         autoComplete="off"
-        handleChange={this.handleUsernameChange} />
+        onChange={this._onUsernameChange} />
     );
   }
 };

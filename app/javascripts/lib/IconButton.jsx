@@ -2,6 +2,7 @@
 
 import React from "react"
 import FontAwesome from "react-fontawesome"
+import _ from "lodash"
 
 import GhostButton from "lib/GhostButton"
 
@@ -12,14 +13,16 @@ export default class IconButton extends React.Component {
   constructor(props) {
     super(props);
   }
-
+  
+  /**
+   * @inheritdoc
+   */
   render() {
     
     return (
-      <GhostButton {...this.props} onClick={this.props.onClick} onMouseDown={this.props.onMouseDown}>
+      <GhostButton onClick={this.props.onClick} onMouseDown={this.props.onMouseDown}>
         <FontAwesome
           name={this.props.icon}
-          inverse={this.props.inverse}
         />
       </GhostButton>
     );
@@ -29,14 +32,12 @@ export default class IconButton extends React.Component {
 
 IconButton.propTypes = {
   icon: React.PropTypes.string,
-  inverse: React.PropTypes.bool,
   onClick: React.PropTypes.func,
   onMouseDown: React.PropTypes.func
 };
 
 IconButton.defaultProps = {
   icon: "circle",
-  inverse: false,
   onClick: function() {},
   onMouseDown: function() {}
 };

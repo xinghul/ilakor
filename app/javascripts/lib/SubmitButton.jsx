@@ -1,6 +1,7 @@
 "use strict";
 
 import React from "react"
+import _ from "lodash"
 
 import LoadSpinner from "lib/LoadSpinner"
 import GhostButton from "lib/GhostButton"
@@ -20,12 +21,18 @@ export default class SubmitButton extends React.Component {
    * @inheritdoc
    */
   render() {
+    
+    let buttonProps = _.clone(this.props);
+    
+    delete buttonProps.isSubmitting;
+    delete buttonProps.submitText;
+    delete buttonProps.handleSubmit;
 
     // put {...this.props} behind disabled, so it can't be overriden
     return (
       <GhostButton
         disabled={this.props.isSubmitting} 
-        {...this.props}
+        {...buttonProps}
         onClick={this.props.handleSubmit}
         className={styles.submitButton} 
         bsSize="large" 

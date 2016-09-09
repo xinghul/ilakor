@@ -1,6 +1,7 @@
 "use strict"
 
 import React from "react"
+import _ from "lodash"
 import { Button } from "react-bootstrap"
 
 import styles from "lib/GhostButton.scss"
@@ -19,16 +20,19 @@ export default class GhostButton extends React.Component {
    */
   render() {
     
-    let classNames = [ styles.ghostButton ];
+    let classNames = [ styles.ghostButton ]
+    ,   buttonProps = _.clone(this.props);
     
     // push in additional className 
     classNames.push(this.props.className);
     
     classNames.push(styles[this.props.theme]);
     
+    delete buttonProps.theme;
+    
     return (
       <Button 
-        {...this.props}
+        {...buttonProps}
         className={classNames.join(' ')}
       >
         {this.props.children}
