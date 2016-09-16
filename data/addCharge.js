@@ -26,7 +26,7 @@ let charge = {
   ],
 };
 
-let stripe = require("stripe")("sk_test_jkhA0OtH2wJTqnQYt0hZAbLQ");
+let stripe = require("stripe")("sk_test_Uud0EfP12pR2yvwuuXmZeTds");
 
 stripe.tokens.create({
     card: {
@@ -41,7 +41,7 @@ stripe.tokens.create({
   charge.charge.source = token.id;
   
   request.post({
-    url: "http://localhost:3001/charge",
+    url: "http://localhost:8080/charge",
     form: {
       charge: JSON.stringify(charge)
     }

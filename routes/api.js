@@ -3,7 +3,7 @@
 let express = require("express")
 ,   fs      = require("fs")
 ,   jwt     = require("jsonwebtoken")
-,   stripe  = require("stripe")("sk_test_jkhA0OtH2wJTqnQYt0hZAbLQ")
+,   stripe  = require("stripe")("sk_test_Uud0EfP12pR2yvwuuXmZeTds")
 ,   _       = require("lodash");
 
 let router = express.Router()

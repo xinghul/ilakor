@@ -73,7 +73,7 @@ class IndexApp extends React.Component {
   }
 };
 
-Stripe.setPublishableKey("pk_test_Yc07ytarKkLiL7yn1swr8mCP");
+Stripe.setPublishableKey("pk_test_8mZpKZytd30HOivscwbQk51Z");
 
 render((
   <Router history={hashHistory}>

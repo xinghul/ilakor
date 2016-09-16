@@ -22,7 +22,7 @@ export default class PaymentApp extends React.Component {
       <div className={styles["payment-app"]}>
         <StripeCheckout 
           token={this.handleTokenChange}
-          stripeKey="pk_test_Yc07ytarKkLiL7yn1swr8mCP"
+          stripeKey="pk_test_8mZpKZytd30HOivscwbQk51Z"
           image="/images/logo.png"
           amount={this.props.amount}
           shippingAddress={true}

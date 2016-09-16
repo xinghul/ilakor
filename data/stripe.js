@@ -1,6 +1,6 @@
 "use strict";
 
-let stripe = require("stripe")("sk_test_jkhA0OtH2wJTqnQYt0hZAbLQ");
+let stripe = require("stripe")("sk_test_Uud0EfP12pR2yvwuuXmZeTds");
 
 stripe.tokens.create({
     card: {

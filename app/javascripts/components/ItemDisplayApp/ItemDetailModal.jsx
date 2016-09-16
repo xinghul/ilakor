@@ -48,43 +48,9 @@ export default class ItemDetailModal extends React.Component {
   };
   
   createItemConfigJsx() {
-    let dimension = this.props.item.dimension
-    ,   heightConfigSlider = null
-    ,   widthConfigSlider = null
-    ,   depthConfigSlider = null;
-    
-    if (dimension.height.customizable) {
-      let heightRange = {
-        min: dimension.height.min,
-        max: dimension.height.max
-      };
-      
-      heightConfigSlider = <SingleRangeSlider label="Height" range={heightRange} start={dimension.height.base} />
-    }
-    
-    if (dimension.width.customizable) {
-      let widthRange = {
-        min: dimension.width.min,
-        max: dimension.width.max
-      };
-      
-      widthConfigSlider = <SingleRangeSlider label="Width" range={widthRange} start={dimension.width.base} />
-    }
-    
-    if (dimension.depth.customizable) {
-      let depthRange = {
-        min: dimension.depth.min,
-        max: dimension.depth.max
-      };
-      
-      depthConfigSlider = <SingleRangeSlider label="Depth" range={depthRange} start={dimension.depth.base} />
-    }
     
     return (
       <div>
-        {heightConfigSlider}
-        {widthConfigSlider}
-        {depthConfigSlider}
       </div>
     );
   }
@@ -100,7 +66,7 @@ export default class ItemDetailModal extends React.Component {
     let imageUrls = item.images.map((image) => {
       invariant(_.isString(image.name), `Each image of item.images should have a 'name' as string.`);
       
-      return "http://d2nl38chx1zeob.cloudfront.net/" + image.name;
+      return "http://d16knxx0wtupz9.cloudfront.net/" + image.name;
     });
     
     return (
