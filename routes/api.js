@@ -6,10 +6,11 @@ let express = require("express")
 ,   stripe  = require("stripe")("sk_test_Uud0EfP12pR2yvwuuXmZeTds")
 ,   _       = require("lodash");
 
-let router = express.Router()
-,   Item   = require("./api/item")
-,   Order  = require("./api/order")
-,   Tag    = require("./api/tag");
+let router   = express.Router()
+,   Item     = require("./api/item")
+,   Order    = require("./api/order")
+,   Tag      = require("./api/tag")
+,   Category = require("./api/category");
 
 let BadRequest    = require("./utils/BadRequest")
 ,   InternalError = require("./utils/InternalError");
@@ -457,6 +458,124 @@ router.route("/tags")
       });
     } else {
       next(new BadRequest("Tag id not specified!"));
+    }
+  });
+  
+/********************************************************
+ *                      Category Routes                      *
+ ********************************************************/
+
+router.route("/categories")
+  /**
+   * Global logic for path '/api/categories'.
+   */
+  .all((req, res, next) => {
+
+    let categoryId = req.query.id || req.params.id;
+    
+    if (_.isString(categoryId)) {
+      req.categoryId = categoryId;
+    }
+    
+    next();
+  })
+  /**
+   * Gets a specific category by id.
+   */
+  .get((req, res, next) => {
+    
+    let categoryId = req.categoryId;
+    
+    if (_.isString(categoryId)) {
+      Category.get(categoryId).then((category) => {
+        res.status(200).json(category);
+      }).catch((err) => {
+        console.log(err.stack);
+        
+        next(new InternalError());
+      });
+    } else {
+      Category.getAll().then((categories) => {
+        res.status(200).json(categories);
+      }).catch(function(err) {
+        console.log(err.stack);
+        
+        next(new InternalError());
+      });
+    }
+
+  })
+  /**
+   * Adds a new category.
+   */
+  .post((req, res, next) => {
+    
+    let rawData;
+    
+    if (!req.body.category) {
+      return next(new BadRequest("Category info undefined."));
+    }
+    
+    try {
+      rawData = JSON.parse(req.body.category);
+    } catch (err) {
+      console.log(err.stack);
+      
+      return next(new BadRequest("Malformed JSON."));
+    }
+
+    Category.add(rawData).then((newCategory) => {
+      res.status(200).json(newCategory);
+    }).catch(function(err) {
+      console.log(err.stack);
+      
+      next(new InternalError());
+    });
+    
+  })
+  /**
+   * Updates a specific category by id.
+   */
+  .put((req, res, next) => {
+    let categoryId = req.categoryId
+    ,   newValue;
+    
+    try {
+      newValue = JSON.parse(req.body.category);
+    } catch (err) {
+      console.log(err.stack);
+      
+      return next(new BadRequest("Malformed JSON."));
+    }
+    
+    if (_.isString(categoryId) && _.isObject(newValue)) {
+      Category.update(categoryId, newValue).then((category) => {
+        res.status(200).json(category);
+      }).catch(function(err) {
+        console.log(err.stack);
+        
+        next(new InternalError());
+      });
+    } else {
+      next(new BadRequest("Category id not specified!"));
+    }
+  })
+  /**
+   * Deletes a specific category by id.
+   */
+  .delete((req, res, next) => {
+    let categoryId = req.categoryId;
+    
+    if (_.isString(categoryId)) {
+      Category.remove(categoryId).then((category) => {
+        res.status(200).json(category);
+      }).catch((err) => {
+        console.log(err.stack);
+        
+        next(new InternalError());
+      });
+    } else {
+      next(new BadRequest("Category id not specified!"));
     }
   });
 
