@@ -5,15 +5,15 @@ let mongoose = require("mongoose")
 
 mongoose.promise = require("bluebird");
 
-let Category = mongoose.model("Category")
+let Brand    = mongoose.model("Brand")
 ,   ObjectId = mongoose.Types.ObjectId;
 
-let CategoryApi = {
+let BrandApi = {
   
   /**
-   * Creates a new category.
+   * Creates a new brand.
    * 
-   * @param  {Object} rawData the raw data containing the new category info.
+   * @param  {Object} rawData the raw data containing the new brand info.
    *
    * @return {Promise} the new promise object.
    */
@@ -21,13 +21,13 @@ let CategoryApi = {
     
     return new Promise((resolve, reject) => {
       
-      let category = new Category(rawData);
+      let brand = new Brand(rawData);
 
-      category.save((err, newCategory) => {
+      brand.save((err, newBrand) => {
         if (err) {
           reject(err);
         } else {
-          resolve(newCategory);
+          resolve(newBrand);
         }
       });
       
@@ -36,7 +36,7 @@ let CategoryApi = {
   },
   
   /**
-   * Removes category specified by given id, if it exists.
+   * Removes brand specified by given id, if it exists.
    * 
    * @param  {String} id the specified id.
    *
@@ -46,7 +46,7 @@ let CategoryApi = {
     
     return new Promise((resolve, reject) => {
       
-      Category.remove({_id: ObjectId(id)}, (err, result) => {
+      Brand.remove({_id: ObjectId(id)}, (err, result) => {
         if (err) {
           reject(err);
         } else {
@@ -59,7 +59,7 @@ let CategoryApi = {
   },
   
   /**
-   * Updates category specified by given id with new value.
+   * Updates brand specified by given id with new value.
    * 
    * @param  {String} id the specified id.
    *
@@ -69,11 +69,11 @@ let CategoryApi = {
     
     return new Promise((resolve, reject) => {
       
-      Category.findOneAndUpdate({_id: ObjectId(id)}, {$set: newValue}, {new: true}, (err, updatedCategory) => {
+      Brand.findOneAndUpdate({_id: ObjectId(id)}, {$set: newValue}, {new: true}, (err, updatedBrand) => {
         if (err) {
           reject(err);
         } else {
-          resolve(updatedCategory);
+          resolve(updatedBrand);
         }
       });
       
@@ -82,7 +82,7 @@ let CategoryApi = {
   },
   
   /**
-   * Returns category specified by given id, if it exists.
+   * Returns brand specified by given id, if it exists.
    * 
    * @param  {String} id the specified id.
    *
@@ -92,7 +92,7 @@ let CategoryApi = {
     
     return new Promise((resolve, reject) => {
       
-      Category.findById(ObjectId(id), (err, result) => {
+      Brand.findById(ObjectId(id), (err, result) => {
         if (err) {
           reject(err);
         } else {
@@ -113,7 +113,7 @@ let CategoryApi = {
     
     return new Promise((resolve, reject) => {
       
-      Category.find({}, (err, result) => {
+      Brand.find({}, (err, result) => {
         if (err) {
           reject(err);
         } else {
@@ -127,4 +127,4 @@ let CategoryApi = {
 
 };
 
-module.exports = CategoryApi;
+module.exports = BrandApi;

@@ -1,19 +1,41 @@
 "use strict";
 
-let express = require("express")
-,   fs      = require("fs")
-,   jwt     = require("jsonwebtoken")
-,   stripe  = require("stripe")("sk_test_Uud0EfP12pR2yvwuuXmZeTds")
-,   _       = require("lodash");
+let express   = require("express")
+,   fs        = require("fs")
+,   invariant = require("invariant")
+,   jwt       = require("jsonwebtoken")
+,   stripe    = require("stripe")("sk_test_Uud0EfP12pR2yvwuuXmZeTds")
+,   _         = require("lodash");
 
 let router   = express.Router()
 ,   Item     = require("./api/item")
 ,   Order    = require("./api/order")
 ,   Tag      = require("./api/tag")
+,   Brand    = require("./api/brand")
 ,   Category = require("./api/category");
 
 let BadRequest    = require("./utils/BadRequest")
 ,   InternalError = require("./utils/InternalError");
+
+const routeToHandler = {
+  tags: Tag,
+  brands: Brand,
+  categories: Category
+};
+
+function SuccessResponse(res, data) {
+  return res.status(200).json(data);
+}
+
+function InternalErrorResponse(next, err) {
+  console.log(err.stack);
+  
+  return next(new InternalError());
+}
+
+function BadRequestResponse(next, message) {
+  return next(new BadRequest(message));
+}
 
 /********************************************************
  *                     Authentication                   *
@@ -52,7 +74,7 @@ let BadRequest    = require("./utils/BadRequest")
  ********************************************************/
 
 router.route("/items")
-.all(function(req, res, next) {
+.all((req, res, next) => {
   
   let itemId = req.query.id || req.params.id;
   
@@ -62,7 +84,7 @@ router.route("/items")
   
   next();
 })
-.get(function(req, res, next) {
+.get((req, res, next) => {
   
   let itemId = req.itemId
   ,   limit
@@ -70,25 +92,13 @@ router.route("/items")
   ,   query;
   
   if (_.isString(itemId)) {
-    Item.get(itemId).then(function(item) {
-      res.status(200).json(item);
-    }).catch(function(err) {
-      console.log(err.stack);
-      
-      next(new InternalError());
-    });
+    Item.get(itemId).then(SuccessResponse.bind(null, res)).catch(InternalErrorResponse.bind(null, next));
   } else {
     limit = req.query.limit || req.params.limit;
     skip = req.query.skip || req.params.skip;
     query = req.query.query || req.params.query;
     
-    Item.getAll(skip, limit, query).then(function(items) {
-      res.status(200).json(items);
-    }).catch(function(err) {
-      console.log(err.stack);
-      
-      next(new InternalError());
-    });
+    Item.getAll(skip, limit, query).then(SuccessResponse.bind(null, res)).catch(InternalErrorResponse.bind(null, next));
   }
 
 })
@@ -97,7 +107,7 @@ router.route("/items")
   let rawData;
   
   if (!req.body.item) {
-    return next(new BadRequest("Item info is undefined."));
+    return BadRequestResponse(next, "Item info is undefined.");
   }
   
   try {
@@ -105,16 +115,10 @@ router.route("/items")
   } catch (err) {
     console.log(err.stack);
     
-    return next(new BadRequest("Malformed JSON."));
+    return BadRequestResponse(next, "Malformed JSON.");
   }
 
-  Item.add(rawData).then(function(updatedItem) {
-    res.status(200).json(updatedItem);
-  }).catch(function(err) {
-    console.log(err.stack);
-    
-    next(new InternalError());
-  });
+  Item.add(rawData).then(SuccessResponse.bind(null, res)).catch(InternalErrorResponse.bind(null, next));
   
 })
 .put(function(req, res, next) {
@@ -130,13 +134,7 @@ router.route("/items")
   }
   
   if (_.isString(itemId) && _.isObject(newValue)) {
-    Item.update(itemId, newValue).then(function(item) {
-      res.status(200).json(item);
-    }).catch(function(err) {
-      console.log(err.stack);
-      
-      next(new InternalError());
-    });
+    Item.update(itemId, newValue).then(SuccessResponse.bind(null, res)).catch(InternalErrorResponse.bind(null, next));
   } else {
     next(new BadRequest("Item id not specified!"));
   }
@@ -145,13 +143,7 @@ router.route("/items")
   let itemId = req.itemId;
   
   if (_.isString(itemId)) {
-    Item.remove(itemId).then(function(result) {
-      res.status(200).json(result);
-    }).catch(function(err) {
-      console.log(err.stack);
-      
-      next(new InternalError());
-    });
+    Item.remove(itemId).then(SuccessResponse.bind(null, res)).catch(InternalErrorResponse.bind(null, next));
   } else {
     next(new BadRequest("Item id not specified!"));
   }
@@ -190,33 +182,15 @@ router.route("/orders")
   
   if (_.isString(orderId)) {
     
-    Order.get(orderId).then(function(order) {
-      res.status(200).json(order);
-    }).catch(function(err) {
-      console.log(err.stack);
-      
-      next(new InternalError());
-    });
+    Order.get(orderId).then(SuccessResponse.bind(null, res)).catch(InternalErrorResponse.bind(null, next));
     
   } else if (_.isString(userId)) {
     
-    Order.getAllByUserId(userId).then(function(orders) {
-      res.status(200).json(orders);
-    }).catch(function(err) {
-      console.log(err.stack);
-      
-      next(new InternalError());
-    });
+    Order.getAllByUserId(userId).then(SuccessResponse.bind(null, res)).catch(InternalErrorResponse.bind(null, next));
     
   } else {
     
-    Order.getAll().then(function(orders) {
-      res.status(200).json(orders);
-    }).catch(function(err) {
-      console.log(err.stack);
-      
-      next(new InternalError());
-    });
+    Order.getAll().then(SuccessResponse.bind(null, res)).catch(InternalErrorResponse.bind(null, next));
     
   }
 
@@ -276,13 +250,7 @@ router.route("/orders")
   }
   
   if (_.isString(orderId) && _.isObject(newValue)) {
-    Order.update(orderId, newValue).then(function(order) {
-      res.status(200).json(order);
-    }).catch(function(err) {
-      console.log(err.stack);
-      
-      next(new InternalError());
-    });
+    Order.update(orderId, newValue).then(SuccessResponse.bind(null, res)).catch(InternalErrorResponse.bind(null, next));
   } else {
     next(new BadRequest("Order id not specified!"));
   }
@@ -342,241 +310,90 @@ router.route("/feature")
 });
 
 
-
-/********************************************************
- *                      Tag Routes                      *
- ********************************************************/
-
-router.route("/tags")
+_.forEach(routeToHandler, (Handler, route) => {
+  router.route(`/${route}`)
   /**
-   * Global logic for path '/api/tags'.
-   */
-  .all(function(req, res, next) {
-
-    let tagId = req.query.id || req.params.id;
-    
-    if (_.isString(tagId)) {
-      req.tagId = tagId;
-    }
-    
-    next();
-  })
-  /**
-   * Gets a specific tag by id.
-   */
-  .get(function(req, res, next) {
-    
-    let tagId = req.tagId;
-    
-    if (_.isString(tagId)) {
-      Tag.get(tagId).then(function(tag) {
-        res.status(200).json(tag);
-      }).catch(function(err) {
-        console.log(err.stack);
-        
-        next(new InternalError());
-      });
-    } else {
-      Tag.getAll().then(function(tags) {
-        res.status(200).json(tags);
-      }).catch(function(err) {
-        console.log(err.stack);
-        
-        next(new InternalError());
-      });
-    }
-
-  })
-  /**
-   * Adds a new tag.
-   */
-  .post(function(req, res, next) {
-    
-    let rawData;
-    
-    if (!req.body.tag) {
-      return next(new BadRequest("Tag info undefined."));
-    }
-    
-    try {
-      rawData = JSON.parse(req.body.tag);
-    } catch (err) {
-      console.log(err.stack);
-      
-      return next(new BadRequest("Malformed JSON."));
-    }
-
-    Tag.add(rawData).then(function(newTag) {
-      res.status(200).json(newTag);
-    }).catch(function(err) {
-      console.log(err.stack);
-      
-      next(new InternalError());
-    });
-    
-  })
-  /**
-   * Updates a specific tag by id.
-   */
-  .put(function(req, res, next) {
-    let tagId    = req.tagId
-    ,   newValue;
-    
-    try {
-      newValue = JSON.parse(req.body.tag);
-    } catch (err) {
-      console.log(err.stack);
-      
-      return next(new BadRequest("Malformed JSON."));
-    }
-    
-    if (_.isString(tagId) && _.isObject(newValue)) {
-      Tag.update(tagId, newValue).then(function(tag) {
-        res.status(200).json(tag);
-      }).catch(function(err) {
-        console.log(err.stack);
-        
-        next(new InternalError());
-      });
-    } else {
-      next(new BadRequest("Tag id not specified!"));
-    }
-  })
-  /**
-   * Deletes a specific tag by id.
-   */
-  .delete(function(req, res, next) {
-    let tagId = req.tagId;
-    
-    if (_.isString(tagId)) {
-      Tag.remove(tagId).then(function(tag) {
-        res.status(200).json(tag);
-      }).catch(function(err) {
-        console.log(err.stack);
-        
-        next(new InternalError());
-      });
-    } else {
-      next(new BadRequest("Tag id not specified!"));
-    }
-  });
-  
-/********************************************************
- *                      Category Routes                      *
- ********************************************************/
-
-router.route("/categories")
-  /**
-   * Global logic for path '/api/categories'.
+   * Global logic for specific route.
    */
   .all((req, res, next) => {
 
-    let categoryId = req.query.id || req.params.id;
+    let reqId = req.query.id || req.params.id;
     
-    if (_.isString(categoryId)) {
-      req.categoryId = categoryId;
+    if (_.isString(reqId)) {
+      req.reqId = reqId;
     }
     
     next();
   })
   /**
-   * Gets a specific category by id.
+   * Gets a specific data by id, return all data if no id specified.
    */
   .get((req, res, next) => {
     
-    let categoryId = req.categoryId;
+    let reqId = req.reqId;
     
-    if (_.isString(categoryId)) {
-      Category.get(categoryId).then((category) => {
-        res.status(200).json(category);
-      }).catch((err) => {
-        console.log(err.stack);
-        
-        next(new InternalError());
-      });
+    if (_.isString(reqId)) {
+      Handler.get(reqId).then(SuccessResponse.bind(null, res)).catch(InternalErrorResponse.bind(null, next));
     } else {
-      Category.getAll().then((categories) => {
-        res.status(200).json(categories);
-      }).catch(function(err) {
-        console.log(err.stack);
-        
-        next(new InternalError());
-      });
+      Handler.getAll().then(SuccessResponse.bind(null, res)).catch(InternalErrorResponse.bind(null, next));
     }
 
   })
   /**
-   * Adds a new category.
+   * Adds a new data.
    */
   .post((req, res, next) => {
     
     let rawData;
     
-    if (!req.body.category) {
-      return next(new BadRequest("Category info undefined."));
+    if (!req.body.data) {
+      return BadRequestResponse(next, "Data info undefined.");
     }
     
     try {
-      rawData = JSON.parse(req.body.category);
+      rawData = JSON.parse(req.body.data);
     } catch (err) {
       console.log(err.stack);
       
-      return next(new BadRequest("Malformed JSON."));
+      return BadRequestResponse(next, "Malformed JSON.");
     }
 
-    Category.add(rawData).then((newCategory) => {
-      res.status(200).json(newCategory);
-    }).catch(function(err) {
-      console.log(err.stack);
-      
-      next(new InternalError());
-    });
+    Handler.add(rawData).then(SuccessResponse.bind(null, res)).catch(InternalErrorResponse.bind(null, next));
     
   })
   /**
-   * Updates a specific category by id.
+   * Updates a specific data by id.
    */
   .put((req, res, next) => {
-    let categoryId = req.categoryId
+    let reqId = req.reqId
     ,   newValue;
     
     try {
-      newValue = JSON.parse(req.body.category);
+      newValue = JSON.parse(req.body.data);
     } catch (err) {
       console.log(err.stack);
       
-      return next(new BadRequest("Malformed JSON."));
+      return BadRequestResponse(next, "Malformed JSON.");
     }
     
-    if (_.isString(categoryId) && _.isObject(newValue)) {
-      Category.update(categoryId, newValue).then((category) => {
-        res.status(200).json(category);
-      }).catch(function(err) {
-        console.log(err.stack);
-        
-        next(new InternalError());
-      });
+    if (_.isString(brandId) && _.isObject(newValue)) {
+      Handler.update(reqId, newValue).then(SuccessResponse.bind(null, res)).catch(InternalErrorResponse.bind(null, next));
     } else {
-      next(new BadRequest("Category id not specified!"));
+      return BadRequestResponse(next, "Data id not specified!");
     }
   })
   /**
-   * Deletes a specific category by id.
+   * Deletes a specific data by id.
    */
   .delete((req, res, next) => {
-    let categoryId = req.categoryId;
+    let reqId = req.reqId;
     
-    if (_.isString(categoryId)) {
-      Category.remove(categoryId).then((category) => {
-        res.status(200).json(category);
-      }).catch((err) => {
-        console.log(err.stack);
-        
-        next(new InternalError());
-      });
+    if (_.isString(reqId)) {
+      Handler.remove(reqId).then(SuccessResponse.bind(null, res)).catch(InternalErrorResponse.bind(null, next));
     } else {
-      next(new BadRequest("Category id not specified!"));
+      return BadRequestResponse(next, "Data id not specified!");
     }
   });
-
+});
+    
 module.exports = router;

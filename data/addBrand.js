@@ -2,14 +2,14 @@
 
 var request = require("request");
 
-var category = {
-  name: "Creatine"
+var brand = {
+  name: "Garden of Life"
 };
 
 request.post({
-  url: "http://localhost:8080/api/categories",
+  url: "http://localhost:8080/api/brands",
   form: {
-    data: JSON.stringify(category)
+    data: JSON.stringify(brand)
   }
 }, function(err, response, body) {
   if (err) {
