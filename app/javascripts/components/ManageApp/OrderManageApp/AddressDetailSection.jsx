@@ -7,7 +7,7 @@ import invariant from "invariant"
 import GridSection from "lib/GridSection"
 import BaseInfo from "lib/BaseInfo"
 
-import styles from "components/OrderManageApp/AddressDetailSection.scss"
+import styles from "components/ManageApp/OrderManageApp/AddressDetailSection.scss"
 
 export default class AddressDetailSection extends React.Component {
   

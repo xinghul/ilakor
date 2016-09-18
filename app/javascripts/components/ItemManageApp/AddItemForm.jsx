@@ -62,11 +62,9 @@ export default class AddItemForm extends React.Component {
     let name = this.refs["name"].getValue()
     ,   tag = this.refs["tag"].getValue()
     ,   image = this.refs["image"].getValue()
-    ,   price = this.refs["price"].getValue()
     ,   description = this.refs["description"].getHtml();
 
-    if (_.isEmpty(name) || _.isEmpty(tag) || _.isEmpty(image) || 
-        _.isEmpty(price) || _.isEmpty(description)) {
+    if (_.isEmpty(name) || _.isEmpty(tag) || _.isEmpty(image) || _.isEmpty(description)) {
       this.refs["alert"].show();
       
       return;
@@ -76,8 +74,6 @@ export default class AddItemForm extends React.Component {
       name: name,
       tag: tag,
       image: image,
-      
-      price: price,
       
       description: description
       
@@ -90,7 +86,7 @@ export default class AddItemForm extends React.Component {
     });
     
     ItemManageAction.addItem(itemConfig)
-      .catch(function(err) {
+      .catch((err) => {
         console.log(err);
       })
       .finally(() => {
@@ -110,7 +106,6 @@ export default class AddItemForm extends React.Component {
     this.refs["name"].clear();
     this.refs["tag"].clear();
     this.refs["image"].clear();
-    this.refs["price"].clear();
     this.refs["description"].clear();
   }
   
@@ -137,14 +132,6 @@ export default class AddItemForm extends React.Component {
     
     let imagesInput = (
       <ImageUploader ref="image" />
-    );
-    
-    let priceInput = (
-      <Input
-        ref="price"
-        label="Price"
-        placeholder="Enter price"
-      />
     );
     
     let descriptionEditor = (
@@ -175,11 +162,6 @@ export default class AddItemForm extends React.Component {
         <Row>
           <Col xs={12} md={12}>
             {imagesInput}
-          </Col>
-        </Row>
-        <Row>
-          <Col xs={12} md={8}>
-            {priceInput}
           </Col>
         </Row>
         <Row>

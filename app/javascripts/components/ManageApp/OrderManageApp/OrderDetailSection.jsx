@@ -10,7 +10,7 @@ import SubmitButton from "lib/SubmitButton"
 
 import OrderAction from "actions/OrderAction"
 
-import styles from "components/OrderManageApp/OrderDetailSection.scss"
+import styles from "components/ManageApp/OrderManageApp/OrderDetailSection.scss"
 
 export default class OrderDetailSection extends React.Component {
   

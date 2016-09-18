@@ -7,7 +7,7 @@ import invariant from "invariant"
 import GridSection from "lib/GridSection"
 import BaseInfo from "lib/BaseInfo"
 
-import styles from "components/OrderManageApp/CustomerDetailSection.scss"
+import styles from "components/ManageApp/OrderManageApp/CustomerDetailSection.scss"
 
 export default class CustomerDetailSection extends React.Component {
   

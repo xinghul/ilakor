@@ -14,7 +14,7 @@ import AddressDetailSection from "./AddressDetailSection"
 import ItemDetailSection from "./ItemDetailSection"
 import OrderDetailSection from "./OrderDetailSection"
 
-import styles from "components/OrderManageApp/OrderDetailModal.scss"
+import styles from "components/ManageApp/OrderManageApp/OrderDetailModal.scss"
 
 export default class OrderDetailModal extends React.Component {
   

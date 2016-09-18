@@ -96,6 +96,7 @@ export default class NarbarApp extends React.Component {
       authArea = (
         <DropdownButton title={title} id="authDropdown">
           <MenuItem href="#/account">My Account</MenuItem>
+          <MenuItem href="#/manage">Manage</MenuItem>
           <MenuItem divider />
           <MenuItem onSelect={this._onLogout}>Log out</MenuItem>
         </DropdownButton>
@@ -143,9 +144,6 @@ export default class NarbarApp extends React.Component {
             </NavItem>
             <NavItem href="#/itemManage">
               Items
-            </NavItem>
-            <NavItem href="#/orderManage">
-              Orders
             </NavItem>
           </Nav>
           <Nav pullRight className={styles.authArea}>

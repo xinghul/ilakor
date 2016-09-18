@@ -14,7 +14,7 @@ import LoadSpinner from "lib/LoadSpinner"
 
 import OrderDetailModal from "./OrderManageApp/OrderDetailModal"
 
-import styles from "components/OrderManageApp.scss"
+import styles from "components/ManageApp/OrderManageApp.scss"
 
 /**
  * Gets the new state from subscribed stores.

@@ -9,7 +9,7 @@ import { Table } from "react-bootstrap"
 import GridSection from "lib/GridSection"
 import BaseInfo from "lib/BaseInfo"
 
-import styles from "components/OrderManageApp/ItemDetailSection.scss"
+import styles from "components/ManageApp/OrderManageApp/ItemDetailSection.scss"
 
 export default class ItemDetailSection extends React.Component {
   

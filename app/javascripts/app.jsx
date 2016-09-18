@@ -1,29 +1,29 @@
 "use strict";
 
-import "babel-polyfill"
+import "babel-polyfill";
 
 // import this first for overwrite reason
-import bootstrapStyles from "bootstrap/dist/css/bootstrap.min.css"
+import bootstrapStyles from "bootstrap/dist/css/bootstrap.min.css";
 
-import React from "react"
-import { render } from "react-dom"
-import ReactCSSTransitionGroup from "react-addons-css-transition-group"
-import { Router, Route, IndexRoute, Link, hashHistory } from "react-router"
+import React from "react";
+import { render } from "react-dom";
+import ReactCSSTransitionGroup from "react-addons-css-transition-group";
+import { Router, Route, IndexRoute, Link, hashHistory } from "react-router";
 
-import NavbarApp from "components/NavbarApp"
-import AuthApp from "components/AuthApp"
+import NavbarApp from "components/NavbarApp";
+import AuthApp from "components/AuthApp";
 
-import ItemDisplayApp from "components/ItemDisplayApp"
-import ItemManageApp from "components/ItemManageApp"
-import OrderManageApp from "components/OrderManageApp"
-import AccountApp from "components/AccountApp"
-import SocialApp from "components/SocialApp"
-import CheckoutApp from "components/CheckoutApp"
-import CompleteLocalApp from "components/CompleteLocalApp"
+import ItemDisplayApp from "components/ItemDisplayApp";
+import ItemManageApp from "components/ItemManageApp";
+import ManageApp from "components/ManageApp";
+import AccountApp from "components/AccountApp";
+import SocialApp from "components/SocialApp";
+import CheckoutApp from "components/CheckoutApp";
+import CompleteLocalApp from "components/CompleteLocalApp";
 
-import SidePanel from "lib/SidePanel"
+import SidePanel from "lib/SidePanel";
 
-import styles from "main/app.scss"
+import styles from "main/app.scss";
 
 class App extends React.Component {
     
@@ -81,7 +81,7 @@ render((
       <IndexRoute component={IndexApp} />
       <Route path="itemDisplay" component={ItemDisplayApp} />
       <Route path="itemManage" component={ItemManageApp} />
-      <Route path="orderManage" component={OrderManageApp} />
+      <Route path="manage" component={ManageApp} />
       <Route path="account" component={AccountApp} />
       <Route path="social" component={SocialApp} />
       <Route path="checkout" component={CheckoutApp} />

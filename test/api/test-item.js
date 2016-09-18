@@ -39,33 +39,9 @@ describe("Items", function() {
   it("should add a new item on /api/items POST", function(done) {
     let rawData = {
       name: itemName,
-      tag: ["TABLE"],
-      price: 3100,
-      dimension: {
-        width: {
-          base: 60,
-          customizable: true,
-          min: 40,
-          max: 80,
-          pricePerUnit: 10
-        },
-        height: {
-          base: 60,
-          customizable: true,
-          min: 40,
-          max: 80,
-          pricePerUnit: 10
-        },
-        depth: {
-          base: 60,
-          customizable: true,
-          min: 40,
-          max: 80,
-          pricePerUnit: 10
-        },
-        weight: 100
-      },
-      stock: 1
+      brand: "Optimum Nutrition",
+      category: "Protein",
+      tag: ["Protein", "Bulking"]
     };
     
     chai.request(server)
