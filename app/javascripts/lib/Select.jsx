@@ -2,12 +2,12 @@
 
 import React from "react"
 import _ from "lodash"
-import Select from "react-select"
+import ReactSelect from "react-select"
 
-import styles from "lib/MultiSelectInput.scss"
+import styles from "lib/Select.scss"
 import reactSelectStyles from "react-select/dist/react-select.min.css"
 
-export default class MultiSelectInput extends React.Component {
+export default class Select extends React.Component {
   
   /**
    * @inheritdoc
@@ -16,7 +16,7 @@ export default class MultiSelectInput extends React.Component {
     super(props);
     
     this.state = {
-      value: []
+      value: this.props.multi ? [] : {}
     };
   }
   
@@ -27,6 +27,7 @@ export default class MultiSelectInput extends React.Component {
    * @param  {Object[]} newValue new select value.
    */
   _onChange = (newValue) => {
+
     this.setState({
       value: newValue
     });
@@ -35,14 +36,22 @@ export default class MultiSelectInput extends React.Component {
   };
   
   /**
-   * Returns the selected value as String[].
+   * Returns the selected value as String[], if multi select is enabled.
    * 
    * @return {String[]}
    */
   getValue() {
-    return this.state.value.map(function(option) {
-      return option.value;
-    });
+    const { value } = this.state;
+    
+    if (_.isArray(value)) {
+      return value.map((option) => {
+        return option.value;
+      });      
+    } else if (!_.isEmpty(value)) {
+      return value.value;
+    }
+    
+    return null;
   }
   
   /**
@@ -50,7 +59,7 @@ export default class MultiSelectInput extends React.Component {
    */
   clear() {
     this.setState({
-      value: []
+      value: this.props.multi ? [] : {}
     });
   }
   
@@ -59,24 +68,24 @@ export default class MultiSelectInput extends React.Component {
    */
   render() {
     
-    const { label, options, placeholder } = this.props;
+    const { label, multi, options, placeholder } = this.props;
     
     let selectOptions = options.map((option) => {
       return {
-        value: option,
-        label: _.capitalize(option)
+        value: option._id,
+        label: _.capitalize(option.name)
       };
     });
 
     return (
-      <div className={styles.multiSelectInput}>
+      <div className={styles.select}>
         <label>
           {label}
         </label>
-        <Select
+        <ReactSelect
           placeholder={placeholder}
           options={selectOptions}
-          multi={true}
+          multi={multi}
           value={this.state.value}
           onChange={this._onChange}
         />
@@ -85,16 +94,18 @@ export default class MultiSelectInput extends React.Component {
   }
 }
 
-MultiSelectInput.propTypes = {
+Select.propTypes = {
   options: React.PropTypes.array,
+  multi: React.PropTypes.bool,
 
   label: React.PropTypes.string,
   placeholder: React.PropTypes.string,
   onChange: React.PropTypes.func
 };
 
-MultiSelectInput.defaultProps = {
+Select.defaultProps = {
   options: [],
+  multi: true,
 
   label: "",
   placeholder: "",

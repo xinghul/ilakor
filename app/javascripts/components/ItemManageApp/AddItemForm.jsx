@@ -7,7 +7,7 @@ import invariant from "invariant"
 import { Row, Col } from "react-bootstrap"
 
 import Input from "lib/Input"
-import MultiSelectInput from "lib/MultiSelectInput"
+import Select from "lib/Select"
 import SubmitButton from "lib/SubmitButton"
 import DraftEditor from "lib/DraftEditor"
 import GridSection from "lib/GridSection"
@@ -18,27 +18,6 @@ import ImageUploader from "./ImageUploader"
 import ItemManageAction from "actions/ItemManageAction"
 
 import styles from "components/ItemManageApp/AddItemForm.scss"
-
-/**
- * Creates the options for tag multiselect.
- * 
- * @param  {Object[]} tags the tags config.
- */
-function createTagOptions(tags) {
-  
-  invariant(_.isArray(tags), `createTagOptions() expects 'tags' as 'array', but get '${typeof tags}'.`);
-  
-  let tagOptions = [];
-  
-  for (let tag of tags)
-  {
-    invariant(_.isString(tag.name), `createTagOptions() expects each tag.name as 'string', but gets '${typeof tag.name}'.`);
-    
-    tagOptions.push(tag.name);
-  }
-  
-  return tagOptions;
-}
 
 
 export default class AddItemForm extends React.Component {
@@ -60,11 +39,14 @@ export default class AddItemForm extends React.Component {
    */
   _handleSubmit = () => {
     let name = this.refs["name"].getValue()
+    ,   brand = this.refs["brand"].getValue()
+    ,   category = this.refs["category"].getValue()
     ,   tag = this.refs["tag"].getValue()
     ,   image = this.refs["image"].getValue()
     ,   description = this.refs["description"].getHtml();
 
-    if (_.isEmpty(name) || _.isEmpty(tag) || _.isEmpty(image) || _.isEmpty(description)) {
+    if (_.isEmpty(name) || _.isEmpty(brand) || _.isEmpty(category) || _.isEmpty(tag) || 
+        _.isEmpty(image) || _.isEmpty(description)) {
       this.refs["alert"].show();
       
       return;
@@ -72,6 +54,8 @@ export default class AddItemForm extends React.Component {
     
     let itemConfig = {
       name: name,
+      brand: brand,
+      category: category,
       tag: tag,
       image: image,
       
@@ -104,6 +88,8 @@ export default class AddItemForm extends React.Component {
    */
   _clearForm() {
     this.refs["name"].clear();
+    this.refs["brand"].clear();
+    this.refs["category"].clear();
     this.refs["tag"].clear();
     this.refs["image"].clear();
     this.refs["description"].clear();
@@ -121,12 +107,32 @@ export default class AddItemForm extends React.Component {
       />
     );
     
+    let brandInput = (
+      <Select
+        multi={false}
+        ref="brand"
+        label="Brand"
+        placeholder="Select brand"
+        options={this.props.brands}
+      />
+    );
+    
+    let categoryInput = (
+      <Select
+        multi={false}
+        ref="category"
+        label="Category"
+        placeholder="Select category"
+        options={this.props.categories}
+      />
+    );
+    
     let tagInput = (
-      <MultiSelectInput
+      <Select
         ref="tag"
         label="Tags"
         placeholder="Select tags"
-        options={createTagOptions(this.props.tags)}
+        options={this.props.tags}
       />
     );
     
@@ -152,6 +158,16 @@ export default class AddItemForm extends React.Component {
         <Row>
           <Col xs={12} md={8}>
             {nameInput}
+          </Col>
+        </Row>
+        <Row>
+          <Col xs={12} md={8}>
+            {brandInput}
+          </Col>
+        </Row>
+        <Row>
+          <Col xs={12} md={8}>
+            {categoryInput}
           </Col>
         </Row>
         <Row>
@@ -186,8 +202,12 @@ export default class AddItemForm extends React.Component {
 
 AddItemForm.propTypes = {
   tags: React.PropTypes.array,
+  categories: React.PropTypes.array,
+  brands: React.PropTypes.array
 };
 
 AddItemForm.defaultProps = {
-  tags: []
+  tags: [],
+  categories: [],
+  brands: []
 };

@@ -1,23 +1,31 @@
-"use strict"
+import _ from "lodash";
+import React from "react";
+import { Row, Col } from "react-bootstrap";
 
-import _ from "lodash"
+import ItemDetailModal from "./ItemManageApp/ItemDetailModal";
+import ItemListTable from "./ItemManageApp/ItemListTable";
+import AddItemForm from "./ItemManageApp/AddItemForm";
 
-import React from "react"
-import { Row, Col } from "react-bootstrap"
+import ItemManageAction from "actions/ItemManageAction";
+import ItemManageStore from "stores/ItemManageStore";
 
-import ItemDetailModal from "./ItemManageApp/ItemDetailModal"
-import ItemListTable from "./ItemManageApp/ItemListTable"
-import AddItemForm from "./ItemManageApp/AddItemForm"
+import BrandManageAction from "actions/item/BrandManageAction";
+import BrandManageStore from "stores/item/BrandManageStore";
 
-import ItemManageAction from "actions/ItemManageAction"
-import ItemManageStore from "stores/ItemManageStore"
+import CategoryManageAction from "actions/item/CategoryManageAction";
+import CategoryManageStore from "stores/item/CategoryManageStore";
 
-import styles from "components/ItemManageApp.scss"
+import TagManageAction from "actions/item/TagManageAction";
+import TagManageStore from "stores/item/TagManageStore";
+
+import styles from "components/ItemManageApp.scss";
 
 function getStateFromStores() {
   return {
     items: ItemManageStore.getItems(),
-    tags: ItemManageStore.getTags()
+    brands: BrandManageStore.getBrands(),
+    categories: CategoryManageStore.getCategories(),
+    tags: TagManageStore.getTags()
   };
 }
 
@@ -31,7 +39,9 @@ export default class ItemManageApp extends React.Component {
     
     this.state = {
       items: ItemManageStore.getItems(),
-      tags: ItemManageStore.getTags(),
+      brands: BrandManageStore.getBrands(),
+      categories: CategoryManageStore.getCategories(),
+      tags: TagManageStore.getTags(),
       
       selectedItem: {}
     };
@@ -42,10 +52,17 @@ export default class ItemManageApp extends React.Component {
    */
   componentDidMount() {
     ItemManageStore.addChangeListener(this._onChange);
+    BrandManageStore.addChangeListener(this._onChange);
+    CategoryManageStore.addChangeListener(this._onChange);
+    TagManageStore.addChangeListener(this._onChange);
     
     ItemManageAction.getItems();
     
-    ItemManageAction.getAllTags();
+    BrandManageAction.getBrands();
+    
+    CategoryManageAction.getCategories();
+    
+    TagManageAction.getTags();
   }
   
   /**
@@ -53,6 +70,9 @@ export default class ItemManageApp extends React.Component {
    */
   componentWillUnmount() {
     ItemManageStore.removeChangeListener(this._onChange);
+    BrandManageStore.removeChangeListener(this._onChange);
+    CategoryManageStore.removeChangeListener(this._onChange);
+    TagManageStore.removeChangeListener(this._onChange);
   }
   
   /**
@@ -91,6 +111,8 @@ export default class ItemManageApp extends React.Component {
         <Row>
           <Col xs={12} md={6}>
             <AddItemForm 
+              brands={this.state.brands}
+              categories={this.state.categories}
               tags={this.state.tags} 
             />
           </Col>
