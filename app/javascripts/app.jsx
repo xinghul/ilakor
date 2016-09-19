@@ -14,7 +14,6 @@ import NavbarApp from "components/NavbarApp";
 import AuthApp from "components/AuthApp";
 
 import ItemDisplayApp from "components/ItemDisplayApp";
-import ItemManageApp from "components/ItemManageApp";
 import ManageApp from "components/ManageApp";
 import AccountApp from "components/AccountApp";
 import SocialApp from "components/SocialApp";
@@ -80,7 +79,6 @@ render((
     <Route path="/" component={App}>
       <IndexRoute component={IndexApp} />
       <Route path="itemDisplay" component={ItemDisplayApp} />
-      <Route path="itemManage" component={ItemManageApp} />
       <Route path="manage" component={ManageApp} />
       <Route path="account" component={AccountApp} />
       <Route path="social" component={SocialApp} />

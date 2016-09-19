@@ -6,8 +6,8 @@ import ItemDetailModal from "./ItemManageApp/ItemDetailModal";
 import ItemListTable from "./ItemManageApp/ItemListTable";
 import AddItemForm from "./ItemManageApp/AddItemForm";
 
-import ItemManageAction from "actions/ItemManageAction";
-import ItemManageStore from "stores/ItemManageStore";
+import ItemManageAction from "actions/item/ItemManageAction";
+import ItemManageStore from "stores/item/ItemManageStore";
 
 import BrandManageAction from "actions/item/BrandManageAction";
 import BrandManageStore from "stores/item/BrandManageStore";
@@ -18,7 +18,7 @@ import CategoryManageStore from "stores/item/CategoryManageStore";
 import TagManageAction from "actions/item/TagManageAction";
 import TagManageStore from "stores/item/TagManageStore";
 
-import styles from "components/ItemManageApp.scss";
+import styles from "components/ManageApp/ItemManageApp.scss";
 
 function getStateFromStores() {
   return {
@@ -56,7 +56,7 @@ export default class ItemManageApp extends React.Component {
     CategoryManageStore.addChangeListener(this._onChange);
     TagManageStore.addChangeListener(this._onChange);
     
-    ItemManageAction.getItems();
+    ItemManageAction.getItems(true);
     
     BrandManageAction.getBrands();
     

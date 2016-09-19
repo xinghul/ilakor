@@ -1,13 +1,11 @@
-"use strict"
+import React from "react";
+import _ from "lodash";
+import { Form, Modal } from "react-bootstrap";
 
-import React from "react"
-import _ from "lodash"
-import { Form, Modal } from "react-bootstrap"
+import Input from "lib/Input";
+import SubmitButton from "lib/SubmitButton";
 
-import Input from "lib/Input"
-import SubmitButton from "lib/SubmitButton"
-
-import ItemManageAction from "actions/ItemManageAction"
+import ItemManageAction from "actions/item/ItemManageAction";
 
 export default class ItemDetailModal extends React.Component {
   

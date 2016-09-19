@@ -1,16 +1,14 @@
-"use strict"
+import React from "react";
+import _ from "lodash";
+import invariant from "invariant";
+import { Table } from "react-bootstrap";
 
-import React from "react"
-import _ from "lodash"
-import invariant from "invariant"
-import { Table } from "react-bootstrap"
+import GridSection from "lib/GridSection";
+import LoadSpinner from "lib/LoadSpinner";
 
-import GridSection from "lib/GridSection"
-import LoadSpinner from "lib/LoadSpinner"
+import ItemManageStore from "stores/item/ItemManageStore";
 
-import ItemManageStore from "stores/ItemManageStore"
-
-import styles from "components/ItemManageApp/ItemListTable.scss"
+import styles from "components/ManageApp/ItemManageApp/ItemListTable.scss";
 
 /**
  * Gets the new state from subscribed stores.

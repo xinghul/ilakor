@@ -37,7 +37,7 @@ export default class TagManageApp extends React.Component {
   componentDidMount() {
     TagManageStore.addChangeListener(this._onChange);
     
-    TagManageAction.getTags();
+    TagManageAction.getTags(true);
   }
   
   /**

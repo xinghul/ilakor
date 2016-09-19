@@ -1,16 +1,14 @@
-"use strict"
+import React from "react";
+import _ from "lodash";
+import invariant from "invariant";
 
-import React from "react"
-import _ from "lodash"
-import invariant from "invariant"
+import { Form, FormGroup, InputGroup, ControlLabel, Row, Col } from "react-bootstrap";
 
-import { Form, FormGroup, InputGroup, ControlLabel, Row, Col } from "react-bootstrap"
+import Input from "lib/Input";
+import Checkbox from "lib/Checkbox";
+import SingleRangeSlider from "lib/SingleRangeSlider";
 
-import Input from "lib/Input"
-import Checkbox from "lib/Checkbox"
-import SingleRangeSlider from "lib/SingleRangeSlider"
-
-import styles from "components/ItemManageApp/DimensionRangeInput.scss"
+import styles from "components/ManageApp/ItemManageApp/DimensionRangeInput.scss";
 
 const positiveNumberReg = /^\d*[1-9]\d*$/;
 

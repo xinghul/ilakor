@@ -1,17 +1,14 @@
-"use strict";
+import _ from "lodash";
+import invariant from "invariant";
+import { EventEmitter } from "events";
 
-import _ from "lodash"
-import invariant from "invariant"
-import { EventEmitter } from "events"
-
-import AppDispatcher from "dispatcher/AppDispatcher"
-import ItemManageConstants from "constants/ItemManageConstants"
+import AppDispatcher from "dispatcher/AppDispatcher";
+import ItemManageConstants from "constants/item/ItemManageConstants";
 
 const CHANGE_EVENT = "change";
 
 // items and tags in this store
 let _items = []
-,   _tags  = []
 ,   _isLoading = false;
 
 let ItemManageStore = _.extend({}, EventEmitter.prototype, {
@@ -88,24 +85,6 @@ let ItemManageStore = _.extend({}, EventEmitter.prototype, {
   },
   
   /**
-   * Sets the tags.
-   * 
-   * @param  {Array} newTags the new tags.
-   */
-  setTags: function(newTags) {
-    invariant(_.isArray(newTags), `setTags(newTags) expects an 'array' as 'newTags', but gets '${typeof newTags}'.`);
-    
-    _tags = newTags;
-  },
-  
-  /**
-   * Returns the tags.
-   */
-  getTags: function() {
-    return _tags;
-  },
-  
-  /**
    * Sets the isLoading flag.
    * 
    * @param  {Boolean} isLoading the new isLoading value.
@@ -176,12 +155,6 @@ ItemManageStore.dispatchToken = AppDispatcher.register(function(payload) {
     case ItemManageConstants.RECEIVED_UPDATED_ITEM:
       ItemManageStore.updateItem(action.item);
       ItemManageStore.emitChange();
-      break;
-      
-    case ItemManageConstants.RECEIVED_ALL_TAGS:
-      ItemManageStore.setTags(action.tags);
-      ItemManageStore.emitChange();
-      break;
       
     case ItemManageConstants.SETS_IS_LOADING:
       ItemManageStore.setIsLoading(action.isLoading);

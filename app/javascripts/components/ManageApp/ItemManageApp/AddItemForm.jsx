@@ -1,23 +1,21 @@
-"use strict"
+import React from "react";
+import _ from "lodash";
+import invariant from "invariant";
 
-import React from "react"
-import _ from "lodash"
-import invariant from "invariant"
+import { Row, Col } from "react-bootstrap";
 
-import { Row, Col } from "react-bootstrap"
+import Input from "lib/Input";
+import Select from "lib/Select";
+import SubmitButton from "lib/SubmitButton";
+import DraftEditor from "lib/DraftEditor";
+import GridSection from "lib/GridSection";
+import AlertMessage from "lib/AlertMessage";
 
-import Input from "lib/Input"
-import Select from "lib/Select"
-import SubmitButton from "lib/SubmitButton"
-import DraftEditor from "lib/DraftEditor"
-import GridSection from "lib/GridSection"
-import AlertMessage from "lib/AlertMessage"
+import ImageUploader from "./ImageUploader";
 
-import ImageUploader from "./ImageUploader"
+import ItemManageAction from "actions/item/ItemManageAction";
 
-import ItemManageAction from "actions/ItemManageAction"
-
-import styles from "components/ItemManageApp/AddItemForm.scss"
+import styles from "components/ManageApp/ItemManageApp/AddItemForm.scss";
 
 
 export default class AddItemForm extends React.Component {

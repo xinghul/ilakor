@@ -52,16 +52,20 @@ let CategoryManageAction = {
   
   /**
    * Gets all the categories.
+   *
+   * @param {Boolean} setIsLoading whether to set the isLoading flag.
    * 
    * @return {Promise} the promise object.
    */
-  getCategories: function() {
+  getCategories: function(setIsLoading) {
     
-    // mark as loading
-    AppDispatcher.handleAction({
-      actionType: CategoryManageConstants.SETS_IS_LOADING,
-      isLoading: true
-    });
+    if (setIsLoading) {
+      // mark as loading
+      AppDispatcher.handleAction({
+        actionType: CategoryManageConstants.SETS_IS_LOADING,
+        isLoading: true
+      });
+    }    
     
     return new Promise((resolve, reject) => {
       
@@ -69,7 +73,7 @@ let CategoryManageAction = {
         .then((res) => {
           let categories = res.body;
           
-          invariant(_.isArray(categories), `getCategories() expects response.body to be an array, but gets '${typeof categories}'.`)
+          invariant(_.isArray(categories), `getCategories() expects response.body to be an array, but gets '${typeof categories}'.`);
           
           AppDispatcher.handleAction({
             actionType: CategoryManageConstants.RECEIVED_CATEGORIES,
@@ -87,10 +91,12 @@ let CategoryManageAction = {
         })
         .finally(() => {
           
-          AppDispatcher.handleAction({
-            actionType: CategoryManageConstants.SETS_IS_LOADING,
-            isLoading: false
-          });
+          if (setIsLoading) {            
+            AppDispatcher.handleAction({
+              actionType: CategoryManageConstants.SETS_IS_LOADING,
+              isLoading: false
+            });
+          }
           
         });
 

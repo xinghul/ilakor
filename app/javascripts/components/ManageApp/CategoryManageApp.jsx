@@ -37,7 +37,7 @@ export default class CategoryManageApp extends React.Component {
   componentDidMount() {
     CategoryManageStore.addChangeListener(this._onChange);
     
-    CategoryManageAction.getCategories();
+    CategoryManageAction.getCategories(true);
   }
   
   /**

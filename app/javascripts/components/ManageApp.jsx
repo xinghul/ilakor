@@ -4,6 +4,7 @@ import invariant from "invariant";
 import { Row, Col, Tab, Nav, NavItem, NavDropdown, MenuItem } from "react-bootstrap";
 
 import OrderManageApp from "./ManageApp/OrderManageApp";
+import ItemManageApp from "./ManageApp/ItemManageApp";
 import BrandManageApp from "./ManageApp/BrandManageApp";
 import CategoryManageApp from "./ManageApp/CategoryManageApp";
 import TagManageApp from "./ManageApp/TagManageApp";
@@ -58,7 +59,7 @@ export default class ManageApp extends React.Component {
                 <OrderManageApp />
               </Tab.Pane>
               <Tab.Pane eventKey="2.1">
-                manage items
+                <ItemManageApp />
               </Tab.Pane>
               <Tab.Pane eventKey="2.2">
                 <BrandManageApp />

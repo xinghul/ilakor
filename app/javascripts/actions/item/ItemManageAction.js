@@ -6,22 +6,26 @@ import invariant from "invariant"
 import Promise from "bluebird"
 
 import AppDispatcher from "dispatcher/AppDispatcher"
-import ItemManageConstants from "constants/ItemManageConstants"
+import ItemManageConstants from "constants/item/ItemManageConstants"
 
 let ItemManageAction = {
   
   /**
    * Gets all items.
    *
+   * @param {Boolean} setIsLoading whether to set the isLoading flag.
+   *
    * @return {Promise}
    */
-  getItems: function() {
+  getItems: function(setIsLoading) {
     
-    // mark as loading
-    AppDispatcher.handleAction({
-      actionType: ItemManageConstants.SETS_IS_LOADING,
-      isLoading: true
-    });
+    if (setIsLoading) {
+      // mark as loading
+      AppDispatcher.handleAction({
+        actionType: ItemManageConstants.SETS_IS_LOADING,
+        isLoading: true
+      });
+    }    
     
     let sampleQuery = {
       price: {
@@ -55,10 +59,12 @@ let ItemManageAction = {
         })
         .finally(() => {
           
-          AppDispatcher.handleAction({
-            actionType: ItemManageConstants.SETS_IS_LOADING,
-            isLoading: false
-          });
+          if (setIsLoading) {
+            AppDispatcher.handleAction({
+              actionType: ItemManageConstants.SETS_IS_LOADING,
+              isLoading: false
+            });
+          }                    
           
         });
       
@@ -177,40 +183,8 @@ let ItemManageAction = {
         });
       
     });
-  },
-  
-  /**
-   * Gets all tags.
-   *
-   * @return {Promise}
-   */
-  getAllTags: function() {
-    
-    return new Promise((resolve, reject) => {
-      
-      request.get("/api/tags")
-        .then((res) => {
-          let tags = res.body;
-          
-          invariant(_.isArray(tags), `getAllTags() expects response.body to be 'array', but gets '${typeof tags}'.`);
-          
-          AppDispatcher.handleAction({
-            actionType: ItemManageConstants.RECEIVED_ALL_TAGS,
-            tags: tags
-          });
-          
-          resolve();
-        })
-        .catch((err) => {
-          let message = err.message;
-          
-          invariant(_.isString(message), `addItem(newItem) expects error.message to be 'string', but gets '${typeof message}'.`);
-          
-          reject(message);
-        });
-      
-    });
   }
+  
 };
 
 export default ItemManageAction;

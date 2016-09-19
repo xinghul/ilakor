@@ -52,16 +52,20 @@ let TagManageAction = {
   
   /**
    * Gets all the tags.
+   *
+   * @param {Boolean} setIsLoading whether to set the isLoading flag.
    * 
    * @return {Promise} the promise object.
    */
-  getTags: function() {
+  getTags: function(setIsLoading) {
     
-    // mark as loading
-    AppDispatcher.handleAction({
-      actionType: TagManageConstants.SETS_IS_LOADING,
-      isLoading: true
-    });
+    if (setIsLoading) {
+      // mark as loading
+      AppDispatcher.handleAction({
+        actionType: TagManageConstants.SETS_IS_LOADING,
+        isLoading: true
+      });
+    }
     
     return new Promise((resolve, reject) => {
       
@@ -69,7 +73,7 @@ let TagManageAction = {
         .then((res) => {
           let tags = res.body;
           
-          invariant(_.isArray(tags), `getTags() expects response.body to be an array, but gets '${typeof tags}'.`)
+          invariant(_.isArray(tags), `getTags() expects response.body to be an array, but gets '${typeof tags}'.`);
           
           AppDispatcher.handleAction({
             actionType: TagManageConstants.RECEIVED_TAGS,
@@ -87,10 +91,12 @@ let TagManageAction = {
         })
         .finally(() => {
           
-          AppDispatcher.handleAction({
-            actionType: TagManageConstants.SETS_IS_LOADING,
-            isLoading: false
-          });
+          if (setIsLoading) {
+            AppDispatcher.handleAction({
+              actionType: TagManageConstants.SETS_IS_LOADING,
+              isLoading: false
+            });
+          }
           
         });
 

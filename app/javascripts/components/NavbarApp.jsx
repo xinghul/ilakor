@@ -142,9 +142,6 @@ export default class NarbarApp extends React.Component {
             <NavItem href="#/itemDisplay">
               Furnitures
             </NavItem>
-            <NavItem href="#/itemManage">
-              Items
-            </NavItem>
           </Nav>
           <Nav pullRight className={styles.authArea}>
             {this.renderAuthArea()}

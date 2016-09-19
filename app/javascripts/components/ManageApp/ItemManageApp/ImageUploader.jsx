@@ -1,16 +1,14 @@
-"use strict"
+import React from "react";
+import _ from "lodash";
+import invariant from "invariant";
+import Dropzone from "dropzone";
+import request from "superagent-bluebird-promise";
 
-import React from "react"
-import _ from "lodash"
-import invariant from "invariant"
-import Dropzone from "dropzone"
-import request from "superagent-bluebird-promise"
+import { Image } from "react-bootstrap";
 
-import { Image } from "react-bootstrap"
+import dropzoneStyles from "dropzone/dist/min/dropzone.min.css";
 
-import dropzoneStyles from "dropzone/dist/min/dropzone.min.css"
-
-import styles from "components/ItemManageApp/ImageUploader.scss"
+import styles from "components/ManageApp/ItemManageApp/ImageUploader.scss";
 
 Dropzone.autoDiscover = false;
 

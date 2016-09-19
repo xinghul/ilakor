@@ -37,7 +37,7 @@ export default class BrandManageApp extends React.Component {
   componentDidMount() {
     BrandManageStore.addChangeListener(this._onChange);
     
-    BrandManageAction.getBrands();
+    BrandManageAction.getBrands(true);
   }
   
   /**

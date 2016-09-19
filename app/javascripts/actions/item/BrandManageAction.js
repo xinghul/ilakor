@@ -52,16 +52,20 @@ let BrandManageAction = {
   
   /**
    * Gets all the brands.
+   *
+   * @param {Boolean} setIsLoading whether to set the isLoading flag.
    * 
    * @return {Promise} the promise object.
    */
-  getBrands: function() {
+  getBrands: function(setIsLoading) {
     
-    // mark as loading
-    AppDispatcher.handleAction({
-      actionType: BrandManageConstants.SETS_IS_LOADING,
-      isLoading: true
-    });
+    if (setIsLoading) {
+      // mark as loading
+      AppDispatcher.handleAction({
+        actionType: BrandManageConstants.SETS_IS_LOADING,
+        isLoading: true
+      });
+    }
     
     return new Promise((resolve, reject) => {
       
@@ -69,7 +73,7 @@ let BrandManageAction = {
         .then((res) => {
           let brands = res.body;
           
-          invariant(_.isArray(brands), `getBrands() expects response.body to be an array, but gets '${typeof brands}'.`)
+          invariant(_.isArray(brands), `getBrands() expects response.body to be an array, but gets '${typeof brands}'.`);
           
           AppDispatcher.handleAction({
             actionType: BrandManageConstants.RECEIVED_BRANDS,
@@ -87,10 +91,12 @@ let BrandManageAction = {
         })
         .finally(() => {
           
-          AppDispatcher.handleAction({
-            actionType: BrandManageConstants.SETS_IS_LOADING,
-            isLoading: false
-          });
+          if (setIsLoading) {
+            AppDispatcher.handleAction({
+              actionType: BrandManageConstants.SETS_IS_LOADING,
+              isLoading: false
+            });
+          }
           
         });
 
