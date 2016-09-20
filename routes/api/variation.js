@@ -5,15 +5,16 @@ let mongoose = require("mongoose")
 
 mongoose.promise = require("bluebird");
 
-let Brand    = mongoose.model("Brand")
-,   ObjectId = mongoose.Types.ObjectId;
+let Item      = mongoose.model("Item")
+,   Variation = mongoose.model("Variation")
+,   ObjectId  = mongoose.Types.ObjectId;
 
-let BrandApi = {
+let VariationApi = {
   
   /**
-   * Creates a new brand.
+   * Creates a new variation.
    * 
-   * @param  {Object} rawData the raw data containing the new brand info.
+   * @param  {Object} rawData the raw data containing the new variation info.
    *
    * @return {Promise}
    */
@@ -21,18 +22,28 @@ let BrandApi = {
     
     return new Promise((resolve, reject) => {
       
-      let brand = new Brand(rawData);
-
-      brand.save()
-        .then(resolve)
-        .catch(reject);
+      let variation = new Variation(rawData)
+      ,   itemId = rawData.item;
+      
+      Item.findById(ObjectId(itemId)).then((item) => {
+        
+        item.variations.push(variation._id);
+        
+        item.save()
+          .then(() => {
+            return variation.save();
+          })
+          .then(resolve)
+          .catch(reject);
+          
+      }).catch(reject);
       
     });
 
   },
   
   /**
-   * Removes brand specified by given id, if it exists.
+   * Removes variation specified by given id, if it exists.
    * 
    * @param  {String} id the specified id.
    *
@@ -42,7 +53,7 @@ let BrandApi = {
     
     return new Promise((resolve, reject) => {
       
-      Brand.remove({_id: ObjectId(id)})
+      Variation.remove({_id: ObjectId(id)})
         .then(resolve)
         .catch(reject);
       
@@ -51,7 +62,7 @@ let BrandApi = {
   },
   
   /**
-   * Updates brand specified by given id with new value.
+   * Updates variation specified by given id with new value.
    * 
    * @param  {String} id the specified id.
    *
@@ -61,7 +72,7 @@ let BrandApi = {
     
     return new Promise((resolve, reject) => {
       
-      Brand.findOneAndUpdate({_id: ObjectId(id)}, {$set: newValue}, {new: true})
+      Variation.findOneAndUpdate({_id: ObjectId(id)}, {$set: newValue}, {new: true})
         .then(resolve)
         .catch(reject);
       
@@ -70,7 +81,7 @@ let BrandApi = {
   },
   
   /**
-   * Returns brand specified by given id, if it exists.
+   * Returns variation specified by given id, if it exists.
    * 
    * @param  {String} id the specified id.
    *
@@ -80,7 +91,7 @@ let BrandApi = {
     
     return new Promise((resolve, reject) => {
       
-      Brand.findById(ObjectId(id))
+      Variation.findById(ObjectId(id))
         .then(resolve)
         .catch(reject);
       
@@ -89,7 +100,7 @@ let BrandApi = {
   },
   
   /**
-   * Returns all tags.
+   * Returns all variations.
    * 
    * @return {Promise}
    */
@@ -97,14 +108,14 @@ let BrandApi = {
     
     return new Promise((resolve, reject) => {
       
-      Brand.find({})
+      Variation.find({})
         .then(resolve)
         .catch(reject);
-      
+        
     });
     
   }
 
 };
 
-module.exports = BrandApi;
+module.exports = VariationApi;

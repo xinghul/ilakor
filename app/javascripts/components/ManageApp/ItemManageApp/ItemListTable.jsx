@@ -72,7 +72,7 @@ export default class ItemListTable extends React.Component {
           <td>{items.indexOf(item)}</td>
           <td>{item.name}</td>
           <td>{item.price}</td>
-          <td>{item.tag.join(",")}</td>
+          <td>{item.tags.join(",")}</td>
         </tr>
       );
     }

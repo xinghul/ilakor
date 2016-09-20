@@ -69,6 +69,7 @@ export default class AddTagForm extends React.Component {
    * @inheritdoc
    */
   render() {
+    
     let nameInput = (
       <Input
         ref="name"

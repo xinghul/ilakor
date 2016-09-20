@@ -120,15 +120,29 @@ export default class SimpleTable extends React.Component {
     
     _.pull(tableHeader, "__v");
     
+    let headers = _.clone(tableHeader);
+    
     for (let item of data)
     {
       tableBody.push(
         <tr onClick={this._onBrandClick.bind(this, item)} key={item._id}>
           <td key={_.uniqueId(item._id)}>{data.indexOf(item)}</td>
-          {_.map(tableHeader, (key) => {
+          {_.map(headers, (key) => {
+            
+            let value = item[key];
+            
+            if (_.isBoolean(value)) {
+              value = value ? "Yes" : "No";
+            } else if (_.isFunction(value) || _.isObject(value)) {
+              _.pull(tableHeader, key);
+              
+              return null;
+            }
+            
             return (
-              <td key={_.uniqueId(item._id)}>{item[key]}</td>
+              <td key={_.uniqueId(item._id)}>{value}</td>
             );
+            
           })}
         </tr>
       );

@@ -1,5 +1,3 @@
-"use strict";
-
 import "babel-polyfill";
 
 // import this first for overwrite reason
@@ -16,7 +14,6 @@ import AuthApp from "components/AuthApp";
 import ItemDisplayApp from "components/ItemDisplayApp";
 import ManageApp from "components/ManageApp";
 import AccountApp from "components/AccountApp";
-import SocialApp from "components/SocialApp";
 import CheckoutApp from "components/CheckoutApp";
 import CompleteLocalApp from "components/CompleteLocalApp";
 
@@ -81,7 +78,6 @@ render((
       <Route path="itemDisplay" component={ItemDisplayApp} />
       <Route path="manage" component={ManageApp} />
       <Route path="account" component={AccountApp} />
-      <Route path="social" component={SocialApp} />
       <Route path="checkout" component={CheckoutApp} />
       <Route path="completeLocal" component={CompleteLocalApp} />
       <Route path="*" component={IndexApp} />

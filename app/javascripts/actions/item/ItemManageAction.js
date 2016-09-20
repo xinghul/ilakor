@@ -1,12 +1,10 @@
-"use strict";
+import request from "superagent-bluebird-promise";
+import _ from "lodash";
+import invariant from "invariant";
+import Promise from "bluebird";
 
-import request from "superagent-bluebird-promise"
-import _ from "lodash"
-import invariant from "invariant"
-import Promise from "bluebird"
-
-import AppDispatcher from "dispatcher/AppDispatcher"
-import ItemManageConstants from "constants/item/ItemManageConstants"
+import AppDispatcher from "dispatcher/AppDispatcher";
+import ItemManageConstants from "constants/item/ItemManageConstants";
 
 let ItemManageAction = {
   
@@ -55,7 +53,7 @@ let ItemManageAction = {
           
           invariant(_.isString(message), `getItems() expects error.message to be 'string', but gets '${typeof message}'.`);
           
-          reject(message);
+          reject(new Error(message));
         })
         .finally(() => {
           
@@ -103,7 +101,7 @@ let ItemManageAction = {
           
           invariant(_.isString(message), `addItem(newItem) expects error.message to be 'string', but gets '${typeof message}'.`);
           
-          reject(message);
+          reject(new Error(message));
         });
       
     }); 
@@ -144,7 +142,7 @@ let ItemManageAction = {
           
           invariant(_.isString(message), `addItem(newItem) expects error.message to be 'string', but gets '${typeof message}'.`);
           
-          reject(message);
+          reject(new Error(message));
         });
       
     });
@@ -179,7 +177,7 @@ let ItemManageAction = {
           
           invariant(_.isString(message), `removeItem(id) expects error.message to be 'string', but gets '${typeof message}'.`);
           
-          reject(message);
+          reject(new Error(message));
         });
       
     });

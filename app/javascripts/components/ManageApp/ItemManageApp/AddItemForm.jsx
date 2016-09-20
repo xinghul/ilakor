@@ -54,7 +54,7 @@ export default class AddItemForm extends React.Component {
       name: name,
       brand: brand,
       category: category,
-      tag: tag,
+      tags: tag,
       image: image,
       
       description: description

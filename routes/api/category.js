@@ -15,7 +15,7 @@ let CategoryApi = {
    * 
    * @param  {Object} rawData the raw data containing the new category info.
    *
-   * @return {Promise} the new promise object.
+   * @return {Promise}
    */
   add: function(rawData) {
     
@@ -40,7 +40,7 @@ let CategoryApi = {
    * 
    * @param  {String} id the specified id.
    *
-   * @return {Promise} the new promise object.
+   * @return {Promise}
    */
   remove: function(id) {
     
@@ -63,7 +63,7 @@ let CategoryApi = {
    * 
    * @param  {String} id the specified id.
    *
-   * @return {Promise} the new promise object.
+   * @return {Promise}
    */
   update: function(id, newValue) {
     
@@ -86,7 +86,7 @@ let CategoryApi = {
    * 
    * @param  {String} id the specified id.
    *
-   * @return {Promise} the new promise object.
+   * @return {Promise}
    */
   get: function(id) {
     
@@ -107,7 +107,7 @@ let CategoryApi = {
   /**
    * Returns all tags.
    * 
-   * @return {Promise} the new promise object.
+   * @return {Promise}
    */
   getAll: function() {
     

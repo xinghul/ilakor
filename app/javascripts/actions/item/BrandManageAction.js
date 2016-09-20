@@ -13,7 +13,7 @@ let BrandManageAction = {
    *
    * @param {String} name the name for the brand.
    * 
-   * @return {Promise} the promise object.
+   * @return {Promise}
    */
   addBrand: function(name) {
     
@@ -44,7 +44,7 @@ let BrandManageAction = {
           
           invariant(_.isString(message), `addBrand(name) expects error.message to be 'string', but gets '${typeof message}'.`);
           
-          reject(message);
+          reject(new Error(message));
         });
 
     });
@@ -55,7 +55,7 @@ let BrandManageAction = {
    *
    * @param {Boolean} setIsLoading whether to set the isLoading flag.
    * 
-   * @return {Promise} the promise object.
+   * @return {Promise}
    */
   getBrands: function(setIsLoading) {
     
@@ -87,7 +87,7 @@ let BrandManageAction = {
           
           invariant(_.isString(message), `getOrders() expects error.message to be 'string', but gets '${typeof message}'.`);
           
-          reject(message);
+          reject(new Error(message));
         })
         .finally(() => {
           
@@ -132,7 +132,7 @@ let BrandManageAction = {
           
           invariant(_.isString(message), `removeBrand(id) expects error.message to be 'string', but gets '${typeof message}'.`);
           
-          reject(message);
+          reject(new Error(message));
         });
       
     });

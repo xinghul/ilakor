@@ -7,12 +7,13 @@ let express   = require("express")
 ,   stripe    = require("stripe")("sk_test_Uud0EfP12pR2yvwuuXmZeTds")
 ,   _         = require("lodash");
 
-let router   = express.Router()
-,   Item     = require("./api/item")
-,   Order    = require("./api/order")
-,   Tag      = require("./api/tag")
-,   Brand    = require("./api/brand")
-,   Category = require("./api/category");
+let router    = express.Router()
+,   Item      = require("./api/item")
+,   Order     = require("./api/order")
+,   Tag       = require("./api/tag")
+,   Brand     = require("./api/brand")
+,   Category  = require("./api/category")
+,   Variation = require("./api/variation");
 
 let BadRequest    = require("./utils/BadRequest")
 ,   InternalError = require("./utils/InternalError");
@@ -20,7 +21,8 @@ let BadRequest    = require("./utils/BadRequest")
 const routeToHandler = {
   tags: Tag,
   brands: Brand,
-  categories: Category
+  categories: Category,
+  variations: Variation
 };
 
 function SuccessResponse(res, data) {

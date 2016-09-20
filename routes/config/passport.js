@@ -48,12 +48,12 @@ module.exports = {
     passport.use(new LocalStrategy({
       usernameField: "email",
       passwordField: "password"
-    }, function(email, password, done) {
+    }, (email, password, done) => {
 
-      process.nextTick(function () {
+      process.nextTick(() => {
         
         // convert email to lower case
-        User.findOne({ email: email.toLowerCase() }, function(err, user) {
+        User.findOne({ email: email.toLowerCase() }, (err, user) => {
           if (err) {
             done(err);
           } else if (!user || !user.authenticate(password)) {

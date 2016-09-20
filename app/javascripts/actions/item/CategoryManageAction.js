@@ -13,7 +13,7 @@ let CategoryManageAction = {
    *
    * @param {String} name the name for the category.
    * 
-   * @return {Promise} the promise object.
+   * @return {Promise}
    */
   addCategory: function(name) {
     
@@ -28,13 +28,13 @@ let CategoryManageAction = {
       request.post("/api/categories")
         .send({ data: JSON.stringify(category) })
         .then((res) => {
-          let brandAdded = res.body;
+          let categoryAdded = res.body;
           
-          invariant(_.isObject(brandAdded), `addCategory(name) expects response.body to be 'object', but gets '${typeof brandAdded}'.`);
+          invariant(_.isObject(categoryAdded), `addCategory(name) expects response.body to be 'object', but gets '${typeof categoryAdded}'.`);
           
           AppDispatcher.handleAction({
             actionType: CategoryManageConstants.RECEIVED_CATEGORY,
-            category: brandAdded
+            category: categoryAdded
           });
           
           resolve();
@@ -44,7 +44,7 @@ let CategoryManageAction = {
           
           invariant(_.isString(message), `addCategory(name) expects error.message to be 'string', but gets '${typeof message}'.`);
           
-          reject(message);
+          reject(new Error(message));
         });
 
     });
@@ -55,7 +55,7 @@ let CategoryManageAction = {
    *
    * @param {Boolean} setIsLoading whether to set the isLoading flag.
    * 
-   * @return {Promise} the promise object.
+   * @return {Promise}
    */
   getCategories: function(setIsLoading) {
     
@@ -87,7 +87,7 @@ let CategoryManageAction = {
           
           invariant(_.isString(message), `getOrders() expects error.message to be 'string', but gets '${typeof message}'.`);
           
-          reject(message);
+          reject(new Error(message));
         })
         .finally(() => {
           
@@ -132,7 +132,7 @@ let CategoryManageAction = {
           
           invariant(_.isString(message), `removeCategory(id) expects error.message to be 'string', but gets '${typeof message}'.`);
           
-          reject(message);
+          reject(new Error(message));
         });
       
     });

@@ -8,6 +8,7 @@ import ItemManageApp from "./ManageApp/ItemManageApp";
 import BrandManageApp from "./ManageApp/BrandManageApp";
 import CategoryManageApp from "./ManageApp/CategoryManageApp";
 import TagManageApp from "./ManageApp/TagManageApp";
+import VariationManageApp from "./ManageApp/VariationManageApp";
 
 import styles from "components/ManageApp.scss"
 
@@ -50,6 +51,7 @@ export default class ManageApp extends React.Component {
                 <MenuItem eventKey="2.2">Manage brands</MenuItem>
                 <MenuItem eventKey="2.3">Manage categories</MenuItem>
                 <MenuItem eventKey="2.4">Manage tags</MenuItem>
+                <MenuItem eventKey="2.5">Manage variations</MenuItem>
               </NavDropdown>
             </Nav>
           </Col>
@@ -69,6 +71,9 @@ export default class ManageApp extends React.Component {
               </Tab.Pane>
               <Tab.Pane eventKey="2.4">
                 <TagManageApp />
+              </Tab.Pane>
+              <Tab.Pane eventKey="2.5">
+                <VariationManageApp />
               </Tab.Pane>
             </Tab.Content>
           </Col>
