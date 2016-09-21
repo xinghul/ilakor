@@ -11,9 +11,22 @@ body {
 body {
   background: #eaeaea url("/images/base.png");
 
-  font: 14px "Source Sans Pro", Helvetica Neue, sans-serif;
+  font-size: 16px;
+  font-family: "Source Sans Pro", Helvetica Neue, sans-serif;
   font-smoothing: antialiased;
   color: #333;
+}
+
+@media screen and (max-width: 1024px) {
+  body {
+    font-size: 14px;
+  }
+}
+
+@media screen and (max-width: 600px) {
+  body {
+    font-size: 13px;
+  }
 }
 
 a {

@@ -1,7 +1,7 @@
 .dataTable {
   
   font-family: Helvetica;
-  font-size: 12px;
+  font-size: .75em;
   line-height: 2.5;
   
   :global(.public_fixedDataTableCell_cellContent) {
@@ -14,7 +14,6 @@
     background-color: #fafafa;
     
     font-family: HelveticaNeue;
-    font-size: 13px;
     font-weight: normal;
     
     cursor: pointer;
