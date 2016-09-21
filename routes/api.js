@@ -30,7 +30,7 @@ function SuccessResponse(res, data) {
 }
 
 function InternalErrorResponse(next, err) {
-  console.log(err.stack);
+  console.log(err, err.stack);
   
   return next(new InternalError());
 }
@@ -311,7 +311,9 @@ router.route("/feature")
   
 });
 
-
+/**
+ * Creates the routes for each entry in the routeToHandler.
+ */
 _.forEach(routeToHandler, (Handler, route) => {
   router.route(`/${route}`)
   /**
@@ -319,10 +321,16 @@ _.forEach(routeToHandler, (Handler, route) => {
    */
   .all((req, res, next) => {
 
-    let reqId = req.query.id || req.params.id;
+    let reqId  = req.query.id || req.params.id
+    ,   item = req.query.item || req.params.item;
     
     if (_.isString(reqId)) {
       req.reqId = reqId;
+    }
+    
+    // if it's variations route, also check if a item id is specified
+    if (route === 'variations' && !_.isEmpty(item)) {
+      req.item = item;
     }
     
     next();
@@ -332,12 +340,13 @@ _.forEach(routeToHandler, (Handler, route) => {
    */
   .get((req, res, next) => {
     
-    let reqId = req.reqId;
+    let reqId  = req.reqId
+    ,   item = req.item;
     
     if (_.isString(reqId)) {
       Handler.get(reqId).then(SuccessResponse.bind(null, res)).catch(InternalErrorResponse.bind(null, next));
     } else {
-      Handler.getAll().then(SuccessResponse.bind(null, res)).catch(InternalErrorResponse.bind(null, next));
+      Handler.getAll(item).then(SuccessResponse.bind(null, res)).catch(InternalErrorResponse.bind(null, next));
     }
 
   })

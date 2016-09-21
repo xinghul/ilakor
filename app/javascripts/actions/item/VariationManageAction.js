@@ -47,13 +47,14 @@ let VariationManageAction = {
   },
   
   /**
-   * Gets all the variations.
+   * Gets variations associated with given item, if no item is specified, get all variations.
    *
    * @param {Boolean} setIsLoading whether to set the isLoading flag.
+   * @param {String} item the specified item id.
    * 
    * @return {Promise}
    */
-  getVariations: function(setIsLoading) {
+  getVariations: function(setIsLoading = false, item = '') {
     
     if (setIsLoading) {
       // mark as loading
@@ -66,6 +67,7 @@ let VariationManageAction = {
     return new Promise((resolve, reject) => {
       
       request.get("/api/variations")
+        .query({ item: item })
         .then((res) => {
           let variations = res.body;
           

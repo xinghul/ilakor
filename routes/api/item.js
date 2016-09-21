@@ -9,8 +9,9 @@ mongoose.promise = require("bluebird");
 
 let S3 = require("../service/s3");
 
-let Item     = mongoose.model("Item")
-,   ObjectId = mongoose.Types.ObjectId;
+let Item      = mongoose.model("Item")
+,   Variation = mongoose.model("Variation")
+,   ObjectId  = mongoose.Types.ObjectId;
 
 let imageExtensionReg = new RegExp(/.+\.(gif|jpe?g|png)$/i);
 
@@ -24,7 +25,7 @@ let imageExtensionReg = new RegExp(/.+\.(gif|jpe?g|png)$/i);
  */
 function uploadImages(item, images) {
   
-  return new Promise(function(resolve, reject) {
+  return new Promise((resolve, reject) => {
     
     let _id        = item._id
     ,   promises   = [];
@@ -42,7 +43,7 @@ function uploadImages(item, images) {
         ,   newImageName = _id + '_' + index + '.' + extension;
 
         promises.push(
-          S3.uploadImage(newImageName, imageFile).then(function(imageUrl) {
+          S3.uploadImage(newImageName, imageFile).then((imageUrl) => {
             return {
               name: newImageName,
               url: imageUrl
@@ -52,21 +53,16 @@ function uploadImages(item, images) {
       }
     }
     
-    Promise.all(promises).then(function(images) {
+    Promise.all(promises).then((images) => {
       // stores the images
       item.images = images;
       
       // save the item with images added
-      item.save(function(err, updatedItem) {
-        if (err) {
-          reject(err);
-        } else {
-          resolve(updatedItem);
-        }
-      });
-    }).catch(function(err) {
-      reject(err);
-    });
+      item.save()
+        .then(resolve)
+        .catch(reject);
+        
+    }).catch(reject);
     
   });
   
@@ -81,7 +77,7 @@ function uploadImages(item, images) {
  */
 function removeImages(images) {
 
-  return new Promise(function(resolve, reject) {
+  return new Promise((resolve, reject) => {
     
     let promises = [];
     
@@ -92,11 +88,9 @@ function removeImages(images) {
       );
     }
     
-    Promise.all(promises).then(function() {
-      resolve();
-    }).catch(function(err) {
-      reject(err);
-    });
+    Promise.all(promises)
+      .then(resolve)
+      .catch(reject);
     
   });
   
@@ -127,7 +121,7 @@ let ItemApi = {
    */
    add: function(rawData) {
      
-     return new Promise(function(resolve, reject) {
+     return new Promise((resolve, reject) => {
        
        // extract the image field
        let images = rawData.image;
@@ -139,14 +133,12 @@ let ItemApi = {
          if (err) {
            reject(err);
          } else {
-           uploadImages(item, images).then(function(updatedItem) {
+           uploadImages(item, images).then((updatedItem) => {
             // we handle this on front end
             //  removeImageCache(images);
              
              resolve(updatedItem);
-           }).catch(function(err) {
-             reject(err);
-           });
+           }).catch(reject);
          }
        });
        
@@ -163,29 +155,23 @@ let ItemApi = {
     */
    remove: function(id) {
      
-     return new Promise(function(resolve, reject) {
+     return new Promise((resolve, reject) => {
        
-       Item.findById(ObjectId(id), function(err, item) {
-         if (err) {
-           reject(err);
-         } else {
-           let images = item.images;
-           
-           removeImages(images).then(function() {
-             
-             Item.remove({_id: ObjectId(id)}, function(err, result) {
-               if (err) {
-                 reject(err);
-               } else {
-                 resolve(result);
-               }
-             });
-             
-           }).catch(function(err) {
-             reject(err);
-           });
-         }
-       });
+       Item.findById(ObjectId(id))
+        .then((item) => {
+          let images = item.images;
+          
+          // remove images stored on s3, all variations associated with this item
+          // and this item
+          return Promise.all([
+            removeImages(images),
+            Variation.remove({item: ObjectId(id)}),
+            Item.remove({_id: ObjectId(id)})
+          ]);
+          
+        })
+        .then(resolve)
+        .catch(reject);
 
      });
      
@@ -200,15 +186,11 @@ let ItemApi = {
     */
    update: function(id, newValue) {
 
-     return new Promise(function(resolve, reject) {
+     return new Promise((resolve, reject) => {
        
-       Item.findOneAndUpdate({_id: ObjectId(id)}, {$set: newValue}, {new: true}, function(err, updatedItem) {
-         if (err) {
-           reject(err);
-         } else {
-           resolve(updatedItem);
-         }
-       });
+       Item.findOneAndUpdate({_id: ObjectId(id)}, {$set: newValue}, {new: true})
+        .then(resolve)
+        .catch(reject);
        
      });
      
@@ -223,15 +205,11 @@ let ItemApi = {
     */
    get: function(id) {
      
-     return new Promise(function(resolve, reject) {
+     return new Promise((resolve, reject) => {
        
-       Item.findById(ObjectId(id), function(err, result) {
-         if (err) {
-           reject(err);
-         } else {
-           resolve(result);
-         }
-       });
+       Item.findById(ObjectId(id))
+        .then(resolve)
+        .catch(reject);
        
      });
      
@@ -254,18 +232,15 @@ let ItemApi = {
      
      query = query || {};
      
-     return new Promise(function(resolve, reject) {
+     return new Promise((resolve, reject) => {
        
        Item.find(query)
          .skip(skip)
          .limit(limit)
-         .exec((err, result) => {
-           if (err) {
-             reject(err);
-           } else {
-             resolve(result);
-           }
-         });
+         .populate("brand category tags variations")
+         .exec()
+         .then(resolve)
+         .catch(reject);
        
      });
      

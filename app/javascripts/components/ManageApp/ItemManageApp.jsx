@@ -20,6 +20,11 @@ import TagManageStore from "stores/item/TagManageStore";
 
 import styles from "components/ManageApp/ItemManageApp.scss";
 
+/**
+ * Gets the new state from subscribed stores.
+ * 
+ * @return {Object}
+ */
 function getStateFromStores() {
   return {
     items: ItemManageStore.getItems(),

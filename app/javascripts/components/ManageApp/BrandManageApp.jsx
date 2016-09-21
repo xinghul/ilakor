@@ -12,6 +12,11 @@ import BrandManageStore from "stores/item/BrandManageStore";
 
 import styles from "components/ManageApp/BrandManageApp.scss";
 
+/**
+ * Gets the new state from subscribed stores.
+ * 
+ * @return {Object}
+ */
 function getStateFromStores() {
   return {
     brands: BrandManageStore.getBrands()

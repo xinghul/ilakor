@@ -4,6 +4,7 @@ import React from "react";
 import { Row, Col } from "react-bootstrap";
 
 import SimpleTable from "lib/SimpleTable";
+import Select from "lib/Select";
 
 import AddVariationForm from "./VariationManageApp/AddVariationForm";
 
@@ -15,6 +16,11 @@ import ItemManageStore from "stores/item/ItemManageStore";
 
 import styles from "components/ManageApp/VariationManageApp.scss";
 
+/**
+ * Gets the new state from subscribed stores.
+ * 
+ * @return {Object}
+ */
 function getStateFromStores() {
   return {
     variations: VariationManageStore.getVariations(),
@@ -66,6 +72,18 @@ export default class VariationManageApp extends React.Component {
   };
   
   /**
+   * @private
+   * Handler for when selected item has changed, sends a new request to fetch the variations associated with the new item.
+   * 
+   * @param  {Object} newItem the new selected item.
+   */
+  _onItemChange = (newItem) => {
+    let value = _.isEmpty(newItem) ? '' : newItem.value;
+    
+    VariationManageAction.getVariations(true, value);
+  };
+  
+  /**
    * @inheritdoc
    */
   render() {
@@ -75,6 +93,15 @@ export default class VariationManageApp extends React.Component {
         <Row>
           <Col xs={12} md={6}>
             <AddVariationForm items={this.state.items}/>
+          </Col>
+          <Col xs={6} md={3} className={styles.itemSelectWrapper}>
+            <Select
+              multi={false}
+              label="Item"
+              placeholder="Select item"
+              options={this.state.items}
+              onChange={this._onItemChange}
+            />
           </Col>
           <Col xs={12} md={6}>
             <SimpleTable 

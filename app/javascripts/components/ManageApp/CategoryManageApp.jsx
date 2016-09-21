@@ -12,6 +12,11 @@ import CategoryManageStore from "stores/item/CategoryManageStore";
 
 import styles from "components/ManageApp/CategoryManageApp.scss";
 
+/**
+ * Gets the new state from subscribed stores.
+ * 
+ * @return {Object}
+ */
 function getStateFromStores() {
   return {
     categories: CategoryManageStore.getCategories()

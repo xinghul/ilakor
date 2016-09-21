@@ -47,10 +47,25 @@ export default class ItemDetailModal extends React.Component {
     });
   };
   
-  createItemConfigJsx() {
+  _createItemDescriptionJsx() {
+    
+    const { item } = this.props;
     
     return (
-      <div>
+      <div dangerouslySetInnerHTML={{__html: item.description}} />
+    );
+  }
+  
+  /**
+   * @private
+   * Creates the section for selecting flavors, sizes and quantities.
+   * 
+   * @return {JSX} 
+   */
+  _createConfigSection() {
+    return (
+      <div className={styles.configSection}>
+        <GhostButton theme="gold" onClick={this._onAddToCartClick}>Add to cart</GhostButton> 
       </div>
     );
   }
@@ -72,34 +87,32 @@ export default class ItemDetailModal extends React.Component {
     return (
       <div className={styles.mainContent}>
         <Row>
-          <Col xs={12} md={12} className={styles.topContent}>
-            <div className={styles.carouselWrapper}>
+          <Col xs={12} md={12} className={styles.mainContent}>
+            <div className={styles.leftContent}>
               <BaseCarousel width={450} height={450} images={imageUrls} title={item.name} />
+              <Accordion>
+                <Panel header="Reviews" eventKey="1">
+                  Here comes the reviews.
+                </Panel>
+                <Panel header="FAQ" eventKey="2">
+                  Here comes the FAQs.
+                </Panel>
+              </Accordion>
             </div>
             <div className={styles.rightContent}>
-              <div className={styles.title}>{item.name}</div>
-              <div className={styles.price}>{ItemUtil.createPriceJsx(item.price)}</div>
-              <div className={styles.config}>
-                {this.createItemConfigJsx()}
+              <div className={styles.section}>
+                <div className={styles.category}>{item.category.name}</div>
+                <div className={styles.brand}>{item.brand.name}</div>
+                <div className={styles.name}>{item.name}</div>                
               </div>
-              <div className={styles.addCartWrapper}>
-                <GhostButton theme="gold" onClick={this._onAddToCartClick}>Add to cart</GhostButton> 
+              <div className={styles.section}>
+                <div className={styles.description}>
+                  {this._createItemDescriptionJsx()}
+                </div>
               </div>
+              {this._createConfigSection()}
             </div>
           </Col>
-        </Row>
-        <Row className={styles.bottomContent}>
-          <Accordion>
-            <Panel header="Description" eventKey="1">
-              <div className={styles.information} dangerouslySetInnerHTML={{__html: item.description}} />
-            </Panel>
-            <Panel header="Reviews" eventKey="2">
-              Here comes the reviews.
-            </Panel>
-            <Panel header="FAQ" eventKey="3">
-              Here comes the FAQs.
-            </Panel>
-          </Accordion>
         </Row>
       </div>
     );

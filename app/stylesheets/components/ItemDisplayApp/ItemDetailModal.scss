@@ -1,60 +1,61 @@
 .itemDetailModal {
   
-  .mainContent {
-    
-    .topContent {
-      display: flex;
-      flex-direction: row;
-  
-      margin-bottom: 20px;
-      
-      .carouselWrapper {
-        width: 450px;
-      }
-      
-      .rightContent {
-        flex: 1;
-        padding-left: 20px;
-        
-        .title {          
-          font-family: "Courgette", cursive;
-          font-size: 30px;
-          font-weight: 600;
-        }
-        
-        .price {
-          font-size: 20px;
-        }
-        
-        .config {
-          padding: 20px 0;
-          margin-top: 10px;
-          
-          border-top: 1px solid #ccc;
-          border-bottom: 1px solid #ccc;
-          
-          height: 300px;
-        }
-        
-        .addCartWrapper {
-          padding: 15px 0;
-        }
-      }
-    }
-    
-    .bottomContent {
-      padding: 15px;
-      
-      border-top: 1px solid #ccc;
-      
-      .information {
-        max-height: 400px;
-
-        overflow-y: scroll;
-        overflow-x: hidden;
-        word-break: break-all;
-      }
-    }
-    
+  :global(.modal-dialog) {
+    width: 95%;
   }
+  
+  .mainContent {
+    display: flex;
+    flex-direction: row;
+
+    margin-bottom: 20px;
+    
+    .leftContent {
+      width: 450px;
+    }
+    
+    .rightContent {
+      flex: 1;
+      padding: 45px 10px 0 25px;
+      
+      .section {
+      }
+      
+      .category {
+        font-size: 0.95em;
+        font-weight: bold;
+        color: #ce0e0e;
+        text-transform: uppercase;
+        font-family: 'BlenditHeavy';
+        letter-spacing: 1px;
+        font-feature-settings: "liga";
+      }
+      
+      .brand {
+        
+      }
+      
+      .name {          
+        font-family: "Courgette", cursive;
+        font-size: 30px;
+        font-weight: 600;
+      }
+      
+      .price {
+        font-size: 20px;
+      }
+      
+      .description {
+        padding: 20px 0;
+        margin-top: 10px;
+        
+        border-top: 1px solid #ccc;
+        border-bottom: 1px solid #ccc;          
+      }
+      
+      .configSection {
+        padding: 15px 0;
+      }
+    }
+  }  
 }

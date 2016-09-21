@@ -1,6 +1,7 @@
 "use strict";
 
 let mongoose = require("mongoose")
+,   _        = require("lodash")
 ,   Promise  = require("bluebird");
 
 mongoose.promise = require("bluebird");
@@ -100,15 +101,25 @@ let VariationApi = {
   },
   
   /**
-   * Returns all variations.
+   * Returns variations associated with given item.
+   * If no item is specified, returns all variations.
+   *
+   * @param {String} item the specific item id.
    * 
    * @return {Promise}
    */
-  getAll: function() {
+  getAll: function(item) {
+    
+    let query = {};
+    
+    if (!_.isEmpty(item)) {
+      query['item'] = item;
+    }
     
     return new Promise((resolve, reject) => {
-      
-      Variation.find({})
+
+      Variation.find(query)
+        .exec()
         .then(resolve)
         .catch(reject);
         
