@@ -5,6 +5,7 @@ let mongoose  = require("mongoose")
 ,   Promise   = require("bluebird");
 
 let Order    = mongoose.model("Order")
+,   Item     = mongoose.model("Item")
 ,   ObjectId = mongoose.Types.ObjectId;
 
 let OrderApi = {
@@ -42,6 +43,11 @@ let OrderApi = {
     return new Promise(function(resolve, reject) {
       
       Order.findById(ObjectId(id))
+        .populate("user")
+        .populate([
+          { path: "items.item", model: "Item" },
+          { path: "items.variation", model: "Variation" }
+        ])
         .then(resolve)
         .catch(reject);
       
@@ -60,7 +66,11 @@ let OrderApi = {
       
       Order
         .find({})
-        .populate("user items")
+        .populate("user")
+        .populate([
+          { path: "items.item", model: "Item" },
+          { path: "items.variation", model: "Variation" }
+        ])
         .exec()
         .then(resolve)
         .catch(reject);
@@ -82,7 +92,11 @@ let OrderApi = {
       
       Order
         .find({ user: userId })
-        .populate("user items")
+        .populate("user")
+        .populate([
+          { path: "items.item", model: "Item" },
+          { path: "items.variation", model: "Variation" }
+        ])
         .exec()
         .then(resolve)
         .catch(reject);

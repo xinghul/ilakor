@@ -1,11 +1,9 @@
-"use strict";
+import _ from "lodash";
+import invariant from "invariant";
+import { EventEmitter } from "events";
 
-import _ from "lodash"
-import invariant from "invariant"
-import { EventEmitter } from "events"
-
-import AppDispatcher from "dispatcher/AppDispatcher"
-import ShoppingCartConstants from "constants/ShoppingCartConstants"
+import AppDispatcher from "dispatcher/AppDispatcher";
+import ShoppingCartConstants from "constants/ShoppingCartConstants";
 
 const CHANGE_EVENT = "change"
 ,     STORE_NAME   = "iLakor.cart";
@@ -89,11 +87,10 @@ function getTotalPrice(itemMap) {
   
   let totalPrice = 0;
   
-  for (let key of Object.keys(itemMap))
-  {
-    totalPrice += itemMap[key].item.price * itemMap[key].count;
-  }
-  
+  _.forEach(itemMap, (itemInfo) => {
+    totalPrice += itemInfo.variation.price * itemInfo.count;    
+  });
+
   return totalPrice;
 }
 
@@ -104,22 +101,29 @@ let _itemMap = _cartStore.get()
 let ShoppingCartStore = _.extend({}, EventEmitter.prototype, {
   
   /**
-   * Adds an item to cart.
+   * Adds an item with specific variation to the cart.
    * 
-   * @param  {Object} item the new item.
+   * @param  {Object} itemInfo the new item with specific variation.
    */
-  addToCart: function(item) {
-    invariant(_.isObject(item), `addToCart(item) expects an 'object' as 'item', but gets '${typeof item}'.`);
+  addToCart: function(itemInfo) {
+    invariant(_.isObject(itemInfo), `addToCart(itemInfo) expects an 'object' as 'itemInfo', but gets '${typeof itemInfo}'.`);
+    invariant(_.inRange(itemInfo.count, 0, 10), `addToCart(itemInfo) expects itemInfo.count to be in range of [0, 9], but gets '${itemInfo.count}'.`);
+    invariant(_.isObject(itemInfo.item), `addToCart(itemInfo) expects an 'object' as 'itemInfo.item', but gets '${typeof itemInfo.item}'.`);
+    invariant(_.isObject(itemInfo.variation), `addToCart(itemInfo) expects an 'object' as 'itemInfo.variation', but gets '${typeof itemInfo.variation}'.`);
     
-    if (_itemMap[item._id]) {
-      _itemMap[item._id].count++;
+    // concat item id and variation id as the key
+    let key = itemInfo.variation._id;
+    
+    if (_itemMap[key]) {
+      _itemMap[key].count += itemInfo.count;
     } else {
-      _itemMap[item._id] = {
-        count: 1,
-        item: item
+      _itemMap[key] = {
+        count: itemInfo.count,
+        item: itemInfo.item,
+        variation: itemInfo.variation
       }
     }
-    
+
     _cartStore.save(_itemMap);
   },
   
@@ -176,7 +180,7 @@ let ShoppingCartStore = _.extend({}, EventEmitter.prototype, {
    * @return {Object}
    */
   getItems: function() {
-    return _itemMap;
+    return _.values(_itemMap);
   },
   
   /**
@@ -236,11 +240,6 @@ ShoppingCartStore.dispatchToken = AppDispatcher.register(function(payload) {
   switch(action.actionType) {
     case ShoppingCartConstants.ADD_TO_CART:
       ShoppingCartStore.addToCart(action.item);
-      ShoppingCartStore.emitChange();
-      break;
-      
-    case ShoppingCartConstants.REMOVE_FROM_CART:
-      ShoppingCartStore.removeFromCart(action.id);
       ShoppingCartStore.emitChange();
       break;
       

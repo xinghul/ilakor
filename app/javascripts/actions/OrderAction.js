@@ -1,13 +1,11 @@
-"use strict";
+import request from "superagent-bluebird-promise";
+import _ from "lodash";
+import invariant from "invariant";
+import Promise from "bluebird";
 
-import request from "superagent-bluebird-promise"
-import _ from "lodash"
-import invariant from "invariant"
-import Promise from "bluebird"
-
-import AppDispatcher from "dispatcher/AppDispatcher"
-import ShoppingCartAction from "actions/ShoppingCartAction"
-import OrderManageConstants from "constants/OrderManageConstants"
+import AppDispatcher from "dispatcher/AppDispatcher";
+import ShoppingCartAction from "actions/ShoppingCartAction";
+import OrderManageConstants from "constants/OrderManageConstants";
 
 let OrderAction = {
   
@@ -39,14 +37,16 @@ let OrderAction = {
       let order = {
         user: user._id,
         charge: {
-          amount: totalPrice,
+          amount: totalPrice * 100,
           currency: "usd",
           source: paymentInfo.id
         },
         payment: paymentInfo,
         address: addressInfo,
-        items: Object.keys(items)
+        items: items
       };
+      
+      console.log(order);
       
       request.post("/api/orders")
         .send({ order: JSON.stringify(order) })
@@ -60,7 +60,7 @@ let OrderAction = {
           
           invariant(_.isString(message), `addOrder(paymentInfo, addressInfo, orderInfo) expects error.message to be 'string', but gets '${typeof message}'.`);
           
-          reject(message);
+          reject(new Error(message));
         });
 
     });
@@ -99,7 +99,7 @@ let OrderAction = {
           
           invariant(_.isString(message), `getOrders() expects error.message to be 'string', but gets '${typeof message}'.`);
           
-          reject(message);
+          reject(new Error(message));
         })
         .finally(() => {
           
@@ -148,7 +148,7 @@ let OrderAction = {
           
           invariant(_.isString(message), `getOrders() expects error.message to be 'string', but gets '${typeof message}'.`);
           
-          reject(message);
+          reject(new Error(message));
         });
       
     });

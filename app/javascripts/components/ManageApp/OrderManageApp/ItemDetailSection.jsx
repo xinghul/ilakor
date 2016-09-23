@@ -1,15 +1,13 @@
-"use strict"
+import React from "react";
+import _ from "lodash";
+import invariant from "invariant";
 
-import React from "react"
-import _ from "lodash"
-import invariant from "invariant"
+import { Table } from "react-bootstrap";
 
-import { Table } from "react-bootstrap"
+import GridSection from "lib/GridSection";
+import BaseInfo from "lib/BaseInfo";
 
-import GridSection from "lib/GridSection"
-import BaseInfo from "lib/BaseInfo"
-
-import styles from "components/ManageApp/OrderManageApp/ItemDetailSection.scss"
+import styles from "components/ManageApp/OrderManageApp/ItemDetailSection.scss";
 
 export default class ItemDetailSection extends React.Component {
   
@@ -17,30 +15,33 @@ export default class ItemDetailSection extends React.Component {
     super(props);    
   }
   
-  createItemsTable() {
-    let items = this.props.items
-    ,   tableBody = [];
-    
-    for (let item of items)
-    {
-      tableBody.push(
-        <tr key={item._id}>
-          <td>{items.indexOf(item)}</td>
-          <td>{item.name}</td>
-          <td>{item.price}</td>
-          <td>{item._id}</td>
+  _createItemDetailTable() {
+    let items = this.props.items;
+    console.log(items);
+    let tableBody = _.map(items, (itemInfo, index) => {
+      console.log(itemInfo)
+      return (
+        <tr key={_.uniqueId(itemInfo.variation._id)}>
+          <td>{index}</td>
+          <td>{itemInfo.item.name}</td>
+          <td>{itemInfo.count}</td>
+          <td>{itemInfo.variation.price}</td>
+          <td>{itemInfo.item._id}</td>
+          <td>{itemInfo.variation._id}</td>
         </tr>
       );
-    }
+    });
     
     return (
       <Table striped bordered hover>
         <thead>
           <tr>
             <th>#</th>
-            <th>Name</th>
+            <th>Item</th>
+            <th>Count</th>
             <th>Price</th>
-            <th>Id</th>
+            <th>Item id</th>
+            <th>Variation id</th>
           </tr>
         </thead>
         <tbody>
@@ -58,11 +59,9 @@ export default class ItemDetailSection extends React.Component {
       return null;
     }
     
-    let itemsTable = this.createItemsTable();
-    
     return (
       <GridSection title="Item information" className={styles.itemDetailSection}>
-        {itemsTable}
+        {this._createItemDetailTable()}
       </GridSection>
     );
   }

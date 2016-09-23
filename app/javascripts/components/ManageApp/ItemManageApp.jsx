@@ -34,6 +34,10 @@ function getStateFromStores() {
   };
 }
 
+/**
+ * @class
+ * @extends {React.Component}
+ */
 export default class ItemManageApp extends React.Component {
   
   /**

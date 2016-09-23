@@ -1,14 +1,16 @@
-"use strict"
+import React from "react";
+import { Image, Glyphicon } from "react-bootstrap";
 
-import React from "react"
-import { Image, Glyphicon } from "react-bootstrap"
+import GhostButton from "lib/GhostButton";
 
-import GhostButton from "lib/GhostButton"
+import styles from "components/ItemDisplayApp/BaseItem.scss";
 
-import styles from "components/ItemDisplayApp/BaseItem.scss"
+import ItemUtil from "utils/ItemUtil";
 
-import ItemUtil from "utils/ItemUtil"
-
+/**
+ * @class
+ * @extends {React.Component}
+ */
 export default class BaseItem extends React.Component {
   
   /**
@@ -18,9 +20,32 @@ export default class BaseItem extends React.Component {
     super(props);
     
     this.state = {
+      itemPrice: 0,
       imageLoaded: false,
       bannerBottom: "-80px"
     };
+  }
+  
+  /**
+   * @inheritdoc
+   */
+  componentWillReceiveProps(props) {
+    
+    const { variations } = props.item;
+    
+    let itemPrice = Number.MAX_SAFE_INTEGER;
+    
+    _.forEach(variations, (variation) => {
+      if (variation.price < itemPrice) {
+        itemPrice = variation.price;
+      }
+    });    
+    console.log(itemPrice);
+
+    this.setState({
+      itemPrice
+    });
+    
   }
   
   /**
@@ -57,32 +82,51 @@ export default class BaseItem extends React.Component {
     });
   };
   
-  createImageJsx() {
-    let item     = this.props.item
-    ,   imageUrl = "http://d16knxx0wtupz9.cloudfront.net/" + item.images[0].name;
+  /**
+   * @private
+   * Creates the JSX for the item image.
+   * 
+   * @return {JSX}        
+   */
+  _createImageJsx() {
+    const { item } = this.props;
+    
+    let imageUrl = "http://d16knxx0wtupz9.cloudfront.net/" + item.images[0].name;
     
     return (
       <Image className={styles.itemImage} src={imageUrl} onLoad={this._onImageLoad} />
     );
   }
   
-  createBannerJsx() {
-    let item = this.props.item
-    ,   bannerStyle;
+  /**
+   * @private
+   * Creates the JSX for banner.
+   * 
+   * @return {JSX}        
+   */
+  _createBannerJsx() {
+    const { item } = this.props;
+    const { itemPrice } = this.state;
     
-    bannerStyle = {
+    let bannerStyle = {
       bottom: this.state.bannerBottom
     };
     
     return (
       <div style={bannerStyle} className={styles.baseBanner}>
         <div className={styles.itemName}>{item.name}</div>
-        <div className={styles.itemPrice}>{ItemUtil.createPriceJsx(item.price)}</div>
+        <div className={styles.itemPrice}>{ItemUtil.createPriceJsx(itemPrice)}</div>
       </div>      
     );
   }
   
-  createLoadSpinnerJsx() {
+  /**
+   * @private
+   * Creates the JSX for the load spinner.
+   * 
+   * @return {JSX}        
+   */
+  _createLoadSpinnerJsx() {
     let style = {
       display: this.state.imageLoaded ? "none" : "block"
     };
@@ -95,30 +139,27 @@ export default class BaseItem extends React.Component {
     );
   }
   
-  handleItemClick = () => {
+  /**
+   * @private
+   * Handler for when the item is clicked.
+   */
+  _onItemClick = () => {
     this.props.handleItemClick(this.props.item);
   };
   
+  /**
+   * @inheritdoc
+   */
   render() {
-    let itemJsx
-    ,   bannerJsx
-    ,   loadSpinnerJsx
-    ,   style;
-    
-    itemJsx = this.createImageJsx();
-    
-    bannerJsx = this.createBannerJsx();
-    
-    loadSpinnerJsx = this.createLoadSpinnerJsx();
-    
+
     return (
       <div className={styles.baseItem} 
         onMouseEnter={this._onMouseEnter}
         onMouseLeave={this._onMouseLeave}
-        onClick={this.handleItemClick}>
-        {itemJsx}
-        {bannerJsx}
-        {loadSpinnerJsx}
+        onClick={this._onItemClick}>
+        {this._createImageJsx()}
+        {this._createBannerJsx()}
+        {this._createLoadSpinnerJsx()}
       </div>
     );
     

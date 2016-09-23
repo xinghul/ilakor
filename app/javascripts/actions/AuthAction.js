@@ -1,13 +1,11 @@
-"use strict";
+import request from "superagent-bluebird-promise";
+import invariant from "invariant";
+import _ from "lodash";
+import Promise from "bluebird";
+import ReactCookie from "react-cookie";
 
-import request from "superagent-bluebird-promise"
-import invariant from "invariant"
-import _ from "lodash"
-import Promise from "bluebird"
-import ReactCookie from "react-cookie"
-
-import AppDispatcher from "dispatcher/AppDispatcher"
-import AuthConstants from "constants/AuthConstants"
+import AppDispatcher from "dispatcher/AppDispatcher";
+import AuthConstants from "constants/AuthConstants";
 
 let AuthAction = {
   
@@ -90,7 +88,7 @@ let AuthAction = {
           
           invariant(_.isString(message), `logIn(user) expects error.body.message to be 'string', but gets '${typeof message}'.`);
           
-          reject(message);
+          reject(new Error(message));
         });
       
     });
@@ -131,7 +129,7 @@ let AuthAction = {
           
           invariant(_.isString(message), `signUp(user) expects error.body.message to be 'string', but gets '${typeof message}'.`);
           
-          reject(message);
+          reject(new Error(message));
         });
 
     });
@@ -172,7 +170,7 @@ let AuthAction = {
           
           invariant(_.isString(message), `logIn(user) expects error.message to be 'string', but gets '${typeof message}'.`);
           
-          reject(message);
+          reject(new Error(message));
         });
 
     });
@@ -203,7 +201,7 @@ let AuthAction = {
           
           invariant(_.isString(message), `forgotPassword(email) expects error.message to be 'string', but gets '${typeof message}'.`);
           
-          reject(message);
+          reject(new Error(message));
         });
 
     });
@@ -237,7 +235,7 @@ let AuthAction = {
           
           invariant(_.isString(message), `forgotPassword(email) expects error.message to be 'string', but gets '${typeof message}'.`);
           
-          reject(message);
+          reject(new Error(message));
         });
 
     });

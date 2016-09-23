@@ -17,6 +17,24 @@ import ItemManageStore from "stores/item/ItemManageStore";
 import styles from "components/ManageApp/VariationManageApp.scss";
 
 /**
+ * Creates the options for Select component.
+ * 
+ * @method createSelectOptions
+ * 
+ * @param  {Array} items the items used for creating the options.
+ * 
+ * @return {Array}
+ */
+function createSelectOptions(items) {
+  return _.map(items, (item) => {
+    return {
+      label: _.capitalize(item.name),
+      value: item._id
+    };
+  });
+}
+
+/**
  * Gets the new state from subscribed stores.
  * 
  * @return {Object}
@@ -28,6 +46,10 @@ function getStateFromStores() {
   };
 }
 
+/**
+ * @class
+ * @extends {React.Component}
+ */
 export default class VariationManageApp extends React.Component {
   
   /**
@@ -47,7 +69,6 @@ export default class VariationManageApp extends React.Component {
    */
   componentDidMount() {
     VariationManageStore.addChangeListener(this._onChange);
-    
     ItemManageStore.addChangeListener(this._onChange);
     
     VariationManageAction.getVariations(true);
@@ -87,19 +108,21 @@ export default class VariationManageApp extends React.Component {
    * @inheritdoc
    */
   render() {
+    
+    let selectOptions = createSelectOptions(this.state.items);
 
     return (
       <div className={styles.variationManageApp}>
         <Row>
           <Col xs={12} md={6}>
-            <AddVariationForm items={this.state.items}/>
+            <AddVariationForm selectOptions={selectOptions}/>
           </Col>
           <Col xs={6} md={3} className={styles.itemSelectWrapper}>
             <Select
               multi={false}
               label="Item"
               placeholder="Select item"
-              options={this.state.items}
+              options={selectOptions}
               onChange={this._onItemChange}
             />
           </Col>

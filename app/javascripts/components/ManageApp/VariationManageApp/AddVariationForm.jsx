@@ -44,6 +44,9 @@ export default class AddVariationForm extends React.Component {
       return;
     }
     
+    // convert the price
+    price = new Number(price).toFixed(2)
+    
     let newVariation = {
       item,
       info: {
@@ -92,7 +95,7 @@ export default class AddVariationForm extends React.Component {
         ref="item"
         label="Item"
         placeholder="Select item"
-        options={this.props.items}
+        options={this.props.selectOptions}
       />
     );
     
@@ -132,22 +135,22 @@ export default class AddVariationForm extends React.Component {
     return (
       <GridSection title="Add new variation" className={styles.addVariationForm}>
         <Row>
-          <Col xs={12} md={8}>
+          <Col xs={12} md={12}>
             {itemInput}
           </Col>
         </Row>
         <Row>
-          <Col xs={12} md={8}>
+          <Col xs={12} md={12}>
             {flavorInput}
           </Col>
         </Row>
         <Row>
-          <Col xs={12} md={8}>
+          <Col xs={12} md={12}>
             {sizeInput}
           </Col>
         </Row>
         <Row>
-          <Col xs={12} md={8}>
+          <Col xs={12} md={12}>
             {priceInput}
           </Col>
         </Row>
@@ -167,9 +170,9 @@ export default class AddVariationForm extends React.Component {
 }
 
 AddVariationForm.propTypes = {
-  items: React.PropTypes.array
+  selectOptions: React.PropTypes.array
 };
 
 AddVariationForm.defaultProps = {
-  items: []
+  selectOptions: []
 };

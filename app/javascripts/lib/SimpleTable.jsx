@@ -113,7 +113,7 @@ export default class SimpleTable extends React.Component {
     ,   buttonDisabled = _.isEmpty(this.state.selectedData);
     
     if (_.isEmpty(data)) {
-      return null;
+      return <div className={styles.emptyTable}>Empty table</div>;
     }
     
     tableHeader = _.keys(data[0]);

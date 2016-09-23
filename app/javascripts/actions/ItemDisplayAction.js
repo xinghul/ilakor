@@ -52,7 +52,7 @@ let ItemDisplayAction = {
           
           invariant(_.isString(message), `logIn(user) expects error.message to be 'string', but gets '${typeof message}'.`);
           
-          reject(message);
+          reject(new Error(message));
         });
       
       onCancel(() => {

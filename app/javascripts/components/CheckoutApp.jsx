@@ -1,24 +1,27 @@
-"use strict";
+import React from "react";
+import _ from "lodash";
+import invariant from "invariant";
+import { hashHistory } from "react-router";
 
-import React from "react"
-import _ from "lodash"
-import invariant from "invariant"
-import { hashHistory } from "react-router"
+import { Glyphicon } from "react-bootstrap";
 
-import { Glyphicon } from "react-bootstrap"
+import styles from "components/CheckoutApp.scss";
 
-import styles from "components/CheckoutApp.scss"
+import ItemUtil from "utils/ItemUtil";
 
-import ItemUtil from "utils/ItemUtil"
+import PaymentApp from "./CheckoutApp/PaymentApp";
+import SubmitButton from "lib/SubmitButton";
+import AlertMessage from "lib/AlertMessage";
 
-import PaymentApp from "./CheckoutApp/PaymentApp"
-import SubmitButton from "lib/SubmitButton"
-import AlertMessage from "lib/AlertMessage"
+import ShoppingCartStore from "stores/ShoppingCartStore";
+import OrderAction from "actions/OrderAction";
+import AuthStore from "stores/AuthStore";
 
-import ShoppingCartStore from "stores/ShoppingCartStore"
-import OrderAction from "actions/OrderAction"
-import AuthStore from "stores/AuthStore"
-
+/**
+ * Gets the new state from subscribed stores.
+ * 
+ * @return {Object}
+ */
 function getStateFromStores() {
   return {
     items: ShoppingCartStore.getItems(),
@@ -26,8 +29,14 @@ function getStateFromStores() {
   };
 }
 
+/**
+ * @class
+ * @extends {React.Component}
+ */
 export default class CheckoutApp extends React.Component {
-  
+  /**
+   * @inheritdoc
+   */
   constructor(props) {
     super(props);
     
@@ -41,19 +50,33 @@ export default class CheckoutApp extends React.Component {
     };
   }
   
+  /**
+   * @inheritdoc
+   */
   componentDidMount() {
     ShoppingCartStore.addChangeListener(this._onChange);
   }
 
+  /**
+   * @inheritdoc
+   */
   componentWillUnmount() {
     ShoppingCartStore.removeChangeListener(this._onChange);
   }
   
+  /**
+   * @private
+   * Handler for when subscribed stores emit 'change' event.
+   */
   _onChange = () => {
     this.setState(getStateFromStores());
   };
   
-  handlePayment = (paymentInfo, addressInfo) => {
+  /**
+   * @private
+   * Handler for when the payment information is received.
+   */
+  _onReceivedPayment = (paymentInfo, addressInfo) => {
 
     this.setState({
       isSubmitting: true
@@ -89,23 +112,28 @@ export default class CheckoutApp extends React.Component {
     });
   };
   
-  createSummary() {
+  /**
+   * @private
+   * Creates the JSX for the summary section.
+   * 
+   * @return {JSX} 
+   */
+  _createSummaryJsx() {
     
     let items = this.state.items
     ,   itemPriceJsx = []
     ,   subTotle = this.state.totalPrice;
-
-    for (let key of Object.keys(items))
-    {
-      let item = items[key];
+    
+    itemPriceJsx = _.map(items, (itemInfo) => {
+      let priceForVariation = itemInfo.variation.price * itemInfo.count;
       
-      itemPriceJsx.push(
-        <div key={key} className={styles.summaryItem}>
-          <span className={styles.labelStyle}>{item.item.price} x {item.count} {item.item.name}</span>
-          <span className={styles.priceStyle}>{ItemUtil.createPriceJsx(item.item.price * item.count)}</span>
+      return (
+        <div key={itemInfo.variation._id} className={styles.summaryItem}>
+          <span className={styles.labelStyle}>{priceForVariation} {itemInfo.item.name}</span>
+          <span className={styles.priceStyle}>{ItemUtil.createPriceJsx(priceForVariation)}</span>
         </div>
       );
-    }
+    });
     
     // hard coded for now
     let discount = 0
@@ -143,17 +171,23 @@ export default class CheckoutApp extends React.Component {
     );
   }
   
-  createCheckoutContent() {
+  /**
+   * @private
+   * Creates the JSX for the checkout form section.
+   * 
+   * @return {JSX} 
+   */
+  _createCheckoutContentJsx() {
     
     return (
       <div>
-        {this.createSummary()}
+        {this._createSummaryJsx()}
         <AlertMessage ref="alert" alertStyle="danger">
           {this.state.errorMessage}
         </AlertMessage>
         <PaymentApp
           amount={this.state.totalPrice}
-          handlePayment={this.handlePayment}
+          handlePayment={this._onReceivedPayment}
         >
           <SubmitButton
             submitText="Processing"
@@ -176,7 +210,13 @@ export default class CheckoutApp extends React.Component {
     );
   }
   
-  createConfirmation() {
+  /**
+   * @private
+   * Creates the JSX for the confirmation section.
+   * 
+   * @return {JSX} 
+   */
+  _createConfirmationJsx() {
     return (
       <div>
         Thank you for shopping with us. We’ll send a confirmation when your item ships.
@@ -184,14 +224,17 @@ export default class CheckoutApp extends React.Component {
     );
   }
 
+  /**
+   * @inheritdoc
+   */
   render() {
 
     let items = this.state.items
     ,   checkoutContent = do {
       if (this.state.checkoutFinish) {
-        this.createConfirmation();
+        this._createConfirmationJsx();
       } else {
-        this.createCheckoutContent();
+        this._createCheckoutContentJsx();
       }
     };
     

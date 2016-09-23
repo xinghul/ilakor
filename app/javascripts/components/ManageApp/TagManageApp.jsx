@@ -23,6 +23,10 @@ function getStateFromStores() {
   };
 }
 
+/**
+ * @class
+ * @extends {React.Component}
+ */
 export default class TagManageApp extends React.Component {
   
   /**

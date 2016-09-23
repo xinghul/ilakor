@@ -1,19 +1,36 @@
-"use strict"
+import React from "react";
+import invariant from "invariant";
+import _ from "lodash";
+import { Modal, Row, Col, Accordion, Panel } from "react-bootstrap";
 
-import React from "react"
-import invariant from "invariant"
-import _ from "lodash"
-import { Modal, Row, Col, Accordion, Panel } from "react-bootstrap"
+import GhostButton from "lib/GhostButton";
+import BaseCarousel from "lib/BaseCarousel";
+import SingleRangeSlider from "lib/SingleRangeSlider";
+import Select from "lib/Select";
 
-import GhostButton from "lib/GhostButton"
-import BaseCarousel from "lib/BaseCarousel"
-import SingleRangeSlider from "lib/SingleRangeSlider"
+import ItemUtil from "utils/ItemUtil";
 
-import ItemUtil from "utils/ItemUtil"
+import ShoppingCartAction from "actions/ShoppingCartAction";
 
-import ShoppingCartAction from "actions/ShoppingCartAction"
+import styles from "components/ItemDisplayApp/ItemDetailModal.scss";
 
-import styles from "components/ItemDisplayApp/ItemDetailModal.scss"
+/**
+ * Creates the options for Select component.
+ * 
+ * @method createSelectOptions
+ *
+ * @param {Array} options the options.
+ * 
+ * @return {Array}
+ */
+function createSelectOptions(options) {
+  return _.map(options, (option) => {
+    return {
+      label: _.capitalize(_.words(option).join(' ')),
+      value: option
+    };
+  });
+}
 
 export default class ItemDetailModal extends React.Component {
   
@@ -22,6 +39,42 @@ export default class ItemDetailModal extends React.Component {
    */
   constructor(props) {
     super(props);
+    
+    this.state = {
+      // current selected values
+      config: {},
+      variations: {},
+      selectionKeys: []
+    };
+  }
+  
+  /**
+   * @inheritdoc
+   */
+  componentWillReceiveProps(props) {
+    
+    const variationRaw = props.item && props.item.variations;
+
+    let variations = {}
+    ,   selectionKeys = [];
+    
+    // gets all the variation info and stores into the array
+    // also gets all the unique key, for each key, we will have a Select for it
+    _.forEach(variationRaw, (variation) => {
+      variations[variation._id] = variation.info;
+      
+      _.forEach(variation.info, (value, key) => {
+        if (selectionKeys.indexOf(key) === -1) {
+          selectionKeys.push(key);
+        }
+      })
+    });
+
+    this.setState({
+      variations,
+      selectionKeys
+    });
+    
   }
   
   /**
@@ -39,11 +92,54 @@ export default class ItemDetailModal extends React.Component {
   _onAddToCartClick = () => {
     
     invariant(!_.isEmpty(this.props.item), `this.props.item shouldn't be empty when _onAddToCartClick() is called.`);
+        
+    const { config } = this.state;
+    const { variations } = this.props.item;
+    
+    let selectedVariation = {};
+    
+    _.forEach(variations, (variationRaw) => {
+      let variation = variationRaw.info;
+      
+      if (_.isMatch(variation, config)) {
+        selectedVariation = variationRaw;
+      } 
+    })
+    
+    let itemInfo = {
+      count: this.refs["quantity"].getValue(),
+      item: this.props.item,
+      variation: selectedVariation
+    };
+    
+    console.log(itemInfo);
     
     ShoppingCartAction
-    .addToCart(this.props.item)
+    .addToCart(itemInfo)
     .finally(() => {
       this._onClose();
+    });
+  };
+  
+  /**
+   * @private
+   * Handler for when one of the Select value changes.
+   * Updates the select options based on newly selected value.
+   * 
+   * @param  {String} key the newly selected key.
+   * @param  {Object} selectedOption the newly selected option.
+   */
+  _onSelectionChange = (key, selectedOption) => {
+    let config = this.state.config;
+    
+    if (_.isEmpty(selectedOption)) {
+      delete config[key];      
+    } else {
+      config[key] = selectedOption.value;
+    }
+    
+    this.setState({
+      config
     });
   };
   
@@ -63,8 +159,59 @@ export default class ItemDetailModal extends React.Component {
    * @return {JSX} 
    */
   _createConfigSection() {
+    
+    const { config, variations, selectionKeys } = this.state;
+
+    // creates the Select group
+    let selectGroup = _.map(selectionKeys, (key) => {
+      let newConfig = _.clone(config);
+
+      delete newConfig[key];
+      
+      let availableVariations = _.filter(_.values(variations), newConfig);
+
+      let value = [];
+      _.forEach(availableVariations, (variation) => {
+        if (!_.isEmpty(variation[key]) && value.indexOf(variation[key]) === -1) {
+          value.push(variation[key]);
+        }
+      });
+      
+      value.sort();
+
+      let options = createSelectOptions(value);
+      
+      let defaultValue = _.isEmpty(config[key]) ? null : config[key];
+      
+      return (
+        <Select 
+          key={_.uniqueId(key)}
+          defaultValue={defaultValue}
+          multi={false}
+          label={_.capitalize(key)}
+          options={options}
+          onChange={this._onSelectionChange.bind(this, key)}
+        />
+      );
+    });
+    
+    let quantityOptions = _.times(10, (count) => {
+      return {
+        label: count,
+        value: count  
+      };
+    });
+    
     return (
       <div className={styles.configSection}>
+        {selectGroup}
+        <Select 
+          ref="quantity"
+          defaultValue={1}
+          multi={false}
+          label="Quantity"
+          options={quantityOptions}
+        />
         <GhostButton theme="gold" onClick={this._onAddToCartClick}>Add to cart</GhostButton> 
       </div>
     );
@@ -76,7 +223,7 @@ export default class ItemDetailModal extends React.Component {
    * @return {JSX}
    */
   createItemDetailJsx() {
-    let item = this.props.item;
+    const { item } = this.props;
     
     let imageUrls = item.images.map((image) => {
       invariant(_.isString(image.name), `Each image of item.images should have a 'name' as string.`);

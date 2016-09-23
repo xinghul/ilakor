@@ -1,20 +1,18 @@
-"use strict"
+import React from "react";
+import _ from "lodash";
+import invariant from "invariant";
 
-import React from "react"
-import _ from "lodash"
-import invariant from "invariant"
+import { Modal, Row, Col } from "react-bootstrap";
 
-import { Modal, Row, Col } from "react-bootstrap"
+import SubmitButton from "lib/SubmitButton";
+import GhostButton from "lib/GhostButton";
+import BaseInfo from "lib/BaseInfo";
+import CustomerDetailSection from "./CustomerDetailSection";
+import AddressDetailSection from "./AddressDetailSection";
+import ItemDetailSection from "./ItemDetailSection";
+import OrderDetailSection from "./OrderDetailSection";
 
-import SubmitButton from "lib/SubmitButton"
-import GhostButton from "lib/GhostButton"
-import BaseInfo from "lib/BaseInfo"
-import CustomerDetailSection from "./CustomerDetailSection"
-import AddressDetailSection from "./AddressDetailSection"
-import ItemDetailSection from "./ItemDetailSection"
-import OrderDetailSection from "./OrderDetailSection"
-
-import styles from "components/ManageApp/OrderManageApp/OrderDetailModal.scss"
+import styles from "components/ManageApp/OrderManageApp/OrderDetailModal.scss";
 
 export default class OrderDetailModal extends React.Component {
   

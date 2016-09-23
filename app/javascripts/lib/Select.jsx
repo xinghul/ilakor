@@ -16,7 +16,8 @@ export default class Select extends React.Component {
     super(props);
     
     this.state = {
-      value: this.props.multi ? [] : {}
+      value: _.isEmpty(this.props.defaultValue) ? (this.props.multi ? [] : {})
+                                                : this.props.defaultValue
     };
   }
   
@@ -69,13 +70,6 @@ export default class Select extends React.Component {
   render() {
     
     const { label, multi, options, placeholder } = this.props;
-    
-    let selectOptions = options.map((option) => {
-      return {
-        value: option._id,
-        label: _.capitalize(option.name)
-      };
-    });
 
     return (
       <div className={styles.select}>
@@ -84,7 +78,7 @@ export default class Select extends React.Component {
         </label>
         <ReactSelect
           placeholder={placeholder}
-          options={selectOptions}
+          options={options}
           multi={multi}
           value={this.state.value}
           onChange={this._onChange}

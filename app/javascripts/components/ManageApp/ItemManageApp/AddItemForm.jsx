@@ -17,6 +17,23 @@ import ItemManageAction from "actions/item/ItemManageAction";
 
 import styles from "components/ManageApp/ItemManageApp/AddItemForm.scss";
 
+/**
+ * Creates the options for Select component.
+ * 
+ * @method createSelectOptions
+ * 
+ * @param  {Array} data the items used for creating the options.
+ * 
+ * @return {Array}
+ */
+function createSelectOptions(data) {
+  return _.map(data, (dataItem) => {
+    return {
+      label: _.capitalize(dataItem.name),
+      value: dataItem._id
+    };
+  });
+}
 
 export default class AddItemForm extends React.Component {
   
@@ -111,7 +128,7 @@ export default class AddItemForm extends React.Component {
         ref="brand"
         label="Brand"
         placeholder="Select brand"
-        options={this.props.brands}
+        options={createSelectOptions(this.props.brands)}
       />
     );
     
@@ -121,7 +138,7 @@ export default class AddItemForm extends React.Component {
         ref="category"
         label="Category"
         placeholder="Select category"
-        options={this.props.categories}
+        options={createSelectOptions(this.props.categories)}
       />
     );
     
@@ -130,7 +147,7 @@ export default class AddItemForm extends React.Component {
         ref="tag"
         label="Tags"
         placeholder="Select tags"
-        options={this.props.tags}
+        options={createSelectOptions(this.props.tags)}
       />
     );
     

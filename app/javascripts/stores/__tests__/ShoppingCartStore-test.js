@@ -73,23 +73,6 @@ describe("ShoppingCartStore", function() {
     expect(items[keys[0]].count).toEqual(1);
   });
   
-  it("Removes same item just added", function() {
-  
-    let items = ShoppingCartStore.getItems();
-    let keys = Object.keys(items);
-    expect(keys.length).toBe(1);
-    
-    let actionRemoveFromCart = {
-      action: {
-        actionType: ShoppingCartConstants.REMOVE_FROM_CART,
-        id: keys[0]
-      }
-    };
-    callback(actionRemoveFromCart);
-    
-    expect(items[keys[0]]).toBeUndefined();
-  });
-  
   it("Adds an item 2 to 5 times", function() {
     let itemId = mockId.generate();
     let actionAddToCart = {

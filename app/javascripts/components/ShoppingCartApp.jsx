@@ -1,24 +1,22 @@
-"use strict"
+import React from "react";
+import _ from "lodash";
+import { hashHistory } from "react-router";
 
-import React from "react"
-import _ from "lodash"
-import { hashHistory } from "react-router"
+import { Glyphicon, OverlayTrigger, Popover, MenuItem } from "react-bootstrap";
+import { Image, SplitButton } from "react-bootstrap";
 
-import { Glyphicon, OverlayTrigger, Popover, MenuItem } from "react-bootstrap"
-import { Image, SplitButton } from "react-bootstrap"
+import CheckoutApp from "components/CheckoutApp";
+import ItemUtil from "utils/ItemUtil";
 
-import CheckoutApp from "components/CheckoutApp"
-import ItemUtil from "utils/ItemUtil"
+import ShoppingCartStore from "stores/ShoppingCartStore";
+import AuthStore from "stores/AuthStore";
 
-import ShoppingCartStore from "stores/ShoppingCartStore"
-import AuthStore from "stores/AuthStore"
+import ShoppingCartAction from "actions/ShoppingCartAction";
+import AuthAction from "actions/AuthAction";
 
-import ShoppingCartAction from "actions/ShoppingCartAction"
-import AuthAction from "actions/AuthAction"
+import GhostButton from "lib/GhostButton";
 
-import GhostButton from "lib/GhostButton"
-
-import styles from "components/ShoppingCartApp.scss"
+import styles from "components/ShoppingCartApp.scss";
 
 /**
  * @private
@@ -75,8 +73,8 @@ function _onCheckoutClick() {
  */
 function _createCartItem(itemInfo) {
   let count = itemInfo.count
-  ,   item = itemInfo.item
-  ,   imageUrl = "http://d16knxx0wtupz9.cloudfront.net/" + item.images[0].name;
+  ,   imageUrl = "http://d16knxx0wtupz9.cloudfront.net/" + itemInfo.item.images[0].name
+  ,   id = itemInfo.variation._id;
   
   // popover is appended to dom on the fly, css modules doesn't work
   let itemStyle = {
@@ -122,23 +120,23 @@ function _createCartItem(itemInfo) {
   };
   
   return (
-    <div key={item._id} style={itemStyle}>
+    <div key={_.uniqueId(id)} style={itemStyle}>
       <Image style={imageStyle} src={imageUrl} thumbnail />
       <div style={infoStyle}>
         <div style={nameStyle}>
-          {item.name}
+          {itemInfo.item.name}
         </div>
         <div style={priceCountStyle}>
           <span>
-            {ItemUtil.createPriceJsx(item.price)}
+            {ItemUtil.createPriceJsx(itemInfo.variation.price)}
           </span>
           <span style={countStyle}>
             <SplitButton 
-              onSelect={_onCountSelect.bind(this, item._id)}
+              onSelect={_onCountSelect.bind(this, id)}
               bsSize="xsmall" 
               title={count} 
-              key={item._id} 
-              id={`split-button-basic-${item._id}`}>
+              key={_.uniqueId(id)} 
+              id={`split-button-basic-${id}`}>
               <MenuItem eventKey="1">1</MenuItem>
               <MenuItem eventKey="2">2</MenuItem>
               <MenuItem eventKey="3">3</MenuItem>

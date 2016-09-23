@@ -108,8 +108,8 @@ export default class ItemDisplayApp extends React.Component {
       this.setState({
         isItemsAdded: true
       });
-    }).catch(function(err) {
-      console.log(err);
+    }).catch((err) => {
+      console.log(err, err.stack);
     });
   };
   

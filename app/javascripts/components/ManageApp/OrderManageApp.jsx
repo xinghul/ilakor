@@ -1,20 +1,18 @@
-"use strict"
+import React from "react";
+import _ from "lodash";
+import invariant from "invariant";
 
-import React from "react"
-import _ from "lodash"
-import invariant from "invariant"
+import { Table } from "react-bootstrap";
 
-import { Table } from "react-bootstrap"
+import OrderManageStore from "stores/OrderManageStore";
+import OrderAction from "actions/OrderAction";
 
-import OrderManageStore from "stores/OrderManageStore"
-import OrderAction from "actions/OrderAction"
+import GridSection from "lib/GridSection";
+import LoadSpinner from "lib/LoadSpinner";
 
-import GridSection from "lib/GridSection"
-import LoadSpinner from "lib/LoadSpinner"
+import OrderDetailModal from "./OrderManageApp/OrderDetailModal";
 
-import OrderDetailModal from "./OrderManageApp/OrderDetailModal"
-
-import styles from "components/ManageApp/OrderManageApp.scss"
+import styles from "components/ManageApp/OrderManageApp.scss";
 
 /**
  * Gets the new state from subscribed stores.
@@ -28,6 +26,10 @@ function getStateFromStores() {
   };
 }
 
+/**
+ * @class
+ * @extends {React.Component}
+ */
 export default class OrderManageApp extends React.Component {
   
   /**

@@ -62,20 +62,18 @@ export default class ItemListTable extends React.Component {
    */
   _renderItemListTable() {
     
-    let items = this.props.items
-    ,   tableBody = [];
+    let items = this.props.items;
     
-    for (let item of items)
-    {
-      tableBody.push(
+    let tableBody = _.map(items, (item) => {
+      return (
         <tr onClick={this.props.handleItemClick.bind(this, item)} key={item._id}>
           <td>{items.indexOf(item)}</td>
           <td>{item.name}</td>
-          <td>{item.price}</td>
-          <td>{item.tags.join(",")}</td>
+          <td>{item.brand.name}</td>
+          <td>{item.category.name}</td>
         </tr>
       );
-    }
+    });
     
     return (
       <Table striped bordered hover>
@@ -83,8 +81,8 @@ export default class ItemListTable extends React.Component {
           <tr>
             <th>#</th>
             <th>Name</th>
-            <th>Price</th>
-            <th>Tag</th>
+            <th>Brand</th>
+            <th>Category</th>
           </tr>
         </thead>
         <tbody>

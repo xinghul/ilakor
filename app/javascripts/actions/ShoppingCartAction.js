@@ -1,11 +1,9 @@
-"use strict";
+import Promise from "bluebird";
+import _ from "lodash";
+import invariant from "invariant";
 
-import Promise from "bluebird"
-import _ from "lodash"
-import invariant from "invariant"
-
-import AppDispatcher from "dispatcher/AppDispatcher"
-import ShoppingCartConstants from "constants/ShoppingCartConstants"
+import AppDispatcher from "dispatcher/AppDispatcher";
+import ShoppingCartConstants from "constants/ShoppingCartConstants";
 
 let ShoppingCartAction = {
   
@@ -25,29 +23,6 @@ let ShoppingCartAction = {
       AppDispatcher.handleAction({
         actionType: ShoppingCartConstants.ADD_TO_CART,
         item: item
-      });
-      
-      resolve();
-      
-    });
-  },
-  
-  /**
-   * Removes an item by id from the shopping cart.
-   * 
-   * @param  {String} id the id of the item.
-   *
-   * @return {Promise}
-   */
-  removeFromCart: function(id) {
-    
-    invariant(_.isString(id), `removeFromCart(id) expects 'id' to be 'string', but gets '${typeof id}'.`);
-    
-    return new Promise((resolve, reject) => {
-      
-      AppDispatcher.handleAction({
-        actionType: ShoppingCartConstants.REMOVE_FROM_CART,
-        id: id
       });
       
       resolve();

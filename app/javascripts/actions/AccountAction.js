@@ -49,7 +49,7 @@ let AccountActions = {
           
           invariant(_.isString(message), `getOrders(userId) expects error.message to be 'string', but gets '${typeof message}'.`);
           
-          reject(message);
+          reject(new Error(message));
         })
         .finally(() => {
           
