@@ -68,8 +68,8 @@ export default class VariationManageApp extends React.Component {
    * @inheritdoc
    */
   componentDidMount() {
-    VariationManageStore.addChangeListener(this._onChange);
-    ItemManageStore.addChangeListener(this._onChange);
+    VariationManageStore.subscribe(this._onChange);
+    ItemManageStore.subscribe(this._onChange);
     
     VariationManageAction.getVariations(true);
     
@@ -80,8 +80,8 @@ export default class VariationManageApp extends React.Component {
    * @inheritdoc
    */
   componentWillUnmount() {
-    VariationManageStore.removeChangeListener(this._onChange);
-    ItemManageStore.removeChangeListener(this._onChange);
+    VariationManageStore.unsubscribe(this._onChange);
+    ItemManageStore.unsubscribe(this._onChange);
   }
   
   /**

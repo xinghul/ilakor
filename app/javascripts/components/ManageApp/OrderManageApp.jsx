@@ -52,7 +52,7 @@ export default class OrderManageApp extends React.Component {
    * @inheritdoc
    */
   componentDidMount() {
-    OrderManageStore.addChangeListener(this._onChange);
+    OrderManageStore.subscribe(this._onChange);
     
     OrderAction.getOrders();    
   }
@@ -61,7 +61,7 @@ export default class OrderManageApp extends React.Component {
    * @inheritdoc
    */
   componentWillUnmount() {
-    OrderManageStore.removeChangeListener(this._onChange);
+    OrderManageStore.unsubscribe(this._onChange);
   }
   
   /**

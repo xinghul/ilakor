@@ -11,6 +11,8 @@ import { Router, Route, IndexRoute, Link, hashHistory } from "react-router";
 import NavbarApp from "components/NavbarApp";
 import AuthApp from "components/AuthApp";
 
+import AuthStore from "stores/AuthStore";
+
 import ItemDisplayApp from "components/ItemDisplayApp";
 import ManageApp from "components/ManageApp";
 import AccountApp from "components/AccountApp";
@@ -21,8 +23,75 @@ import SidePanel from "lib/SidePanel";
 
 import styles from "main/app.scss";
 
-class App extends React.Component {
+const protectedRoutes = [
+  "/manage", "/account", "/checkout"
+];
+
+/**
+ * @private 
+ * onEnter hook ensures that the current user is admin.
+ */
+ function ensureIsAdmin(nextState, replace) {
+   
+   const user = AuthStore.getUser();
+   
+   if (_.isEmpty(user) || !user.isAdmin) {
+     replace({
+       pathname: '/'
+     });
+   }
+ }
+ 
+ /**
+  * @private 
+  * onEnter hook ensures that the current customer is logged in.
+  */
+  function ensureLoggedIn(nextState, replace) {
     
+    const user = AuthStore.getUser();
+    
+    if (_.isEmpty(user)) {
+      replace({
+        pathname: '/'
+      });
+    }
+  }
+ 
+/**
+ * @class
+ * @extends {React.Component}
+ */
+class App extends React.Component {
+  /**
+   * @inheritdoc
+   */
+  constructor(props) {
+    super(props);
+  }
+  
+  /**
+   * @private
+   * Handler for when the auth store changes.
+   */
+  _onAuthChange = () => {
+    const user = AuthStore.getUser();
+    const { pathname } = this.props.location;
+    
+    if (_.isEmpty(user) && protectedRoutes.indexOf(pathname) !== -1) {
+      hashHistory.push('/');
+    }
+  };
+
+  /**
+   * @inheritdoc
+   */
+  componentDidMount() {
+    AuthStore.subscribe(this._onAuthChange);    
+  }
+
+  /**
+   * @inheritdoc
+   */
   render() {
     return (
       <div className={styles.app}>
@@ -84,9 +153,9 @@ render((
     <Route path="/" component={App}>
       <IndexRoute component={IndexApp} />
       <Route path="itemDisplay" component={ItemDisplayApp} />
-      <Route path="manage" component={ManageApp} />
-      <Route path="account" component={AccountApp} />
-      <Route path="checkout" component={CheckoutApp} />
+      <Route path="manage" component={ManageApp} onEnter={ensureIsAdmin} />
+      <Route path="account" component={AccountApp} onEnter={ensureLoggedIn} />
+      <Route path="checkout" component={CheckoutApp} onEnter={ensureLoggedIn} />
       <Route path="completeLocal" component={CompleteLocalApp} />
       <Route path="*" component={IndexApp} />
     </Route>

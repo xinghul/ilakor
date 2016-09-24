@@ -219,7 +219,7 @@ let ShoppingCartStore = _.extend({}, EventEmitter.prototype, {
    * 
    * @param  {Function} callback the callback to add.
    */
-  addChangeListener: function(callback) {
+  subscribe: function(callback) {
     this.on(CHANGE_EVENT, callback);
   },
 
@@ -228,14 +228,14 @@ let ShoppingCartStore = _.extend({}, EventEmitter.prototype, {
    * 
    * @param  {Function} callback the callback to remove.
    */
-  removeChangeListener: function(callback) {
+  unsubscribe: function(callback) {
     this.removeListener(CHANGE_EVENT, callback);
   }
 
 });
 
-ShoppingCartStore.dispatchToken = AppDispatcher.register(function(payload) {
-  let action = payload.action;
+ShoppingCartStore.dispatchToken = AppDispatcher.register((payload) => {
+  const { action } = payload;
 
   switch(action.actionType) {
     case ShoppingCartConstants.ADD_TO_CART:

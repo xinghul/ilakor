@@ -44,7 +44,7 @@ export default class TagManageApp extends React.Component {
    * @inheritdoc
    */
   componentDidMount() {
-    TagManageStore.addChangeListener(this._onChange);
+    TagManageStore.subscribe(this._onChange);
     
     TagManageAction.getTags(true);
   }
@@ -53,7 +53,7 @@ export default class TagManageApp extends React.Component {
    * @inheritdoc
    */
   componentWillUnmount() {
-    TagManageStore.removeChangeListener(this._onChange);
+    TagManageStore.unsubscribe(this._onChange);
   }
   
   /**

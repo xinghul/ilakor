@@ -28,7 +28,6 @@ function getStateFromStores() {
  * @extends {React.Component}
  */
 export default class BrandManageApp extends React.Component {
-  
   /**
    * @inheritdoc
    */
@@ -44,7 +43,7 @@ export default class BrandManageApp extends React.Component {
    * @inheritdoc
    */
   componentDidMount() {
-    BrandManageStore.addChangeListener(this._onChange);
+    BrandManageStore.subscribe(this._onChange);
     
     BrandManageAction.getBrands(true);
   }
@@ -53,7 +52,7 @@ export default class BrandManageApp extends React.Component {
    * @inheritdoc
    */
   componentWillUnmount() {
-    BrandManageStore.removeChangeListener(this._onChange);
+    BrandManageStore.unsubscribe(this._onChange);
   }
   
   /**

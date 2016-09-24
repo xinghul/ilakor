@@ -60,10 +60,10 @@ export default class ItemManageApp extends React.Component {
    * @inheritdoc
    */
   componentDidMount() {
-    ItemManageStore.addChangeListener(this._onChange);
-    BrandManageStore.addChangeListener(this._onChange);
-    CategoryManageStore.addChangeListener(this._onChange);
-    TagManageStore.addChangeListener(this._onChange);
+    ItemManageStore.subscribe(this._onChange);
+    BrandManageStore.subscribe(this._onChange);
+    CategoryManageStore.subscribe(this._onChange);
+    TagManageStore.subscribe(this._onChange);
     
     ItemManageAction.getItems(true);
     
@@ -78,10 +78,10 @@ export default class ItemManageApp extends React.Component {
    * @inheritdoc
    */
   componentWillUnmount() {
-    ItemManageStore.removeChangeListener(this._onChange);
-    BrandManageStore.removeChangeListener(this._onChange);
-    CategoryManageStore.removeChangeListener(this._onChange);
-    TagManageStore.removeChangeListener(this._onChange);
+    ItemManageStore.unsubscribe(this._onChange);
+    BrandManageStore.unsubscribe(this._onChange);
+    CategoryManageStore.unsubscribe(this._onChange);
+    TagManageStore.unsubscribe(this._onChange);
   }
   
   /**

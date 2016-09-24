@@ -118,7 +118,7 @@ let ItemManageStore = _.extend({}, EventEmitter.prototype, {
    * 
    * @param  {Function} callback the callback to add.
    */
-  addChangeListener: function(callback) {
+  subscribe: function(callback) {
     this.on(CHANGE_EVENT, callback);
   },
 
@@ -127,7 +127,7 @@ let ItemManageStore = _.extend({}, EventEmitter.prototype, {
    * 
    * @param  {Function} callback the callback to remove.
    */
-  removeChangeListener: function(callback) {
+  unsubscribe: function(callback) {
     this.removeListener(CHANGE_EVENT, callback);
   }
 

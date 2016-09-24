@@ -27,6 +27,7 @@ let AuthStore = _.extend({}, EventEmitter.prototype, {
 
   /**
    * Returns the user.
+   * 
    * @return {Object} 
    */
   getUser: function() {
@@ -67,7 +68,7 @@ let AuthStore = _.extend({}, EventEmitter.prototype, {
    * 
    * @param  {Function} callback the callback to add.
    */
-  addChangeListener: function(callback) {
+  subscribe: function(callback) {
     this.on(CHANGE_EVENT, callback);
     
     // emit change right away
@@ -82,14 +83,14 @@ let AuthStore = _.extend({}, EventEmitter.prototype, {
    * 
    * @param  {Function} callback the callback to remove.
    */
-  removeChangeListener: function(callback) {
+  unsubscribe: function(callback) {
     this.removeListener(CHANGE_EVENT, callback);
   }
 
 });
 
-AuthStore.dispatchToken = AppDispatcher.register(function(payload) {
-  let action = payload.action;
+AuthStore.dispatchToken = AppDispatcher.register((payload) => {
+  const { action } = payload;
 
   switch(action.actionType) {
 

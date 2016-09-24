@@ -54,14 +54,14 @@ export default class CheckoutApp extends React.Component {
    * @inheritdoc
    */
   componentDidMount() {
-    ShoppingCartStore.addChangeListener(this._onChange);
+    ShoppingCartStore.subscribe(this._onChange);
   }
 
   /**
    * @inheritdoc
    */
   componentWillUnmount() {
-    ShoppingCartStore.removeChangeListener(this._onChange);
+    ShoppingCartStore.unsubscribe(this._onChange);
   }
   
   /**

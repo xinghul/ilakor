@@ -89,7 +89,7 @@ let OrderManageStore = _.extend({}, EventEmitter.prototype, {
    * 
    * @param  {Function} callback the callback to add.
    */
-  addChangeListener: function(callback) {
+  subscribe: function(callback) {
     this.on(CHANGE_EVENT, callback);
   },
 
@@ -98,14 +98,14 @@ let OrderManageStore = _.extend({}, EventEmitter.prototype, {
    * 
    * @param  {Function} callback the callback to remove.
    */
-  removeChangeListener: function(callback) {
+  unsubscribe: function(callback) {
     this.removeListener(CHANGE_EVENT, callback);
   }
 
 });
 
-OrderManageStore.dispatchToken = AppDispatcher.register(function(payload) {
-  let action = payload.action;
+OrderManageStore.dispatchToken = AppDispatcher.register((payload) => {
+  const { action } = payload;
 
   switch(action.actionType) {
 

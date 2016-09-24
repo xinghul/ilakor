@@ -172,18 +172,18 @@ export default class ShoppingCartApp extends React.Component {
    * @inheritdoc
    */
   componentDidMount() {
-    ShoppingCartStore.addChangeListener(this._onChange);
+    ShoppingCartStore.subscribe(this._onChange);
     
-    AuthStore.addChangeListener(this._onChange);
+    AuthStore.subscribe(this._onChange);
   }
   
   /**
    * @inheritdoc
    */
   componentWillUnmount() {
-    ShoppingCartStore.removeChangeListener(this._onChange);
+    ShoppingCartStore.unsubscribe(this._onChange);
     
-    AuthStore.removeChangeListener(this._onChange);
+    AuthStore.unsubscribe(this._onChange);
   }
   
   /**

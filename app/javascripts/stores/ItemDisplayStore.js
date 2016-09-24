@@ -107,7 +107,7 @@ let ItemDisplayStore = _.extend({}, EventEmitter.prototype, {
    * 
    * @param  {Function} callback the callback to add.
    */
-  addChangeListener: function(callback) {
+  subscribe: function(callback) {
     this.on(CHANGE_EVENT, callback);
   },
 
@@ -116,14 +116,14 @@ let ItemDisplayStore = _.extend({}, EventEmitter.prototype, {
    * 
    * @param  {Function} callback the callback to remove.
    */
-  removeChangeListener: function(callback) {
+  unsubscribe: function(callback) {
     this.removeListener(CHANGE_EVENT, callback);
   }
 
 });
 
-ItemDisplayStore.dispatchToken = AppDispatcher.register(function(payload) {
-  let action = payload.action;
+ItemDisplayStore.dispatchToken = AppDispatcher.register((payload) => {
+  const { action } = payload;
 
   switch(action.actionType) {
     case ItemDisplayConstants.RECEIVED_ITEMS:

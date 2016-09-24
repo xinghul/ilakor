@@ -46,14 +46,14 @@ export default class AccountApp extends React.Component {
    * @inheritdoc
    */
   componentDidMount() {
-    AuthStore.addChangeListener(this._onChange);
+    AuthStore.subscribe(this._onChange);
   }
   
   /**
    * @inheritdoc
    */
   componentWillUnmount() {
-    AuthStore.removeChangeListener(this._onChange);
+    AuthStore.unsubscribe(this._onChange);
   }
   
   /**

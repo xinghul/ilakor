@@ -1,18 +1,16 @@
-"use strict"
-
-import React from "react"
-import { Navbar, Nav, NavItem, Image } from "react-bootstrap"
-import { DropdownButton, MenuItem } from "react-bootstrap"
+import React from "react";
+import { Navbar, Nav, NavItem, Image } from "react-bootstrap";
+import { DropdownButton, MenuItem } from "react-bootstrap";
 
 
-import styles from "components/NavbarApp.scss"
+import styles from "components/NavbarApp.scss";
 
-import GhostButton from "lib/GhostButton"
+import GhostButton from "lib/GhostButton";
 
-import AuthStore from "stores/AuthStore"
-import AuthAction from "actions/AuthAction"
+import AuthStore from "stores/AuthStore";
+import AuthAction from "actions/AuthAction";
 
-import ShoppingCartApp from "./ShoppingCartApp"
+import ShoppingCartApp from "./ShoppingCartApp";
 
 /**
  * @private 
@@ -27,8 +25,14 @@ function getStateFromStores() {
   };
 }
 
+/**
+ * @class
+ * @extends {React.Component}
+ */
 export default class NarbarApp extends React.Component {
-  
+  /**
+   * @inheritdoc
+   */
   constructor(props) {
     super(props);
     
@@ -41,7 +45,7 @@ export default class NarbarApp extends React.Component {
    * @inheritdoc
    */
   componentDidMount() {
-    AuthStore.addChangeListener(this._onChange);
+    AuthStore.subscribe(this._onChange);
     
     AuthAction.logInFromCookie();
   }
@@ -50,7 +54,7 @@ export default class NarbarApp extends React.Component {
    * @inheritdoc
    */
   componentWillUnmount() {
-    AuthStore.removeChangeListener(this._onChange);
+    AuthStore.unsubscribe(this._onChange);
   }
   
   /**
@@ -68,7 +72,7 @@ export default class NarbarApp extends React.Component {
    * Handler for logging out.
    */
   _onLogout = () => {
-    AuthAction.removeUserFromCookie();
+    AuthAction.logOut();
   };
   
   /**
@@ -86,17 +90,17 @@ export default class NarbarApp extends React.Component {
    * @return {JSX} the jsx created.
    */
   renderAuthArea() {
-    let authArea;
-    let user = this.state.user;
+    
+    const { user } = this.state; 
 
     if (user && user._id) {
 
       let title = "Hello, " + user.username;
       
-      authArea = (
+      return (
         <DropdownButton title={title} id="authDropdown">
           <MenuItem href="#/account">My Account</MenuItem>
-          <MenuItem href="#/manage">Manage</MenuItem>
+          {user.isAdmin ? <MenuItem href="#/manage">Manage</MenuItem> : null}
           <MenuItem divider />
           <MenuItem onSelect={this._onLogout}>Log out</MenuItem>
         </DropdownButton>
@@ -104,15 +108,13 @@ export default class NarbarApp extends React.Component {
       
     } else {
       
-      authArea = (
+    return (
         <div>
           <GhostButton onClick={this._showModal}>Sign in</GhostButton> 
         </div>
       );
         
     }
-    
-    return authArea;
   }
   
   /**

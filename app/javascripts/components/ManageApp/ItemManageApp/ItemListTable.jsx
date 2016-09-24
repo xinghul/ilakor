@@ -36,14 +36,14 @@ export default class ItemListTable extends React.Component {
    * @inheritdoc
    */
   componentDidMount() {
-    ItemManageStore.addChangeListener(this._onChange);
+    ItemManageStore.subscribe(this._onChange);
   }
   
   /**
    * @inheritdoc
    */
   componentWillUnmount() {
-    ItemManageStore.removeChangeListener(this._onChange);
+    ItemManageStore.unsubscribe(this._onChange);
   }
   
   /**

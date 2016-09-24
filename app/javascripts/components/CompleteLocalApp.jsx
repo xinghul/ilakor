@@ -31,11 +31,11 @@ export default class CompleteLocalApp extends React.Component {
   }
   
   componentDidMount() {
-    AuthStore.addChangeListener(this._onChange);
+    AuthStore.subscribe(this._onChange);
   }
 
   componentWillUnmount() {
-    AuthStore.removeChangeListener(this._onChange);
+    AuthStore.unsubscribe(this._onChange);
   }
 
   _onChange = () => {

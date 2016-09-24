@@ -27,11 +27,11 @@ export default class ItemFilterApp extends React.Component {
   }
   
   componentDidMount() {
-    ItemDisplayStore.addChangeListener(this._onChange);    
+    ItemDisplayStore.subscribe(this._onChange);    
   }
   
   componentWillUnmount() {
-    ItemDisplayStore.removeChangeListener(this._onChange);
+    ItemDisplayStore.unsubscribe(this._onChange);
   }
   
   _onChange = () => {

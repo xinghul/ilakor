@@ -41,14 +41,14 @@ export default class SimpleTable extends React.Component {
    * @inheritdoc
    */
   componentDidMount() {
-    this.props.store.addChangeListener(this._onChange);
+    this.props.store.subscribe(this._onChange);
   }
   
   /**
    * @inheritdoc
    */
   componentWillUnmount() {
-    this.props.store.removeChangeListener(this._onChange);
+    this.props.store.unsubscribe(this._onChange);
   }
   
   /**

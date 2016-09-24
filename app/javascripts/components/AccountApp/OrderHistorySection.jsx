@@ -41,7 +41,7 @@ export default class OrderHistorySection extends React.Component {
    * @inheritdoc
    */
   componentDidMount() {
-    AccountStore.addChangeListener(this._onChange);
+    AccountStore.subscribe(this._onChange);
 
     AccountAction.getOrders(this.props.user._id);
   }
@@ -50,7 +50,7 @@ export default class OrderHistorySection extends React.Component {
    * @inheritdoc
    */
   componentWillUnmount() {
-    AccountStore.removeChangeListener(this._onChange);
+    AccountStore.unsubscribe(this._onChange);
   }
   
   /**

@@ -247,7 +247,7 @@ let AuthAction = {
    * @return {Promise}
    */
   logInFromCookie: function() {
-    let user = ReactCookie.load("user");
+    const user = ReactCookie.load("user");
 
     if (_.isObject(user)) {
       AppDispatcher.handleAction({
@@ -262,7 +262,7 @@ let AuthAction = {
    * 
    * @return {Promise}
    */
-  removeUserFromCookie: function() {
+  logOut: function() {
     
     return new Promise((resolve, reject) => {
       

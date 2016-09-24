@@ -44,7 +44,7 @@ export default class CategoryManageApp extends React.Component {
    * @inheritdoc
    */
   componentDidMount() {
-    CategoryManageStore.addChangeListener(this._onChange);
+    CategoryManageStore.subscribe(this._onChange);
     
     CategoryManageAction.getCategories(true);
   }
@@ -53,7 +53,7 @@ export default class CategoryManageApp extends React.Component {
    * @inheritdoc
    */
   componentWillUnmount() {
-    CategoryManageStore.removeChangeListener(this._onChange);
+    CategoryManageStore.unsubscribe(this._onChange);
   }
   
   /**

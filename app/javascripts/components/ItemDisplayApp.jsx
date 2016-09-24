@@ -48,7 +48,7 @@ export default class ItemDisplayApp extends React.Component {
   }
   
   componentDidMount() {
-    ItemDisplayStore.addChangeListener(this._onChange);
+    ItemDisplayStore.subscribe(this._onChange);
     
     window.addEventListener("scroll", this._checkReachBottom);
     
@@ -58,7 +58,7 @@ export default class ItemDisplayApp extends React.Component {
   }
   
   componentWillUnmount() {
-    ItemDisplayStore.removeChangeListener(this._onChange);
+    ItemDisplayStore.unsubscribe(this._onChange);
     
     window.removeEventListener("scroll", this._checkReachBottom); 
 

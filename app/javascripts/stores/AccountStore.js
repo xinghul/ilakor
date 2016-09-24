@@ -68,7 +68,7 @@ let AccountStore = _.extend({}, EventEmitter.prototype, {
    * 
    * @param  {Function} callback the callback to add.
    */
-  addChangeListener: function(callback) {
+  subscribe: function(callback) {
     this.on(CHANGE_EVENT, callback);
   },
 
@@ -77,14 +77,14 @@ let AccountStore = _.extend({}, EventEmitter.prototype, {
    * 
    * @param  {Function} callback the callback to remove.
    */
-  removeChangeListener: function(callback) {
+  unsubscribe: function(callback) {
     this.removeListener(CHANGE_EVENT, callback);
   }
 
 });
 
-AccountStore.dispatchToken = AppDispatcher.register(function(payload) {
-  let action = payload.action;
+AccountStore.dispatchToken = AppDispatcher.register((payload) => {
+  const { action } = payload;
 
   switch(action.actionType) {
 
