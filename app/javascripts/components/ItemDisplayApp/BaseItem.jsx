@@ -39,7 +39,11 @@ export default class BaseItem extends React.Component {
       if (variation.price < itemPrice) {
         itemPrice = variation.price;
       }
-    });    
+    });
+    
+    if (itemPrice === Number.MAX_SAFE_INTEGER) {
+      itemPrice = 0;
+    }
 
     this.setState({
       itemPrice

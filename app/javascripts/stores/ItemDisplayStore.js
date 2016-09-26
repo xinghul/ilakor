@@ -1,23 +1,30 @@
-"use strict";
+import _ from "lodash";
+import invariant from "invariant";
+import { EventEmitter } from "events";
 
-import _ from "lodash"
-import invariant from "invariant"
-import { EventEmitter } from "events"
-
-import AppDispatcher from "dispatcher/AppDispatcher"
-import ItemDisplayConstants from "constants/ItemDisplayConstants"
+import AppDispatcher from "dispatcher/AppDispatcher";
+import ItemDisplayConstants from "constants/ItemDisplayConstants";
 
 const CHANGE_EVENT = "change";
 
+const availableFilterTypes = [
+  "brand", "category", "tag"
+];
+
 // items in this store
 let _items = []
-,   _filters = {
-  color: "red",
-  location: "kitchen",
-  made: "China"
-}
+,   _filters = {}
 ,   _hasMoreItems = true;
 
+// initialize applied filters
+_.forEach(availableFilterTypes, (filterType) => {
+  _filters[filterType] = [];
+});
+
+// _filters["tag"] = ["bulking", "cutting"];
+// 
+// _filters["category"] = ["protein", "creatine"]
+// 
 let ItemDisplayStore = _.extend({}, EventEmitter.prototype, {
   
   /**
@@ -38,12 +45,40 @@ let ItemDisplayStore = _.extend({}, EventEmitter.prototype, {
   },
   
   /**
-   * Returns the items.
+   * Returns the items after applying the filters.
    * 
    * @return {Array}
    */
   getItems: function() {
-    return _items;
+    let result = [];
+    
+    _.forEach(_items, (item) => {
+      let tags = _.map(item.tags, (rawTag) => {
+        return rawTag.name;
+      });
+
+      // check if tags matches
+      // must contains all tags selected
+      if (_.difference(_filters.tag, tags).length > 0) {
+        return;
+      }
+      
+      // check if brand matches
+      // must be one of the selected brands
+      if (!_.isEmpty(_filters.brand) && _filters.brand.indexOf(item.brand.name) === -1) {
+        return;
+      }
+      
+      // check if category matches
+      // must be one of the selected categories
+      if (!_.isEmpty(_filters.category) && _filters.category.indexOf(item.category.name) === -1) {
+        return;
+      }
+      
+      result.push(item);
+    });
+    
+    return result;
   },
   
   /**
@@ -65,25 +100,29 @@ let ItemDisplayStore = _.extend({}, EventEmitter.prototype, {
   /**
    * Adds a new filter.
    * 
-   * @param  {Object} newFilter the new filter config.
+   * @param  {Object} filter the new filter config.
    */
-  addFilter: function(newFilter) {
-    invariant(_.isObject(newFilter), `addFilter(newFilter) expects an 'object' as 'newFilter', but gets '${typeof newFilter}'.`);
-    invariant(!_filters.hasOwnProperty(newFilter.type), `Filter type '${filterType}' is already applied!`);
-    invariant(!_.isEmpty(newFilter.value), "filter value can not be empty!");
+  addFilter: function(filter) {
+    invariant(_.isObject(filter), `addFilter(filter) expects an 'object' as 'filter', but gets '${typeof filter}'.`);
+    invariant(availableFilterTypes.indexOf(filter.type) !== -1, `'${filter.type}' is not one of the available filter types.`);
+    invariant(!_.isEmpty(filter.value), "filter value can not be empty!");
+    invariant(_filters[filter.type].indexOf(filter.value) === -1, `Filter value '${filter.value}' of type '${filter.type}' already applied!`);
     
-    _filters[newFilter.type] = newFilter.value;
+    _filters[filter.type].push(filter.value);
   },
   
   /**
    * Removes a specific filter.
    * 
-   * @param  {String} filterType the specific filte type to remove.
+   * @param  {Object} filter the filter to be removed.
    */
-  removeFilter: function(filterType) {
-    invariant(_filters.hasOwnProperty(filterType), `Filter type '${filterType}' is not applied!`);
+  removeFilter: function(filter) {
+    invariant(_.isObject(filter), `removeFilter(filter) expects an 'object' as 'filter', but gets '${typeof filter}'.`);
+    invariant(availableFilterTypes.indexOf(filter.type) !== -1, `'${filter.type}' is not one of the available filter types.`);
+    invariant(!_.isEmpty(filter.value), "filter value can not be empty!");
+    invariant(_filters[filter.type].indexOf(filter.value) !== -1, `Filter value '${filter.value}' of type '${filter.type}' is not applied!`);
     
-    delete _filters[filterType];
+    _.pull(_filters[filter.type], filter.value);
   },
   
   /**
@@ -136,8 +175,13 @@ ItemDisplayStore.dispatchToken = AppDispatcher.register((payload) => {
       ItemDisplayStore.emitChange();
       break;
     
+    case ItemDisplayConstants.ADD_FILTER:
+      ItemDisplayStore.addFilter(action.filter);
+      ItemDisplayStore.emitChange();
+      break;  
+    
     case ItemDisplayConstants.REMOVE_FILTER:
-      ItemDisplayStore.removeFilter(action.filterType);
+      ItemDisplayStore.removeFilter(action.filter);
       ItemDisplayStore.emitChange();
       break;  
       

@@ -1,12 +1,10 @@
-"use strict";
+import request from "superagent-bluebird-promise";
+import invariant from "invariant";
+import _ from "lodash";
+import Promise from "bluebird";
 
-import request from "superagent-bluebird-promise"
-import invariant from "invariant"
-import _ from "lodash"
-import Promise from "bluebird"
-
-import AppDispatcher from "dispatcher/AppDispatcher"
-import ItemDisplayConstants from "constants/ItemDisplayConstants"
+import AppDispatcher from "dispatcher/AppDispatcher";
+import ItemDisplayConstants from "constants/ItemDisplayConstants";
 
 const LOAD_SIZE = 20;
 
@@ -29,10 +27,10 @@ let ItemDisplayAction = {
     return new Promise((resolve, reject, onCancel) => {
       
       let _request = request.get("/api/items")
-        .query({
-          skip: skip, 
-          limit: limit
-        })
+        // .query({
+        //   skip: skip, 
+        //   limit: limit
+        // })
         .then((res) => {
           let items = res.body;
           
@@ -83,21 +81,40 @@ let ItemDisplayAction = {
   },
   
   /**
-   * Removes a filter.
+   * Adds a filter.
    * 
-   * @param  {String} filterType  the filter type to remove.
+   * @param  {Object} filter  the specific filter to add.
    * 
    * @return {Promise}
    */
-  removeFilter: function(filterType) {
+  addFilter: function(filter) {
     
-    invariant(_.isString(filterType), `removeFilter(filterType) expects filterType to be 'string', but gets '${typeof filterType}'.`);
+    return new Promise((resolve, reject) => {
+      
+      AppDispatcher.handleAction({
+        actionType: ItemDisplayConstants.ADD_FILTER,
+        filter: filter
+      });
+      
+      resolve();
+      
+    });
+  },
+  
+  /**
+   * Removes a filter.
+   * 
+   * @param  {Object} filter  the specific filter to remove.
+   * 
+   * @return {Promise}
+   */
+  removeFilter: function(filter) {
     
     return new Promise((resolve, reject) => {
       
       AppDispatcher.handleAction({
         actionType: ItemDisplayConstants.REMOVE_FILTER,
-        filterType: filterType
+        filter: filter
       });
       
       resolve();

@@ -189,6 +189,8 @@ let ItemApi = {
      return new Promise((resolve, reject) => {
        
        Item.findOneAndUpdate({_id: ObjectId(id)}, {$set: newValue}, {new: true})
+        .populate("brand category tags variations")
+        .exec()
         .then(resolve)
         .catch(reject);
        
@@ -208,6 +210,8 @@ let ItemApi = {
      return new Promise((resolve, reject) => {
        
        Item.findById(ObjectId(id))
+        .populate("brand category tags variations")
+        .exec()
         .then(resolve)
         .catch(reject);
        

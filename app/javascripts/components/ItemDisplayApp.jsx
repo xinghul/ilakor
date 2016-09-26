@@ -1,22 +1,25 @@
-"use strict"
+import React from "react";
+import Promise from "bluebird";
 
-import React from "react"
-import Promise from "bluebird"
+import ItemDisplayStore from "stores/ItemDisplayStore";
+import ItemDisplayAction from "actions/ItemDisplayAction";
+import ShoppingCartAction from "actions/ShoppingCartAction";
 
-import ItemDisplayStore from "stores/ItemDisplayStore"
-import ItemDisplayAction from "actions/ItemDisplayAction"
-import ShoppingCartAction from "actions/ShoppingCartAction"
+import ItemDisplayGrid from "./ItemDisplayApp/ItemDisplayGrid";
+import ItemDetailModal from "./ItemDisplayApp/ItemDetailModal";
+import ItemFilterApp from "./ItemDisplayApp/ItemFilterApp";
+import FilterDisplayApp from "./ItemDisplayApp/FilterDisplayApp";
+import LoadItemSpinner from "./ItemDisplayApp/LoadItemSpinner";
 
-import ItemDisplayGrid from "./ItemDisplayApp/ItemDisplayGrid"
-import ItemDetailModal from "./ItemDisplayApp/ItemDetailModal"
-import ItemFilterApp from "./ItemDisplayApp/ItemFilterApp"
-import FilterDisplayApp from "./ItemDisplayApp/FilterDisplayApp"
-import LoadItemSpinner from "./ItemDisplayApp/LoadItemSpinner"
-
-import styles from "components/ItemDisplayApp.scss"
+import styles from "components/ItemDisplayApp.scss";
 
 Promise.config({ cancellation: true });
 
+/**
+ * Gets the new state from subscribed stores.
+ * 
+ * @return {Object}
+ */
 function getStateFromStores() {
   return {
     items: ItemDisplayStore.getItems(),
@@ -30,8 +33,14 @@ const ITEM_DISPLAY_APP_ID = "itemDisplayApp";
 let _getItemPromise = null
 ,   _addItemPromise = null;
 
+/**
+ * @class
+ * @extends {React.Component}
+ */
 export default class ItemDisplayApp extends React.Component {
-  
+  /**
+   * @inheritdoc
+   */
   constructor(props) {
     super(props);
     
@@ -47,6 +56,9 @@ export default class ItemDisplayApp extends React.Component {
     };
   }
   
+  /**
+   * @inheritdoc
+   */
   componentDidMount() {
     ItemDisplayStore.subscribe(this._onChange);
     
@@ -57,6 +69,9 @@ export default class ItemDisplayApp extends React.Component {
     this._checkReachBottom();
   }
   
+  /**
+   * @inheritdoc
+   */
   componentWillUnmount() {
     ItemDisplayStore.unsubscribe(this._onChange);
     
@@ -72,45 +87,47 @@ export default class ItemDisplayApp extends React.Component {
   }
   
   _onChange = () => {
-    if (_addItemPromise && _addItemPromise.isCancellable())
-    {
-      _addItemPromise.cancel();
-    }
-
-    let newState = getStateFromStores()
-    ,   items = this.state.items;
-
-    let newItems = newState.items.slice(items.length);
+    this.setState(getStateFromStores());
     
-    this.setState({
-      hasMoreItems: newState.hasMoreItems,
-      isItemsAdded: false
-    });
-    
-    _addItemPromise = Promise.resolve(null);
-    
-    for (let item of newItems)
-    {
-      _addItemPromise = _addItemPromise.delay(200).then(() => {
-        return new Promise((resolve, reject) => {
-          items.push(item);
-    
-          this.setState({
-            items: items
-          });
-          
-          resolve();
-        });
-      });
-    }
-
-    _addItemPromise.then(() => {
-      this.setState({
-        isItemsAdded: true
-      });
-    }).catch((err) => {
-      console.log(err, err.stack);
-    });
+    // if (_addItemPromise && _addItemPromise.isCancellable())
+    // {
+    //   _addItemPromise.cancel();
+    // }
+    // 
+    // let newState = getStateFromStores()
+    // ,   items = this.state.items;
+    // 
+    // let newItems = newState.items.slice(items.length);
+    // 
+    // this.setState({
+    //   hasMoreItems: newState.hasMoreItems,
+    //   isItemsAdded: false
+    // });
+    // 
+    // _addItemPromise = Promise.resolve(null);
+    // 
+    // for (let item of newItems)
+    // {
+    //   _addItemPromise = _addItemPromise.delay(200).then(() => {
+    //     return new Promise((resolve, reject) => {
+    //       items.push(item);
+    // 
+    //       this.setState({
+    //         items: items
+    //       });
+    //       
+    //       resolve();
+    //     });
+    //   });
+    // }
+    // 
+    // _addItemPromise.then(() => {
+    //   this.setState({
+    //     isItemsAdded: true
+    //   });
+    // }).catch((err) => {
+    //   console.log(err, err.stack);
+    // });
   };
   
   handleRemoveFilter = (filterType, filterValue) => {
@@ -123,14 +140,14 @@ export default class ItemDisplayApp extends React.Component {
     })
   };
   
-  handleItemClick = (item) => {
+  _onItemClick = (item) => {
     this.setState({
       selectedItem: item,
       showItemDetailModal: true
     });
   };
   
-  doInfiniteLoad = () => {
+  _doInfiniteLoad = () => {
     // do nothing when it's already in the loading process
     // or when there's no more items 
     // or when new items are not fully added to the grid
@@ -153,7 +170,7 @@ export default class ItemDisplayApp extends React.Component {
     });
   };
   
-  onItemDetailModalClose = () => {
+  _onItemDetailModalClose = () => {
     this.setState({
       showItemDetailModal: false
     });
@@ -166,7 +183,7 @@ export default class ItemDisplayApp extends React.Component {
     let scrollHeight = this._gridContainer.scrollHeight; 
 
     if ((scrollTop + window.innerHeight) >= scrollHeight) {
-      this.doInfiniteLoad();
+      this._doInfiniteLoad();
     }
   };
   
@@ -176,7 +193,7 @@ export default class ItemDisplayApp extends React.Component {
         <ItemDetailModal 
           showModal={this.state.showItemDetailModal} 
           item={this.state.selectedItem}
-          onClose={this.onItemDetailModalClose}
+          onClose={this._onItemDetailModalClose}
         />
         <div className={styles.mainContent}>
           {/*
@@ -190,7 +207,7 @@ export default class ItemDisplayApp extends React.Component {
             */}
             <ItemDisplayGrid
               items={this.state.items} 
-              handleItemClick={this.handleItemClick}
+              handleItemClick={this._onItemClick}
             />
             <LoadItemSpinner hidden={!this.state.isLoading} />
           </div>

@@ -65,6 +65,7 @@ export default class ItemListTable extends React.Component {
     let items = this.props.items;
     
     let tableBody = _.map(items, (item) => {
+
       return (
         <tr onClick={this.props.handleItemClick.bind(this, item)} key={item._id}>
           <td>{items.indexOf(item)}</td>
@@ -73,6 +74,7 @@ export default class ItemListTable extends React.Component {
           <td>{item.category.name}</td>
         </tr>
       );
+
     });
     
     return (
