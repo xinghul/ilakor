@@ -1,12 +1,11 @@
-"use strict"
+import React, { PropTypes } from "react";
+import _ from "lodash";
+import { FormGroup, InputGroup, FormControl } from "react-bootstrap";
+import FontAwesome from "react-fontawesome";
 
-import React, { PropTypes } from "react"
-import _ from "lodash"
-import { FormGroup, InputGroup, FormControl } from "react-bootstrap"
-import FontAwesome from "react-fontawesome"
+import styles from "lib/Input.scss";
 
-import styles from "lib/Input.scss"
-
+// prop types for Input component
 const propTypes = { 
   type: PropTypes.string,
 
@@ -24,6 +23,7 @@ const propTypes = {
   disabled: PropTypes.bool
 };
 
+// default props for Input component
 const defaultProps = {
   type: "text",
   
@@ -41,8 +41,11 @@ const defaultProps = {
   disabled: false
 };
 
+/**
+ * @class
+ * @extends {React.Component}
+ */
 export default class Input extends React.Component {
-  
   /**
    * @inheritdoc
    */

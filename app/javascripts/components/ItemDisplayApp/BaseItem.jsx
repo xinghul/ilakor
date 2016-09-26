@@ -40,7 +40,6 @@ export default class BaseItem extends React.Component {
         itemPrice = variation.price;
       }
     });    
-    console.log(itemPrice);
 
     this.setState({
       itemPrice

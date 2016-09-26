@@ -7,6 +7,7 @@ import GhostButton from "lib/GhostButton";
 import BaseCarousel from "lib/BaseCarousel";
 import SingleRangeSlider from "lib/SingleRangeSlider";
 import Select from "lib/Select";
+import Input from "lib/Input";
 
 import ItemUtil from "utils/ItemUtil";
 
@@ -188,7 +189,7 @@ export default class ItemDetailModal extends React.Component {
           key={_.uniqueId(key)}
           defaultValue={defaultValue}
           multi={false}
-          label={_.capitalize(key)}
+          placeholder={`Select ${key}...`}
           options={options}
           onChange={this._onSelectionChange.bind(this, key)}
         />
@@ -205,12 +206,10 @@ export default class ItemDetailModal extends React.Component {
     return (
       <div className={styles.configSection}>
         {selectGroup}
-        <Select 
+        <Input
           ref="quantity"
-          defaultValue={1}
-          multi={false}
+          initialValue="1"
           label="Quantity"
-          options={quantityOptions}
         />
         <GhostButton theme="gold" onClick={this._onAddToCartClick}>Add to cart</GhostButton> 
       </div>

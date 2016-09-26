@@ -1,12 +1,14 @@
-"use strict"
+import React from "react";
+import _ from "lodash";
+import ReactSelect from "react-select";
 
-import React from "react"
-import _ from "lodash"
-import ReactSelect from "react-select"
+import styles from "lib/Select.scss";
+import reactSelectStyles from "react-select/dist/react-select.min.css";
 
-import styles from "lib/Select.scss"
-import reactSelectStyles from "react-select/dist/react-select.min.css"
-
+/**
+ * @class
+ * @extends {React.Component}
+ */
 export default class Select extends React.Component {
   
   /**
@@ -16,7 +18,7 @@ export default class Select extends React.Component {
     super(props);
     
     this.state = {
-      value: _.isEmpty(this.props.defaultValue) ? (this.props.multi ? [] : {})
+      value: _.isEmpty(this.props.defaultValue) ? null
                                                 : this.props.defaultValue
     };
   }
@@ -60,7 +62,7 @@ export default class Select extends React.Component {
    */
   clear() {
     this.setState({
-      value: this.props.multi ? [] : {}
+      value: null
     });
   }
   
@@ -70,7 +72,7 @@ export default class Select extends React.Component {
   render() {
     
     const { label, multi, options, placeholder } = this.props;
-
+    
     return (
       <div className={styles.select}>
         <label>
