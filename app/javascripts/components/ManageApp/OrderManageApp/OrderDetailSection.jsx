@@ -1,19 +1,23 @@
-"use strict"
+import React from "react";
+import _ from "lodash";
+import invariant from "invariant";
 
-import React from "react"
-import _ from "lodash"
-import invariant from "invariant"
+import GridSection from "lib/GridSection";
+import BaseInfo from "lib/BaseInfo";
+import SubmitButton from "lib/SubmitButton";
 
-import GridSection from "lib/GridSection"
-import BaseInfo from "lib/BaseInfo"
-import SubmitButton from "lib/SubmitButton"
+import OrderAction from "actions/OrderAction";
 
-import OrderAction from "actions/OrderAction"
+import styles from "components/ManageApp/OrderManageApp/OrderDetailSection.scss";
 
-import styles from "components/ManageApp/OrderManageApp/OrderDetailSection.scss"
-
+/**
+ * @class
+ * @extends {React.Component}
+ */
 export default class OrderDetailSection extends React.Component {
-  
+  /**
+   * @inheritdoc
+   */
   constructor(props) {
     super(props);    
     
@@ -23,11 +27,19 @@ export default class OrderDetailSection extends React.Component {
     };
   }
   
-  handleTakePayment = () => {
+  /**
+   * @private
+   * Handler for when the payment is taken.
+   */
+  _onTakePayment = () => {
     
   };
   
-  handleSendOrder = () => {
+  /**
+   * @private
+   * Handler for when the order is sent.
+   */
+  _onSendOrder = () => {
     
     let order = this.props.order;
     
@@ -49,24 +61,32 @@ export default class OrderDetailSection extends React.Component {
     });
   };
   
-  createActionButtons() {
-    let order = this.props.order
-    ,   buttonDisabled = this.state.isTakingPayment || this.state.isSendingOrder;
+  /**
+   * Creates the JSX for the actionbutton group.
+   * @return {[type]}                [description]
+   */
+  _createActionButtonsJsx() {
+    
+    const { order } = this.props;
+    
+    let actionInProcess = this.state.isTakingPayment || this.state.isSendingOrder
+    ,   paymentTaken = order.stripe.captured
+    ,   orderSent = order.sent;
 
     return (
       <div className={styles.actionButtons}>
         <SubmitButton 
           theme="warning" 
-          disabled={order.stripe.captured || buttonDisabled}
+          disabled={paymentTaken || actionInProcess}
           isSubmitting={this.state.isTakingPayment}
-          handleSubmit={this.handleTakePayment}
-        >Take payment</SubmitButton>
+          handleSubmit={this._onTakePayment}
+        >{paymentTaken ? "Payment taken" : "Take payment"}</SubmitButton>
         <SubmitButton 
           theme="success"
-          disabled={order.sent || buttonDisabled}
+          disabled={orderSent || actionInProcess}
           isSubmitting={this.state.isSendingOrder}
-          handleSubmit={this.handleSendOrder}
-        >Send order</SubmitButton>  
+          handleSubmit={this._onSendOrder}
+        >{orderSent ? "Order sent" : "Send order"}</SubmitButton>  
       </div>
     );
   }
@@ -79,7 +99,7 @@ export default class OrderDetailSection extends React.Component {
       return null;
     }
     
-    let actionButtons = this.createActionButtons();
+    let actionButtons = this._createActionButtonsJsx();
     
     return (
       <GridSection title="Order information" className={styles.orderDetailSection}>

@@ -105,7 +105,7 @@ let OrderApi = {
       
       Order
         .findOneAndUpdate({_id: ObjectId(id)}, {$set: newValue}, {new: true})
-        .populate("user items")
+        .populate("user items.item items.variation")
         .exec()
         .then(resolve)
         .catch(reject);

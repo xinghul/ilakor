@@ -19,7 +19,7 @@ import AccountApp from "components/AccountApp";
 import CheckoutApp from "components/CheckoutApp";
 import CompleteLocalApp from "components/CompleteLocalApp";
 
-import SidePanel from "lib/SidePanel";
+import SonicLoader from "lib/SonicLoader";
 
 import styles from "main/app.scss";
 
@@ -141,6 +141,7 @@ owning you now — yet you would be this generous
 to think of my child. With the pens you sent
 she has made I hope a healing instrument.
         </p>
+        <SonicLoader />
       </div>
     );
   }

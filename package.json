@@ -67,6 +67,7 @@
     "react-stripe-checkout": "2.2.5",
     "request": "2.75.0",
     "serve-favicon": "2.3.0",
+    "sonic.js": "0.2.1",
     "stripe": "4.11.0",
     "style-loader": "0.13.1",
     "superagent": "2.3.0",

@@ -1,12 +1,15 @@
-"use strict"
+import React from "react";
+import _ from "lodash";
 
-import React from "react"
-import _ from "lodash"
+import SonicLoader from "lib/SonicLoader";
 
-import styles from "lib/LoadSpinner.scss"
+import styles from "lib/LoadSpinner.scss";
 
+/**
+ * @class
+ * @extends {React.Component}
+ */
 export default class LoadSpinner extends React.Component {
-  
   /**
    * @inheritdoc
    */
