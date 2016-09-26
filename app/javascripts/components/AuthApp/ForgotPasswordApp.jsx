@@ -86,7 +86,7 @@ export default class ForgotPasswordApp extends React.Component {
           <EmailInput
             value={this.state.email} 
             disabled={this.state.isSubmitting} 
-            placeholder="Enter your Cromford email"
+            placeholder="Enter your iLakor email"
             isRegister={false} 
             handleChange={this._onEmailChange} 
           />

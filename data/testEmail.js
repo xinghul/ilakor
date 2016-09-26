@@ -7,8 +7,8 @@ var smtpConfig = {
     port: 465,
     secure: true, // use SSL
     auth: {
-        user: 'cramfordtest@gmail.com',
-        pass: 'cramfordtest123'
+        user: 'ilakorlevi@gmail.com',
+        pass: 'ilakorlevi123'
     }
 };
 // create reusable transporter object using the default SMTP transport
@@ -16,7 +16,7 @@ var transporter = nodemailer.createTransport(smtpConfig);
 
 // setup e-mail data with unicode symbols
 var mailOptions = {
-    from: 'Cromford', // sender address
+    from: 'iLakor', // sender address
     to: 'xinghu1989@gmail.com', // list of receivers
     subject: 'Password reset', // Subject line
     html: '<b>Hello world 🐴</b>' // html body

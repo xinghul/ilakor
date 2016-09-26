@@ -13,8 +13,8 @@ const SMTP_CONFIG = {
     port: 465,
     secure: true, // use SSL
     auth: {
-        user: "cramfordtest@gmail.com",
-        pass: "cramfordtest123"
+        user: "ilakorlevi@gmail.com",
+        pass: "Lxh_6589775"
     }
 };
 
@@ -22,7 +22,7 @@ let transporter = nodemailer.createTransport(SMTP_CONFIG);
 
 /**
  * Sends an email with given params.
- * ''
+ * 
  * @param  {String | Array} to the recipients
  * @param  {String} subject the subject
  * @param  {String} template the filename of the template
@@ -32,7 +32,7 @@ let transporter = nodemailer.createTransport(SMTP_CONFIG);
  */
 function sendEmail(to, subject, template, formatParams) {
   
-  return new Promise(function(resolve, reject) {
+  return new Promise((resolve, reject) => {
     
     if (_.isArray(to)) {
       to = to.join(", ");
@@ -50,14 +50,14 @@ function sendEmail(to, subject, template, formatParams) {
     invariant(_.isString(subject), `expects 'subject' to be string, but get '${typeof subject}'`);
     
     let mailOptions = {
-        from: "Cromford <cramfordtest@gmail.com>",
+        from: "iLakor <ilakorlevi@gmail.com>",
         to: to,
         subject: subject,
         html: html
     };
     
     // send mail with defined transport object
-    transporter.sendMail(mailOptions, function(err, info){
+    transporter.sendMail(mailOptions, (err, info) => {
       if (err) {
         reject(err);
       } else {
@@ -80,14 +80,10 @@ let EmailApi = {
    * @return {Promise}
    */
   sendLocalRegister: function(email, username) {
-    return new Promise(function(resolve, reject) {
-      sendEmail(email, "Welcome to Cromford", "localRegister.html", username)
-        .then(function() {
-          resolve();          
-        })
-        .catch(function(err) {
-          reject(err);
-        });
+    return new Promise((resolve, reject) => {
+      sendEmail(email, "Welcome to iLakor", "localRegister.html", username)
+        .then(resolve)
+        .catch(reject);
     });
   },
   
@@ -99,14 +95,10 @@ let EmailApi = {
    * @return {Promise}
    */
   sendFacebookRegister: function(email) {
-    return new Promise(function(resolve, reject) {
-      sendEmail(email, "Welcome to Cromford", "facebookRegister.html")
-        .then(function() {
-          resolve();          
-        })
-        .catch(function(err) {
-          reject(err);
-        });
+    return new Promise((resolve, reject) => {
+      sendEmail(email, "Welcome to iLakor", "facebookRegister.html")
+        .then(resolve)
+        .catch(reject);
     });
   },
   
@@ -116,18 +108,14 @@ let EmailApi = {
    * @param {String} email the email to sent to.
    * @param {String} link the link for password reset.
    * 
-   * @return {Promise} the new promise object.
+   * @return {Promise}
    */
   sendResetPassword: function(email, link) {
     
-    return new Promise(function(resolve, reject) {
+    return new Promise((resolve, reject) => {
       sendEmail(email, "Reset password", "resetPassword.html", link)
-        .then(function() {
-          resolve();          
-        })
-        .catch(function(err) {
-          reject(err);
-        });
+        .then(resolve)
+        .catch(reject);
     });
 
   },
@@ -137,17 +125,13 @@ let EmailApi = {
    * 
    * @param  {String} email the email to sent to.
    * 
-   * @return {Promise} the new promise object.
+   * @return {Promise}
    */
   sendUnregistered: function(email) {
-    return new Promise(function(resolve, reject) {
+    return new Promise((resolve, reject) => {
       sendEmail(email, "Reset password", "unregistered.html")
-        .then(function() {
-          resolve();          
-        })
-        .catch(function(err) {
-          reject(err);
-        });
+        .then(resolve)
+        .catch(reject);
     });
   }
 
