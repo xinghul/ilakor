@@ -13,6 +13,13 @@ import AuthApp from "components/AuthApp";
 
 import AuthStore from "stores/AuthStore";
 
+
+import ItemManageAction from "actions/item/ItemManageAction";
+import BrandManageAction from "actions/item/BrandManageAction";
+import CategoryManageAction from "actions/item/CategoryManageAction";
+import TagManageAction from "actions/item/TagManageAction";
+import VariationManageAction from "actions/item/VariationManageAction";
+
 import ItemDisplayApp from "components/ItemDisplayApp";
 import ManageApp from "components/ManageApp";
 import AccountApp from "components/AccountApp";
@@ -87,6 +94,16 @@ class App extends React.Component {
    */
   componentDidMount() {
     AuthStore.subscribe(this._onAuthChange);    
+    
+    ItemManageAction.getItems();
+    
+    BrandManageAction.getBrands();
+    
+    CategoryManageAction.getCategories();
+    
+    TagManageAction.getTags();
+    
+    VariationManageAction.getVariations();
   }
 
   /**
@@ -141,7 +158,6 @@ owning you now — yet you would be this generous
 to think of my child. With the pens you sent
 she has made I hope a healing instrument.
         </p>
-        <SonicLoader />
       </div>
     );
   }

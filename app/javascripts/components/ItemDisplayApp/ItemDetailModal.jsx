@@ -208,7 +208,7 @@ export default class ItemDetailModal extends React.Component {
         {selectGroup}
         <Input
           ref="quantity"
-          initialValue="1"
+          defaultValue="1"
           label="Quantity"
         />
         <GhostButton theme="gold" onClick={this._onAddToCartClick}>Add to cart</GhostButton> 

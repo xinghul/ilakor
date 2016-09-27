@@ -62,8 +62,9 @@ export default class OrderDetailSection extends React.Component {
   };
   
   /**
-   * Creates the JSX for the actionbutton group.
-   * @return {[type]}                [description]
+   * Creates the JSX for the action button group.
+   * 
+   * @return {JSX}
    */
   _createActionButtonsJsx() {
     

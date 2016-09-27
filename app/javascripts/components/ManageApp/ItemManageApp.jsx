@@ -6,17 +6,12 @@ import ItemDetailModal from "./ItemManageApp/ItemDetailModal";
 import ItemListTable from "./ItemManageApp/ItemListTable";
 import AddItemForm from "./ItemManageApp/AddItemForm";
 
-import ItemManageAction from "actions/item/ItemManageAction";
 import ItemManageStore from "stores/item/ItemManageStore";
-
-import BrandManageAction from "actions/item/BrandManageAction";
 import BrandManageStore from "stores/item/BrandManageStore";
-
-import CategoryManageAction from "actions/item/CategoryManageAction";
 import CategoryManageStore from "stores/item/CategoryManageStore";
-
-import TagManageAction from "actions/item/TagManageAction";
 import TagManageStore from "stores/item/TagManageStore";
+
+import ItemManageAction from "actions/item/ItemManageAction";
 
 import styles from "components/ManageApp/ItemManageApp.scss";
 
@@ -66,12 +61,6 @@ export default class ItemManageApp extends React.Component {
     TagManageStore.subscribe(this._onChange);
     
     ItemManageAction.getItems(true);
-    
-    BrandManageAction.getBrands();
-    
-    CategoryManageAction.getCategories();
-    
-    TagManageAction.getTags();
   }
   
   /**

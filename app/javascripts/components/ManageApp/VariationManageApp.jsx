@@ -11,7 +11,6 @@ import AddVariationForm from "./VariationManageApp/AddVariationForm";
 import VariationManageAction from "actions/item/VariationManageAction";
 import VariationManageStore from "stores/item/VariationManageStore";
 
-import ItemManageAction from "actions/item/ItemManageAction";
 import ItemManageStore from "stores/item/ItemManageStore";
 
 import styles from "components/ManageApp/VariationManageApp.scss";
@@ -72,8 +71,6 @@ export default class VariationManageApp extends React.Component {
     ItemManageStore.subscribe(this._onChange);
     
     VariationManageAction.getVariations(true);
-    
-    ItemManageAction.getItems();
   }
   
   /**

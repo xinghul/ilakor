@@ -11,7 +11,7 @@ const propTypes = {
 
   onChange: PropTypes.func,
   
-  initialValue: PropTypes.string,
+  defaultValue: PropTypes.string,
   placeholder: PropTypes.string,
   icon: PropTypes.string,
   label: PropTypes.string,
@@ -29,7 +29,7 @@ const defaultProps = {
   
   onChange: function() {},
 
-  initialValue: "",
+  defaultValue: "",
   placeholder: "",
   icon: "",
   label: "",
@@ -53,7 +53,7 @@ export default class Input extends React.Component {
     super(props);
     
     this.state = {
-      value: this.props.initialValue,
+      value: this.props.defaultValue,
       focused: false
     };
   }
@@ -109,7 +109,7 @@ export default class Input extends React.Component {
    */
   clear() {
     this.setState({
-      value: this.props.initialValue,
+      value: this.props.defaultValue,
       focused: false
     });
   }

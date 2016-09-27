@@ -21,10 +21,6 @@ _.forEach(availableFilterTypes, (filterType) => {
   _filters[filterType] = [];
 });
 
-// _filters["tag"] = ["bulking", "cutting"];
-// 
-// _filters["category"] = ["protein", "creatine"]
-// 
 let ItemDisplayStore = _.extend({}, EventEmitter.prototype, {
   
   /**
@@ -58,8 +54,8 @@ let ItemDisplayStore = _.extend({}, EventEmitter.prototype, {
       });
 
       // check if tags matches
-      // must contains all tags selected
-      if (_.difference(_filters.tag, tags).length > 0) {
+      // must contain at least one of the tags selected
+      if (!_.isEmpty(_filters.tag) && _.intersection(_filters.tag, tags).length === 0) {
         return;
       }
       
@@ -95,6 +91,18 @@ let ItemDisplayStore = _.extend({}, EventEmitter.prototype, {
    */
   hasMoreItems: function() {
     return _hasMoreItems;
+  },
+  
+  /**
+   * Sets a filter.
+   * 
+   * @param  {Object} filter the new filter config.
+   */
+  setFilter: function(filter) {
+    invariant(_.isObject(filter), `setFilter(filter) expects an 'object' as 'filter', but gets '${typeof filter}'.`);
+    invariant(availableFilterTypes.indexOf(filter.type) !== -1, `'${filter.type}' is not one of the available filter types.`);
+    
+    _filters[filter.type] = filter.value;
   },
   
   /**
@@ -174,6 +182,11 @@ ItemDisplayStore.dispatchToken = AppDispatcher.register((payload) => {
       ItemDisplayStore.clearItems();
       ItemDisplayStore.emitChange();
       break;
+      
+    case ItemDisplayConstants.SET_FILTER:
+      ItemDisplayStore.setFilter(action.filter);
+      ItemDisplayStore.emitChange();
+      break;  
     
     case ItemDisplayConstants.ADD_FILTER:
       ItemDisplayStore.addFilter(action.filter);

@@ -1,23 +1,24 @@
-"use strict"
+import React from "react";
+import _ from "lodash";
+import invariant from "invariant";
 
-import React from "react"
-import _ from "lodash"
-import invariant from "invariant"
+import styles from "lib/Checkbox.scss";
 
-import styles from "lib/Checkbox.scss"
-
+/**
+ * @class
+ * @extends {React.Component}
+ */
 export default class Checkbox extends React.Component {
-  
   /**
    * @inheritdoc
    */
   constructor(props) {
     super(props);
     
-    this._id = _.uniqueId("baseCheckbox");
+    this._id = _.uniqueId("checkbox");
     
     this.state = {
-      checked: false
+      checked: this.props.defaultValue
     };
   }
   
@@ -60,16 +61,19 @@ export default class Checkbox extends React.Component {
    */
   render() {
     
+    const { label, disabled } = this.props;
+    const { checked } = this.state;
+    
     return (
       <div className={styles.checkbox}>
         <input 
-          {...this.props}
           type="checkbox" 
+          disabled={disabled}
           id={this._id}
           onChange={this._onCheckboxChange}
-          checked={this.state.checked}
+          checked={checked}
         />
-        <label htmlFor={this._id}>{this.props.label}</label>
+        <label htmlFor={this._id}>{label}</label>
       </div>
     );
   }
@@ -77,11 +81,17 @@ export default class Checkbox extends React.Component {
 
 Checkbox.propTypes = {
   label: React.PropTypes.string,
-  onChange: React.PropTypes.func
+  onChange: React.PropTypes.func,
+  disabled: React.PropTypes.bool,
+  
+  defaultValue: React.PropTypes.bool
 }
 
 Checkbox.defaultProps = {
   label: "Checkbox",
-  onChange: function() {}
+  onChange: () => {},
+  disabled: false,
+  
+  defaultValue: false
 };
 

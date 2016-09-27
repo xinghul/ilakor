@@ -1,23 +1,3 @@
 .itemFilterApp {
-  position: relative;
-  top: 30px;
-  height: 400px;
   
-  border: 1px solid #999;
-  border-left: none;
-  border-radius: 4px;
-  box-shadow: 0 0 15px #555;
-  
-  transition: width 300ms ease-in;
-}
-
-.collapseButton {
-  position: absolute;
-  top: 45%;
-  height: 50px;
-  right: -12px;
-}
-
-.filterItemSection {
-  padding: 20px 15px;
 }

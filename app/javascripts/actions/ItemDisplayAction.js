@@ -81,6 +81,27 @@ let ItemDisplayAction = {
   },
   
   /**
+   * Sets a filter.
+   * 
+   * @param  {Object} filter  the specific filter to set.
+   * 
+   * @return {Promise}
+   */
+  setFilter: function(filter) {
+    
+    return new Promise((resolve, reject) => {
+      
+      AppDispatcher.handleAction({
+        actionType: ItemDisplayConstants.SET_FILTER,
+        filter: filter
+      });
+      
+      resolve();
+      
+    });
+  },
+  
+  /**
    * Adds a filter.
    * 
    * @param  {Object} filter  the specific filter to add.

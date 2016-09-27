@@ -1,6 +1,4 @@
-"use strict";
-
-import FluxConstant from "flux-constant"
+import FluxConstant from "flux-constant";
 
 export default FluxConstant.set([
   "RECEIVED_ITEMS",
@@ -8,6 +6,7 @@ export default FluxConstant.set([
   
   "NO_MORE_ITEMS",
   
+  "SET_FILTER",
   "ADD_FILTER",
   "REMOVE_FILTER"
 ]);

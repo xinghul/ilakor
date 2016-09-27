@@ -87,6 +87,10 @@ export default class ItemDisplayApp extends React.Component {
     }
   }
   
+  /**
+   * @private
+   * Handler for when subscribed stores emit 'change' event.
+   */
   _onChange = () => {
     this.setState(getStateFromStores());
     
@@ -148,6 +152,10 @@ export default class ItemDisplayApp extends React.Component {
     });
   };
   
+  /**
+   * @private
+   * Loads more item.
+   */
   _doInfiniteLoad = () => {
     // do nothing when it's already in the loading process
     // or when there's no more items 
@@ -177,11 +185,15 @@ export default class ItemDisplayApp extends React.Component {
     });
   };
   
+  /**
+   * @private
+   * Checks if it has scrolled to bottom.
+   * Load more items if it does.
+   */
   _checkReachBottom = () => {
 
-    let scrollTop = this._gridContainer.scrollTop;
-    
-    let scrollHeight = this._gridContainer.scrollHeight; 
+    let scrollTop = this._gridContainer.scrollTop
+    ,   scrollHeight = this._gridContainer.scrollHeight; 
 
     if ((scrollTop + window.innerHeight) >= scrollHeight) {
       this._doInfiniteLoad();
@@ -197,11 +209,9 @@ export default class ItemDisplayApp extends React.Component {
           onClose={this._onItemDetailModalClose}
         />
         <div className={styles.mainContent}>
-          {/*
-            <div className={styles.filterDisplaySection}>
-              <ItemFilterApp />
-            </div>            
-          */}
+          <div className={styles.filterDisplaySection}>
+            <ItemFilterApp />
+          </div>
           <div className={styles.itemDisplaySection}>
             {/*
               <FilterDisplayApp handleRemoveFilter={this.handleRemoveFilter} filters={this.state.filters}/>              

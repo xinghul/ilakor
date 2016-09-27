@@ -1,13 +1,15 @@
-"use strict"
+import React from "react";
+import _ from "lodash";
+import invariant from "invariant";
 
-import React from "react"
-import _ from "lodash"
-import invariant from "invariant"
+import Icon from "lib/Icon";
 
-import Icon from "lib/Icon"
+import styles from "lib/SidePanel.scss";
 
-import styles from "lib/SidePanel.scss"
-
+/**
+ * @class
+ * @extends {React.Component}
+ */
 export default class SidePanel extends React.Component {
   
   /**
@@ -32,11 +34,12 @@ export default class SidePanel extends React.Component {
   };
   
   /**
+   * @private
    * Creates the JSX for the collapse button if enabled.
    * 
    * @return {JSX}
    */
-  createCollapseButtonJsx() {
+  _createCollapseButtonJsx() {
     
     if (!this.props.collapsible) {
       return null;
@@ -77,7 +80,7 @@ export default class SidePanel extends React.Component {
     
     return (
       <div style={style} className={classNames.join(' ')}>
-        {this.createCollapseButtonJsx()}
+        {this._createCollapseButtonJsx()}
         <div className={styles.panelContent}>
           {this.props.children}
         </div>

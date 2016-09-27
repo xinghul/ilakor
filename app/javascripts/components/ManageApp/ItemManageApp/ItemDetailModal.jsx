@@ -92,12 +92,12 @@ export default class ItemDetailModal extends React.Component {
         <Input 
           label="_id"
           disabled={true}
-          initialValue={item._id}
+          defaultValue={item._id}
         />
         <Input 
           label="Name"
           ref="name"
-          initialValue={item.name}
+          defaultValue={item.name}
         />
       </Form>
     );

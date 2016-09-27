@@ -6,6 +6,25 @@ import styles from "lib/Select.scss";
 import reactSelectStyles from "react-select/dist/react-select.min.css";
 
 /**
+ * Extracts the selected value as array|string, so it can be consumed by other apps.
+ * 
+ * @param  {Object[]}     rawValue the raw selected value.
+ * 
+ * @return {String[] | String}
+ */
+function extractValue(rawValue) {
+  if (_.isArray(rawValue)) {
+    return rawValue.map((option) => {
+      return option.value;
+    });      
+  } else if (!_.isEmpty(rawValue)) {
+    return rawValue.value;
+  }
+  
+  return null;
+}
+
+/**
  * @class
  * @extends {React.Component}
  */
@@ -35,7 +54,7 @@ export default class Select extends React.Component {
       value: newValue
     });
     
-    this.props.onChange(newValue);
+    this.props.onChange(extractValue(newValue));
   };
   
   /**
@@ -46,15 +65,7 @@ export default class Select extends React.Component {
   getValue() {
     const { value } = this.state;
     
-    if (_.isArray(value)) {
-      return value.map((option) => {
-        return option.value;
-      });      
-    } else if (!_.isEmpty(value)) {
-      return value.value;
-    }
-    
-    return null;
+    return extractValue(value);
   }
   
   /**
@@ -96,7 +107,12 @@ Select.propTypes = {
 
   label: React.PropTypes.string,
   placeholder: React.PropTypes.string,
-  onChange: React.PropTypes.func
+  onChange: React.PropTypes.func,
+  
+  defaultValue: React.PropTypes.oneOfType([
+    React.PropTypes.string,
+    React.PropTypes.arrayOf(React.PropTypes.string)
+  ])
 };
 
 Select.defaultProps = {
@@ -105,5 +121,7 @@ Select.defaultProps = {
 
   label: "",
   placeholder: "",
-  onChange: () => {}
+  onChange: () => {},
+  
+  defaultValue: null
 };

@@ -16,7 +16,7 @@ export default class MaskedInput extends React.Component {
     super(props);
     
     this.state = {
-      value: this.props.initialValue || "",
+      value: this.props.defaultValue || "",
       focused: false
     };
   }
@@ -50,7 +50,7 @@ export default class MaskedInput extends React.Component {
   
   clear() {
     this.setState({
-      value: this.props.initialValue || "",
+      value: this.props.defaultValue || "",
       focused: false
     });
   }

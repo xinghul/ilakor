@@ -142,7 +142,7 @@ export default class NarbarApp extends React.Component {
         <Navbar.Collapse>
           <Nav>
             <NavItem href="#/itemDisplay">
-              Furnitures
+              Shop
             </NavItem>
           </Nav>
           <Nav pullRight className={styles.authArea}>
