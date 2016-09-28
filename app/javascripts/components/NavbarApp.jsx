@@ -141,7 +141,7 @@ export default class NarbarApp extends React.Component {
         </Navbar.Header>
         <Navbar.Collapse>
           <Nav>
-            <NavItem href="#/itemDisplay">
+            <NavItem href="#/shop">
               Shop
             </NavItem>
           </Nav>

@@ -208,20 +208,16 @@ export default class ItemDisplayApp extends React.Component {
           item={this.state.selectedItem}
           onClose={this._onItemDetailModalClose}
         />
-        <div className={styles.mainContent}>
-          <div className={styles.filterDisplaySection}>
-            <ItemFilterApp />
-          </div>
-          <div className={styles.itemDisplaySection}>
-            {/*
-              <FilterDisplayApp handleRemoveFilter={this.handleRemoveFilter} filters={this.state.filters}/>              
-            */}
-            <ItemDisplayGrid
-              items={this.state.items} 
-              handleItemClick={this._onItemClick}
-            />
+        <ItemFilterApp />
+        <div className={styles.itemDisplaySection}>
+          {/*
+            <FilterDisplayApp handleRemoveFilter={this.handleRemoveFilter} filters={this.state.filters}/>              
+          */}
+          <ItemDisplayGrid
+            items={this.state.items} 
+            handleItemClick={this._onItemClick}
+          />
           <SonicLoader hidden={!this.state.isLoading} />
-          </div>
         </div>
       </div>
     );

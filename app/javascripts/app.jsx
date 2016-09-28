@@ -12,8 +12,9 @@ import NavbarApp from "components/NavbarApp";
 import AuthApp from "components/AuthApp";
 
 import AuthStore from "stores/AuthStore";
+import AppStore from "stores/AppStore";
 
-
+import AppAction from "actions/AppAction";
 import ItemManageAction from "actions/item/ItemManageAction";
 import BrandManageAction from "actions/item/BrandManageAction";
 import CategoryManageAction from "actions/item/CategoryManageAction";
@@ -26,7 +27,7 @@ import AccountApp from "components/AccountApp";
 import CheckoutApp from "components/CheckoutApp";
 import CompleteLocalApp from "components/CompleteLocalApp";
 
-import SonicLoader from "lib/SonicLoader";
+import ItemFilterApp from "components/ItemDisplayApp/ItemFilterApp";
 
 import styles from "main/app.scss";
 
@@ -34,35 +35,65 @@ const protectedRoutes = [
   "/manage", "/account", "/checkout"
 ];
 
+const routeToBackgroundImage = {
+  "/": "bg1", 
+  "/shop": "bg2", 
+  "/manage": "bg3",
+  "/account": "bg4", 
+  "/checkout": "bg1", 
+  "/completeLocal": "bg2"
+};
+
 /**
- * @private 
- * onEnter hook ensures that the current user is admin.
- */
- function ensureIsAdmin(nextState, replace) {
-   
-   const user = AuthStore.getUser();
-   
-   if (_.isEmpty(user) || !user.isAdmin) {
-     replace({
-       pathname: '/'
-     });
-   }
- }
- 
- /**
-  * @private 
-  * onEnter hook ensures that the current customer is logged in.
-  */
-  function ensureLoggedIn(nextState, replace) {
-    
-    const user = AuthStore.getUser();
-    
-    if (_.isEmpty(user)) {
-      replace({
-        pathname: '/'
-      });
-    }
+* @private 
+* onEnter hook ensures that the current user is admin.
+*/
+function ensureIsAdmin(nextState, replace) {
+
+  const user = AuthStore.getUser();
+
+  if (_.isEmpty(user) || !user.isAdmin) {
+    replace({
+      pathname: '/'
+    });
   }
+}
+
+/**
+* @private 
+* onEnter hook ensures that the current customer is logged in.
+*/
+function ensureLoggedIn(nextState, replace) {
+
+  const user = AuthStore.getUser();
+
+  if (_.isEmpty(user)) {
+    replace({
+      pathname: '/'
+    });
+  }
+}
+
+/**
+ * @private
+ * Handler for when Router's onUpdate event.
+ */
+function onRouterUpdate() {
+  const { pathname } = this.state.location;
+  
+  AppAction.updateRoute(pathname);
+}
+
+/**
+ * Gets the new state from subscribed stores.
+ * 
+ * @return {Object}
+ */
+function getStateFromStores() {
+  return {
+    route: AppStore.getRoute()
+  };
+}
  
 /**
  * @class
@@ -74,7 +105,44 @@ class App extends React.Component {
    */
   constructor(props) {
     super(props);
+    
+    this.state = getStateFromStores();
   }
+  
+  
+  /**
+   * @inheritdoc
+   */
+  componentDidMount() {
+    AppStore.subscribe(this._onChange); 
+    AuthStore.subscribe(this._onAuthChange);
+    
+    ItemManageAction.getItems();
+    
+    BrandManageAction.getBrands();
+    
+    CategoryManageAction.getCategories();
+    
+    TagManageAction.getTags();
+    
+    VariationManageAction.getVariations();
+  }
+  
+  /**
+   * @inheritdoc
+   */
+  componentWillUnmount() {
+    AppStore.unsubscribe(this._onChange);
+    AuthStore.unsubscribe(this._onAuthChange);
+  }
+  
+  /**
+   * @private
+   * Handler for when subscribed stores emit 'change' event.
+   */
+  _onChange = () => {
+    this.setState(getStateFromStores());
+  };
   
   /**
    * @private
@@ -92,41 +160,34 @@ class App extends React.Component {
   /**
    * @inheritdoc
    */
-  componentDidMount() {
-    AuthStore.subscribe(this._onAuthChange);    
-    
-    ItemManageAction.getItems();
-    
-    BrandManageAction.getBrands();
-    
-    CategoryManageAction.getCategories();
-    
-    TagManageAction.getTags();
-    
-    VariationManageAction.getVariations();
-  }
-
-  /**
-   * @inheritdoc
-   */
   render() {
+    
+    const { route } = this.state;
+    let imageSrc = routeToBackgroundImage[route];
+
+    let backgroundStyle = {
+      // backgroundImage: `url(/images/${imageSrc}.jpg)`
+    };
+
     return (
       <div className={styles.app}>
         <NavbarApp />
         <AuthApp />
         <ReactCSSTransitionGroup
           component="div"
-          className={styles.appContent}
+          className={styles.content}
           transitionName="route"
           transitionEnterTimeout={300}
           transitionLeaveTimeout={300}
         >
+          <div className={styles.background} style={backgroundStyle} />
           {React.cloneElement(this.props.children, {
             key: this.props.location.pathname
           })}
         </ReactCSSTransitionGroup>
       </div>
     );
+    
   }
 }
 
@@ -158,6 +219,7 @@ owning you now — yet you would be this generous
 to think of my child. With the pens you sent
 she has made I hope a healing instrument.
         </p>
+        <ItemFilterApp />
       </div>
     );
   }
@@ -166,10 +228,10 @@ she has made I hope a healing instrument.
 Stripe.setPublishableKey("pk_test_8mZpKZytd30HOivscwbQk51Z");
 
 render((
-  <Router history={hashHistory}>
+  <Router history={hashHistory} onUpdate={onRouterUpdate}>
     <Route path="/" component={App}>
       <IndexRoute component={IndexApp} />
-      <Route path="itemDisplay" component={ItemDisplayApp} />
+      <Route path="shop" component={ItemDisplayApp} />
       <Route path="manage" component={ManageApp} onEnter={ensureIsAdmin} />
       <Route path="account" component={AccountApp} onEnter={ensureLoggedIn} />
       <Route path="checkout" component={CheckoutApp} onEnter={ensureLoggedIn} />

@@ -3,20 +3,7 @@
   
   width: 100%;
   
-  .mainContent {
-    display: flex;
-    flex-direction: row;
-  }
-
-  .filterDisplaySection {
-    margin-right: 10px;
-    
-    display: flex;
-  }
-
   .itemDisplaySection {
-    flex: 1;  
-    
     display: flex;
     flex-direction: column;
   }

@@ -61,7 +61,14 @@ export default class ItemFilterApp extends React.Component {
   constructor(props) {
     super(props);
     
-    this.state = getStateFromStores();
+    this.state = {
+      filters: ItemDisplayStore.getFilters(),
+      tags: TagManageStore.getTags(),
+      brands: BrandManageStore.getBrands(),
+      categories: CategoryManageStore.getCategories(),
+      
+      collapsed: false
+    };
   }
   
   /**
@@ -90,6 +97,20 @@ export default class ItemFilterApp extends React.Component {
    */
   _onChange = () => {
     this.setState(getStateFromStores());
+  };
+  
+  /**
+   * @private
+   * Handler for when the collapsed button is clicked.
+   */
+  _onCollapseToggleClick = () => {
+    
+    const { collapsed } = this.state;
+    
+    this.setState({
+      collapsed: !collapsed
+    });
+    
   };
   
   /**
@@ -244,14 +265,28 @@ export default class ItemFilterApp extends React.Component {
    */
   _createFilterSectionJsx() {
     
+    const { collapsed } = this.state;
+      
+    let style = { maxHeight: collapsed ? "" : "300px" };
+    
     return (
-      <SidePanel collapsible={true} position="relative" align="top">
+      <div className={styles.filterSection} style={style}>
         {this._createBrandFilterJsx()}
         {this._createCategoryFilterJsx()}
         {this._createTagFilterJsx()}
-      </SidePanel>
+      </div>
     );
     
+  }
+  
+  _createCollapseToggleJsx() {
+    
+    const { collapsed } = this.state;
+    let text = collapsed ? "FILTER +" : "FILTER -";
+    
+    return (
+      <div className={styles.collapsedToggle} onClick={this._onCollapseToggleClick}>{text}</div>
+    );
   }
   
   /**
@@ -261,6 +296,7 @@ export default class ItemFilterApp extends React.Component {
 
     return (
       <div className={styles.itemFilterApp}>
+        {this._createCollapseToggleJsx()}
         {this._createFilterSectionJsx()}
       </div>
     );
