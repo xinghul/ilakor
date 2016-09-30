@@ -1,19 +1,58 @@
 .itemFilterApp {
+  position: fixed;
+  width: 100%;
   
   .filterSection {
-    overflow: hidden;
-    max-height: 0px;
+    position: relative;
+    padding: 10px;
+    overflow: visible;
+    
+    width: 100%;
+    max-height: 40px;
     
     border: 0.5px solid #ccc;
     border-left-width: 0px;
     border-right-width: 0px;
     background-color: rgba(238, 238, 238, 0.5);
     
-    transition: max-height 300ms linear;
+    transition: all 150ms ease-out;
+    
+    .filterSectionHeader {
+      margin-bottom: 5px;
+      cursor: pointer;
+      
+      white-space: nowrap;
+      overflow: hidden;
+    }
+    
+    .filterItem {
+      display: flex;
+      flex-direction: row;
+      
+      .filterInfo {
+        display: inline-block;
+        width: 140px;
+        
+        .filterIcon {
+          margin: 15px 10px 0 10px;
+        }
+        
+        .filterName {
+          display: inline-block;
+          cursor: default;
+          
+          margin-top: 15px;
+        }
+      }
+      
+      .filterSelect {
+        display: inline-block;
+        flex: 1;
+      }
+    
+    }
   }
   
   
-  .collapsedToggle {
-    cursor: pointer;
-  }
+  
 }

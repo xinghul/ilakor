@@ -101,7 +101,7 @@ let ItemDisplayStore = _.extend({}, EventEmitter.prototype, {
   setFilter: function(filter) {
     invariant(_.isObject(filter), `setFilter(filter) expects an 'object' as 'filter', but gets '${typeof filter}'.`);
     invariant(availableFilterTypes.indexOf(filter.type) !== -1, `'${filter.type}' is not one of the available filter types.`);
-    
+    console.log("setting", filter);
     _filters[filter.type] = filter.value;
   },
   

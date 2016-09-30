@@ -55,7 +55,7 @@ export default class SidePanel extends React.Component {
     
     return (
       <div className={styles.collapseButton} onClick={this._onCollapseButtonClick}>
-        <Icon name={iconName} hoverable={true} cover={true} />
+        <Icon name={iconName} hoverable={true} />
       </div>
     );
   }

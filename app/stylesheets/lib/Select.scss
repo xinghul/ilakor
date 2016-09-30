@@ -1,6 +1,28 @@
 .select {
   margin-bottom: 15px;
   
+  :global(.Select-control) {
+    cursor: pointer;
+  }
+  
+  :global(.Select .Select-value) {
+    background-color: white;
+    color: black;
+    border-color: black; 
+  }
+  
+  :global(.Select .Select-value-icon) {
+    background-color: rgba(0, 0, 0, 0.7);
+    color: white;
+    
+    border-right: none;
+    
+    &:hover {
+      background-color: black;
+      color: white;
+    }
+  }
+  
   label {
     display: block;
     margin-bottom: 5px;

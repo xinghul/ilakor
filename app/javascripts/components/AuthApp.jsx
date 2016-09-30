@@ -1,33 +1,31 @@
-"use strict";
+import React from "react";
+import _ from "lodash";
+import invariant from "invariant";
+import ReactCSSTransitionGroup from "react-addons-css-transition-group";
+import { Modal } from "react-bootstrap";
 
-import React from "react"
-import _ from "lodash"
-import invariant from "invariant"
-import ReactCSSTransitionGroup from "react-addons-css-transition-group"
-import { Modal } from "react-bootstrap"
+import LoginApp from "./AuthApp/LoginApp";
+import SignupApp from "./AuthApp/SignupApp";
+import ForgotPasswordApp from "./AuthApp/ForgotPasswordApp";
 
-import LoginApp from "./AuthApp/LoginApp"
-import SignupApp from "./AuthApp/SignupApp"
-import ForgotPasswordApp from "./AuthApp/ForgotPasswordApp"
+import GhostButton from "lib/GhostButton";
+import SubmitButton from "lib/SubmitButton";
+import SocialButton from "lib/SocialButton";
+import EmailInput from "./AuthApp/EmailInput";
+import UsernameInput from "./AuthApp/UsernameInput";
+import PasswordInput from "./AuthApp/PasswordInput";
 
-import GhostButton from "lib/GhostButton"
-import SubmitButton from "lib/SubmitButton"
-import SocialButton from "lib/SocialButton"
-import EmailInput from "./AuthApp/EmailInput"
-import UsernameInput from "./AuthApp/UsernameInput"
-import PasswordInput from "./AuthApp/PasswordInput"
+import AuthStore from "stores/AuthStore";
+import AuthAction from "actions/AuthAction";
 
-import AuthStore from "stores/AuthStore"
-import AuthAction from "actions/AuthAction"
-
-import styles from "components/AuthApp.scss"
+import styles from "components/AuthApp.scss";
 
 /**
  * @private 
  *
  * Get new state from subscribed stores.
  *
- * @return {Object} the new state. 
+ * @return {Object}
  */
 function getStateFromStores() {
   return {
@@ -35,6 +33,10 @@ function getStateFromStores() {
   };
 }
 
+/**
+ * @class
+ * @extends {React.Component}
+ */
 export default class AuthApp extends React.Component {
   
   /**

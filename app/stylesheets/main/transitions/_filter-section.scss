@@ -1,0 +1,20 @@
+
+:global(.filter-section-enter) {
+  opacity: 0.01;
+}
+
+:global(.filter-section-enter.filter-section-enter-active) {
+  opacity: 1;
+  
+  transition: all 200ms ease-out;
+}
+
+:global(.filter-section-leave) {
+  opacity: 1;
+}
+
+:global(.filter-section-leave.filter-section-leave-active) {
+  opacity: 0.01;
+
+  transition: all 200ms ease-out;
+}

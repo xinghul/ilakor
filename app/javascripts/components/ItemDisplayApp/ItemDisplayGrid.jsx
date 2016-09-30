@@ -1,19 +1,29 @@
-"use strict"
+import _ from "lodash";
+import React from "react";
+import ReactCSSTransitionGroup from "react-addons-css-transition-group";
 
-import React from "react"
-import ReactCSSTransitionGroup from "react-addons-css-transition-group"
+import styles from "components/ItemDisplayApp/ItemDisplayGrid.scss";
 
-import styles from "components/ItemDisplayApp/ItemDisplayGrid.scss"
+import BaseItem from "./BaseItem";
 
-import BaseItem from "./BaseItem"
-
+/**
+ * @class
+ * @extends {React.Component}
+ */
 export default class ItemDisplayGrid extends React.Component {
-  
+  /**
+   * @inheritdoc
+   */
   constructor(props) {
     super(props);
   }
   
-  createItemJsx(item) {
+  /**
+   * Creates the JSX for each BaseItem.
+   * 
+   * @return {JSX}
+   */
+  _createItemJsx(item) {
 
     let itemJsx;
 
@@ -28,15 +38,17 @@ export default class ItemDisplayGrid extends React.Component {
     
     return itemJsx;
   }
-
+  
+  /**
+   * @inheritdoc
+   */
   render() {
-    let items    = this.props.items
-    ,   itemsJsx = [];
-
-    for (let item of items)
-    {
-      itemsJsx.push(this.createItemJsx(item));
-    }
+    
+    const { items } = this.props;
+    
+    let itemsJsx = _.map(items, (item) => {
+      return this._createItemJsx(item);
+    });
     
     return (
       <div className={styles.itemDisplayGrid}>

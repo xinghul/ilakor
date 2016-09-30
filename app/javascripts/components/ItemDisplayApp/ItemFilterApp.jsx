@@ -1,9 +1,9 @@
 import React from "react";
 import { Button, Glyphicon, Accordion, Panel } from "react-bootstrap";
+import ReactCSSTransitionGroup from "react-addons-css-transition-group";
 
-import SidePanel from "lib/SidePanel";
-import Checkbox from "lib/Checkbox";
 import Select from "lib/Select";
+import Icon from "lib/Icon";
 
 import ItemDisplayAction from "actions/ItemDisplayAction";
 
@@ -29,25 +29,88 @@ function getStateFromStores() {
 }
 
 /**
- * Creates the options for tag Select component.
+ * Creates the options for Select component.
  * 
- * @param {Array} tags the raw tags.
+ * @param {Array} options the raw options.
  * 
  * @return {Array}
  */
-function createTagSelectOptions(tags) {
+function createSelectOptions(options) {
   
-  return _.map(tags, (tag) => {
+  return _.map(options, (option) => {
     
-    let tagName = tag.name;
+    let name = option.name;
     
     return {
-      label: _.capitalize(_.words(tagName).join(' ')),
-      value: tagName
+      label: _.capitalize(_.words(name).join(' ')),
+      value: name
     };
     
   });
   
+}
+
+/**
+ * Creates a string decribing the current applied filters.
+ * 
+ * @param  {Object} filters current applied filters.
+ * 
+ * @return {String}
+ */
+function createFilterDescription(filters) {
+  
+  // display names for filter types
+  const filterTypeDisplayName = {
+    'brand': 'brands',
+    'category': 'categories',
+    'tag': 'goals'
+  };
+  
+  /**
+   * Connects filter values and form a sentence.
+   * 
+   * @param  {String[]} values filter values.
+   * 
+   * @return {String}
+   */
+  function connectfilterValuess(values) {
+    if (values.length === 1) {
+      return values[0];
+    }
+    
+    let sentence = "";
+    
+    for (let index = 0; index < values.length; index++)
+    {
+      if (index === values.length - 1) {
+        sentence += " and ";
+      } else if (index > 0) {
+        sentence += ", "
+      }
+
+      sentence += "<b>" + _.capitalize(values[index]) + "</b>";
+    }
+    
+    return sentence;
+  }
+  
+  /**
+   * Generates description for given filter type and filter values.
+   * 
+   * @param  {String} filterType   filter type.
+   * @param  {String[]} filterValues filter values.
+   * 
+   * @return {String}
+   */
+  function generateDescriptionForType(filterType, filterValues) {
+    if (_.isEmpty(filterValues)) {
+      return `all ${filterTypeDisplayName[filterType]}`;
+    }
+    
+    return `${filterTypeDisplayName[filterType]} ${connectfilterValuess(filterValues)}`;
+  }
+  
+  return `Displaying items for ${generateDescriptionForType("brand", filters.brand)}, ${generateDescriptionForType("category", filters.category)} and ${generateDescriptionForType("tag", filters.tag)}.`;
 }
 
 /**
@@ -106,7 +169,7 @@ export default class ItemFilterApp extends React.Component {
   _onCollapseToggleClick = () => {
     
     const { collapsed } = this.state;
-    
+
     this.setState({
       collapsed: !collapsed
     });
@@ -118,21 +181,16 @@ export default class ItemFilterApp extends React.Component {
    * Handler for when a brand is checked/unchecked.
    * Updates the filter accordingly.
    * 
-   * @param  {String} brandName the brand name.
-   * @param  {Boolean} checked   whether the brand is checked or not.
+   * @param  {Array} brands the selected brands.
    */
-  _onBrandChange = (brandName, checked) => {
+  _onBrandChange = (brands) => {
     
     let filter = {
       type: "brand",
-      value: brandName
+      value: brands
     };
     
-    if (checked) {
-      ItemDisplayAction.addFilter(filter);
-    } else {
-      ItemDisplayAction.removeFilter(filter);
-    }
+    ItemDisplayAction.setFilter(filter);
   };
   
   /**
@@ -140,21 +198,16 @@ export default class ItemFilterApp extends React.Component {
    * Handler for when a category is checked/unchecked.
    * Updates the filter accordingly.
    * 
-   * @param  {String} categoryName the category name.
-   * @param  {Boolean} checked   whether the category is checked or not.
+   * @param  {Array} categories the selected categories.
    */
-  _onCategoryChange = (categoryName, checked) => {
+  _onCategoryChange = (categories) => {
     
     let filter = {
       type: "category",
-      value: categoryName
+      value: categories
     };
     
-    if (checked) {
-      ItemDisplayAction.addFilter(filter);
-    } else {
-      ItemDisplayAction.removeFilter(filter);
-    }
+    ItemDisplayAction.setFilter(filter);
   };
   
   /**
@@ -185,21 +238,19 @@ export default class ItemFilterApp extends React.Component {
     const { filters, brands } = this.state;
 
     return (
-      <div>
-        <h5>Select brands</h5>
-        {_.map(brands, (brand) => {
-          
-          let brandName = brand.name;
-          
-          return (
-            <Checkbox
-              key={brand._id}
-              defaultValue={filters.brand.indexOf(brandName) !== -1}
-              label={_.capitalize(brandName)}
-              onChange={this._onBrandChange.bind(this, brandName)} 
-            />
-          );
-        })}
+      <div className={styles.filterItem}>
+        <div className={styles.filterInfo}>
+          <Icon name="square" className={styles.filterIcon} />
+          <h5 className={styles.filterName}>Brands</h5>
+        </div>
+        <div className={styles.filterSelect}>
+          <Select 
+            placeholder="Specify brands..."
+            defaultValue={filters.brand}
+            options={createSelectOptions(brands)}
+            onChange={this._onBrandChange}
+          />
+        </div>
       </div>
     );
     
@@ -216,21 +267,19 @@ export default class ItemFilterApp extends React.Component {
     const { filters, categories } = this.state;
 
     return (
-      <div>
-        <h5>Select categories</h5>
-        {_.map(categories, (category) => {
-          
-          let categoryName = category.name;
-          
-          return (
-            <Checkbox
-              key={category._id}
-              defaultValue={filters.category.indexOf(categoryName) !== -1}
-              label={_.capitalize(categoryName)}
-              onChange={this._onCategoryChange.bind(this, categoryName)} 
-            />
-          );
-        })}
+      <div className={styles.filterItem}>
+        <div className={styles.filterInfo}>
+          <Icon name="tags" className={styles.filterIcon} />
+          <h5 className={styles.filterName}>Categories</h5>
+        </div>
+        <div className={styles.filterSelect}>
+          <Select 
+            placeholder="Specify categories..."
+            defaultValue={filters.category}
+            options={createSelectOptions(categories)}
+            onChange={this._onCategoryChange}
+          />
+        </div>
       </div>
     );
     
@@ -247,14 +296,63 @@ export default class ItemFilterApp extends React.Component {
     const { filters, tags } = this.state;
     
     return (
-      <Select 
-        placeholder="Select goals..."
-        defaultValue={filters.tag}
-        options={createTagSelectOptions(tags)}
-        onChange={this._onTagChange}
-      />
+      <div className={styles.filterItem}>
+        <div className={styles.filterInfo}>
+          <Icon name="dot-circle-o" className={styles.filterIcon} />
+          <h5 className={styles.filterName}>Goals</h5>
+        </div>
+        <div className={styles.filterSelect}>
+          <Select 
+            placeholder="Specify goals..."
+            defaultValue={filters.tag}
+            options={createSelectOptions(tags)}
+            onChange={this._onTagChange}
+          />
+        </div>
+      </div>
     );
     
+  }
+  
+  /**
+   * @private
+   * Creates the header for the filter section.
+   * 
+   * @return {JSX} 
+   */
+  _createFilterSectionHeaderJsx() {
+    
+    const { filters, collapsed } = this.state;
+    let text = collapsed ? `+ ${createFilterDescription(filters)}` : "- Hide filters";
+    
+    text = _.truncate(text, { length: 120, separator: ' ' });
+    
+    return (
+      <div className={styles.filterSectionHeader} onClick={this._onCollapseToggleClick} dangerouslySetInnerHTML={{__html: text}} />
+    );
+  }
+  
+  /**
+   * @private
+   * Creates the body for the filter section.
+   * 
+   * @return {JSX}
+   */
+  _createFilterSectionBodyJsx() {
+    
+    const { collapsed } = this.state;
+    
+    if (collapsed) {
+      return null;
+    } else {
+      return (
+        <div>
+          {this._createBrandFilterJsx()}
+          {this._createCategoryFilterJsx()}
+          {this._createTagFilterJsx()}
+        </div>
+      );
+    }
   }
   
   /**
@@ -267,27 +365,26 @@ export default class ItemFilterApp extends React.Component {
     
     const { collapsed } = this.state;
       
-    let style = { maxHeight: collapsed ? "" : "300px" };
+    let style = { 
+      maxHeight: collapsed ? "" : "300px"
+    };
     
     return (
-      <div className={styles.filterSection} style={style}>
-        {this._createBrandFilterJsx()}
-        {this._createCategoryFilterJsx()}
-        {this._createTagFilterJsx()}
-      </div>
+      <ReactCSSTransitionGroup 
+        component="div"
+        className={styles.filterSection} 
+        transitionName="filter-section"
+        transitionEnterTimeout={200} 
+        transitionLeaveTimeout={200}
+        style={style}
+      >
+        {this._createFilterSectionHeaderJsx()}
+        {this._createFilterSectionBodyJsx()}
+      </ReactCSSTransitionGroup>
     );
     
   }
   
-  _createCollapseToggleJsx() {
-    
-    const { collapsed } = this.state;
-    let text = collapsed ? "FILTER +" : "FILTER -";
-    
-    return (
-      <div className={styles.collapsedToggle} onClick={this._onCollapseToggleClick}>{text}</div>
-    );
-  }
   
   /**
    * @inheritdoc
@@ -296,7 +393,6 @@ export default class ItemFilterApp extends React.Component {
 
     return (
       <div className={styles.itemFilterApp}>
-        {this._createCollapseToggleJsx()}
         {this._createFilterSectionJsx()}
       </div>
     );

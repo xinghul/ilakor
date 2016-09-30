@@ -1,10 +1,12 @@
-"use strict"
+import React from "react";
+import FontAwesome from "react-fontawesome";
 
-import React from "react"
-import FontAwesome from "react-fontawesome"
+import styles from "lib/Icon.scss";
 
-import styles from "lib/Icon.scss"
-
+/**
+ * @class
+ * @extends {React.Component}
+ */
 export default class Icon extends React.Component {
   
   /**
@@ -19,23 +21,25 @@ export default class Icon extends React.Component {
    */
   render() {
     
+    const { className, name, size, hoverable } = this.props;
+    
     let classNames = [ styles.icon ];
     
-    // push in additional className 
-    classNames.push(this.props.className);
+    if (!_.isEmpty(className)) {
+      classNames.push(className);      
+    }
     
     let style = {
-      opacity: this.props.hoverable ? "0.6" : "",
-      cursor: this.props.hoverable ? "pointer" : "",
-      height: this.props.cover ? "100%" : "",
-      width: this.props.cover ? "100%" : ""
+      opacity: hoverable ? "0.6" : "",
+      cursor: hoverable ? "pointer" : ""
     };
     
     return (
       <FontAwesome
         className={classNames.join(' ')}
         style={style}
-        name={this.props.name}
+        name={name}
+        size={size}
       />
     );
   }
@@ -43,11 +47,12 @@ export default class Icon extends React.Component {
 
 Icon.propTypes = {
   name: React.PropTypes.string.isRequired,
-  hoverable: React.PropTypes.bool,
-  cover: React.PropTypes.bool
+  
+  size: React.PropTypes.oneOf(["lg", "2x", "3x", "4x", "5x"]),
+  hoverable: React.PropTypes.bool
 }
 
 Icon.defaultProps = {
-  hoverable: false,
-  cover: false
+  size: null,
+  hoverable: false
 }
