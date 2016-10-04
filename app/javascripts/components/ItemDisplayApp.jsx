@@ -25,7 +25,8 @@ function getStateFromStores() {
   return {
     items: ItemDisplayStore.getItems(),
     filters: ItemDisplayStore.getFilters(),
-    hasMoreItems: ItemDisplayStore.hasMoreItems()
+    hasMoreItems: ItemDisplayStore.hasMoreItems(),
+    filterCollapsed: ItemDisplayStore.getFilterCollapsed()
   };
 }
 
@@ -49,6 +50,7 @@ export default class ItemDisplayApp extends React.Component {
       items: ItemDisplayStore.getItems(),
       filters: ItemDisplayStore.getFilters(),
       hasMoreItems: ItemDisplayStore.hasMoreItems(), 
+      filterCollapsed: ItemDisplayStore.getFilterCollapsed(),
       
       selectedItem: {},
       showItemDetailModal: false,
@@ -63,11 +65,13 @@ export default class ItemDisplayApp extends React.Component {
   componentDidMount() {
     ItemDisplayStore.subscribe(this._onChange);
     
-    window.addEventListener("scroll", this._checkReachBottom);
+    ItemDisplayAction.getItems();
     
-    this._gridContainer = document.getElementById(ITEM_DISPLAY_APP_ID);
-    
-    this._checkReachBottom();
+    // window.addEventListener("scroll", this._checkReachBottom);
+    // 
+    // this._gridContainer = document.getElementById(ITEM_DISPLAY_APP_ID);
+    // 
+    // this._checkReachBottom();
   }
   
   /**
@@ -76,15 +80,15 @@ export default class ItemDisplayApp extends React.Component {
   componentWillUnmount() {
     ItemDisplayStore.unsubscribe(this._onChange);
     
-    window.removeEventListener("scroll", this._checkReachBottom); 
-
-    if (_getItemPromise && _getItemPromise.isCancellable()) {
-      _getItemPromise.cancel();
-    }
-
-    if (_addItemPromise && _addItemPromise.isCancellable()) {
-      _addItemPromise.cancel();
-    }
+    // window.removeEventListener("scroll", this._checkReachBottom); 
+    // 
+    // if (_getItemPromise && _getItemPromise.isCancellable()) {
+    //   _getItemPromise.cancel();
+    // }
+    // 
+    // if (_addItemPromise && _addItemPromise.isCancellable()) {
+    //   _addItemPromise.cancel();
+    // }
   }
   
   /**
@@ -200,7 +204,17 @@ export default class ItemDisplayApp extends React.Component {
     }
   };
   
+  /**
+   * @inheritdoc
+   */
   render() {
+    
+    const { filterCollapsed } = this.state;
+    
+    let style = {
+      top: filterCollapsed ? "" : "216px"
+    };
+    
     return (
       <div className={styles.itemDisplayApp} id={ITEM_DISPLAY_APP_ID}>
         <ItemDetailModal 
@@ -209,7 +223,7 @@ export default class ItemDisplayApp extends React.Component {
           onClose={this._onItemDetailModalClose}
         />
         <ItemFilterApp />
-        <div className={styles.itemDisplaySection}>
+        <div style={style} className={styles.itemDisplaySection}>
           {/*
             <FilterDisplayApp handleRemoveFilter={this.handleRemoveFilter} filters={this.state.filters}/>              
           */}

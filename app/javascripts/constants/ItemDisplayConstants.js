@@ -6,6 +6,8 @@ export default FluxConstant.set([
   
   "NO_MORE_ITEMS",
   
+  "SET_FILTER_COLLAPSED",
+  
   "SET_FILTER",
   "ADD_FILTER",
   "REMOVE_FILTER"

@@ -14,6 +14,7 @@ const availableFilterTypes = [
 // items in this store
 let _items = []
 ,   _filters = {}
+,   _filterCollapsed = false
 ,   _hasMoreItems = true;
 
 // initialize applied filters
@@ -94,6 +95,24 @@ let ItemDisplayStore = _.extend({}, EventEmitter.prototype, {
   },
   
   /**
+   * Sets the filter collapsed flag.
+   * 
+   * @param  {Boolean} filterCollapsed whether the filter is collapsed.
+   */
+  setFilterCollapsed: function(filterCollapsed) {
+    _filterCollapsed = filterCollapsed;
+  },
+  
+  /**
+   * Gets the filter collapsed flag.
+   * 
+   * @return {Boolean}
+   */
+  getFilterCollapsed: function() {
+    return _filterCollapsed;
+  },
+  
+  /**
    * Sets a filter.
    * 
    * @param  {Object} filter the new filter config.
@@ -101,7 +120,7 @@ let ItemDisplayStore = _.extend({}, EventEmitter.prototype, {
   setFilter: function(filter) {
     invariant(_.isObject(filter), `setFilter(filter) expects an 'object' as 'filter', but gets '${typeof filter}'.`);
     invariant(availableFilterTypes.indexOf(filter.type) !== -1, `'${filter.type}' is not one of the available filter types.`);
-    console.log("setting", filter);
+
     _filters[filter.type] = filter.value;
   },
   
@@ -195,6 +214,11 @@ ItemDisplayStore.dispatchToken = AppDispatcher.register((payload) => {
     
     case ItemDisplayConstants.REMOVE_FILTER:
       ItemDisplayStore.removeFilter(action.filter);
+      ItemDisplayStore.emitChange();
+      break;  
+    
+    case ItemDisplayConstants.SET_FILTER_COLLAPSED:
+      ItemDisplayStore.setFilterCollapsed(action.collapsed);
       ItemDisplayStore.emitChange();
       break;  
       

@@ -1,5 +1,6 @@
 .itemFilterApp {
   position: fixed;
+  z-index: 10;
   width: 100%;
   
   .filterSection {
@@ -13,7 +14,7 @@
     border: 0.5px solid #ccc;
     border-left-width: 0px;
     border-right-width: 0px;
-    background-color: rgba(238, 238, 238, 0.5);
+    background-color: rgb(238, 238, 238);
     
     transition: all 150ms ease-out;
     

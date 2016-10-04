@@ -4,6 +4,9 @@
   width: 100%;
   
   .itemDisplaySection {
+    position: absolute;
+    top: 40px;
+    
     display: flex;
     flex-direction: column;
   }

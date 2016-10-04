@@ -141,6 +141,27 @@ let ItemDisplayAction = {
       resolve();
       
     });
+  },
+  
+  /**
+   * Sets the filter collapsed flag.
+   * 
+   * @param  {Boolean} collapsed the new filter collapsed value.
+   *
+   * @return {Promise}
+   */
+  setFilterCollapsed: function(collapsed) {
+    
+    return new Promise((resolve, reject) => {
+      
+      AppDispatcher.handleAction({
+        actionType: ItemDisplayConstants.SET_FILTER_COLLAPSED,
+        collapsed: collapsed
+      });
+      
+      resolve();
+      
+    });
   }
 };
 

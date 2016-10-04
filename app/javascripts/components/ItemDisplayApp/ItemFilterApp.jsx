@@ -22,6 +22,8 @@ import styles from "components/ItemDisplayApp/ItemFilterApp.scss";
 function getStateFromStores() {
   return {
     filters: ItemDisplayStore.getFilters(),
+    collapsed: ItemDisplayStore.getFilterCollapsed(),
+    
     tags: TagManageStore.getTags(),
     brands: BrandManageStore.getBrands(),
     categories: CategoryManageStore.getCategories()
@@ -124,14 +126,7 @@ export default class ItemFilterApp extends React.Component {
   constructor(props) {
     super(props);
     
-    this.state = {
-      filters: ItemDisplayStore.getFilters(),
-      tags: TagManageStore.getTags(),
-      brands: BrandManageStore.getBrands(),
-      categories: CategoryManageStore.getCategories(),
-      
-      collapsed: false
-    };
+    this.state = getStateFromStores();
   }
   
   /**
@@ -169,11 +164,8 @@ export default class ItemFilterApp extends React.Component {
   _onCollapseToggleClick = () => {
     
     const { collapsed } = this.state;
-
-    this.setState({
-      collapsed: !collapsed
-    });
     
+    ItemDisplayAction.setFilterCollapsed(!collapsed);
   };
   
   /**
