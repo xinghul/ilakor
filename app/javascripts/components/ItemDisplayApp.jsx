@@ -52,7 +52,6 @@ export default class ItemDisplayApp extends React.Component {
       filterCollapsed: ItemDisplayStore.getFilterCollapsed(),
       
       selectedItem: {},
-      showItemDetailModal: false,
       isLoading: false,
       isItemsAdded: true
     };
@@ -138,11 +137,18 @@ export default class ItemDisplayApp extends React.Component {
     // });
   };
   
+  /**
+   * @private
+   * Handler for when item is clicked.
+   * 
+   * @param  {Object} item the clicked item.
+   */
   _onItemClick = (item) => {
     this.setState({
-      selectedItem: item,
-      showItemDetailModal: true
+      selectedItem: item
     });
+    
+    this.refs["detailModal"].showModal();
   };
   
   /**
@@ -172,12 +178,6 @@ export default class ItemDisplayApp extends React.Component {
     });
   };
   
-  _onItemDetailModalClose = () => {
-    this.setState({
-      showItemDetailModal: false
-    });
-  };
-  
   /**
    * @private
    * Checks if it has scrolled to bottom.
@@ -198,7 +198,7 @@ export default class ItemDisplayApp extends React.Component {
    */
   render() {
     
-    const { filterCollapsed } = this.state;
+    const { items, filterCollapsed, selectedItem, isLoading } = this.state;
     
     let style = {
       top: filterCollapsed ? "" : "216px"
@@ -207,17 +207,16 @@ export default class ItemDisplayApp extends React.Component {
     return (
       <div className={styles.itemDisplayApp} id={ITEM_DISPLAY_APP_ID}>
         <ItemDetailModal 
-          showModal={this.state.showItemDetailModal} 
-          item={this.state.selectedItem}
-          onClose={this._onItemDetailModalClose}
+          ref="detailModal"
+          item={selectedItem}
         />
         <ItemFilterApp />
         <div style={style} className={styles.itemDisplaySection}>
           <ItemDisplayGrid
-            items={this.state.items} 
+            items={items} 
             handleItemClick={this._onItemClick}
           />
-          <SonicLoader hidden={!this.state.isLoading} />
+          <SonicLoader hidden={!isLoading} />
         </div>
       </div>
     );

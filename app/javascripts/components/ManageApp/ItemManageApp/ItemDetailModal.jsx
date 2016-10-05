@@ -7,8 +7,15 @@ import SubmitButton from "lib/SubmitButton";
 
 import ItemManageAction from "actions/item/ItemManageAction";
 
+/**
+ * @class
+ * @extends {React.Component}
+ */
 export default class ItemDetailModal extends React.Component {
   
+  /**
+   * @inheritdoc
+   */
   constructor(props) {
     super(props);
     
@@ -19,7 +26,11 @@ export default class ItemDetailModal extends React.Component {
     };
   }
   
-  handleApply = () => {
+  /**
+   * @private
+   * Handler for when applying changes is clicked.
+   */
+  _onItemUpdate = () => {
     
     let item = this.props.item
     ,   newValue = {};
@@ -40,7 +51,7 @@ export default class ItemDetailModal extends React.Component {
       item._id,
       newValue
     ).then(() => {
-      this.onClose();
+      this._onModalClose();
     }).catch((err) => {
       console.log(err);
     }).finally(() => {
@@ -50,7 +61,11 @@ export default class ItemDetailModal extends React.Component {
     });
   };
   
-  handleDelete = () => {
+  /**
+   * @private
+   * Handler for deleting the item.
+   */
+  _onItemDelete = () => {
     this.setState({
       isDeleting: true
     });
@@ -58,7 +73,7 @@ export default class ItemDetailModal extends React.Component {
     ItemManageAction.removeItem(
       this.props.item._id
     ).then(() => {
-      this.onClose();
+      this._onModalClose();
     }).catch((err) => {
       console.log(err);
     }).finally(() => {
@@ -68,19 +83,32 @@ export default class ItemDetailModal extends React.Component {
     });
   };
   
-  onClose = () => {
+  /**
+   * @private
+   * Handler for closing the modal.
+   */
+  _onModalClose = () => {
     this.setState({
       showModal: false
     });
   };
   
+  /**
+   * Shows the modal.
+   */
   showModal() {
     this.setState({
       showModal: true
     });
   }
   
-  createKeyValueForm() {
+  /**
+   * @private
+   * Creates the modal body.
+   *
+   * @return {JSX}
+   */
+  _createModalBody() {
     let item = this.props.item;
     
     if (_.isEmpty(item)) {
@@ -102,32 +130,34 @@ export default class ItemDetailModal extends React.Component {
       </Form>
     );
   }
-
+  
+  /**
+   * @inheritdoc
+   */
   render() {
     
-    let keyValueForm = this.createKeyValueForm()
-    ,   buttonDisabled = this.state.isApplying || this.state.isDeleting;
+    let buttonDisabled = this.state.isApplying || this.state.isDeleting;
 
     return (
-      <Modal show={this.state.showModal} onHide={this.onClose}>
+      <Modal show={this.state.showModal} onHide={this._onModalClose}>
         <Modal.Header closeButton>
           <Modal.Title>Item info</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          {keyValueForm}
+          {this._createModalBody()}
         </Modal.Body>
         <Modal.Footer>
           <SubmitButton 
             theme="danger" 
             disabled={buttonDisabled}
             isSubmitting={this.state.isDeleting}
-            handleSubmit={this.handleDelete}
+            handleSubmit={this._onItemDelete}
           >Delete</SubmitButton>
           <SubmitButton 
             theme="black"
             disabled={buttonDisabled}
             isSubmitting={this.state.isApplying}
-            handleSubmit={this.handleApply}
+            handleSubmit={this._onItemUpdate}
           >Apply</SubmitButton>  
         </Modal.Footer>
       </Modal>

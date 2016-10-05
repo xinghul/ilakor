@@ -33,6 +33,10 @@ function createSelectOptions(options) {
   });
 }
 
+/**
+ * @class
+ * @extends {React.Component}
+ */
 export default class ItemDetailModal extends React.Component {
   
   /**
@@ -42,6 +46,7 @@ export default class ItemDetailModal extends React.Component {
     super(props);
     
     this.state = {
+      showModal: false,
       // current selected values
       config: {},
       variations: {},
@@ -80,11 +85,22 @@ export default class ItemDetailModal extends React.Component {
   
   /**
    * @private
-   * Triggers for closing the modal.
+   * Handler for closing the modal.
    */
-  _onClose = () => {
-    this.props.onClose();
+  _onModalClose = () => {
+    this.setState({
+      showModal: false
+    });
   };
+  
+  /**
+   * Shows the modal.
+   */
+  showModal() {
+    this.setState({
+      showModal: true
+    });
+  }
   
   /**
    * @private
@@ -118,7 +134,7 @@ export default class ItemDetailModal extends React.Component {
     ShoppingCartAction
     .addToCart(itemInfo)
     .finally(() => {
-      this._onClose();
+      this._onModalClose();
     });
   };
   
@@ -144,6 +160,12 @@ export default class ItemDetailModal extends React.Component {
     });
   };
   
+  /**
+   * @private
+   * Creates the JSX for the description section.
+   *
+   * @return {JSX}
+   */
   _createItemDescriptionJsx() {
     
     const { item } = this.props;
@@ -221,7 +243,7 @@ export default class ItemDetailModal extends React.Component {
    * 
    * @return {JSX}
    */
-  createItemDetailJsx() {
+  _createModalBody() {
     const { item } = this.props;
     
     let imageUrls = item.images.map((image) => {
@@ -238,10 +260,10 @@ export default class ItemDetailModal extends React.Component {
               <BaseCarousel width={450} height={450} images={imageUrls} title={item.name} />
               <Accordion>
                 <Panel header="Reviews" eventKey="1">
-                  Here comes the reviews.
+                  No reviews.
                 </Panel>
                 <Panel header="FAQ" eventKey="2">
-                  Here comes the FAQs.
+                  No FAQs.
                 </Panel>
               </Accordion>
             </div>
@@ -269,24 +291,25 @@ export default class ItemDetailModal extends React.Component {
    */
   render() {
     
-    if (_.isEmpty(this.props.item)) {
+    const { showModal } = this.state;
+    const { item } = this.props;
+    
+    if (_.isEmpty(item)) {
       return null;
     }
     
-    let itemDetailJsx = this.createItemDetailJsx();
-
     return (
       <Modal
         bsSize="large"
         className={styles.itemDetailModal} 
-        show={this.props.showModal} 
-        onHide={this._onClose}
+        show={showModal} 
+        onHide={this._onModalClose}
       >
         <Modal.Body>
-          {itemDetailJsx}
+          {this._createModalBody()}
         </Modal.Body>
         <Modal.Footer>
-          <GhostButton theme="black" onClick={this._onClose}>Close</GhostButton> 
+          <GhostButton theme="black" onClick={this._onModalClose}>Close</GhostButton> 
         </Modal.Footer>
       </Modal>
     );
@@ -295,7 +318,5 @@ export default class ItemDetailModal extends React.Component {
 }
 
 ItemDetailModal.propTypes = { 
-  showModal: React.PropTypes.bool.isRequired,
-  onClose: React.PropTypes.func.isRequired,
   item: React.PropTypes.object.isRequired
 };
