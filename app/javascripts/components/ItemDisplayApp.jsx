@@ -10,7 +10,6 @@ import SonicLoader from "lib/SonicLoader";
 import ItemDisplayGrid from "./ItemDisplayApp/ItemDisplayGrid";
 import ItemDetailModal from "./ItemDisplayApp/ItemDetailModal";
 import ItemFilterApp from "./ItemDisplayApp/ItemFilterApp";
-import FilterDisplayApp from "./ItemDisplayApp/FilterDisplayApp";
 
 import styles from "components/ItemDisplayApp.scss";
 
@@ -139,16 +138,6 @@ export default class ItemDisplayApp extends React.Component {
     // });
   };
   
-  handleRemoveFilter = (filterType, filterValue) => {
-    ItemDisplayAction.removeFilter(filterType, filterValue).then(function() {
-      
-      console.log("removed " + filterType + ": " + filterValue);
-
-    }).catch(function(err) {
-      console.log(err);
-    })
-  };
-  
   _onItemClick = (item) => {
     this.setState({
       selectedItem: item,
@@ -224,9 +213,6 @@ export default class ItemDisplayApp extends React.Component {
         />
         <ItemFilterApp />
         <div style={style} className={styles.itemDisplaySection}>
-          {/*
-            <FilterDisplayApp handleRemoveFilter={this.handleRemoveFilter} filters={this.state.filters}/>              
-          */}
           <ItemDisplayGrid
             items={this.state.items} 
             handleItemClick={this._onItemClick}
