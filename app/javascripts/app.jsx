@@ -27,7 +27,7 @@ import AccountApp from "components/AccountApp";
 import CheckoutApp from "components/CheckoutApp";
 import CompleteLocalApp from "components/CompleteLocalApp";
 
-import ItemFilterApp from "components/ItemDisplayApp/ItemFilterApp";
+import SubmitButton from "lib/SubmitButton";
 
 import styles from "main/app.scss";
 
@@ -194,13 +194,29 @@ class IndexApp extends React.Component {
   
   constructor(props) {
     super(props);
+    
+    this.state = {
+      isSubmitting: false
+    };
   }
+  
+  _handleSubmit = () => {
+    this.setState({
+      isSubmitting: true
+    });
+  };
   
   render() {
     
     return (
       <div>
-        <ItemFilterApp />
+        <SubmitButton
+          theme="black"
+          handleSubmit={this._handleSubmit}
+          isSubmitting={this.state.isSubmitting}
+          submitText="submitting"
+          block
+        >Submit</SubmitButton>
         <div>
           <p>My daughter made drawings with the pens you sent,
   line drawings that suggest the things they represent,

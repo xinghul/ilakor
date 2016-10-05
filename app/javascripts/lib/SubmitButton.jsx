@@ -1,13 +1,15 @@
-"use strict";
+import React from "react";
+import _ from "lodash";
 
-import React from "react"
-import _ from "lodash"
+import LoadSpinner from "lib/LoadSpinner";
+import GhostButton from "lib/GhostButton";
 
-import LoadSpinner from "lib/LoadSpinner"
-import GhostButton from "lib/GhostButton"
+import styles from "lib/SubmitButton.scss";
 
-import styles from "lib/SubmitButton.scss"
-
+/**
+ * @class
+ * @extends {React.Component}
+ */
 export default class SubmitButton extends React.Component {
   
   /**
@@ -37,9 +39,7 @@ export default class SubmitButton extends React.Component {
         className={styles.submitButton} 
         bsSize="large" 
       >
-        <div hidden={!this.props.isSubmitting} className={styles.spinner}>
-          <LoadSpinner text={this.props.submitText} />
-        </div>
+        <LoadSpinner className={styles.spinner} size={40} hidden={!this.props.isSubmitting} text={this.props.submitText} />
         <div hidden={this.props.isSubmitting}>
           {this.props.children}
         </div>
@@ -57,5 +57,5 @@ SubmitButton.propTypes = {
 SubmitButton.defaultProps = {
   isSubmitting: false,
   submitText: "",
-  handleSubmit: function() {}
+  handleSubmit: () => {}
 };

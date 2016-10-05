@@ -5,7 +5,7 @@ import ItemDisplayStore from "stores/ItemDisplayStore";
 import ItemDisplayAction from "actions/ItemDisplayAction";
 import ShoppingCartAction from "actions/ShoppingCartAction";
 
-import SonicLoader from "lib/SonicLoader";
+import LoadSpinner from "lib/LoadSpinner";
 
 import ItemDisplayGrid from "./ItemDisplayApp/ItemDisplayGrid";
 import ItemDetailModal from "./ItemDisplayApp/ItemDetailModal";
@@ -216,7 +216,7 @@ export default class ItemDisplayApp extends React.Component {
             items={items} 
             handleItemClick={this._onItemClick}
           />
-          <SonicLoader hidden={!isLoading} />
+          <LoadSpinner hidden={!isLoading} />
         </div>
       </div>
     );
