@@ -1,11 +1,13 @@
-"use strict"
+import React from "react";
+import _ from "lodash";
+import { Button } from "react-bootstrap";
 
-import React from "react"
-import _ from "lodash"
-import { Button } from "react-bootstrap"
+import styles from "lib/GhostButton.scss";
 
-import styles from "lib/GhostButton.scss"
-
+/**
+ * @class
+ * @extends {React.Component}
+ */
 export default class GhostButton extends React.Component {
   
   /**

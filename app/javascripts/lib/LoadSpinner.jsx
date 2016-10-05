@@ -107,7 +107,7 @@ LoadSpinner.propTypes = {
 
 LoadSpinner.defaultProps = {
   size: 100,
-  fill: "gray",
+  fill: "#00b2ff",
   hidden: false,
   text: ""
 };

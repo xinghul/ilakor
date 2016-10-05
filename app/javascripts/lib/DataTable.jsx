@@ -1,17 +1,15 @@
-"use strict"
+import React from "react";
+import { Table, Column, Cell } from "fixed-data-table";
+import _ from "lodash";
+import invariant from "invariant";
 
-import React from "react"
-import { Table, Column, Cell } from "fixed-data-table"
-import _ from "lodash"
-import invariant from "invariant"
+import SortableHeaderCell from "./DataTable/Cell/SortableHeaderCell";
+import TableColumnConfig from "./DataTable/TableColumnConfig";
+import SortTypes from "./DataTable/SortTypes";
 
-import SortableHeaderCell from "./DataTable/Cell/SortableHeaderCell"
-import TableColumnConfig from "./DataTable/TableColumnConfig"
-import SortTypes from "./DataTable/SortTypes"
+import defaultStyles from "fixed-data-table/dist/fixed-data-table.min.css";
 
-import defaultStyles from "fixed-data-table/dist/fixed-data-table.min.css"
-
-import styles from "lib/DataTable.scss"
+import styles from "lib/DataTable.scss";
 
 const MIN_COLUMN_WIDTH = 10
 ,     ROW_HEIGHT = 30
