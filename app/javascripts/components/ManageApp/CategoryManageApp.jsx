@@ -3,7 +3,7 @@ import _ from "lodash";
 import React from "react";
 import { Row, Col } from "react-bootstrap";
 
-import SimpleTable from "lib/SimpleTable";
+import DataTable from "lib/DataTable";
 
 import AddCategoryForm from "./CategoryManageApp/AddCategoryForm";
 
@@ -11,6 +11,12 @@ import CategoryManageAction from "actions/item/CategoryManageAction";
 import CategoryManageStore from "stores/item/CategoryManageStore";
 
 import styles from "components/ManageApp/CategoryManageApp.scss";
+
+// categories table key to header
+const columnKeyToHeader = {
+  "_id": "Id",
+  "name": "Name"
+};
 
 /**
  * Gets the new state from subscribed stores.
@@ -36,7 +42,9 @@ export default class CategoryManageApp extends React.Component {
     super(props);
     
     this.state = {
-      categories: CategoryManageStore.getCategories()
+      categories: CategoryManageStore.getCategories(),
+      
+      selectedData: null
     };
   }
   
@@ -65,9 +73,24 @@ export default class CategoryManageApp extends React.Component {
   };
   
   /**
+   * @private
+   * Handler for when a row is selected.
+   *
+   * @param {Object} selectedData the selected data.
+   */
+  _onRowSelect = (selectedData) => {
+    
+    this.setState({
+      selectedData: selectedData
+    });
+  };
+  
+  /**
    * @inheritdoc
    */
   render() {
+    
+    const { categories } = this.state;
 
     return (
       <div className={styles.categoryManageApp}>
@@ -76,11 +99,10 @@ export default class CategoryManageApp extends React.Component {
             <AddCategoryForm />
           </Col>
           <Col xs={12} md={6}>
-            <SimpleTable 
-              store={CategoryManageStore}
-              data={this.state.categories} 
-              title="Categories"
-              removeHandler={CategoryManageAction.removeCategory}
+            <DataTable
+              data={categories} 
+              columnKeyToHeader={columnKeyToHeader} 
+              onRowSelect={this._onRowSelect}
             />
           </Col>
         </Row>

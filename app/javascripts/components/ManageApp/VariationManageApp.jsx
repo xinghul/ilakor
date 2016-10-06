@@ -3,7 +3,6 @@ import _ from "lodash";
 import React from "react";
 import { Row, Col } from "react-bootstrap";
 
-import SimpleTable from "lib/SimpleTable";
 import DataTable from "lib/DataTable";
 import Select from "lib/Select";
 

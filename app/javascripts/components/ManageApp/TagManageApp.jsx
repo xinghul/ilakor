@@ -3,7 +3,7 @@ import _ from "lodash";
 import React from "react";
 import { Row, Col } from "react-bootstrap";
 
-import SimpleTable from "lib/SimpleTable";
+import DataTable from "lib/DataTable";
 
 import AddTagForm from "./TagManageApp/AddTagForm";
 
@@ -11,6 +11,12 @@ import TagManageAction from "actions/item/TagManageAction";
 import TagManageStore from "stores/item/TagManageStore";
 
 import styles from "components/ManageApp/TagManageApp.scss";
+
+// tags table key to header
+const columnKeyToHeader = {
+  "_id": "Id",
+  "name": "Name"
+};
 
 /**
  * Gets the new state from subscribed stores.
@@ -36,7 +42,9 @@ export default class TagManageApp extends React.Component {
     super(props);
     
     this.state = {
-      tags: TagManageStore.getTags()
+      tags: TagManageStore.getTags(),
+      
+      selectedData: null
     };
   }
   
@@ -65,9 +73,24 @@ export default class TagManageApp extends React.Component {
   };
   
   /**
+   * @private
+   * Handler for when a row is selected.
+   *
+   * @param {Object} selectedData the selected data.
+   */
+  _onRowSelect = (selectedData) => {
+    
+    this.setState({
+      selectedData: selectedData
+    });
+  };
+  
+  /**
    * @inheritdoc
    */
   render() {
+    
+    const { tags } = this.state;
 
     return (
       <div className={styles.tagManageApp}>
@@ -76,11 +99,10 @@ export default class TagManageApp extends React.Component {
             <AddTagForm />
           </Col>
           <Col xs={12} md={6}>
-            <SimpleTable 
-              store={TagManageStore}
-              data={this.state.tags} 
-              title="Tags"
-              removeHandler={TagManageAction.removeTag}
+            <DataTable
+              data={tags} 
+              columnKeyToHeader={columnKeyToHeader} 
+              onRowSelect={this._onRowSelect}
             />
           </Col>
         </Row>

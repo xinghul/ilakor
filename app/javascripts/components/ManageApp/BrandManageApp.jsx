@@ -3,7 +3,7 @@ import _ from "lodash";
 import React from "react";
 import { Row, Col } from "react-bootstrap";
 
-import SimpleTable from "lib/SimpleTable";
+import DataTable from "lib/DataTable";
 
 import AddBrandForm from "./BrandManageApp/AddBrandForm";
 
@@ -11,6 +11,12 @@ import BrandManageAction from "actions/item/BrandManageAction";
 import BrandManageStore from "stores/item/BrandManageStore";
 
 import styles from "components/ManageApp/BrandManageApp.scss";
+
+// brands table key to header
+const columnKeyToHeader = {
+  "_id": "Id",
+  "name": "Name"
+};
 
 /**
  * Gets the new state from subscribed stores.
@@ -35,7 +41,9 @@ export default class BrandManageApp extends React.Component {
     super(props);
     
     this.state = {
-      brands: BrandManageStore.getBrands()
+      brands: BrandManageStore.getBrands(),
+      
+      selectedData: null
     };
   }
   
@@ -64,9 +72,24 @@ export default class BrandManageApp extends React.Component {
   };
   
   /**
+   * @private
+   * Handler for when a row is selected.
+   *
+   * @param {Object} selectedData the selected data.
+   */
+  _onRowSelect = (selectedData) => {
+    
+    this.setState({
+      selectedData: selectedData
+    });
+  };
+  
+  /**
    * @inheritdoc
    */
   render() {
+    
+    const { brands } = this.state;
 
     return (
       <div className={styles.brandManageApp}>
@@ -75,11 +98,10 @@ export default class BrandManageApp extends React.Component {
             <AddBrandForm />
           </Col>
           <Col xs={12} md={6}>
-            <SimpleTable 
-              store={BrandManageStore}
-              data={this.state.brands} 
-              title="Brands"
-              removeHandler={BrandManageAction.removeBrand}
+            <DataTable
+              data={brands} 
+              columnKeyToHeader={columnKeyToHeader} 
+              onRowSelect={this._onRowSelect}
             />
           </Col>
         </Row>
