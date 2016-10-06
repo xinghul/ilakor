@@ -1,12 +1,12 @@
 import React from "react";
 import _ from "lodash";
+import Numeral from "numeral";
 import { hashHistory } from "react-router";
 
 import { Glyphicon, OverlayTrigger, Popover, MenuItem } from "react-bootstrap";
 import { Image, SplitButton } from "react-bootstrap";
 
 import CheckoutApp from "components/CheckoutApp";
-import ItemUtil from "utils/ItemUtil";
 
 import ShoppingCartStore from "stores/ShoppingCartStore";
 import AuthStore from "stores/AuthStore";
@@ -128,7 +128,7 @@ function _createCartItem(itemInfo) {
         </div>
         <div style={priceCountStyle}>
           <span>
-            {ItemUtil.createPriceJsx(itemInfo.variation.price)}
+            {Numeral(itemInfo.variation.price).format("$0,0.00")}
           </span>
           <span style={countStyle}>
             <SplitButton 
@@ -247,7 +247,7 @@ export default class ShoppingCartApp extends React.Component {
     return (
       <Popover id="shoppingCartPopover" title="Shopping cart">
         {displayItems}
-        <div style={priceStyle}>Total: {ItemUtil.createPriceJsx(totalPrice)}</div>
+        <div style={priceStyle}>Total: {Numeral(totalPrice).format("$0,0.00")}</div>
         <div style={buttonGroupStyle}>
           <GhostButton style={clearCartButtonStyle} theme="black" onClick={_onClearCart}>Clear cart</GhostButton>
           <GhostButton disabled={notLoggedIn} theme="warning" onClick={_onCheckoutClick}>Checkout</GhostButton>

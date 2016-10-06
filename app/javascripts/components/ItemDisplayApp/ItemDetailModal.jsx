@@ -9,8 +9,6 @@ import SingleRangeSlider from "lib/SingleRangeSlider";
 import Select from "lib/Select";
 import Input from "lib/Input";
 
-import ItemUtil from "utils/ItemUtil";
-
 import ShoppingCartAction from "actions/ShoppingCartAction";
 
 import styles from "components/ItemDisplayApp/ItemDetailModal.scss";

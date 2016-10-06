@@ -1,11 +1,11 @@
 import React from "react";
+import _ from "lodash";
 import { Image, Glyphicon } from "react-bootstrap";
+import Numeral from "numeral";
 
 import GhostButton from "lib/GhostButton";
 
 import styles from "components/ItemDisplayApp/BaseItem.scss";
-
-import ItemUtil from "utils/ItemUtil";
 
 /**
  * @class
@@ -20,6 +20,8 @@ export default class BaseItem extends React.Component {
     super(props);
     
     this.state = {
+      outOfStock: false,
+      
       itemPrice: 0,
       imageLoaded: false,
       bannerBottom: "-80px"
@@ -33,7 +35,8 @@ export default class BaseItem extends React.Component {
     
     const { variations } = props.item;
     
-    let itemPrice = Number.MAX_SAFE_INTEGER;
+    let itemPrice = Number.MAX_SAFE_INTEGER
+    ,   outOfStock = false;
     
     _.forEach(variations, (variation) => {
       if (variation.price < itemPrice) {
@@ -43,10 +46,12 @@ export default class BaseItem extends React.Component {
     
     if (itemPrice === Number.MAX_SAFE_INTEGER) {
       itemPrice = 0;
+      outOfStock = true;
     }
 
     this.setState({
-      itemPrice
+      itemPrice,
+      outOfStock
     });
     
   }
@@ -108,8 +113,9 @@ export default class BaseItem extends React.Component {
    * @return {JSX}        
    */
   _createBannerJsx() {
+    
     const { item } = this.props;
-    const { itemPrice } = this.state;
+    const { itemPrice, outOfStock } = this.state;
     
     let bannerStyle = {
       bottom: this.state.bannerBottom
@@ -117,8 +123,15 @@ export default class BaseItem extends React.Component {
     
     return (
       <div style={bannerStyle} className={styles.baseBanner}>
-        <div className={styles.itemName}>{item.name}</div>
-        <div className={styles.itemPrice}>{ItemUtil.createPriceJsx(itemPrice)}</div>
+        <div className={styles.itemName}>{_.capitalize(item.name)}</div>
+        {do {
+          if (outOfStock) {
+            <div className={styles.itemPrice}>out of stock</div>;
+          } else {
+            <div className={styles.itemPrice}>from <span className={styles.price}>{Numeral(itemPrice).format("$0,0.00")}</span></div>;
+          }
+        }}
+        
       </div>      
     );
   }
@@ -147,6 +160,14 @@ export default class BaseItem extends React.Component {
    * Handler for when the item is clicked.
    */
   _onItemClick = () => {
+    
+    const { outOfStock } = this.state;
+    
+    // if it's out of stock, do nothing
+    if (outOfStock) {
+      return;
+    }
+    
     this.props.handleItemClick(this.props.item);
   };
   

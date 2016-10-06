@@ -1,13 +1,12 @@
 import React from "react";
 import _ from "lodash";
+import Numeral from "numeral";
 import invariant from "invariant";
 import { hashHistory } from "react-router";
 
 import { Glyphicon } from "react-bootstrap";
 
 import styles from "components/CheckoutApp.scss";
-
-import ItemUtil from "utils/ItemUtil";
 
 import PaymentApp from "./CheckoutApp/PaymentApp";
 import SubmitButton from "lib/SubmitButton";
@@ -122,7 +121,7 @@ export default class CheckoutApp extends React.Component {
     
     let items = this.state.items
     ,   itemPriceJsx = []
-    ,   subTotle = this.state.totalPrice;
+    ,   subTotal = this.state.totalPrice;
     
     itemPriceJsx = _.map(items, (itemInfo) => {
       let priceForVariation = itemInfo.variation.price * itemInfo.count;
@@ -130,7 +129,7 @@ export default class CheckoutApp extends React.Component {
       return (
         <div key={itemInfo.variation._id} className={styles.summaryItem}>
           <span className={styles.labelStyle}>{priceForVariation} {itemInfo.item.name}</span>
-          <span className={styles.priceStyle}>{ItemUtil.createPriceJsx(priceForVariation)}</span>
+          <span className={styles.priceStyle}>{Numeral(priceForVariation).format("$0,0.00")}</span>
         </div>
       );
     });
@@ -138,8 +137,8 @@ export default class CheckoutApp extends React.Component {
     // hard coded for now
     let discount = 0
     ,   shipping = 7
-    ,   tax = subTotle * 0.08
-    ,   totle = subTotle - discount + shipping + tax;
+    ,   tax = subTotal * 0.08
+    ,   total = subTotal - discount + shipping + tax;
     
     return (
       <div className={styles.summarySection}>
@@ -149,23 +148,23 @@ export default class CheckoutApp extends React.Component {
         {itemPriceJsx}
         <div className={styles.summaryItem}>
           <span className={styles.labelStyle}>Discount</span>
-          <span className={styles.priceStyle}>{ItemUtil.createPriceJsx(discount)}</span>
+          <span className={styles.priceStyle}>{Numeral(discount).format("$0,0.00")}</span>
         </div>
         <div className={styles.summaryItem}>
           <span className={styles.labelStyle}>Subtotal</span>
-          <span className={styles.priceStyle}>{ItemUtil.createPriceJsx(subTotle)}</span>
+          <span className={styles.priceStyle}>{Numeral(subTotal).format("$0,0.00")}</span>
         </div>
         <div className={styles.summaryItem}>
           <span className={styles.labelStyle}>Shipping</span>
-          <span className={styles.priceStyle}>{ItemUtil.createPriceJsx(shipping)}</span>
+          <span className={styles.priceStyle}>{Numeral(shipping).format("$0,0.00")}</span>
         </div>
         <div className={styles.summaryItem}>
           <span className={styles.labelStyle}>Tax</span>
-          <span className={styles.priceStyle}>{ItemUtil.createPriceJsx(tax)}</span>
+          <span className={styles.priceStyle}>{Numeral(tax).format("$0,0.00")}</span>
         </div>
         <div className={styles.totalPrice}>
           <span>Total</span>
-          <span className={styles.priceStyle}>{ItemUtil.createPriceJsx(totle)}</span>
+          <span className={styles.priceStyle}>{Numeral(total).format("$0,0.00")}</span>
         </div>
       </div>
     );

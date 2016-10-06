@@ -1,6 +1,5 @@
 import React from "react";
 import { findDOMNode } from "react-dom";
-import Dimensions from "react-dimensions";
 import { Table, Column, Cell } from "fixed-data-table";
 import _ from "lodash";
 import invariant from "invariant";
