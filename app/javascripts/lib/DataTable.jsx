@@ -1,4 +1,6 @@
 import React from "react";
+import { findDOMNode } from "react-dom";
+import Dimensions from "react-dimensions";
 import { Table, Column, Cell } from "fixed-data-table";
 import _ from "lodash";
 import invariant from "invariant";
@@ -12,8 +14,53 @@ import defaultStyles from "fixed-data-table/dist/fixed-data-table.min.css";
 import styles from "lib/DataTable.scss";
 
 const MIN_COLUMN_WIDTH = 10
-,     ROW_HEIGHT = 30
+,     ROW_HEIGHT = 42
 ,     SCROLL_BAR_HEIGHT = 17;
+
+/**
+ * Returns value in object with key contains dot.
+ * 
+ * @param  {Object} obj the given object
+ * @param  {String} rawKey the key.
+ * 
+ * @return {String}
+ */
+function getValueByKey(obj, rawKey) {
+  
+    rawKey = rawKey.replace(/\[(\w+)\]/g, '.$1'); // convert indexes to properties
+    rawKey = rawKey.replace(/^\./, '');           // strip a leading dot
+    
+    let keys = rawKey.split('.');
+    
+    for (let key of keys) {
+      if (key in obj) {
+        obj = obj[key];
+      } else {
+        return;
+      }
+    }
+    
+    return obj;
+}
+
+/**
+ * Returns readable value based on given raw input.
+ * 
+ * @param  {Any} value the given raw input.
+ * 
+ * @return {String}
+ */
+function readableValue(value) {
+  
+  if (_.isBoolean(value)) {
+    return value ? "Yes" : "No";
+  } else if (_.isObject(value)) {
+    return "";
+  }
+  
+  // treat as string
+  return value;
+}
 
 /**
  * @class
@@ -132,8 +179,10 @@ export default class DataTable extends React.Component {
     
     // set the initial size
     this.state = {
-      tableWidth: 1000,
+      tableWidth: window.innerWidth,
       tableHeight: 500,
+      
+      selectedRowIndex: null,
       
       sortedDataList: createSortedDataList([], {}),      
       showColumn: showColumn,
@@ -195,11 +244,42 @@ export default class DataTable extends React.Component {
    * Updates the table width based on window's size.
    */
   _updateTableWidth = () => {
+    
+    let node = findDOMNode(this);
 
     this.setState({
-      tableWidth: window.innerWidth - 20
+      tableWidth: node.offsetWidth || window.innerWidth - 30
     });
     
+  };
+  
+  /**
+   * @private
+   * Handler for when a row is clicked.
+   *
+   * @param {Object} evt the event object.
+   * @param {Number} rowIndex the clicked row index.
+   */
+  _onRowClick = (evt, rowIndex) => {
+    
+    const { sortedDataList } = this.state;
+    let { selectedRowIndex } = this.state;
+    let selectedData = null;
+    
+    // de-select if it's already selected
+    if (selectedRowIndex === rowIndex) {
+      selectedRowIndex = null;
+    } else {
+      selectedRowIndex = rowIndex;
+      
+      selectedData = sortedDataList.getObjectAt(selectedRowIndex);
+    }
+    
+    this.setState({
+      selectedRowIndex
+    });
+
+    this.props.onRowSelect(selectedData);
   };
   
   /**
@@ -235,9 +315,11 @@ export default class DataTable extends React.Component {
       [columnKey]: sortDir,
     };
     
+    // also reset selected row index
     this.setState({
       colSortDirs: newColSortDirs,
-      sortedDataList: createSortedDataList(this.props.data, newColSortDirs)
+      sortedDataList: createSortedDataList(this.props.data, newColSortDirs),
+      selectedRowIndex: null
     });
     
   };
@@ -265,10 +347,11 @@ export default class DataTable extends React.Component {
    */
   render() {
     
-    let classNames = [ styles.dataTable ]
-    ,   { className, columnKeyToHeader } = this.props
-    ,   { tableWidth, tableHeight, columnWidths, colSortDirs, showColumn, sortedDataList } = this.state
-    ,   columnKeys = this.columnKeys;
+    const { className, columnKeyToHeader } = this.props;
+    const { tableWidth, tableHeight, columnWidths, colSortDirs, showColumn, sortedDataList, selectedRowIndex } = this.state;
+    const { columnKeys } = this;
+
+    let classNames = [ styles.dataTable ];
     
     if (!_.isEmpty(className)) {
       classNames.push(className);
@@ -285,6 +368,7 @@ export default class DataTable extends React.Component {
         <Table
           rowHeight={ROW_HEIGHT}
           rowsCount={sortedDataList.getSize()}
+          onRowClick={this._onRowClick}
           onColumnResizeEndCallback={this._onColumnResizeEndCallback}
           isColumnResizing={false}
           width={tableWidth}
@@ -308,18 +392,17 @@ export default class DataTable extends React.Component {
                     sortDir={colSortDirs[columnKey]}
                   >{columnKeyToHeader[columnKey]}</SortableHeaderCell>
                 }
-                cell={({rowIndex, ...props}) => (
-                  <Cell {...props}>
-                    {do {
-                      // render empty string if it's an object
-                      if (_.isObject(sortedDataList.getObjectAt(rowIndex)[columnKey])) {
-                        ""
-                      } else {
-                        sortedDataList.getObjectAt(rowIndex)[columnKey]
-                      }
-                    }}
-                  </Cell>
-                )}
+                cell={({rowIndex, ...props}) => {
+                  let obj = sortedDataList.getObjectAt(rowIndex)
+                  ,   value = getValueByKey(obj, columnKey);
+
+                  return (
+                    <Cell {...props} className={rowIndex === selectedRowIndex ? styles.selectedCell : ""}>
+                      {readableValue(value)}
+                    </Cell>
+                  );
+                  
+                }}
                 width={columnWidths[columnKey]}
                 flexGrow={1}
                 isResizable={true}
@@ -336,5 +419,11 @@ export default class DataTable extends React.Component {
 
 DataTable.propTypes = {
   data: React.PropTypes.arrayOf(React.PropTypes.object).isRequired,
-  columnKeyToHeader: React.PropTypes.object.isRequired
+  columnKeyToHeader: React.PropTypes.object.isRequired,
+  
+  onRowSelect: React.PropTypes.func
+};
+
+DataTable.defaultProps = {
+  onRowSelect: () => {}
 };

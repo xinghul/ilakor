@@ -1,20 +1,24 @@
 .dataTable {
+  margin-bottom: 20px;
   
-  font-family: Helvetica;
-  font-size: .75em;
-  line-height: 2.5;
-  
+  :global(.public_fixedDataTable_main) {
+    margin: auto;
+    
+    border: 1px solid rgba(0, 0, 0, 0.15);
+    border-radius: 2px;
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.12);
+  }
+
   :global(.public_fixedDataTableCell_cellContent) {
     padding: 0 7px;
     white-space: nowrap;
   }
   
   :global(.public_fixedDataTable_header .public_fixedDataTableCell_cellContent) {
+    line-height: 42px;
+    
     background-image: none;
     background-color: #fafafa;
-    
-    font-family: HelveticaNeue;
-    font-weight: normal;
     
     cursor: pointer;
     
@@ -23,6 +27,10 @@
     &:hover {
       background-color: #ededed;
     }
+  }
+  
+  .selectedCell {
+    background-color: rgba(65, 167, 255, 0.5);
   }
   
 }

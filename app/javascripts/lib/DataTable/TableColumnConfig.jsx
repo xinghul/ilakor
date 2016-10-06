@@ -1,14 +1,16 @@
-"use strict"
-
-import React from "react"
-import { Dropdown, MenuItem } from "react-bootstrap"
+import React from "react";
+import { Dropdown, MenuItem } from "react-bootstrap";
 import _ from "lodash"
 
-import Icon from "lib/Icon"
-import Checkbox from "lib/Checkbox"
+import Icon from "lib/Icon";
+import Checkbox from "lib/Checkbox";
 
-import styles from "lib/DataTable/TableColumnConfig.scss"
+import styles from "lib/DataTable/TableColumnConfig.scss";
 
+/**
+ * @class
+ * @extends {React.Component}
+ */
 class DropdownToggle extends React.Component {
   
   /**
@@ -45,6 +47,10 @@ class DropdownToggle extends React.Component {
   }
 }
 
+/**
+ * @class
+ * @extends {React.Component}
+ */
 class DropdownMenu extends React.Component {
   
   /**
@@ -68,6 +74,10 @@ class DropdownMenu extends React.Component {
   }
 }
 
+/**
+ * @class
+ * @extends {React.Component}
+ */
 export default class TableColumnConfig extends React.Component {
   
   /**
@@ -118,11 +128,10 @@ export default class TableColumnConfig extends React.Component {
               return (
                 <Checkbox 
                   key={columnKey}
-                  checked={showColumn[columnKey]}
+                  label={columnKeyToHeader[columnKey]}
+                  defaultValue={showColumn[columnKey]}
                   onChange={this._onCheckboxChange.bind(null, columnKey)}
-                >
-                  {columnKeyToHeader[columnKey]}
-                </Checkbox>
+                />
               );
               
             })}

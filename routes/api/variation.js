@@ -93,6 +93,7 @@ let VariationApi = {
     return new Promise((resolve, reject) => {
       
       Variation.findById(ObjectId(id))
+        .populate("item")
         .then(resolve)
         .catch(reject);
       
@@ -119,6 +120,7 @@ let VariationApi = {
     return new Promise((resolve, reject) => {
 
       Variation.find(query)
+        .populate("item")
         .exec()
         .then(resolve)
         .catch(reject);

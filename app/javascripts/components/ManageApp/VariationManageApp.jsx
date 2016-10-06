@@ -4,6 +4,7 @@ import React from "react";
 import { Row, Col } from "react-bootstrap";
 
 import SimpleTable from "lib/SimpleTable";
+import DataTable from "lib/DataTable";
 import Select from "lib/Select";
 
 import AddVariationForm from "./VariationManageApp/AddVariationForm";
@@ -14,6 +15,16 @@ import VariationManageStore from "stores/item/VariationManageStore";
 import ItemManageStore from "stores/item/ItemManageStore";
 
 import styles from "components/ManageApp/VariationManageApp.scss";
+
+// variations table key to header
+const columnKeyToHeader = {
+  "_id": "Id",
+  "item.name": "Item",
+  "outOfStock": "Out of stock",
+  "price": "Price",
+  "info.flavor": "Flavor",
+  "info.size": "Size"
+};
 
 /**
  * Creates the options for Select component.
@@ -59,7 +70,9 @@ export default class VariationManageApp extends React.Component {
     
     this.state = {
       variations: VariationManageStore.getVariations(),
-      items: ItemManageStore.getItems()
+      items: ItemManageStore.getItems(),
+      
+      selectedData: null
     };
   }
   
@@ -91,6 +104,19 @@ export default class VariationManageApp extends React.Component {
   
   /**
    * @private
+   * Handler for when a row is selected.
+   *
+   * @param {Object} selectedData the selected data.
+   */
+  _onRowSelect = (selectedData) => {
+    
+    this.setState({
+      selectedData: selectedData
+    });
+  };
+  
+  /**
+   * @private
    * Handler for when selected item has changed, sends a new request to fetch the variations associated with the new item.
    * 
    * @param  {Object} newItem the new selected item.
@@ -106,7 +132,9 @@ export default class VariationManageApp extends React.Component {
    */
   render() {
     
-    let selectOptions = createSelectOptions(this.state.items);
+    const { variations, items } = this.state;
+    
+    let selectOptions = createSelectOptions(items);
 
     return (
       <div className={styles.variationManageApp}>
@@ -124,11 +152,10 @@ export default class VariationManageApp extends React.Component {
             />
           </Col>
           <Col xs={12} md={6}>
-            <SimpleTable 
-              store={VariationManageStore}
-              data={this.state.variations} 
-              title="Variations"
-              removeHandler={VariationManageAction.removeVariation}
+            <DataTable
+              data={variations} 
+              columnKeyToHeader={columnKeyToHeader} 
+              onRowSelect={this._onRowSelect}
             />
           </Col>
         </Row>

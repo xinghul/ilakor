@@ -1,13 +1,11 @@
-"use strict";
+import React from "react";
+import { Cell } from "fixed-data-table";
 
-import React from "react"
-import { Cell } from "fixed-data-table"
+import Icon from "lib/Icon";
 
-import Icon from "lib/Icon"
+import styles from "lib/DataTable/Cell/SortableHeaderCell.scss";
 
-import styles from "lib/DataTable/Cell/SortableHeaderCell.scss"
-
-import SortTypes from "../SortTypes"
+import SortTypes from "../SortTypes";
 
 /**
  * Returns the reversed sort direction.
@@ -20,6 +18,10 @@ function reverseSortDirection(sortDir) {
   return sortDir === SortTypes.DESC ? SortTypes.ASC : SortTypes.DESC;
 }
 
+/**
+ * @class
+ * @extends {React.Component}
+ */
 export default class SortableHeaderCell extends React.Component {
   
   /**
