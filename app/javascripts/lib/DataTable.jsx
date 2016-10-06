@@ -55,7 +55,19 @@ function readableValue(value) {
   if (_.isBoolean(value)) {
     return value ? "Yes" : "No";
   } else if (_.isObject(value)) {
+    
+    // one last try
+    if (_.isString(value.name)) {
+      return value.name;
+    }
+    
     return "";
+  } else if (_.isArray(value)) {
+    let result = _.map(value, (obj) => {
+      return readableValue(obj);
+    });
+    
+    return result.join(", ");
   }
   
   // treat as string
@@ -248,7 +260,7 @@ export default class DataTable extends React.Component {
     let node = findDOMNode(this);
 
     this.setState({
-      tableWidth: node.offsetWidth || window.innerWidth - 30
+      tableWidth: (node.offsetWidth || window.innerWidth) - 30
     });
     
   };
