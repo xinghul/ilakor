@@ -25,7 +25,8 @@ function getStateFromStores() {
     items: ItemDisplayStore.getItems(),
     filters: ItemDisplayStore.getFilters(),
     hasMoreItems: ItemDisplayStore.hasMoreItems(),
-    filterCollapsed: ItemDisplayStore.getFilterCollapsed()
+    filterCollapsed: ItemDisplayStore.getFilterCollapsed(),
+    isLoading: ItemDisplayStore.getIsLoading()
   };
 }
 
@@ -50,9 +51,9 @@ export default class ItemDisplayApp extends React.Component {
       filters: ItemDisplayStore.getFilters(),
       hasMoreItems: ItemDisplayStore.hasMoreItems(), 
       filterCollapsed: ItemDisplayStore.getFilterCollapsed(),
+      isLoading: ItemDisplayStore.getIsLoading(),
       
       selectedItem: {},
-      isLoading: false,
       isItemsAdded: true
     };
   }
@@ -63,7 +64,7 @@ export default class ItemDisplayApp extends React.Component {
   componentDidMount() {
     ItemDisplayStore.subscribe(this._onChange);
     
-    ItemDisplayAction.getItems();
+    ItemDisplayAction.getItems(true);
     
     // window.addEventListener("scroll", this._checkReachBottom);
     // 

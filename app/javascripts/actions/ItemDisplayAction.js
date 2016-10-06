@@ -17,12 +17,22 @@ let ItemDisplayAction = {
   /**
    * Gets items with given skip and limit.
    *
+   * @param {Boolean} setIsLoading whether to set the isLoading flag.
+   *
    * @return {Promise}
    */
-  getItems: function() {
+  getItems: function(setIsLoading) {
     
     let skip = _skip
     ,   limit = LOAD_SIZE;
+    
+    if (setIsLoading) {
+      // mark as loading
+      AppDispatcher.handleAction({
+        actionType: ItemDisplayConstants.SETS_IS_LOADING,
+        isLoading: true
+      });
+    }    
     
     return new Promise((resolve, reject, onCancel) => {
       
@@ -51,6 +61,16 @@ let ItemDisplayAction = {
           invariant(_.isString(message), `logIn(user) expects error.message to be 'string', but gets '${typeof message}'.`);
           
           reject(new Error(message));
+        })
+        .finally(() => {
+          if (setIsLoading) {            
+            
+            AppDispatcher.handleAction({
+              actionType: ItemDisplayConstants.SETS_IS_LOADING,
+              isLoading: false
+            });
+          }
+          
         });
       
       onCancel(() => {

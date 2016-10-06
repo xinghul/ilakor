@@ -15,7 +15,8 @@ const availableFilterTypes = [
 let _items = []
 ,   _filters = {}
 ,   _filterCollapsed = false
-,   _hasMoreItems = true;
+,   _hasMoreItems = true
+,   _isLoading = false;
 
 // initialize applied filters
 _.forEach(availableFilterTypes, (filterType) => {
@@ -27,18 +28,16 @@ let ItemDisplayStore = _.extend({}, EventEmitter.prototype, {
   /**
    * Adds new items to the item list.
    * 
-   * @param  {Array} newItems the new items.
+   * @param  {Array} items the new items.
    */
-  addItems: function(newItems) {
-    invariant(_.isArray(newItems), `addItems(newItems) expects an 'array' as 'newItems', but gets '${typeof newItems}'.`);
+  addItems: function(items) {
+    invariant(_.isArray(items), `addItems(items) expects an 'array' as 'items', but gets '${typeof items}'.`);
     
-    if (newItems.length === 0) {
+    if (items.length === 0) {
       _hasMoreItems = false;
-      
-      return;
     }
     
-    _items = _items.concat(newItems);
+    _items = items;
   },
   
   /**
@@ -162,6 +161,28 @@ let ItemDisplayStore = _.extend({}, EventEmitter.prototype, {
   },
   
   /**
+   * Sets the isLoading flag.
+   * 
+   * @param  {Boolean} isLoading the new isLoading value.
+   */
+  setIsLoading: function(isLoading) {
+    invariant(_.isBoolean(isLoading), `setIsLoading(isLoading) expects a 'boolean' as 'isLoading', but gets '${typeof isLoading}'.`);
+    
+    invariant(_isLoading !== isLoading, `setIsLoading(isLoading) can't be called with same value.`);
+    
+    _isLoading = isLoading;
+  },
+
+  /**
+   * Returns the isLoading flag.
+   * 
+   * @return {Boolean}
+   */
+  getIsLoading: function() {
+    return _isLoading;
+  },  
+  
+  /**
    * Emits the 'change' event.
    */
   emitChange: function() {
@@ -221,6 +242,11 @@ ItemDisplayStore.dispatchToken = AppDispatcher.register((payload) => {
       ItemDisplayStore.setFilterCollapsed(action.collapsed);
       ItemDisplayStore.emitChange();
       break;  
+      
+    case ItemDisplayConstants.SETS_IS_LOADING:
+      ItemDisplayStore.setIsLoading(action.isLoading);
+      ItemDisplayStore.emitChange();
+      break;
       
     default:
       // do nothing
