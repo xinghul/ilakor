@@ -2,8 +2,9 @@ import _ from "lodash";
 import React from "react";
 import { Row, Col } from "react-bootstrap";
 
+import DataTable from "lib/DataTable";
+
 import ItemDetailModal from "./ItemManageApp/ItemDetailModal";
-import ItemListTable from "./ItemManageApp/ItemListTable";
 import AddItemForm from "./ItemManageApp/AddItemForm";
 
 import ItemManageStore from "stores/item/ItemManageStore";
@@ -14,6 +15,15 @@ import TagManageStore from "stores/item/TagManageStore";
 import ItemManageAction from "actions/item/ItemManageAction";
 
 import styles from "components/ManageApp/ItemManageApp.scss";
+
+// brands table key to header
+const columnKeyToHeader = {
+  "_id": "Id",
+  "name": "Name",
+  "brand.name": "Brand",
+  "category.name": "Category"
+};
+
 
 /**
  * Gets the new state from subscribed stores.
@@ -47,7 +57,7 @@ export default class ItemManageApp extends React.Component {
       categories: CategoryManageStore.getCategories(),
       tags: TagManageStore.getTags(),
       
-      selectedItem: {}
+      selectedItem: null
     };
   }
   
@@ -83,13 +93,13 @@ export default class ItemManageApp extends React.Component {
   
   /**
    * @private
-   * Handler for item in the table being clicked.
+   * Handler for item in the table being selected.
    * 
-   * @param  {Object} item the clicked item.
+   * @param  {Object} selectedItem the selected item.
    */
-  _onItemClick = (item) => {
+  _onItemSelect = (selectedItem) => {
     this.setState({
-      selectedItem: item
+      selectedItem
     });
     
     this.refs["itemModal"].showModal();
@@ -100,24 +110,27 @@ export default class ItemManageApp extends React.Component {
    */
   render() {
     
+    const { items, tags, brands, categories, selectedItem } = this.state;
+    
     return (
       <div className={styles.itemManageApp}>
         <ItemDetailModal 
-          item={this.state.selectedItem}
+          item={selectedItem}
           ref="itemModal"
         />
         <Row>
           <Col xs={12} md={6}>
             <AddItemForm 
-              brands={this.state.brands}
-              categories={this.state.categories}
-              tags={this.state.tags} 
+              brands={brands}
+              categories={categories}
+              tags={tags} 
             />
           </Col>
           <Col xs={12} md={6}>
-            <ItemListTable 
-              items={this.state.items} 
-              handleItemClick={this._onItemClick}
+            <DataTable
+              data={items} 
+              columnKeyToHeader={columnKeyToHeader} 
+              onRowSelect={this._onItemSelect}
             />
           </Col>
         </Row>

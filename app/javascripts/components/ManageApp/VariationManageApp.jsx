@@ -110,7 +110,7 @@ export default class VariationManageApp extends React.Component {
   _onRowSelect = (selectedData) => {
     
     this.setState({
-      selectedData: selectedData
+      selectedData
     });
   };
   

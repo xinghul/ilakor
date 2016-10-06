@@ -17,9 +17,9 @@ export default class ItemDetailSection extends React.Component {
   
   _createItemDetailTable() {
     let items = this.props.items;
-    console.log(items);
+
     let tableBody = _.map(items, (itemInfo, index) => {
-      console.log(itemInfo)
+
       return (
         <tr key={_.uniqueId(itemInfo.variation._id)}>
           <td>{index}</td>

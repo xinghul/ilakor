@@ -81,7 +81,7 @@ export default class CategoryManageApp extends React.Component {
   _onRowSelect = (selectedData) => {
     
     this.setState({
-      selectedData: selectedData
+      selectedData
     });
   };
   

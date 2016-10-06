@@ -136,10 +136,17 @@ export default class ItemDetailModal extends React.Component {
    */
   render() {
     
-    let buttonDisabled = this.state.isApplying || this.state.isDeleting;
+    const { item } = this.props;
+    const { showModal, isApplying, isDeleting } = this.state;
+    
+    if (_.isEmpty(item)) {
+      return null;
+    }
+    
+    let buttonDisabled = isApplying || isDeleting;
 
     return (
-      <Modal show={this.state.showModal} onHide={this._onModalClose}>
+      <Modal show={showModal} onHide={this._onModalClose}>
         <Modal.Header closeButton>
           <Modal.Title>Item info</Modal.Title>
         </Modal.Header>
@@ -150,13 +157,13 @@ export default class ItemDetailModal extends React.Component {
           <SubmitButton 
             theme="danger" 
             disabled={buttonDisabled}
-            isSubmitting={this.state.isDeleting}
+            isSubmitting={isDeleting}
             handleSubmit={this._onItemDelete}
           >Delete</SubmitButton>
           <SubmitButton 
             theme="black"
             disabled={buttonDisabled}
-            isSubmitting={this.state.isApplying}
+            isSubmitting={isApplying}
             handleSubmit={this._onItemUpdate}
           >Apply</SubmitButton>  
         </Modal.Footer>
@@ -167,5 +174,9 @@ export default class ItemDetailModal extends React.Component {
 }
 
 ItemDetailModal.propTypes = { 
-  item: React.PropTypes.object.isRequired
+  item: React.PropTypes.object
+};
+
+ItemDetailModal.defaultProps = {
+  item: null
 };

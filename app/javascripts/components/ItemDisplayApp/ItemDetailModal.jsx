@@ -318,5 +318,9 @@ export default class ItemDetailModal extends React.Component {
 }
 
 ItemDetailModal.propTypes = { 
-  item: React.PropTypes.object.isRequired
+  item: React.PropTypes.object
+};
+
+ItemDetailModal.defaultProps = {
+  item: null
 };
