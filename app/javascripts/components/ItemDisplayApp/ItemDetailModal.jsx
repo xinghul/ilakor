@@ -75,7 +75,7 @@ export default class ItemDetailModal extends React.Component {
         }
       })
     });
-
+    
     this.setState({
       variations,
       selectionKeys
@@ -129,8 +129,6 @@ export default class ItemDetailModal extends React.Component {
       variation: selectedVariation
     };
     
-    console.log(itemInfo);
-    
     ShoppingCartAction
     .addToCart(itemInfo)
     .finally(() => {
@@ -144,15 +142,16 @@ export default class ItemDetailModal extends React.Component {
    * Updates the select options based on newly selected value.
    * 
    * @param  {String} key the newly selected key.
-   * @param  {Object} selectedOption the newly selected option.
+   * @param  {String} value the newly selected value.
    */
-  _onSelectionChange = (key, selectedOption) => {
-    let config = this.state.config;
+  _onSelectionChange = (key, value) => {
     
-    if (_.isEmpty(selectedOption)) {
+    let { config } = this.state;
+
+    if (_.isEmpty(value)) {
       delete config[key];      
     } else {
-      config[key] = selectedOption.value;
+      config[key] = value;
     }
     
     this.setState({
@@ -205,7 +204,7 @@ export default class ItemDetailModal extends React.Component {
       let options = createSelectOptions(value);
       
       let defaultValue = _.isEmpty(config[key]) ? null : config[key];
-      
+
       return (
         <Select 
           key={_.uniqueId(key)}
@@ -216,13 +215,6 @@ export default class ItemDetailModal extends React.Component {
           onChange={this._onSelectionChange.bind(this, key)}
         />
       );
-    });
-    
-    let quantityOptions = _.times(10, (count) => {
-      return {
-        label: count,
-        value: count  
-      };
     });
     
     return (

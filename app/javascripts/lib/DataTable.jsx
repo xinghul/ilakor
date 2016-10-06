@@ -54,21 +54,26 @@ function readableValue(value) {
   
   if (_.isBoolean(value)) {
     return value ? "Yes" : "No";
-  } else if (_.isObject(value)) {
-    
-    // one last try
-    if (_.isString(value.name)) {
-      return value.name;
-    }
-    
-    return "";
   } else if (_.isArray(value)) {
     let result = _.map(value, (obj) => {
       return readableValue(obj);
     });
     
     return result.join(", ");
-  }
+  } else if (_.isObject(value)) {
+
+    // try name
+    if (_.isString(value.name)) {
+      return value.name;
+    }
+    
+    // try _id
+    if (_.isString(value._id)) {
+      return value._id;
+    }
+    
+    return "";
+  } 
   
   // treat as string
   return value;
