@@ -1,20 +1,18 @@
-"use strict"
+import React from "react";
+import _ from "lodash";
+import invariant from "invariant";
+import { Nav, NavItem } from "react-bootstrap";
 
-import React from "react"
-import _ from "lodash"
-import invariant from "invariant"
-import { Nav, NavItem } from "react-bootstrap"
+import OrderHistorySection from "./AccountApp/OrderHistorySection";
+import AccountDetailSection from "./AccountApp/AccountDetailSection";
 
-import OrderHistorySection from "./AccountApp/OrderHistorySection"
-import AccountDetailSection from "./AccountApp/AccountDetailSection"
+import SidePanel from "lib/SidePanel";
+import AlertMessage from "lib/AlertMessage";
 
-import SidePanel from "lib/SidePanel"
-import AlertMessage from "lib/AlertMessage"
+import AuthStore from "stores/AuthStore";
+import AuthAction from "actions/AuthAction";
 
-import AuthStore from "stores/AuthStore"
-import AuthAction from "actions/AuthAction"
-
-import styles from "components/AccountApp.scss"
+import styles from "components/AccountApp.scss";
 
 /**
  * Gets the new state from subscribed stores.
@@ -27,6 +25,10 @@ function getStateFromStores() {
   };
 }
 
+/**
+ * @class
+ * @extends {React.Component}
+ */
 export default class AccountApp extends React.Component {
   
   /**
@@ -85,11 +87,12 @@ export default class AccountApp extends React.Component {
   };
   
   /**
+   * @private
    * Creates the jsx for the content when user is not logged in.
    * 
    * @return {JSX}
    */
-  createLoginAreaJsx() {
+  _createLoginAreaJsx() {
     return (
       <AlertMessage className={styles.loginMessage}>
         <a className={styles.loginLink} onClick={this._onLoginClick}>Log in</a> to view account page.
@@ -98,11 +101,12 @@ export default class AccountApp extends React.Component {
   }
   
   /**
+   * @private
    * Creates the jsx for side panel nav.
    * 
    * @return {JSX}
    */
-  createNavJsx() {
+  _createNavJsx() {
     return (
       <SidePanel position="fixed" align="top">
         <Nav bsStyle="pills" stacked activeKey={this.state.selectedNav} onSelect={this._onNavItemSelect}>
@@ -120,7 +124,7 @@ export default class AccountApp extends React.Component {
     
     let mainContent = do {
       if (_.isEmpty(this.state.user)) {
-        this.createLoginAreaJsx();
+        this._createLoginAreaJsx();
       } else if (this.state.selectedNav === 1) {
         <AccountDetailSection user={this.state.user} />;
       } else if (this.state.selectedNav === 2) {
@@ -131,7 +135,7 @@ export default class AccountApp extends React.Component {
     return (
       <div className={styles.accountApp}>
         <div className={styles.navMenu}>
-          {this.createNavJsx()}
+          {this._createNavJsx()}
         </div>
         <div className={styles.mainContent}>
           {mainContent}

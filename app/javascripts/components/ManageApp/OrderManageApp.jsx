@@ -7,7 +7,6 @@ import { Row, Col } from "react-bootstrap";
 import OrderManageStore from "stores/OrderManageStore";
 import OrderAction from "actions/OrderAction";
 
-import GridSection from "lib/GridSection";
 import DataTable from "lib/DataTable";
 
 import OrderDetailModal from "./OrderManageApp/OrderDetailModal";

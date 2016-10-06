@@ -1,19 +1,24 @@
-"use strict"
+import React from "react";
+import _ from "lodash";
+import invariant from "invariant";
 
-import React from "react"
-import _ from "lodash"
-import invariant from "invariant"
-import { Table } from "react-bootstrap"
+import GridSection from "lib/GridSection";
+import LoadSpinner from "lib/LoadSpinner";
+import DataTable from "lib/DataTable";
 
-import GridSection from "lib/GridSection"
-import LoadSpinner from "lib/LoadSpinner"
+import AccountStore from "stores/AccountStore";
 
-import AccountStore from "stores/AccountStore"
+import AccountAction from "actions/AccountAction";
 
-import AccountAction from "actions/AccountAction"
+import styles from "components/AccountApp/OrderHistorySection.scss";
 
-import styles from "components/AccountApp/OrderHistorySection.scss"
-
+// orders table key to header
+const columnKeyToHeader = {
+  "_id": "Id",
+  "created": "Created",
+  "stripe.amount": "Amount",
+  "sent": "Order sent"
+};
 /**
  * Gets the new state from subscribed stores.
  * 
@@ -26,6 +31,10 @@ function getStateFromStores() {
   };
 }
 
+/**
+ * @class
+ * @extends {React.Component}
+ */
 export default class OrderHistorySection extends React.Component {
   
   /**
@@ -62,61 +71,18 @@ export default class OrderHistorySection extends React.Component {
   };
   
   /**
-   * Creates the orders table JSX.
-   * 
-   * @return {JSX}
-   */
-  createOrdersTable() {
-    let orders = this.state.orders
-    ,   tableBody = [];
-    
-    for (let order of orders)
-    {
-      tableBody.push(
-        <tr key={order._id}>
-          <td>{orders.indexOf(order)}</td>
-          <td>{order._id}</td>
-          <td>{order.created}</td>
-          <td>{order.stripe.amount.toString()}</td>
-          <td>{order.sent ? "Yes" : "No"}</td>
-        </tr>
-      );
-    }
-    
-    return (
-      <Table striped bordered hover>
-        <thead>
-          <tr>
-            <th>#</th>
-            <th>Id</th>
-            <th>Created</th>
-            <th>Amount</th>
-            <th>Sent</th>
-          </tr>
-        </thead>
-        <tbody>
-          {tableBody}
-        </tbody>
-      </Table>
-    );
-  }
-  
-  /**
    * @inheritdoc
    */
   render() {
     
-    let orders = this.state.orders;
-    
+    const { orders, isLoading } = this.state;
+
     return (
       <GridSection title="Order history" className={styles.orderHistorySection}>
-        {do {
-          if (this.state.isLoading) {
-            <LoadSpinner className={styles.loadSpinner} />;
-          } else {
-            this.createOrdersTable();
-          }
-        }}
+        <DataTable
+          data={orders} 
+          columnKeyToHeader={columnKeyToHeader} 
+        />
       </GridSection>
     );
   }

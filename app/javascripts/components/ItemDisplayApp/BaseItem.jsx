@@ -184,7 +184,7 @@ export default class BaseItem extends React.Component {
   render() {
     
     const { item } = this.props;
-    console.log(item.category.name)
+
     let style = {
       borderTopColor: categoryToColor[item.category.name] || "gray"
     };
