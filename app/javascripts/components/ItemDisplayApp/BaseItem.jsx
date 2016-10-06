@@ -7,6 +7,13 @@ import GhostButton from "lib/GhostButton";
 
 import styles from "components/ItemDisplayApp/BaseItem.scss";
 
+const categoryToColor = {
+  "protein": "#cb3837",
+  "pre workout": "#f09233",
+  "post workout": "#2a79a7",
+  "creatine": "#00a79d"
+};
+
 /**
  * @class
  * @extends {React.Component}
@@ -39,7 +46,7 @@ export default class BaseItem extends React.Component {
     ,   outOfStock = false;
     
     _.forEach(variations, (variation) => {
-      if (variation.price < itemPrice) {
+      if (!variation.outOfStock && variation.price < itemPrice) {
         itemPrice = variation.price;
       }
     });
@@ -175,9 +182,16 @@ export default class BaseItem extends React.Component {
    * @inheritdoc
    */
   render() {
+    
+    const { item } = this.props;
+    console.log(item.category.name)
+    let style = {
+      borderTopColor: categoryToColor[item.category.name] || "gray"
+    };
 
     return (
-      <div className={styles.baseItem} 
+      <div style={style} 
+        className={styles.baseItem} 
         onMouseEnter={this._onMouseEnter}
         onMouseLeave={this._onMouseLeave}
         onClick={this._onItemClick}>
@@ -197,5 +211,5 @@ BaseItem.propTypes = {
 
 BaseItem.defaultProps = { 
   item: {},
-  handleItemClick: function() {}
+  handleItemClick: () => {}
 };
