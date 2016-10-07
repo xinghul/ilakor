@@ -1,11 +1,9 @@
-"use strict"
+import React from "react";
+import { ButtonGroup } from "react-bootstrap";
 
-import React from "react"
-import { ButtonGroup } from "react-bootstrap"
+import InlineStyleButton from "./InlineStyleButton";
 
-import InlineStyleButton from "./InlineStyleButton"
-
-import styles from "lib/DraftEditor/InlineStyleControl.scss"
+import styles from "lib/DraftEditor/InlineStyleControl.scss";
 
 // supported inline styles
 const INLINE_STYLES = [
@@ -14,6 +12,10 @@ const INLINE_STYLES = [
   "UNDERLINE"
 ];
 
+/**
+ * @class
+ * @extends {React.Component}
+ */
 export default class InlineStyleControl extends React.Component {
   
   /**

@@ -1,12 +1,14 @@
-"use strict"
+import React from "react";
+import _ from "lodash";
 
-import React from "react"
-import _ from "lodash"
+import IconButton from "lib/IconButton";
 
-import IconButton from "lib/IconButton"
+import styles from "lib/DraftEditor/InlineStyleButton.scss";
 
-import styles from "lib/DraftEditor/InlineStyleButton.scss"
-
+/**
+ * @class
+ * @extends {React.Component}
+ */
 export default class InlineStyleButton extends React.Component {
   
   /**

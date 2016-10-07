@@ -1,13 +1,15 @@
-"use strict"
+import React from "react";
+import _ from "lodash";
 
-import React from "react"
-import _ from "lodash"
+import GhostButton from "lib/GhostButton";
+import IconButton from "lib/IconButton";
 
-import GhostButton from "lib/GhostButton"
-import IconButton from "lib/IconButton"
+import styles from "lib/DraftEditor/BlockTypeButton.scss";
 
-import styles from "lib/DraftEditor/BlockTypeButton.scss"
-
+/**
+ * @class
+ * @extends {React.Component}
+ */
 export default class BlockTypeButton extends React.Component {
   
   /**

@@ -1,11 +1,9 @@
-"use strict"
+import React from "react";
+import { ButtonGroup } from "react-bootstrap";
 
-import React from "react"
-import { ButtonGroup } from "react-bootstrap"
+import BlockTypeButton from "./BlockTypeButton";
 
-import BlockTypeButton from "./BlockTypeButton"
-
-import styles from "lib/DraftEditor/BlockTypeControl.scss"
+import styles from "lib/DraftEditor/BlockTypeControl.scss";
 
 // supported block types
 const BLOCK_TYPES = [
@@ -21,6 +19,10 @@ const BLOCK_TYPES = [
   {icon: "code", style: "code-block"},
 ];
 
+/**
+ * @class
+ * @extends {React.Component}
+ */
 export default class BlockTypeControl extends React.Component {
   
   /**
