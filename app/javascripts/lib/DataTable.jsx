@@ -184,9 +184,10 @@ export default class DataTable extends React.Component {
     
     this.columnKeys = Object.keys(props.columnKeyToHeader);
     
+    this.throttledUpdateTableWidth = _.throttle(this._updateTableWidth, 250);
+    
     let columnWidths = {}
     ,   showColumn = {};
-    
     this.columnKeys.forEach((columnKey) => {
       columnWidths[columnKey] = 100;
       
@@ -229,11 +230,11 @@ export default class DataTable extends React.Component {
   componentDidMount() {
     
     if (window.addEventListener) {
-      window.addEventListener("resize", _.throttle(this._updateTableWidth, 250), false);
+      window.addEventListener("resize", this.throttledUpdateTableWidth, false);
     } else if (window.attachEvent) {
-      window.attachEvent("onresize", _.throttle(this._updateTableWidth, 250));
+      window.attachEvent("onresize", this.throttledUpdateTableWidth, false);
     } else {
-      window.onresize = this._updateTableWidth;
+      window.onresize = this.throttledUpdateTableWidth;
     }
     
     this._updateTableWidth();
@@ -245,10 +246,10 @@ export default class DataTable extends React.Component {
    */
   componentWillUnmount() {
 
-    if(window.removeEventListener) {
-      window.removeEventListener("resize", _.throttle(this._updateTableWidth, 250), false);
+    if (window.removeEventListener) {
+      window.removeEventListener("resize", this.throttledUpdateTableWidth, false);
     } else if(window.removeEvent) {
-      window.removeEvent("onresize", _.throttle(this._updateTableWidth, 250), false);
+      window.removeEvent("onresize", this.throttledUpdateTableWidth, false);
     } else {
       window.onresize = null;
     }
@@ -256,10 +257,87 @@ export default class DataTable extends React.Component {
   }
   
   /**
+   * @inheritdoc
+   */
+  render() {
+    
+    const { className, columnKeyToHeader } = this.props;
+    const { tableWidth, tableHeight, columnWidths, colSortDirs, showColumn, sortedDataList, selectedRowIndex } = this.state;
+    const { columnKeys } = this;
+
+    let classNames = [ styles.dataTable ];
+    
+    if (!_.isEmpty(className)) {
+      classNames.push(className);
+    }
+    
+    return (
+      <div className={classNames.join(' ')}>
+        <TableColumnConfig 
+          columnKeys={columnKeys}
+          showColumn={showColumn}
+          columnKeyToHeader={columnKeyToHeader}
+          onShowColumnChange={this._onShowColumnChange} 
+        />
+        <Table
+          rowHeight={ROW_HEIGHT}
+          rowsCount={sortedDataList.getSize()}
+          onRowClick={this._onRowClick}
+          onColumnResizeEndCallback={this._onColumnResizeEndCallback}
+          isColumnResizing={false}
+          width={tableWidth}
+          height={tableHeight}
+          headerHeight={ROW_HEIGHT}
+        >
+          {columnKeys.map((columnKey, index) => {
+            
+            // only renders specific columns
+            if (!showColumn[columnKey]) {
+              return null;
+            }
+            
+            return (
+              <Column
+                key={columnKey}
+                columnKey={columnKey}
+                header={
+                  <SortableHeaderCell
+                    onSortChange={this._onSortChange}
+                    sortDir={colSortDirs[columnKey]}
+                  >{columnKeyToHeader[columnKey]}</SortableHeaderCell>
+                }
+                cell={({rowIndex, ...props}) => {
+                  let obj = sortedDataList.getObjectAt(rowIndex)
+                  ,   value = getValueByKey(obj, columnKey);
+                  
+                  return <TextCell {...props} text={readableValue(value)} className={rowIndex === selectedRowIndex ? styles.selectedCell : ""} />;
+
+                  // return (
+                  //   <Cell {...props} className={rowIndex === selectedRowIndex ? styles.selectedCell : ""}>
+                  //     {readableValue(value)}
+                  //   </Cell>
+                  // );
+                  
+                }}
+                width={columnWidths[columnKey]}
+                flexGrow={1}
+                isResizable={true}
+              />
+            );
+            
+          })}          
+          
+        </Table>
+      </div>
+    );
+  }
+  
+  /**
    * @private
    * Updates the table width based on window's size.
    */
   _updateTableWidth = () => {
+
     let node = findDOMNode(this);
 
     this.setState({
@@ -356,81 +434,13 @@ export default class DataTable extends React.Component {
       showColumn: showColumn
     });
   };
-  
-  /**
-   * @inheritdoc
-   */
-  render() {
-    
-    const { className, columnKeyToHeader } = this.props;
-    const { tableWidth, tableHeight, columnWidths, colSortDirs, showColumn, sortedDataList, selectedRowIndex } = this.state;
-    const { columnKeys } = this;
-
-    let classNames = [ styles.dataTable ];
-    
-    if (!_.isEmpty(className)) {
-      classNames.push(className);
-    }
-    
-    return (
-      <div className={classNames.join(' ')}>
-        <TableColumnConfig 
-          columnKeys={columnKeys}
-          showColumn={showColumn}
-          columnKeyToHeader={columnKeyToHeader}
-          onShowColumnChange={this._onShowColumnChange} 
-        />
-        <Table
-          rowHeight={ROW_HEIGHT}
-          rowsCount={sortedDataList.getSize()}
-          onRowClick={this._onRowClick}
-          onColumnResizeEndCallback={this._onColumnResizeEndCallback}
-          isColumnResizing={false}
-          width={tableWidth}
-          height={tableHeight}
-          headerHeight={ROW_HEIGHT}
-        >
-          {columnKeys.map((columnKey, index) => {
-            
-            // only renders specific columns
-            if (!showColumn[columnKey]) {
-              return null;
-            }
-            
-            return (
-              <Column
-                key={columnKey}
-                columnKey={columnKey}
-                header={
-                  <SortableHeaderCell
-                    onSortChange={this._onSortChange}
-                    sortDir={colSortDirs[columnKey]}
-                  >{columnKeyToHeader[columnKey]}</SortableHeaderCell>
-                }
-                cell={({rowIndex, ...props}) => {
-                  let obj = sortedDataList.getObjectAt(rowIndex)
-                  ,   value = getValueByKey(obj, columnKey);
-
-                  return (
-                    <Cell {...props} className={rowIndex === selectedRowIndex ? styles.selectedCell : ""}>
-                      {readableValue(value)}
-                    </Cell>
-                  );
-                  
-                }}
-                width={columnWidths[columnKey]}
-                flexGrow={1}
-                isResizable={true}
-              />
-            );
-            
-          })}          
-          
-        </Table>
-      </div>
-    );
-  }
 }
+
+const TextCell = ({text, ...props}) => (
+  <Cell {...props}>
+    {text}
+  </Cell>
+);
 
 DataTable.propTypes = {
   data: React.PropTypes.arrayOf(React.PropTypes.object).isRequired,

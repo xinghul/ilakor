@@ -14,8 +14,15 @@ import OrderDetailSection from "./OrderDetailSection";
 
 import styles from "components/ManageApp/OrderManageApp/OrderDetailModal.scss";
 
+/**
+ * @class
+ * @extends {React.Component}
+ */
 export default class OrderDetailModal extends React.Component {
   
+  /**
+   * @inheritdoc
+   */
   constructor(props) {
     super(props);    
     
@@ -24,18 +31,28 @@ export default class OrderDetailModal extends React.Component {
     };
   }
   
+  /**
+   * Shows the modal.
+   */
   showModal() {
     this.setState({
       showModal: true
     });
   }
   
-  onClose = () => {
+  /**
+   * @private
+   * Closes the modal.
+   */
+  _closeModal = () => {
     this.setState({
       showModal: false  
     });
   };
   
+  /**
+   * @inheritdoc
+   */
   render() {
     
     let order = this.props.order;
@@ -45,7 +62,7 @@ export default class OrderDetailModal extends React.Component {
     }
         
     return (
-      <Modal className={styles.orderDetailModal} show={this.state.showModal} onHide={this.onClose}>
+      <Modal className={styles.orderDetailModal} show={this.state.showModal} onHide={this._closeModal}>
         <Modal.Header closeButton>
           <Modal.Title>Order {order._id}</Modal.Title>
         </Modal.Header>
@@ -64,7 +81,7 @@ export default class OrderDetailModal extends React.Component {
           </div>
         </Modal.Body>
         <Modal.Footer>
-          <GhostButton theme="black" onClick={this.onClose}>Close</GhostButton>  
+          <GhostButton theme="black" onClick={this._closeModal}>Close</GhostButton>  
         </Modal.Footer>
       </Modal>
     );

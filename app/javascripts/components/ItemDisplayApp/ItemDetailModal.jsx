@@ -85,7 +85,7 @@ export default class ItemDetailModal extends React.Component {
    * @private
    * Handler for closing the modal.
    */
-  _onModalClose = () => {
+  _closeModal = () => {
     this.setState({
       showModal: false
     });
@@ -130,7 +130,7 @@ export default class ItemDetailModal extends React.Component {
     ShoppingCartAction
     .addToCart(itemInfo)
     .finally(() => {
-      this._onModalClose();
+      this._closeModal();
     });
   };
   
@@ -293,13 +293,13 @@ export default class ItemDetailModal extends React.Component {
         bsSize="large"
         className={styles.itemDetailModal} 
         show={showModal} 
-        onHide={this._onModalClose}
+        onHide={this._closeModal}
       >
         <Modal.Body>
           {this._createModalBody()}
         </Modal.Body>
         <Modal.Footer>
-          <GhostButton theme="black" onClick={this._onModalClose}>Close</GhostButton> 
+          <GhostButton theme="black" onClick={this._closeModal}>Close</GhostButton> 
         </Modal.Footer>
       </Modal>
     );

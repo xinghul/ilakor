@@ -100,8 +100,6 @@ export default class OrderDetailSection extends React.Component {
       return null;
     }
     
-    let actionButtons = this._createActionButtonsJsx();
-    
     return (
       <GridSection title="Order information" className={styles.orderDetailSection}>
         <BaseInfo label="Id" text={order._id} />
@@ -109,7 +107,7 @@ export default class OrderDetailSection extends React.Component {
         <BaseInfo label="Amount" icon="shopping-cart" text={order.stripe.amount.toString()} />
         <BaseInfo label="Paid" icon="money" text={order.stripe.captured ? "Yes" : "No"} />
         <BaseInfo label="Sent" icon="mail-forward" text={order.sent ? "Yes" : "No"} />
-        {actionButtons}
+        {this._createActionButtonsJsx()}
       </GridSection>
     );
   }

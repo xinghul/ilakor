@@ -51,7 +51,7 @@ export default class ItemDetailModal extends React.Component {
       item._id,
       newValue
     ).then(() => {
-      this._onModalClose();
+      this._closeModal();
     }).catch((err) => {
       console.log(err);
     }).finally(() => {
@@ -73,7 +73,7 @@ export default class ItemDetailModal extends React.Component {
     ItemManageAction.removeItem(
       this.props.item._id
     ).then(() => {
-      this._onModalClose();
+      this._closeModal();
     }).catch((err) => {
       console.log(err);
     }).finally(() => {
@@ -87,7 +87,7 @@ export default class ItemDetailModal extends React.Component {
    * @private
    * Handler for closing the modal.
    */
-  _onModalClose = () => {
+  _closeModal = () => {
     this.setState({
       showModal: false
     });
@@ -146,7 +146,7 @@ export default class ItemDetailModal extends React.Component {
     let buttonDisabled = isApplying || isDeleting;
 
     return (
-      <Modal show={showModal} onHide={this._onModalClose}>
+      <Modal show={showModal} onHide={this._closeModal}>
         <Modal.Header closeButton>
           <Modal.Title>Item info</Modal.Title>
         </Modal.Header>

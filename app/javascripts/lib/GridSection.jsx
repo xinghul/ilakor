@@ -25,7 +25,7 @@ export default class GridSection extends React.Component {
     
     let classNames = [ styles.gridSection ];
     
-    if (_.isEmpty(className)) {
+    if (!_.isEmpty(className)) {
       classNames.push(className);
     }
     
