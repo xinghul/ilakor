@@ -195,7 +195,7 @@ export default class DataTable extends React.Component {
     
     // set the initial size
     this.state = {
-      tableWidth: window.innerWidth,
+      tableWidth: 0,
       tableHeight: 500,
       
       selectedRowIndex: null,
@@ -260,7 +260,6 @@ export default class DataTable extends React.Component {
    * Updates the table width based on window's size.
    */
   _updateTableWidth = () => {
-    
     let node = findDOMNode(this);
 
     this.setState({
