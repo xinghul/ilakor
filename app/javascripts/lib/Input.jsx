@@ -145,10 +145,12 @@ export default class Input extends React.Component {
           &nbsp; 
           <label>{label}</label>
         </InputGroup.Addon>
-      } else {
+      } else if (!_.isEmpty(label)) {
         <InputGroup.Addon className={addonClassname}>
           <label>{label}</label>
         </InputGroup.Addon>
+      } else {
+        null
       }
     }
 

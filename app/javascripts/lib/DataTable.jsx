@@ -32,7 +32,7 @@ function getValueByKey(obj, rawKey) {
     let keys = rawKey.split('.');
     
     for (let key of keys) {
-      if (key in obj) {
+      if (obj.hasOwnProperty(key)) {
         obj = obj[key];
       } else {
         return;

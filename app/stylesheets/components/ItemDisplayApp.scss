@@ -8,6 +8,8 @@
     width: 100%;
     top: 40px;
     
+    transition: top 150ms ease-out;
+    
     display: flex;
     flex-direction: column;
   }

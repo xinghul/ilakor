@@ -115,7 +115,7 @@ export default class OrderManageApp extends React.Component {
           order={selectedOrder} 
         />
         <Row>
-          <Col xs={12} md={6}>
+          <Col xs={12} md={12}>
             <DataTable
               data={orders} 
               columnKeyToHeader={columnKeyToHeader} 

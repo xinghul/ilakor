@@ -70,5 +70,5 @@ ItemDisplayGrid.propTypes = {
 
 ItemDisplayGrid.defaultProps = { 
   items: [],
-  handleItemClick: function() {}
+  handleItemClick: () => {}
 };
