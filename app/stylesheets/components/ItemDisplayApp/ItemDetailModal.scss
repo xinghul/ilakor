@@ -2,6 +2,7 @@
   
   :global(.modal-dialog) {
     width: 95%;
+    min-width: 800px;
   }
   
   .mainContent {
@@ -16,7 +17,9 @@
     
     .rightContent {
       flex: 1;
-      padding: 45px 10px 0 25px;
+      padding: 25px 10px 0 25px;
+      
+      overflow: scroll;
       
       .section {
       }
@@ -29,28 +32,74 @@
       }
       
       .brand {
-        
+        font-size: 0.95em;
+        font-weight: bold;
+        text-transform: uppercase;
+        text-align: right;
       }
       
       .name {          
-        font-size: 1.75em;
+        font-size: 2.5em;
         font-weight: 600;
+        text-transform: uppercase;
       }
       
-      .price {
-        font-size: 1.25em;
+      .featureSection {
+        margin: 20px 0;
+
+        background: black;
+        color: white;
+        
+        .featureItem {
+          display: inline-block;
+          flex-direction: column;
+          padding: 1em;
+          
+          .featureKey {
+            flex: 1;
+            
+            color: #999;
+          }
+          
+          .featureValue {
+            flex: 1;
+            
+            font-size: 1.5em;
+          }
+        }
       }
       
       .description {
         padding: 20px 0;
         margin-top: 10px;
         
-        border-top: 1px solid #ccc;
-        border-bottom: 1px solid #ccc;          
+        border-bottom: 1px solid #ccc;   
+        
+        font-size: .85em;
+        color: #777; 
+        
+        h1, h2, h3, h4, h5, h6 {
+          font-weight: bold;
+          color: black;
+        }      
       }
       
       .configSection {
         padding: 15px 0;
+        
+        .priceSection {
+          margin-bottom: 10px;
+          font-size: 1.25em;
+          
+          color: #777; 
+          
+          .price {
+            font-size: 2em;
+            font-weight: bold;
+            
+            color: #b12704;
+          }
+        }
       }
     }
   }  

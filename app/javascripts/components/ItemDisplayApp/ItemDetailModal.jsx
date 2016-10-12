@@ -1,13 +1,14 @@
 import React from "react";
 import invariant from "invariant";
 import _ from "lodash";
+import Numeral from "numeral";
 import { Modal, Row, Col, Accordion, Panel } from "react-bootstrap";
 
 import GhostButton from "lib/GhostButton";
 import BaseCarousel from "lib/BaseCarousel";
-import SingleRangeSlider from "lib/SingleRangeSlider";
 import Select from "lib/Select";
 import Input from "lib/Input";
+import AlertMessage from "lib/AlertMessage";
 
 import ShoppingCartAction from "actions/ShoppingCartAction";
 
@@ -48,7 +49,9 @@ export default class ItemDetailModal extends React.Component {
       // current selected values
       config: {},
       variations: {},
-      selectionKeys: []
+      selectionKeys: [],
+      availableVariations: [],
+      errorMessage: ""
     };
   }
   
@@ -71,12 +74,13 @@ export default class ItemDetailModal extends React.Component {
         if (selectionKeys.indexOf(key) === -1) {
           selectionKeys.push(key);
         }
-      })
+      });
     });
     
     this.setState({
       variations,
-      selectionKeys
+      selectionKeys,
+      availableVariations: variationRaw
     });
     
   }
@@ -87,7 +91,9 @@ export default class ItemDetailModal extends React.Component {
    */
   _closeModal = () => {
     this.setState({
-      showModal: false
+      showModal: false,
+      config: {},
+      errorMessage: ""
     });
   };
   
@@ -98,182 +104,6 @@ export default class ItemDetailModal extends React.Component {
     this.setState({
       showModal: true
     });
-  }
-  
-  /**
-   * @private
-   * Handler for when 'Add to cart' button is clicked.
-   */
-  _onAddToCartClick = () => {
-    
-    invariant(!_.isEmpty(this.props.item), `this.props.item shouldn't be empty when _onAddToCartClick() is called.`);
-        
-    const { config } = this.state;
-    const { variations } = this.props.item;
-    
-    let selectedVariation = {};
-    
-    _.forEach(variations, (variationRaw) => {
-      let variation = variationRaw.info;
-      
-      if (_.isMatch(variation, config)) {
-        selectedVariation = variationRaw;
-      } 
-    })
-    
-    let itemInfo = {
-      count: this.refs["quantity"].getValue(),
-      item: this.props.item,
-      variation: selectedVariation
-    };
-    
-    ShoppingCartAction
-    .addToCart(itemInfo)
-    .finally(() => {
-      this._closeModal();
-    });
-  };
-  
-  /**
-   * @private
-   * Handler for when one of the Select value changes.
-   * Updates the select options based on newly selected value.
-   * 
-   * @param  {String} key the newly selected key.
-   * @param  {String} value the newly selected value.
-   */
-  _onSelectionChange = (key, value) => {
-    
-    let { config } = this.state;
-
-    if (_.isEmpty(value)) {
-      delete config[key];      
-    } else {
-      config[key] = value;
-    }
-    
-    this.setState({
-      config
-    });
-  };
-  
-  /**
-   * @private
-   * Creates the JSX for the description section.
-   *
-   * @return {JSX}
-   */
-  _createItemDescriptionJsx() {
-    
-    const { item } = this.props;
-    
-    return (
-      <div dangerouslySetInnerHTML={{__html: item.description}} />
-    );
-  }
-  
-  /**
-   * @private
-   * Creates the section for selecting flavors, sizes and quantities.
-   * 
-   * @return {JSX} 
-   */
-  _createConfigSection() {
-    
-    const { config, variations, selectionKeys } = this.state;
-
-    // creates the Select group
-    let selectGroup = _.map(selectionKeys, (key) => {
-      let newConfig = _.clone(config);
-
-      delete newConfig[key];
-      
-      let availableVariations = _.filter(_.values(variations), newConfig);
-
-      let value = [];
-      _.forEach(availableVariations, (variation) => {
-        if (!_.isEmpty(variation[key]) && value.indexOf(variation[key]) === -1) {
-          value.push(variation[key]);
-        }
-      });
-      
-      value.sort();
-
-      let options = createSelectOptions(value);
-      
-      let defaultValue = _.isEmpty(config[key]) ? null : config[key];
-
-      return (
-        <Select 
-          key={_.uniqueId(key)}
-          defaultValue={defaultValue}
-          multi={false}
-          placeholder={`Select ${key}...`}
-          options={options}
-          onChange={this._onSelectionChange.bind(this, key)}
-        />
-      );
-    });
-    
-    return (
-      <div className={styles.configSection}>
-        {selectGroup}
-        <Input
-          ref="quantity"
-          defaultValue="1"
-          label="Quantity"
-        />
-        <GhostButton theme="gold" onClick={this._onAddToCartClick}>Add to cart</GhostButton> 
-      </div>
-    );
-  }
-  
-  /**
-   * Creates the JSX for the item detail.
-   * 
-   * @return {JSX}
-   */
-  _createModalBody() {
-    const { item } = this.props;
-    
-    let imageUrls = item.images.map((image) => {
-      invariant(_.isString(image.name), `Each image of item.images should have a 'name' as string.`);
-      
-      return "http://d16knxx0wtupz9.cloudfront.net/" + image.name;
-    });
-    
-    return (
-      <div className={styles.mainContent}>
-        <Row>
-          <Col xs={12} md={12} className={styles.mainContent}>
-            <div className={styles.leftContent}>
-              <BaseCarousel width={450} height={450} images={imageUrls} title={item.name} />
-              <Accordion>
-                <Panel header="Reviews" eventKey="1">
-                  No reviews.
-                </Panel>
-                <Panel header="FAQ" eventKey="2">
-                  No FAQs.
-                </Panel>
-              </Accordion>
-            </div>
-            <div className={styles.rightContent}>
-              <div className={styles.section}>
-                <div className={styles.category}>{item.category.name}</div>
-                <div className={styles.brand}>{item.brand.name}</div>
-                <div className={styles.name}>{item.name}</div>                
-              </div>
-              <div className={styles.section}>
-                <div className={styles.description}>
-                  {this._createItemDescriptionJsx()}
-                </div>
-              </div>
-              {this._createConfigSection()}
-            </div>
-          </Col>
-        </Row>
-      </div>
-    );
   }
 
   /**
@@ -304,6 +134,273 @@ export default class ItemDetailModal extends React.Component {
       </Modal>
     );
     
+  }
+  
+  
+  /**
+   * @private
+   * Handler for when 'Add to cart' button is clicked.
+   */
+  _onAddToCartClick = () => {
+    
+    invariant(!_.isEmpty(this.props.item), `this.props.item shouldn't be empty when _onAddToCartClick() is called.`);
+    const { availableVariations } = this.state;
+    
+    let count = _.toInteger(this.refs["quantity"].getValue());
+    
+    if (!_.inRange(count, 1, 10)) {
+      this.setState({
+        errorMessage: "Please enter a valid count(1 to 9)."
+      });
+      
+      this.refs["errorMessage"].show();
+    } else if (availableVariations.length > 1) {
+      this.setState({
+        errorMessage: "Please select flavor and size."
+      });
+      
+      this.refs["errorMessage"].show();
+    } else {
+      // success 
+      let itemInfo = {
+        count,
+        item: this.props.item,
+        variation: availableVariations[0]
+      };
+      
+      ShoppingCartAction
+      .addToCart(itemInfo)
+      .finally(() => {
+        this._closeModal();
+      });
+    }
+    
+  };
+  
+  /**
+   * @private
+   * Handler for when one of the Select value changes.
+   * Updates the select options based on newly selected value.
+   * 
+   * @param  {String} key the newly selected key.
+   * @param  {String} value the newly selected value.
+   */
+  _onSelectionChange = (key, value) => {
+    
+    let { config } = this.state;
+    const { variations } = this.props.item;
+
+    if (_.isEmpty(value)) {
+      // reset config when clear is clicked
+      config = {};     
+    } else {
+      config[key] = value;
+    }
+    
+    let availableVariations = [];
+    
+    _.forEach(variations, (variation) => {
+      if (_.isMatch(variation.info, config)) {
+        availableVariations.push(variation);
+      }
+    });
+    
+    this.setState({
+      config,
+      availableVariations
+    });
+  };
+  
+  /**
+   * @private
+   * Creates the JSX for the description section.
+   *
+   * @return {JSX}
+   */
+  _createItemDescriptionJsx() {
+    
+    const { item } = this.props;
+    
+    return (
+      <div dangerouslySetInnerHTML={{__html: item.description}} />
+    );
+  }
+  
+  /**
+   * @private
+   * Creates the JSX for the features section.
+   *
+   * @return {JSX}
+   */
+  _createFeaturesSectionJsx() {
+    
+    const { features } = this.props.item;
+    
+    let featureItems = _.map(features, (feature) => {
+      return (
+        <div key={_.uniqueId(feature.key)} className={styles.featureItem}>
+          <div className={styles.featureKey}>
+            {feature.key}
+          </div>
+          <div className={styles.featureValue}>
+            {feature.value}
+          </div>
+        </div>
+      );
+    });
+    
+    return (
+      <div className={styles.featureSection}>
+        {featureItems}
+      </div>
+    );
+  }
+  
+  /**
+   * @private
+   * Creates the section for selecting flavors, sizes and quantities.
+   * 
+   * @return {JSX} 
+   */
+  _createConfigSectionJsx() {
+    
+    const { config, variations, selectionKeys } = this.state;
+
+    // creates the Select group
+    let selectGroup = _.map(selectionKeys, (key) => {
+      let newConfig = _.clone(config);
+
+      delete newConfig[key];
+      
+      let availableVariations = _.filter(_.values(variations), newConfig);
+
+      let value = [];
+      _.forEach(availableVariations, (variation) => {
+        if (!_.isEmpty(variation[key]) && value.indexOf(variation[key]) === -1) {
+          value.push(variation[key]);
+        }
+      });
+      
+      value.sort();
+
+      let options = createSelectOptions(value);
+      
+      let defaultValue = !_.isEmpty(config[key]) ? config[key]
+                                                 : (options.length === 1 ? options[0].value : null);
+
+      return (
+        <Row key={_.uniqueId(key)}>
+          <Col md={8} xs={12}>
+            <Select 
+              defaultValue={defaultValue}
+              multi={false}
+              placeholder={`Select ${key}...`}
+              options={options}
+              onChange={this._onSelectionChange.bind(this, key)}
+            />
+          </Col>
+        </Row>
+      );
+    });
+    
+    return (
+      <div className={styles.configSection}>
+        {this._createPriceSectionJsx()}
+        {selectGroup}
+        <Row>
+          <Col md={4} xs={6}>
+            <Input
+              shrink={true}
+              ref="quantity"
+              defaultValue="1"
+              label="Quantity"
+            />
+          </Col>
+          <Col md={4} xs={6}>
+            <GhostButton block theme="gold" onClick={this._onAddToCartClick}>Add to cart</GhostButton>
+          </Col>
+        </Row>
+      </div>
+    );
+  }
+  
+  /**
+   * Creates the JSX for the price section.
+   * 
+   * @return {JSX}
+   */
+  _createPriceSectionJsx() {
+    
+    const { availableVariations } = this.state;
+    
+    invariant(availableVariations.length >= 1, `availableVariations should not be empty.`);
+
+    return (
+      <div className={styles.priceSection}>
+        {do {
+          if (availableVariations.length > 1) {
+            <span>from </span>
+          } else {
+            null
+          }
+        }}
+        <span className={styles.price}>{Numeral(availableVariations[0].price).format("$0,0.00")}</span>
+      </div>
+    );
+    
+  }
+  
+  /**
+   * Creates the JSX for the item detail.
+   * 
+   * @return {JSX}
+   */
+  _createModalBody() {
+    
+    const { item } = this.props;
+    const { errorMessage } = this.state;
+    
+    let imageUrls = item.images.map((image) => {
+      invariant(_.isString(image.name), `Each image of item.images should have a 'name' as string.`);
+      
+      return "http://d16knxx0wtupz9.cloudfront.net/" + image.name;
+    });
+    
+    return (
+      <div className={styles.mainContent}>
+        <div className={styles.leftContent}>
+          <BaseCarousel width={450} height={450} images={imageUrls} title={item.name} />
+          <Accordion>
+            <Panel header="Reviews" eventKey="1">
+              No reviews.
+            </Panel>
+            <Panel header="FAQ" eventKey="2">
+              No FAQs.
+            </Panel>
+          </Accordion>
+        </div>
+        <div className={styles.rightContent}>
+          <Row>
+            <Col md={6} xs={12}>
+              <div className={styles.category}>{item.category.name} PRODUCT</div>
+            </Col>
+            <Col md={6} xs={12}>
+              <div className={styles.brand}>{item.brand.name}</div>
+            </Col>
+          </Row>
+          <div className={styles.name}>{item.name}</div> 
+          {this._createFeaturesSectionJsx()}
+          <div className={styles.description}>
+            {this._createItemDescriptionJsx()}
+          </div>
+          {this._createConfigSectionJsx()}
+          <AlertMessage 
+            ref="errorMessage"
+            alertStyle="danger" 
+          >{errorMessage}</AlertMessage>
+        </div>
+      </div>
+    );
   }
 }
 
