@@ -8,6 +8,8 @@ import SortableHeaderCell from "./DataTable/Cell/SortableHeaderCell";
 import TableColumnConfig from "./DataTable/TableColumnConfig";
 import SortTypes from "./DataTable/SortTypes";
 
+import LoadSpinner from "lib/LoadSpinner";
+
 import defaultStyles from "fixed-data-table/dist/fixed-data-table.min.css";
 
 import styles from "lib/DataTable.scss";
@@ -261,7 +263,7 @@ export default class DataTable extends React.Component {
    */
   render() {
     
-    const { className, columnKeyToHeader } = this.props;
+    const { className, columnKeyToHeader, isLoading } = this.props;
     const { tableWidth, tableHeight, columnWidths, colSortDirs, showColumn, sortedDataList, selectedRowIndex } = this.state;
     const { columnKeys } = this;
 
@@ -279,55 +281,62 @@ export default class DataTable extends React.Component {
           columnKeyToHeader={columnKeyToHeader}
           onShowColumnChange={this._onShowColumnChange} 
         />
-        <Table
-          rowHeight={ROW_HEIGHT}
-          rowsCount={sortedDataList.getSize()}
-          onRowClick={this._onRowClick}
-          onColumnResizeEndCallback={this._onColumnResizeEndCallback}
-          isColumnResizing={false}
-          width={tableWidth}
-          height={tableHeight}
-          headerHeight={ROW_HEIGHT}
-        >
-          {columnKeys.map((columnKey, index) => {
-            
-            // only renders specific columns
-            if (!showColumn[columnKey]) {
-              return null;
-            }
-            
-            return (
-              <Column
-                key={columnKey}
-                columnKey={columnKey}
-                header={
-                  <SortableHeaderCell
-                    onSortChange={this._onSortChange}
-                    sortDir={colSortDirs[columnKey]}
-                  >{columnKeyToHeader[columnKey]}</SortableHeaderCell>
+        {do {
+          if (isLoading) {
+            <LoadSpinner className={styles.loadSpinner} size={40} />
+          } else {
+            <Table
+              rowHeight={ROW_HEIGHT}
+              rowsCount={sortedDataList.getSize()}
+              onRowClick={this._onRowClick}
+              onColumnResizeEndCallback={this._onColumnResizeEndCallback}
+              isColumnResizing={false}
+              width={tableWidth}
+              height={tableHeight}
+              headerHeight={ROW_HEIGHT}
+            >
+              {columnKeys.map((columnKey, index) => {
+                
+                // only renders specific columns
+                if (!showColumn[columnKey]) {
+                  return null;
                 }
-                cell={({rowIndex, ...props}) => {
-                  let obj = sortedDataList.getObjectAt(rowIndex)
-                  ,   value = getValueByKey(obj, columnKey);
-                  
-                  return <TextCell {...props} text={readableValue(value)} className={rowIndex === selectedRowIndex ? styles.selectedCell : ""} />;
+                
+                return (
+                  <Column
+                    key={columnKey}
+                    columnKey={columnKey}
+                    header={
+                      <SortableHeaderCell
+                        onSortChange={this._onSortChange}
+                        sortDir={colSortDirs[columnKey]}
+                      >{columnKeyToHeader[columnKey]}</SortableHeaderCell>
+                    }
+                    cell={({rowIndex, ...props}) => {
+                      let obj = sortedDataList.getObjectAt(rowIndex)
+                      ,   value = getValueByKey(obj, columnKey);
+                      
+                      return <TextCell {...props} text={readableValue(value)} className={rowIndex === selectedRowIndex ? styles.selectedCell : ""} />;
 
-                  // return (
-                  //   <Cell {...props} className={rowIndex === selectedRowIndex ? styles.selectedCell : ""}>
-                  //     {readableValue(value)}
-                  //   </Cell>
-                  // );
-                  
-                }}
-                width={columnWidths[columnKey]}
-                flexGrow={1}
-                isResizable={true}
-              />
-            );
-            
-          })}          
-          
-        </Table>
+                      // return (
+                      //   <Cell {...props} className={rowIndex === selectedRowIndex ? styles.selectedCell : ""}>
+                      //     {readableValue(value)}
+                      //   </Cell>
+                      // );
+                      
+                    }}
+                    width={columnWidths[columnKey]}
+                    flexGrow={1}
+                    isResizable={true}
+                  />
+                );
+                
+              })}          
+              
+            </Table>
+          }
+        }}
+        
       </div>
     );
   }
@@ -446,9 +455,11 @@ DataTable.propTypes = {
   data: React.PropTypes.arrayOf(React.PropTypes.object).isRequired,
   columnKeyToHeader: React.PropTypes.object.isRequired,
   
-  onRowSelect: React.PropTypes.func
+  onRowSelect: React.PropTypes.func,
+  isLoading: React.PropTypes.bool
 };
 
 DataTable.defaultProps = {
-  onRowSelect: () => {}
+  onRowSelect: () => {},
+  isLoading: false
 };

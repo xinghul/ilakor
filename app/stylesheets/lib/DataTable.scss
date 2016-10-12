@@ -1,12 +1,22 @@
+%tableBorder {
+  border: 1px solid rgba(0, 0, 0, 0.15);
+  border-radius: 2px;
+  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.12);
+}
+
 .dataTable {
   margin-bottom: 20px;
   
-  :global(.public_fixedDataTable_main) {
-    margin: auto;
+  .loadSpinner {
+    @extend %tableBorder;
     
-    border: 1px solid rgba(0, 0, 0, 0.15);
-    border-radius: 2px;
-    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.12);
+    margin: 0 15px;
+  }
+  
+  :global(.public_fixedDataTable_main) {
+    @extend %tableBorder;
+    
+    margin: auto;
   }
 
   :global(.public_fixedDataTableCell_cellContent) {

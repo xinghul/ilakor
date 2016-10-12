@@ -26,7 +26,8 @@ const columnKeyToHeader = {
  */
 function getStateFromStores() {
   return {
-    orders: AccountStore.getOrders()
+    orders: AccountStore.getOrders(),
+    isLoading: AccountStore.getIsLoading()
   };
 }
 
@@ -74,13 +75,14 @@ export default class OrderHistorySection extends React.Component {
    */
   render() {
     
-    const { orders } = this.state;
+    const { orders, isLoading } = this.state;
 
     return (
       <GridSection title="Order history" className={styles.orderHistorySection}>
         <DataTable
           data={orders} 
           columnKeyToHeader={columnKeyToHeader} 
+          isLoading={isLoading}
         />
       </GridSection>
     );

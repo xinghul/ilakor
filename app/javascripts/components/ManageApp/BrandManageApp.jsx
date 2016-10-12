@@ -25,7 +25,8 @@ const columnKeyToHeader = {
  */
 function getStateFromStores() {
   return {
-    brands: BrandManageStore.getBrands()
+    brands: BrandManageStore.getBrands(),
+    isLoading: BrandManageStore.getIsLoading()
   };
 }
 
@@ -42,6 +43,7 @@ export default class BrandManageApp extends React.Component {
     
     this.state = {
       brands: BrandManageStore.getBrands(),
+      isLoading: BrandManageStore.getIsLoading(),
       
       selectedData: null
     };
@@ -89,7 +91,7 @@ export default class BrandManageApp extends React.Component {
    */
   render() {
     
-    const { brands } = this.state;
+    const { brands, isLoading } = this.state;
 
     return (
       <div className={styles.brandManageApp}>
@@ -102,6 +104,7 @@ export default class BrandManageApp extends React.Component {
               data={brands} 
               columnKeyToHeader={columnKeyToHeader} 
               onRowSelect={this._onRowSelect}
+              isLoading={isLoading}
             />
           </Col>
         </Row>

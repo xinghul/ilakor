@@ -104,7 +104,7 @@ export default class OrderManageApp extends React.Component {
    */
   render() {
     
-    const { orders, selectedOrderIndex } = this.state;
+    const { orders, selectedOrderIndex, isLoading } = this.state;
     
     let selectedOrder = orders[selectedOrderIndex] || {};
     
@@ -120,6 +120,7 @@ export default class OrderManageApp extends React.Component {
               data={orders} 
               columnKeyToHeader={columnKeyToHeader} 
               onRowSelect={this._onOrderSelect}
+              isLoading={isLoading}
             />
           </Col>
         </Row>

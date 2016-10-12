@@ -72,7 +72,7 @@ export default class LoadSpinner extends React.Component {
   */
   render() {
     
-    const { hidden, text } = this.props;
+    const { hidden, size, text } = this.props;
     
     let classNames = [ styles.loadSpinner ];
     
@@ -80,7 +80,8 @@ export default class LoadSpinner extends React.Component {
     classNames.push(this.props.className);
     
     let style = {
-      display: hidden ? "none" : "block"
+      display: hidden ? "none" : "block",
+      height: size + "px"
     };
     
     let textStyle = {
