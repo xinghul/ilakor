@@ -7,11 +7,26 @@
 .dataTable {
   margin-bottom: 20px;
   
+  .tableConfig {
+    height: 40px;
+    
+    .filter {
+      float: left;
+      margin: 6px 0px 6px 15px;
+      
+      input {
+        height: 28px;
+      }
+    }
+  }
+  
   .loadSpinner {
     @extend %tableBorder;
     
     margin: 0 15px;
   }
+  
+
   
   :global(.public_fixedDataTable_main) {
     @extend %tableBorder;
@@ -37,6 +52,10 @@
     &:hover {
       background-color: #ededed;
     }
+  }
+  
+  :global(.public_fixedDataTableCell_wrap1) {
+    transition: background-color 100ms ease-out;
   }
   
   .selectedCell {

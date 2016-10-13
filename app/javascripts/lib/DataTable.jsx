@@ -9,6 +9,7 @@ import TableColumnConfig from "./DataTable/TableColumnConfig";
 import SortTypes from "./DataTable/SortTypes";
 
 import LoadSpinner from "lib/LoadSpinner";
+import Input from "lib/Input";
 
 import defaultStyles from "fixed-data-table/dist/fixed-data-table.min.css";
 
@@ -124,52 +125,6 @@ class SortedDataList {
 }
 
 /**
- * Creates a new SortedDataList based on given data and sort direction.
- * 
- * @param  {Array} data         the data.
- * @param  {Object} colSortDirs the sort direction.
- * 
- * @return {SortedDataList}
- */
-function createSortedDataList(data, colSortDirs) {
-  
-  invariant(_.isArray(data), `createSortedDataList(data, colSortDirs) expects 'data' to be 'array', but gets '${typeof data}'.`);
-  invariant(_.isObject(colSortDirs), `createSortedDataList(data, colSortDirs) expects 'colSortDirs' to be 'object', but gets '${typeof colSortDirs}'.`);
-  
-  let indexMap = _.times(data.length);
-  
-  if (_.isEmpty(colSortDirs)) {
-    return new SortedDataList(indexMap, data);
-  }
-  
-  let columnKey = _.keys(colSortDirs)[0]
-  ,   sortDir = _.values(colSortDirs)[0];
-
-  indexMap.sort((indexA, indexB) => {
-    
-    let valueA = data[indexA][columnKey]
-    ,   valueB = data[indexB][columnKey]
-    ,   sortVal = 0;
-
-    if (valueA > valueB) {
-      sortVal = 1;
-    } else if (valueA < valueB) {
-      sortVal = -1;
-    }
-    
-    // revert the direction if sort descending
-    if (sortVal !== 0 && sortDir === SortTypes.DESC) {
-      sortVal = sortVal * -1;
-    }
-
-    return sortVal;
-    
-  });
-  
-  return new SortedDataList(indexMap, data);
-}
-
-/**
  * @class
  * @extends {React.Component}
  *
@@ -184,7 +139,7 @@ export default class DataTable extends React.Component {
     
     super(props);
     
-    this.columnKeys = Object.keys(props.columnKeyToHeader);
+    this.columnKeys = _.keys(props.columnKeyToHeader);
     
     this.throttledUpdateTableWidth = _.throttle(this._updateTableWidth, 250);
     
@@ -203,23 +158,15 @@ export default class DataTable extends React.Component {
       
       selectedRowIndex: null,
       
-      sortedDataList: createSortedDataList([], {}),      
       showColumn: showColumn,
       columnWidths: columnWidths,      
       // column sort directions, only support sort on single column for now
-      colSortDirs: {}
+      colSortDirs: {},
+      // client-side filter
+      filter: ""
     };
     
-  }
-  
-  /**
-   * @inheritdoc
-   */
-  componentWillReceiveProps(props) {
-
-    this.setState({
-      sortedDataList: createSortedDataList(props.data, this.state.colSortDirs)
-    });    
+    this.sortedDataList = this._createSortedDataList();
   }
   
   /**
@@ -259,24 +206,34 @@ export default class DataTable extends React.Component {
    */
   render() {
     
-    const { className, columnKeyToHeader, isLoading } = this.props;
-    const { tableWidth, tableHeight, columnWidths, colSortDirs, showColumn, sortedDataList, selectedRowIndex } = this.state;
+    const { data, className, columnKeyToHeader, isLoading } = this.props;
+    const { tableWidth, tableHeight, columnWidths, filter, colSortDirs, showColumn, selectedRowIndex } = this.state;
     const { columnKeys } = this;
 
-    let classNames = [ styles.dataTable ];
+    let classNames = [ styles.dataTable ]
+    ,   sortedDataList;
     
     if (!_.isEmpty(className)) {
       classNames.push(className);
     }
     
+    this.sortedDataList = sortedDataList = this._createSortedDataList();
+    
     return (
       <div className={classNames.join(' ')}>
-        <TableColumnConfig 
-          columnKeys={columnKeys}
-          showColumn={showColumn}
-          columnKeyToHeader={columnKeyToHeader}
-          onShowColumnChange={this._onShowColumnChange} 
-        />
+        <div className={styles.tableConfig}>
+          <Input
+            placeholder="filter result..."
+            className={styles.filter}
+            onChange={this._onFilterChange}
+          />
+          <TableColumnConfig 
+            columnKeys={columnKeys}
+            showColumn={showColumn}
+            columnKeyToHeader={columnKeyToHeader}
+            onShowColumnChange={this._onShowColumnChange} 
+          />
+        </div>
         {do {
           if (isLoading) {
             <LoadSpinner className={styles.loadSpinner} size={40} />
@@ -339,6 +296,75 @@ export default class DataTable extends React.Component {
   
   /**
    * @private
+   * Creates a new SortedDataList based on current state.
+   * 
+   * @return {SortedDataList}
+   */
+  _createSortedDataList = () => {
+
+    const { columnKeys } = this;
+    const { data } = this.props;
+    const { colSortDirs, filter, showColumn } = this.state;
+          
+    let indexMap = [];
+    
+    // apply filter
+    _.times(data.length, (index) => {
+      let obj = data[index]
+      ,   foundMatch = false;
+      
+      _.forEach(columnKeys, (columnKey) => {
+        // skips the hidden columns or if match has been found
+        if (!showColumn[columnKey] || foundMatch) {
+          return;
+        }
+        
+        let value = readableValue(getValueByKey(obj, columnKey));
+        
+        if (_.includes(_.toLower(value), _.toLower(filter))) {
+          foundMatch = true;
+        }
+      });
+      
+      if (foundMatch) {
+        indexMap.push(index);
+      }
+      
+    });
+    
+    if (_.isEmpty(colSortDirs)) {
+      return new SortedDataList(indexMap, data);
+    }
+    
+    let columnKey = _.keys(colSortDirs)[0]
+    ,   sortDir = _.values(colSortDirs)[0];
+
+    indexMap.sort((indexA, indexB) => {
+      
+      let valueA = readableValue(getValueByKey(data[indexA], columnKey))
+      ,   valueB = readableValue(getValueByKey(data[indexB], columnKey))
+      ,   sortVal = 0;
+
+      if (valueA > valueB) {
+        sortVal = 1;
+      } else if (valueA < valueB) {
+        sortVal = -1;
+      }
+      
+      // revert the direction if sort descending
+      if (sortVal !== 0 && sortDir === SortTypes.DESC) {
+        sortVal = sortVal * -1;
+      }
+
+      return sortVal;
+      
+    });
+    
+    return new SortedDataList(indexMap, data);
+  };
+  
+  /**
+   * @private
    * Updates the table width based on window's size.
    */
   _updateTableWidth = () => {
@@ -353,6 +379,22 @@ export default class DataTable extends React.Component {
   
   /**
    * @private
+   * Handler for when the filter value changes.
+   *
+   * @param {String} value the new filter value.
+   */
+  _onFilterChange = (value) => {
+
+    // clear selected row when filter changes
+    this.setState({
+      filter: value,
+      selectedRowIndex: null
+    });
+    
+  };
+  
+  /**
+   * @private
    * Handler for when a row is clicked.
    *
    * @param {Object} evt the event object.
@@ -360,7 +402,7 @@ export default class DataTable extends React.Component {
    */
   _onRowClick = (evt, rowIndex) => {
     
-    const { sortedDataList } = this.state;
+    const { sortedDataList } = this;
     let { selectedRowIndex } = this.state;
     let selectedData = null;
     
@@ -409,6 +451,8 @@ export default class DataTable extends React.Component {
    */
   _onSortChange = (columnKey, sortDir) => {
     
+    const { filter } = this.state;
+    
     let newColSortDirs = {
       [columnKey]: sortDir,
     };
@@ -416,7 +460,6 @@ export default class DataTable extends React.Component {
     // also reset selected row index
     this.setState({
       colSortDirs: newColSortDirs,
-      sortedDataList: createSortedDataList(this.props.data, newColSortDirs),
       selectedRowIndex: null
     });
     
@@ -436,7 +479,7 @@ export default class DataTable extends React.Component {
     showColumn[columnKey] = show;
 
     this.setState({
-      showColumn: showColumn
+      showColumn
     });
   };
 }
