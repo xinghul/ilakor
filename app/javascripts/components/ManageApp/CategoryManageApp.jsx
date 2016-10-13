@@ -25,7 +25,8 @@ const columnKeyToHeader = {
  */
 function getStateFromStores() {
   return {
-    categories: CategoryManageStore.getCategories()
+    categories: CategoryManageStore.getCategories(),
+    isLoading: CategoryManageStore.getIsLoading()
   };
 }
 
@@ -43,6 +44,7 @@ export default class CategoryManageApp extends React.Component {
     
     this.state = {
       categories: CategoryManageStore.getCategories(),
+      isLoading: CategoryManageStore.getIsLoading(),
       
       selectedData: null
     };
@@ -90,7 +92,7 @@ export default class CategoryManageApp extends React.Component {
    */
   render() {
     
-    const { categories } = this.state;
+    const { categories, isLoading } = this.state;
 
     return (
       <div className={styles.categoryManageApp}>
@@ -103,6 +105,7 @@ export default class CategoryManageApp extends React.Component {
               data={categories} 
               columnKeyToHeader={columnKeyToHeader} 
               onRowSelect={this._onRowSelect}
+              isLoading={isLoading}
             />
           </Col>
         </Row>

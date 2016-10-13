@@ -26,6 +26,7 @@ const columnKeyToHeader = {
 function getStateFromStores() {
   return {
     brands: BrandManageStore.getBrands(),
+    
     isLoading: BrandManageStore.getIsLoading()
   };
 }
@@ -41,12 +42,9 @@ export default class BrandManageApp extends React.Component {
   constructor(props) {
     super(props);
     
-    this.state = {
-      brands: BrandManageStore.getBrands(),
-      isLoading: BrandManageStore.getIsLoading(),
-      
+    this.state = _.merge(getStateFromStores(), {
       selectedData: null
-    };
+    });
   }
   
   /**

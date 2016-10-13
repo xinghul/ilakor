@@ -216,10 +216,6 @@ export default class DataTable extends React.Component {
    * @inheritdoc
    */
   componentWillReceiveProps(props) {
-    
-    // rows plus row header
-    let rowCount = props.data.length + 1
-    ,   tableHeight = rowCount * ROW_HEIGHT + SCROLL_BAR_HEIGHT;
 
     this.setState({
       sortedDataList: createSortedDataList(props.data, this.state.colSortDirs)

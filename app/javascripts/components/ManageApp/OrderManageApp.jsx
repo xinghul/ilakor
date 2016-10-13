@@ -46,14 +46,11 @@ export default class OrderManageApp extends React.Component {
   constructor(props) {
     super(props);
     
-    this.state = {
-      orders: OrderManageStore.getOrders(),
-      isLoading: OrderManageStore.getIsLoading(),
-      
+    this.state = _.merge(getStateFromStores(), {
       // use selected order index instead of selected order
       // so order detail modal will be updated once a change is made
       selectedOrderIndex: 0
-    };
+    });
   }
   
   /**

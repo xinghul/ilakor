@@ -25,7 +25,8 @@ const columnKeyToHeader = {
  */
 function getStateFromStores() {
   return {
-    tags: TagManageStore.getTags()
+    tags: TagManageStore.getTags(),
+    isLoading: TagManageStore.getIsLoading()
   };
 }
 
@@ -41,11 +42,9 @@ export default class TagManageApp extends React.Component {
   constructor(props) {
     super(props);
     
-    this.state = {
-      tags: TagManageStore.getTags(),
-      
+    this.state = _.merge(getStateFromStores(), {
       selectedData: null
-    };
+    });
   }
   
   /**
@@ -90,7 +89,7 @@ export default class TagManageApp extends React.Component {
    */
   render() {
     
-    const { tags } = this.state;
+    const { tags, isLoading } = this.state;
 
     return (
       <div className={styles.tagManageApp}>
@@ -103,6 +102,7 @@ export default class TagManageApp extends React.Component {
               data={tags} 
               columnKeyToHeader={columnKeyToHeader} 
               onRowSelect={this._onRowSelect}
+              isLoading={isLoading}
             />
           </Col>
         </Row>

@@ -51,7 +51,9 @@ function createSelectOptions(items) {
 function getStateFromStores() {
   return {
     variations: VariationManageStore.getVariations(),
-    items: ItemManageStore.getItems()
+    items: ItemManageStore.getItems(),
+    
+    isLoading: VariationManageStore.getIsLoading()
   };
 }
 
@@ -67,12 +69,9 @@ export default class VariationManageApp extends React.Component {
   constructor(props) {
     super(props);
     
-    this.state = {
-      variations: VariationManageStore.getVariations(),
-      items: ItemManageStore.getItems(),
-      
+    this.state = _.merge(getStateFromStores(), {
       selectedData: null
-    };
+    });
   }
   
   /**
@@ -131,7 +130,7 @@ export default class VariationManageApp extends React.Component {
    */
   render() {
     
-    const { variations, items } = this.state;
+    const { variations, items, isLoading } = this.state;
     
     let selectOptions = createSelectOptions(items);
 
@@ -155,6 +154,7 @@ export default class VariationManageApp extends React.Component {
               data={variations} 
               columnKeyToHeader={columnKeyToHeader} 
               onRowSelect={this._onRowSelect}
+              isLoading={isLoading}
             />
           </Col>
         </Row>

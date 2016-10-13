@@ -35,7 +35,9 @@ function getStateFromStores() {
     items: ItemManageStore.getItems(),
     brands: BrandManageStore.getBrands(),
     categories: CategoryManageStore.getCategories(),
-    tags: TagManageStore.getTags()
+    tags: TagManageStore.getTags(),
+    
+    isLoading: ItemManageStore.getIsLoading()
   };
 }
 
@@ -51,14 +53,9 @@ export default class ItemManageApp extends React.Component {
   constructor(props) {
     super(props);
     
-    this.state = {
-      items: ItemManageStore.getItems(),
-      brands: BrandManageStore.getBrands(),
-      categories: CategoryManageStore.getCategories(),
-      tags: TagManageStore.getTags(),
-      
+    this.state = _.merge(getStateFromStores(), {
       selectedItem: null
-    };
+    });
   }
   
   /**
@@ -110,7 +107,7 @@ export default class ItemManageApp extends React.Component {
    */
   render() {
     
-    const { items, tags, brands, categories, selectedItem } = this.state;
+    const { items, tags, brands, categories, isLoading, selectedItem } = this.state;
     
     return (
       <div className={styles.itemManageApp}>
@@ -131,6 +128,7 @@ export default class ItemManageApp extends React.Component {
               data={items} 
               columnKeyToHeader={columnKeyToHeader} 
               onRowSelect={this._onItemSelect}
+              isLoading={isLoading}
             />
           </Col>
         </Row>

@@ -27,6 +27,7 @@ const columnKeyToHeader = {
 function getStateFromStores() {
   return {
     orders: AccountStore.getOrders(),
+    
     isLoading: AccountStore.getIsLoading()
   };
 }
