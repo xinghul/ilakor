@@ -148,7 +148,8 @@ export default class DataTable extends React.Component {
     this.columnKeys.forEach((columnKey) => {
       columnWidths[columnKey] = 100;
       
-      showColumn[columnKey] = true;
+      showColumn[columnKey] = _.isBoolean(props.showColumn[columnKey]) ? 
+                              props.showColumn[columnKey] : true;
     });
     
     // set the initial size
@@ -494,11 +495,13 @@ DataTable.propTypes = {
   data: React.PropTypes.arrayOf(React.PropTypes.object).isRequired,
   columnKeyToHeader: React.PropTypes.object.isRequired,
   
+  showColumn: React.PropTypes.object,
   onRowSelect: React.PropTypes.func,
   isLoading: React.PropTypes.bool
 };
 
 DataTable.defaultProps = {
+  showColumn: {},
   onRowSelect: () => {},
   isLoading: false
 };
