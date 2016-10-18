@@ -1,36 +1,32 @@
-%tableBorder {
-  border: 1px solid rgba(0, 0, 0, 0.15);
-  border-radius: 2px;
-  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.12);
-}
+@import "utilities/variables";
 
 .dataTable {
   margin-bottom: 20px;
-  
+
   .tableConfig {
     height: 40px;
-    
+
     .filter {
       float: left;
       margin: 6px 0px 6px 15px;
-      
+
       input {
         height: 28px;
       }
     }
   }
-  
+
   .loadSpinner {
-    @extend %tableBorder;
-    
+    @extend %borderNormal;
+
     margin: 0 15px;
   }
-  
 
-  
+
+
   :global(.public_fixedDataTable_main) {
-    @extend %tableBorder;
-    
+    @extend %borderNormal;
+
     margin: auto;
   }
 
@@ -38,28 +34,28 @@
     padding: 0 7px;
     white-space: nowrap;
   }
-  
+
   :global(.public_fixedDataTable_header .public_fixedDataTableCell_cellContent) {
     line-height: 42px;
-    
+
     background-image: none;
     background-color: #fafafa;
-    
+
     cursor: pointer;
-    
+
     transition: background-color 100ms ease-out;
-    
+
     &:hover {
       background-color: #ededed;
     }
   }
-  
+
   :global(.public_fixedDataTableCell_wrap1) {
     transition: background-color 100ms ease-out;
   }
-  
+
   .selectedCell {
     background-color: rgba(65, 167, 255, 0.5);
   }
-  
+
 }

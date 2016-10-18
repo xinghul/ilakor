@@ -37,7 +37,7 @@ let config = {
         loader: ExtractTextPlugin.extract("style-loader", "css-loader")
       },
       {
-        test: /\.css$/, 
+        test: /\.css$/,
         exclude: /node_modules/,
         loader: ExtractTextPlugin.extract("style-loader", "css-loader?modules&importLoaders=1&localIdentName=[name]__[local]___[hash:base64:5]!postcss-loader")
       },
@@ -47,9 +47,12 @@ let config = {
       },
       {
         test: /\.json$/,
-        loader: "json-loader" 
+        loader: "json-loader"
       }
     ]
+  },
+  sassLoader: {
+    includePaths: [path.resolve("app/stylesheets")]
   },
   devtool: 'source-map',
   postcss: function () {
