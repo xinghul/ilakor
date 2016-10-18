@@ -1,21 +1,21 @@
 .navbarApp {
-  background-color: #3B2F25;
-  
+  background-color: black;
+
   font-weight: 600;
-  
+
   .brandImg {
     margin-top: -5px;
     width: 35px;
   }
-  
+
   .toggle {
     border: none;
-    
+
     &:hover, &:focus {
       background-color: transparent;
     }
   }
-  
+
   .authArea {
     margin: 8px 6px 0 0;
   }
