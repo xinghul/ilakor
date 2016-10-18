@@ -19,38 +19,38 @@ const categoryToColor = {
  * @extends {React.Component}
  */
 export default class BaseItem extends React.Component {
-  
+
   /**
    * @inheritdoc
    */
   constructor(props) {
     super(props);
-    
+
     this.state = {
       outOfStock: false,
-      
+
       itemPrice: 0,
       imageLoaded: false,
-      bannerBottom: "-80px"
+      bannerBottom: "-50px"
     };
   }
-  
+
   /**
    * @inheritdoc
    */
   componentWillReceiveProps(props) {
-    
+
     const { variations } = props.item;
-    
+
     let itemPrice = Number.MAX_SAFE_INTEGER
     ,   outOfStock = false;
-    
+
     _.forEach(variations, (variation) => {
       if (!variation.outOfStock && variation.price < itemPrice) {
         itemPrice = variation.price;
       }
     });
-    
+
     if (itemPrice === Number.MAX_SAFE_INTEGER) {
       itemPrice = 0;
       outOfStock = true;
@@ -60,9 +60,9 @@ export default class BaseItem extends React.Component {
       itemPrice,
       outOfStock
     });
-    
+
   }
-  
+
   /**
    * @private
    * Handler for when the image is loaded.
@@ -71,12 +71,12 @@ export default class BaseItem extends React.Component {
     if (this.state.imageLoaded) {
       return;
     }
-    
+
     this.setState({
       imageLoaded: true
     });
   };
-  
+
   /**
    * @private
    * Handler for when mouse enters the item div.
@@ -86,103 +86,107 @@ export default class BaseItem extends React.Component {
       bannerBottom: "0px"
     });
   };
-  
+
   /**
    * @private
    * Handler for when mouse leaves the item div.
    */
   _onMouseLeave = () => {
     this.setState({
-      bannerBottom: "-80px"
+      bannerBottom: "-50px"
     });
   };
-  
+
   /**
    * @private
    * Creates the JSX for the item image.
-   * 
-   * @return {JSX}        
+   *
+   * @return {JSX}
    */
   _createImageJsx() {
     const { item } = this.props;
-    
+
     let imageUrl = "http://d16knxx0wtupz9.cloudfront.net/" + item.images[0].name;
-    
+
     return (
       <Image className={styles.itemImage} src={imageUrl} onLoad={this._onImageLoad} />
     );
   }
-  
+
   /**
    * @private
    * Creates the JSX for banner.
-   * 
-   * @return {JSX}        
+   *
+   * @return {JSX}
    */
   _createBannerJsx() {
-    
-    const { item } = this.props;
+
+    const { features } = this.props.item;
     const { itemPrice, outOfStock } = this.state;
-    
+
     let bannerStyle = {
       bottom: this.state.bannerBottom
     };
-    
+
     return (
-      <div style={bannerStyle} className={styles.baseBanner}>
-        <div className={styles.itemName}>{_.capitalize(item.name)}</div>
-        {do {
-          if (outOfStock) {
-            <div className={styles.itemPrice}>out of stock</div>;
-          } else {
-            <div className={styles.itemPrice}>from <span className={styles.price}>{Numeral(itemPrice).format("$0,0.00")}</span></div>;
-          }
-        }}
-        
-      </div>      
+      <div style={bannerStyle} className={styles.banner}>
+        <div className={styles.leftContent}>
+          {do {
+            if (outOfStock) {
+              <div className={styles.itemPrice}>out of stock</div>;
+            } else {
+              <div className={styles.itemPrice}>from <span className={styles.price}>{Numeral(itemPrice).format("$0,0.00")}</span></div>;
+            }
+          }}
+        </div>
+        <div className={styles.rightContent}>
+          <div className={styles.featureKey}>{_.capitalize(features[0].key)}</div>
+          <div className={styles.featureValue}>{features[0].value}</div>
+        </div>
+      </div>
     );
   }
-  
+
   /**
    * @private
    * Creates the JSX for the load spinner.
-   * 
-   * @return {JSX}        
+   *
+   * @return {JSX}
    */
   _createLoadSpinnerJsx() {
     let style = {
       display: this.state.imageLoaded ? "none" : "block"
     };
-    
+
     return (
       <div className={styles.loaderWrapper} style={style}>
         <div className={styles.loader}></div>
       </div>
-      
+
     );
   }
-  
+
   /**
    * @private
    * Handler for when the item is clicked.
    */
   _onItemClick = () => {
-    
+
     const { outOfStock } = this.state;
-    
+
     // if it's out of stock, do nothing
     if (outOfStock) {
       return;
     }
-    
+
     this.props.handleItemClick(this.props.item);
   };
-  
+
   /**
    * @inheritdoc
    */
   render() {
-    
+
     const { item } = this.props;
 
     let style = {
@@ -190,8 +194,8 @@ export default class BaseItem extends React.Component {
     };
 
     return (
-      <div style={style} 
-        className={styles.baseItem} 
+      <div style={style}
+        className={styles.baseItem}
         onMouseEnter={this._onMouseEnter}
         onMouseLeave={this._onMouseLeave}
         onClick={this._onItemClick}>
@@ -200,16 +204,16 @@ export default class BaseItem extends React.Component {
         {this._createLoadSpinnerJsx()}
       </div>
     );
-    
+
   }
 }
 
-BaseItem.propTypes = { 
+BaseItem.propTypes = {
   item: React.PropTypes.object.isRequired,
   handleItemClick: React.PropTypes.func
 };
 
-BaseItem.defaultProps = { 
+BaseItem.defaultProps = {
   item: {},
   handleItemClick: () => {}
 };
