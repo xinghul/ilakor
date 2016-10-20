@@ -19,7 +19,7 @@ import AuthStore from "stores/AuthStore";
 
 /**
  * Gets the new state from subscribed stores.
- * 
+ *
  * @return {Object}
  */
 function getStateFromStores() {
@@ -39,11 +39,11 @@ export default class CheckoutApp extends React.Component {
    */
   constructor(props) {
     super(props);
-    
+
     this.state = {
       items: ShoppingCartStore.getItems(),
       totalPrice: ShoppingCartStore.getTotalPrice(),
-      
+
       /**
        * Indicates the step of the checkout process.
        *
@@ -51,17 +51,24 @@ export default class CheckoutApp extends React.Component {
        * (Shipping method)
        * 2. Summary
        * 3. Payment
-       * 
+       *
        * @type {Number}
        */
       step: 1,
 
       errorMessage: "",
       isSubmitting: false,
-      checkoutFinish: false
+      checkoutFinish: false,
+
+      /**
+       * The address info.
+       *
+       * @type {Object}
+       */
+      addressInfo: {}
     };
   }
-  
+
   /**
    * @inheritdoc
    */
@@ -75,7 +82,26 @@ export default class CheckoutApp extends React.Component {
   componentWillUnmount() {
     ShoppingCartStore.unsubscribe(this._onChange);
   }
-  
+
+  /**
+   * @inheritdoc
+   */
+  render() {
+
+    const { items, errorMessage } = this.state;
+
+    return (
+      <div className={styles.checkoutApp}>
+        <div className={styles.checkoutForm}>
+          <AlertMessage ref="alert" alertStyle="danger">
+            {errorMessage}
+          </AlertMessage>
+          {this._createCheckoutContentJsx()}
+        </div>
+      </div>
+    );
+  }
+
   /**
    * @private
    * Handler for when subscribed stores emit 'change' event.
@@ -83,7 +109,7 @@ export default class CheckoutApp extends React.Component {
   _onChange = () => {
     this.setState(getStateFromStores());
   };
-  
+
   /**
    * @private
    * Handler for when the payment information is received.
@@ -99,22 +125,22 @@ export default class CheckoutApp extends React.Component {
       items: this.state.items,
       user: AuthStore.getUser()
     };
-    
+
     OrderAction.addOrder(paymentInfo, addressInfo, orderInfo)
     .then((res) => {
       this.setState({
         checkoutFinish: true
       });
-      
+
       setTimeout(() => {
         hashHistory.push("/");
       }, 3000);
     })
-    .catch((message) => {      
+    .catch((message) => {
       this.setState({
         errorMessage: message
       });
-      
+
       this.refs["alert"].show();
     })
     .finally(() => {
@@ -123,47 +149,55 @@ export default class CheckoutApp extends React.Component {
       });
     });
   };
-  
+
+  /**
+   * @private
+   * Handler for when the onSubmit of AddressSection is called, saves the address info.
+   *
+   * @param  {Object} addressInfo the address info.
+   */
   _onAddressSubmit = (addressInfo) => {
-    
-    let orderInfo = {
-      totalPrice: this.state.totalPrice,
-      items: this.state.items,
-      user: AuthStore.getUser()
-    };
-    
-    OrderAction.addOrder({}, addressInfo, orderInfo)
-    .then((res) => {
-    })
-    .catch((message) => {      
-      this.setState({
-        errorMessage: message
-      });
-      
-      this.refs["alert"].show();
-    })
-    .finally(() => {
-      this.setState({
-        isSubmitting: false
-      });
+
+    // go to next step and clear error message
+    this.setState({
+      step: 2,
+      addressInfo: addressInfo,
+      errorMessage: ""
     });
   };
-  
+
+  /**
+   * @private
+   * Handler for when receives error message from sections.
+   * Display the error message with AlertMessage.
+   *
+   * @param  {String} errorMessage the error message.
+   */
+  _onError = (errorMessage) => {
+
+    this.setState({
+      errorMessage
+    });
+
+    this.refs["alert"].show();
+
+  };
+
   /**
    * @private
    * Creates the JSX for the summary section.
-   * 
-   * @return {JSX} 
+   *
+   * @return {JSX}
    */
   _createSummaryJsx() {
-    
+
     let items = this.state.items
     ,   itemPriceJsx = []
     ,   subTotal = this.state.totalPrice;
-    
+
     itemPriceJsx = _.map(items, (itemInfo) => {
       let priceForVariation = itemInfo.variation.price * itemInfo.count;
-      
+
       return (
         <div key={itemInfo.variation._id} className={styles.summaryItem}>
           <span className={styles.labelStyle}>{priceForVariation} {itemInfo.item.name}</span>
@@ -171,13 +205,13 @@ export default class CheckoutApp extends React.Component {
         </div>
       );
     });
-    
+
     // hard coded for now
     let discount = 0
     ,   shipping = 7
     ,   tax = subTotal * 0.08
     ,   total = subTotal - discount + shipping + tax;
-    
+
     return (
       <div className={styles.summarySection}>
         <div className={styles.sectionHeader}>
@@ -207,52 +241,68 @@ export default class CheckoutApp extends React.Component {
       </div>
     );
   }
-  
+
   /**
    * @private
-   * Creates the JSX for the checkout form section.
-   * 
-   * @return {JSX} 
+   * Creates the JSX for the checkout content based on current step.
+   *
+   * @return {JSX}
    */
   _createCheckoutContentJsx() {
-    
-    return (
-      <div>
-        {this._createSummaryJsx()}
-        <AlertMessage ref="alert" alertStyle="danger">
-          {this.state.errorMessage}
-        </AlertMessage>
-        <AddressSection onSubmit={this._onAddressSubmit}/>
-        <PaymentApp
-          amount={this.state.totalPrice}
-          handlePayment={this._onReceivedPayment}
-        >
-          <SubmitButton
-            submitText="Processing"
-            disabled={this.state.isSubmitting} 
-            isSubmitting={this.state.isSubmitting}
-            block
-            theme="gold"
-          >
-            <Glyphicon glyph="lock" />
-            {' '}
-            Proceed to checkout
-          </SubmitButton>
-        </PaymentApp>
-        <div className={styles.information}>
-          <Glyphicon glyph="lock" />
-          {' '}
-          Your card information is encrypted
-        </div>
-      </div>
-    );
+
+    const { step } = this.state;
+
+    if (step === 1) {
+      // shipping address
+      return (
+        <AddressSection onSubmit={this._onAddressSubmit} onError={this._onError} />
+      );
+    } else if (step === 2) {
+      return (
+        <div>haha</div>
+      );
+      // summary
+    } else if (step === 3) {
+      // payment
+    }
+
+
+    // return (
+    //   <div>
+    //     {this._createSummaryJsx()}
+    //     <AlertMessage ref="alert" alertStyle="danger">
+    //       {this.state.errorMessage}
+    //     </AlertMessage>
+    //     <PaymentApp
+    //       amount={this.state.totalPrice}
+    //       handlePayment={this._onReceivedPayment}
+    //     >
+    //       <SubmitButton
+    //         submittingText="Processing"
+    //         disabled={this.state.isSubmitting}
+    //         isSubmitting={this.state.isSubmitting}
+    //         block
+    //         theme="gold"
+    //       >
+    //         <Glyphicon glyph="lock" />
+    //         {' '}
+    //         Proceed to checkout
+    //       </SubmitButton>
+    //     </PaymentApp>
+    //     <div className={styles.information}>
+    //       <Glyphicon glyph="lock" />
+    //       {' '}
+    //       Your card information is encrypted
+    //     </div>
+    //   </div>
+    // );
   }
-  
+
   /**
    * @private
    * Creates the JSX for the confirmation section.
-   * 
-   * @return {JSX} 
+   *
+   * @return {JSX}
    */
   _createConfirmationJsx() {
     return (
@@ -262,26 +312,4 @@ export default class CheckoutApp extends React.Component {
     );
   }
 
-  /**
-   * @inheritdoc
-   */
-  render() {
-
-    let items = this.state.items
-    ,   checkoutContent = do {
-      if (this.state.checkoutFinish) {
-        this._createConfirmationJsx();
-      } else {
-        this._createCheckoutContentJsx();
-      }
-    };
-    
-    return (
-      <div className={styles.checkoutApp}>
-        <div className={styles.checkoutForm}>
-          {checkoutContent}
-        </div>
-      </div>
-    );
-  }
 }

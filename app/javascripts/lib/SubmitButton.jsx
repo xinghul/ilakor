@@ -11,35 +11,35 @@ import styles from "lib/SubmitButton.scss";
  * @extends {React.Component}
  */
 export default class SubmitButton extends React.Component {
-  
+
   /**
    * @inheritdoc
    */
   constructor(props) {
     super(props);
   }
-  
+
   /**
    * @inheritdoc
    */
   render() {
-    
+
     let buttonProps = _.clone(this.props);
-    
+
     delete buttonProps.isSubmitting;
-    delete buttonProps.submitText;
+    delete buttonProps.submittingText;
     delete buttonProps.handleSubmit;
 
     // put {...this.props} behind disabled, so it can't be overriden
     return (
       <GhostButton
-        disabled={this.props.isSubmitting} 
+        disabled={this.props.isSubmitting}
         {...buttonProps}
         onClick={this.props.handleSubmit}
-        className={styles.submitButton} 
-        bsSize="large" 
+        className={styles.submitButton}
+        bsSize="large"
       >
-        <LoadSpinner className={styles.spinner} size={40} hidden={!this.props.isSubmitting} text={this.props.submitText} />
+        <LoadSpinner className={styles.spinner} size={40} hidden={!this.props.isSubmitting} text={this.props.submittingText} />
         <div hidden={this.props.isSubmitting}>
           {this.props.children}
         </div>
@@ -50,12 +50,12 @@ export default class SubmitButton extends React.Component {
 
 SubmitButton.propTypes = {
   isSubmitting: React.PropTypes.bool,
-  submitText: React.PropTypes.string,
+  submittingText: React.PropTypes.string,
   handleSubmit: React.PropTypes.func
 };
 
 SubmitButton.defaultProps = {
   isSubmitting: false,
-  submitText: "",
+  submittingText: "",
   handleSubmit: () => {}
 };

@@ -214,7 +214,7 @@ class IndexApp extends React.Component {
           theme="black"
           handleSubmit={this._handleSubmit}
           isSubmitting={this.state.isSubmitting}
-          submitText="submitting"
+          submittingText="submitting"
           block
         >Submit</SubmitButton>
         <div>
