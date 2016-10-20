@@ -29,39 +29,4 @@
     }
   }
 
-  .summarySection {
-    margin: -10px -30px 10px -30px;
-    padding: 10px;
-
-    border-bottom: solid 1px #ccc;
-    border-radius: 10px;
-    background-color: #e5e5e5;
-
-    .sectionHeader {
-      margin-bottom: 10px;
-      color: #959595;
-
-      text-transform: uppercase;
-      font-weight: 700;
-    }
-
-    .summaryItem {
-      margin-bottom: 5px;
-
-      .labelStyle {
-        font-style: italic;
-      }
-    }
-
-    .totalPrice {
-      margin-top: 10px;
-
-      font-weight: 600;
-    }
-
-    .priceStyle {
-      float: right;
-    }
-  }
-
 }
