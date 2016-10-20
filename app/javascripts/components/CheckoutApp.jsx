@@ -4,14 +4,15 @@ import Numeral from "numeral";
 import invariant from "invariant";
 import { hashHistory } from "react-router";
 
-import { Glyphicon } from "react-bootstrap";
+import { Glyphicon, Pager } from "react-bootstrap";
 
 import styles from "components/CheckoutApp.scss";
 
-import PaymentApp from "./CheckoutApp/PaymentApp";
 import SubmitButton from "lib/SubmitButton";
 import AlertMessage from "lib/AlertMessage";
 
+import PaymentApp from "./CheckoutApp/PaymentApp";
+import AddressSection from "./CheckoutApp/AddressSection";
 import ShoppingCartStore from "stores/ShoppingCartStore";
 import OrderAction from "actions/OrderAction";
 import AuthStore from "stores/AuthStore";
@@ -42,6 +43,18 @@ export default class CheckoutApp extends React.Component {
     this.state = {
       items: ShoppingCartStore.getItems(),
       totalPrice: ShoppingCartStore.getTotalPrice(),
+      
+      /**
+       * Indicates the step of the checkout process.
+       *
+       * 1. Shipping address
+       * (Shipping method)
+       * 2. Summary
+       * 3. Payment
+       * 
+       * @type {Number}
+       */
+      step: 1,
 
       errorMessage: "",
       isSubmitting: false,
@@ -96,6 +109,31 @@ export default class CheckoutApp extends React.Component {
       setTimeout(() => {
         hashHistory.push("/");
       }, 3000);
+    })
+    .catch((message) => {      
+      this.setState({
+        errorMessage: message
+      });
+      
+      this.refs["alert"].show();
+    })
+    .finally(() => {
+      this.setState({
+        isSubmitting: false
+      });
+    });
+  };
+  
+  _onAddressSubmit = (addressInfo) => {
+    
+    let orderInfo = {
+      totalPrice: this.state.totalPrice,
+      items: this.state.items,
+      user: AuthStore.getUser()
+    };
+    
+    OrderAction.addOrder({}, addressInfo, orderInfo)
+    .then((res) => {
     })
     .catch((message) => {      
       this.setState({
@@ -184,6 +222,7 @@ export default class CheckoutApp extends React.Component {
         <AlertMessage ref="alert" alertStyle="danger">
           {this.state.errorMessage}
         </AlertMessage>
+        <AddressSection onSubmit={this._onAddressSubmit}/>
         <PaymentApp
           amount={this.state.totalPrice}
           handlePayment={this._onReceivedPayment}

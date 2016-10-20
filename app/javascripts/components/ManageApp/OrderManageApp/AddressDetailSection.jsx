@@ -1,20 +1,28 @@
-"use strict"
+import React from "react";
+import _ from "lodash";
+import invariant from "invariant";
 
-import React from "react"
-import _ from "lodash"
-import invariant from "invariant"
+import GridSection from "lib/GridSection";
+import BaseInfo from "lib/BaseInfo";
 
-import GridSection from "lib/GridSection"
-import BaseInfo from "lib/BaseInfo"
+import styles from "components/ManageApp/OrderManageApp/AddressDetailSection.scss";
 
-import styles from "components/ManageApp/OrderManageApp/AddressDetailSection.scss"
-
+/**
+ * @class
+ * @extends {React.Component}
+ */
 export default class AddressDetailSection extends React.Component {
   
+  /**
+   * @inheritdoc
+   */
   constructor(props) {
     super(props);    
   }
   
+  /**
+   * @inheritdoc
+   */
   render() {
     
     let address = this.props.address;
