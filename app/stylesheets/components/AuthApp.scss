@@ -1,19 +1,19 @@
 .authApp {
-  
+
   :global(.modal-body) {
-    height: 350px;
+    height: 380px;
   }
-  
+
   .localContent {
     position: absolute;
     padding-top: 30px;
-    
+
     height: 100%;
     width: 52%;
-    
+
     overflow: hidden;
   }
-  
+
   .socialContent {
     position: absolute;
     padding: 15px 0;
@@ -22,7 +22,7 @@
 
     height: 100%;
     width: 40%;
-    
+
     text-align: center;
   }
 
@@ -32,16 +32,15 @@
     left: 58%;
     height: 290px;
     background-color: #e5e5e5;
-    
+
     .dividerContent {
       position: absolute;
       top: 48%;
-      left: -7px;    
+      left: -7px;
 
       background-color: white;
-      
+
       line-height: 21px;
     }
   }
 }
-

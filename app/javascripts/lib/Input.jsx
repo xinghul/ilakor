@@ -6,11 +6,11 @@ import FontAwesome from "react-fontawesome";
 import styles from "lib/Input.scss";
 
 // prop types for Input component
-const propTypes = { 
+const propTypes = {
   type: PropTypes.string,
 
   onChange: PropTypes.func,
-  
+
   defaultValue: PropTypes.string,
   placeholder: PropTypes.string,
   icon: PropTypes.string,
@@ -18,7 +18,7 @@ const propTypes = {
   validationState: PropTypes.string,
   autoComplete: PropTypes.string,
   focusText: PropTypes.string,
-  
+
   shrink: PropTypes.bool,
   disabled: PropTypes.bool
 };
@@ -26,7 +26,7 @@ const propTypes = {
 // default props for Input component
 const defaultProps = {
   type: "text",
-  
+
   onChange: function() {},
 
   defaultValue: "",
@@ -36,7 +36,7 @@ const defaultProps = {
   validationState: null,
   autoComplete: "",
   focusText: "",
-  
+
   shrink: false,
   disabled: false
 };
@@ -51,30 +51,30 @@ export default class Input extends React.Component {
    */
   constructor(props) {
     super(props);
-    
+
     this.state = {
       value: this.props.defaultValue,
       focused: false
     };
   }
-  
+
   /**
    * @private
    * Handler for when the input emits the 'change' event.
-   * 
+   *
    * @param  {Object} evt the 'change' event object.
    */
   _onChange = (evt) => {
     let newValue = evt.target.value
     ,   name = evt.target.name;
-    
+
     this.setState({
       value: newValue
     });
-    
+
     this.props.onChange(newValue, name);
   };
-  
+
   /**
    * @private
    * Handler for when the input emits the 'onfocus' event.
@@ -84,7 +84,7 @@ export default class Input extends React.Component {
       focused: true
     });
   };
-  
+
   /**
    * @private
    * Handler for when the input emits the 'onblur' event.
@@ -94,16 +94,16 @@ export default class Input extends React.Component {
       focused: false
     });
   };
-  
+
   /**
    * Returns the input value.
-   * 
+   *
    * @return {String}
    */
   getValue() {
     return this.state.value;
   }
-  
+
   /**
    * Resets the base input state.
    */
@@ -113,20 +113,20 @@ export default class Input extends React.Component {
       focused: false
     });
   }
-  
+
   /**
    * @inheritdoc
    */
   render() {
-    
+
     let addonClassname
     ,   addonContent
     ,   classNames = [ styles.input ]
-    ,   focusTextStyle = { maxHeight: this.state.focused ? "90px" : "" };
-    
+    ,   focusTextStyle = { maxHeight: this.state.focused ? "105px" : "" };
+
     const { type, placeholder, icon, label, validationState, autoComplete, focusText, className,
             shrink, disabled } = this.props;
-    
+
     addonClassname = do {
       if (shrink) {
         styles.addonContentShrink;
@@ -142,7 +142,7 @@ export default class Input extends React.Component {
             name={icon}
             fixedWidth={true}
           />
-          &nbsp; 
+          &nbsp;
           <label>{label}</label>
         </InputGroup.Addon>
       } else if (!_.isEmpty(label)) {
@@ -155,18 +155,18 @@ export default class Input extends React.Component {
     }
 
     if (!_.isEmpty(className)) {
-      // push in additional className 
+      // push in additional className
       classNames.push(className);
     }
-    
+
     return (
-      <FormGroup 
-        className={classNames.join(' ')} 
+      <FormGroup
+        className={classNames.join(' ')}
         validationState={validationState}
       >
         <InputGroup>
           {addonContent}
-          <FormControl 
+          <FormControl
             type={type}
             value={this.props.value ? this.props.value : this.state.value}
             onChange={this._onChange}
@@ -177,9 +177,9 @@ export default class Input extends React.Component {
             disabled={disabled}
           />
         </InputGroup>
-        <div 
-          hidden={_.isEmpty(focusText)} 
-          className={styles.focusContentContainer} 
+        <div
+          hidden={_.isEmpty(focusText)}
+          className={styles.focusContentContainer}
           style={focusTextStyle}
         >
           <div className={styles.focusContent}>
@@ -187,9 +187,9 @@ export default class Input extends React.Component {
           </div>
         </div>
       </FormGroup>
-      
+
     );
-    
+
   }
 }
 
